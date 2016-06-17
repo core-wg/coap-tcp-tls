@@ -2,7 +2,7 @@
 
 This is the working area for the Working Group internet-draft, "A TCP and TLS Transport for the Constrained Application Protocol (CoAP)".
 
-* [Editor's copy](https://core-wg.github.io/coap-tcp-tls/)
+* [Editor's copy](https://core-wg.github.io/coap-tcp-tls/)  [![Build Status](https://travis-ci.org/core-wg/coap-tcp-tls.svg?branch=master)](https://travis-ci.org/core-wg/coap-tcp-tls)
 * [Working Group Draft] (https://tools.ietf.org/html/draft-ietf-core-coap-tcp-tls)
 
 
