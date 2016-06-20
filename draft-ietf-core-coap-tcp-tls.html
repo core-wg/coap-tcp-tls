@@ -270,7 +270,7 @@ li, p {
   <link href="#rfc.toc" rel="Contents"/>
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
 <link href="#rfc.section.2" rel="Chapter" title="2 Terminology"/>
-<link href="#rfc.section.3" rel="Chapter" title="3 Constrained Application Protocol"/>
+<link href="#rfc.section.3" rel="Chapter" title="3 Message Adapter Protocol"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Message Format"/>
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Discussion"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Message Transmission"/>
@@ -370,7 +370,7 @@ li, p {
 
   	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
 <li>2.   <a href="#rfc.section.2">Terminology</a></li>
-<li>3.   <a href="#rfc.section.3">Constrained Application Protocol</a></li>
+<li>3.   <a href="#rfc.section.3">Message Adapter Protocol</a></li>
 <li>4.   <a href="#rfc.section.4">Message Format</a></li>
 <ul><li>4.1.   <a href="#rfc.section.4.1">Discussion</a></li>
 </ul><li>5.   <a href="#rfc.section.5">Message Transmission</a></li>
@@ -393,15 +393,18 @@ li, p {
 
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a></h1>
 <p id="rfc.section.1.p.1">The <a href="#RFC7252">Constrained Application Protocol (CoAP)</a> <cite title="NONE">[RFC7252]</cite> was designed for Internet of Things (IoT) deployments, assuming that UDP can be used unimpeded &#8212; UDP <a href="#RFC0768">[RFC0768]</a>, or DTLS <a href="#RFC6347">[RFC6347]</a> over UDP; it is a good choice for transferring small amounts of data across networks that follow the IP architecture.  Some CoAP deployments, however, may have to integrate well with existing enterprise infrastructure, where the use of UDP-based protocols may not be well-received or may even be blocked by firewalls.  Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP brittle, resulting in lost or malformed packets.</p>
-<p id="rfc.section.1.p.2">Where NATs are still present, CoAP over TCP can also help with their traversal. NATs often calculate expiration timers based on the transport layer protocol being used by application protocols.  Many NATs are built around the assumption that a transport layer protocol such as TCP gives them additional information about the session life cycle and keep TCP-based NAT bindings around for a longer period. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter, as research confirms <a href="#HomeGateway">[HomeGateway]</a>.</p>
-<p id="rfc.section.1.p.3">Some environments may also benefit from the more sophisticated congestion control capabilities provided by many TCP implementations.  (Note that there is ongoing work to add more elaborate congestion control to CoAP as well, see <a href="#I-D.bormann-core-cocoa">[I-D.bormann-core-cocoa]</a>.)</p>
+<p id="rfc.section.1.p.2">Where NATs are still present, CoAP over TCP can also help with their traversal. NATs often calculate expiration timers based on the transport layer protocol being used by application protocols.  Many NATs are built around the assumption that a transport layer protocol, such as TCP, gives them additional information about the session life cycle and keep TCP-based NAT bindings around for a longer period. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter, as research confirms <a href="#HomeGateway">[HomeGateway]</a>.</p>
+<p id="rfc.section.1.p.3">Some environments may also benefit from the ability of TCP to exchange larger payloads (such as firmware images) without application layer segmentation and to utilize the more sophisticated congestion control capabilities provided by many TCP implementations.  (Note that there is ongoing work to add more elaborate congestion control to CoAP as well, see <a href="#I-D.bormann-core-cocoa">[I-D.bormann-core-cocoa]</a>.)</p>
 <p id="rfc.section.1.p.4">Finally, CoAP may be integrated into a Web environment where the front-end uses CoAP from IoT devices to a cloud infrastructure but the CoAP messages are then transported in TCP between the back-end services.  A TCP-to-UDP gateway can be used at the cloud boundary to talk to the UDP-based IoT.</p>
 <p id="rfc.section.1.p.5">To make IoT devices work smoothly in these demanding environments, CoAP needs to make use of a different transport protocol, namely TCP <a href="#RFC0793">[RFC0793]</a>, in some situations secured by TLS <a href="#RFC5246">[RFC5246]</a>.</p>
-<p id="rfc.section.1.p.6">The present document describes a shim header that conveys length information about each CoAP message.  Modifications to CoAP beyond the replacement of the message layer (e.g., to introduce further optimizations) are intentionally avoided.</p>
+<p id="rfc.section.1.p.6">Conceptually, the CoAP over TCP/TLS specification replaces most of CoAP&#8217;s message layer by a new message adapter on top of TCP or TLS that does provides a framing mechanism on top of the byte stream provided by TCP/TLS, conveying the length information about each CoAP message that on datagram transports is provided by the datagram layer below (UDP, DTLS).</p>
+<p id="rfc.section.1.p.7">The message adapter also adds a way to use signaling messages to perform various housekeeping operations on the TCP, see [I-D.bormann-core-signaling].</p>
+<p id="rfc.section.1.p.8">When CoAP is used over TLS then some of the housekeeping features are already available with the TLS Handshake protocol; less new functionality is then required.</p>
+<p id="rfc.section.1.p.9">Modifications to CoAP beyond the replacement of the message layer (e.g., to introduce further optimizations) are intentionally avoided.</p>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
 <p id="rfc.section.2.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
-<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#constrained-application-protocol" id="constrained-application-protocol">Constrained Application Protocol</a></h1>
-<p id="rfc.section.3.p.1">The interaction model of CoAP over TCP is very similar to the one for CoAP over UDP, with the key difference that using TCP voids the need to provide certain transport layer protocol features, such as reliable delivery, fragmentation and reassembly, as well as congestion control, at the CoAP level. The protocol stack is illustrated in <a href="#stack">Figure 1</a> (derived from <a href="#RFC7252">[RFC7252]</a>, Figure 1).</p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#message-adapter-protocol" id="message-adapter-protocol">Message Adapter Protocol</a></h1>
+<p id="rfc.section.3.p.1">The interaction model of CoAP over TCP is very similar to the one for CoAP over UDP, with the key difference that using TCP voids the need to provide certain transport layer protocol features at the CoAP level, such as reliable delivery, fragmentation and reassembly, as well as congestion control. The protocol stack is illustrated in <a href="#stack">Figure 1</a> (derived from <a href="#RFC7252">[RFC7252]</a>, Figure 1).</p>
 <div id="rfc.figure.1"/>
 <div id="stack"/>
 <pre>
@@ -409,13 +412,13 @@ li, p {
         |      Application     |
         +----------------------+
         +----------------------+
-        |  Requests/Responses  |  CoAP (RFC7252)
+        |  Requests/Responses  |  CoAP (RFC 7252)
         |----------------------|
-        |    Message adapter   |  This Document
+        |    Message Adapter   |  This Document
         +----------------------+
-        +-----------+    ^
-        |    TLS    |    |
-        +-----------+    v
+        +-----------+      ^
+        |    TLS    |  or  |
+        +-----------+      v
         +----------------------+
         |          TCP         |
         +----------------------+
@@ -452,9 +455,9 @@ li, p {
            |&lt;-------------------+
            |                    |
 </pre>
-<p class="figure">Figure 3</p>
+<p class="figure">Figure 3: Untyped messages carrying Request/Response.</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#message-format" id="message-format">Message Format</a></h1>
-<p id="rfc.section.4.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 4</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate.</p>
+<p id="rfc.section.4.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 4</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate and for providing length information.</p>
 <div id="rfc.figure.4"/>
 <div id="CoAP-Header"/>
 <pre>
@@ -599,10 +602,11 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
 
 <ul>
   <li>The port subcomponent indicates the TCP port at which the TLS server for the CoAP server is located.  If it is empty or not given, then the default port 443 is assumed (this is different from the default port for &#8220;coaps&#8221;, i.e., CoAP over DTLS over UDP).</li>
-  <li>When CoAP is exchanged over TLS port 443 then the &#8220;TLS Application Layer Protocol Negotiation Extension&#8221; <a href="#RFC7301">[RFC7301]</a> MUST be used to allow demultiplexing at the server-side unless out-of-band information ensures that the client only interacts with a server that is able to demultiplex CoAP messages over port 443. This would, for example, be true for many IoT deployments where clients are pre-configured to only ever talk with specific servers.  <a id="alwaysalpn" class="info">[alwaysalpn]<span class="info">cabo: Shouldn&#8217;t we simply always require ALPN? The protocol should not be defined in such a way that it depends on some undefined pre-configuration mechanism.</span></a></li>
+  <li>When CoAP is exchanged over TLS port 443, the &#8220;TLS Application Layer Protocol Negotiation Extension&#8221; <a href="#RFC7301">[RFC7301]</a> MUST be used to allow demultiplexing at the server-side.</li>
 </ul>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#security" id="security">Security Considerations</a></h1>
-<p id="rfc.section.7.p.1">This document defines how to convey CoAP over TCP and TLS. It does not introduce new vulnerabilities beyond those described already in the CoAP specification. CoAP <a href="#RFC7252">[RFC7252]</a> makes use of DTLS 1.2 and this specification consequently uses TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. CoAP MUST NOT be used with older versions of TLS. Guidelines for use of cipher suites and TLS extensions can be found in <a href="#I-D.ietf-dice-profile">[I-D.ietf-dice-profile]</a>.</p>
+<p id="rfc.section.7.p.1">This document defines how to convey CoAP over TCP and TLS.  CoAP <a href="#RFC7252">[RFC7252]</a> makes use of DTLS 1.2 and this specification consequently uses TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. CoAP MUST NOT be used with older versions of TLS. Guidelines for use of cipher suites and TLS extensions can be found in <a href="#I-D.ietf-dice-profile">[I-D.ietf-dice-profile]</a>.</p>
+<p id="rfc.section.7.p.2">TLS does not protect the TCP header. This may, for example, allow an on-path adversary to terminate a TCP connection prematurely by spoofing a TCP reset message.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#service-name-and-port-number-registration" id="service-name-and-port-number-registration">Service Name and Port Number Registration</a></h1>
 <p id="rfc.section.8.1.p.1">IANA is requested to assign the port number 5683 and the service name &#8220;coap+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>.</p>
@@ -660,7 +664,7 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a></h1>
-<p id="rfc.section.9.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Michael Koster, Matthias Kovatsch, Szymon Sasin, Andrew Summers, and Zach Shelby for their feedback.</p>
+<p id="rfc.section.9.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Christian Groves, Klaus Hartke, Julien Vermillard, Gengyu Wei, Michael Koster, Matthias Kovatsch, Szymon Sasin, David Navarro, Achim Kraus, Andrew Summers, and Zach Shelby for their feedback.</p>
 <h1 id="rfc.references"><a href="#rfc.references">10.</a> References</h1>
 <h1 id="rfc.references.1"><a href="#rfc.references.1">10.1.</a> Normative References</h1>
 <table>

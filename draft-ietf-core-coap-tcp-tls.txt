@@ -76,24 +76,24 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Constrained Application Protocol  . . . . . . . . . . . . . .   3
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  Message Adapter Protocol  . . . . . . . . . . . . . . . . . .   4
    4.  Message Format  . . . . . . . . . . . . . . . . . . . . . . .   5
      4.1.  Discussion  . . . . . . . . . . . . . . . . . . . . . . .   8
-   5.  Message Transmission  . . . . . . . . . . . . . . . . . . . .   8
+   5.  Message Transmission  . . . . . . . . . . . . . . . . . . . .   9
    6.  CoAP URI  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     6.1.  coap+tcp URI scheme . . . . . . . . . . . . . . . . . . .   9
-     6.2.  coaps+tcp URI scheme  . . . . . . . . . . . . . . . . . .   9
+     6.1.  coap+tcp URI scheme . . . . . . . . . . . . . . . . . . .  10
+     6.2.  coaps+tcp URI scheme  . . . . . . . . . . . . . . . . . .  10
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
      8.1.  Service Name and Port Number Registration . . . . . . . .  10
-     8.2.  URI Schemes . . . . . . . . . . . . . . . . . . . . . . .  11
-     8.3.  ALPN Protocol ID  . . . . . . . . . . . . . . . . . . . .  11
+     8.2.  URI Schemes . . . . . . . . . . . . . . . . . . . . . . .  12
+     8.3.  ALPN Protocol ID  . . . . . . . . . . . . . . . . . . . .  12
    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  12
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
      10.2.  Informative References . . . . . . . . . . . . . . . . .  13
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
 
@@ -120,14 +120,16 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
    Where NATs are still present, CoAP over TCP can also help with their
    traversal.  NATs often calculate expiration timers based on the
    transport layer protocol being used by application protocols.  Many
-   NATs are built around the assumption that a transport layer protocol
-   such as TCP gives them additional information about the session life
+   NATs are built around the assumption that a transport layer protocol,
+   such as TCP, gives them additional information about the session life
    cycle and keep TCP-based NAT bindings around for a longer period.
    UDP, on the other hand, does not provide such information to a NAT
    and timeouts tend to be much shorter, as research confirms
    [HomeGateway].
 
-   Some environments may also benefit from the more sophisticated
+   Some environments may also benefit from the ability of TCP to
+   exchange larger payloads (such as firmware images) without
+   application layer segmentation and to utilize the more sophisticated
    congestion control capabilities provided by many TCP implementations.
    (Note that there is ongoing work to add more elaborate congestion
    control to CoAP as well, see [I-D.bormann-core-cocoa].)
@@ -142,26 +144,24 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
    CoAP needs to make use of a different transport protocol, namely TCP
    [RFC0793], in some situations secured by TLS [RFC5246].
 
-   The present document describes a shim header that conveys length
-   information about each CoAP message.  Modifications to CoAP beyond
-   the replacement of the message layer (e.g., to introduce further
-   optimizations) are intentionally avoided.
+   Conceptually, the CoAP over TCP/TLS specification replaces most of
+   CoAP's message layer by a new message adapter on top of TCP or TLS
+   that does provides a framing mechanism on top of the byte stream
+   provided by TCP/TLS, conveying the length information about each CoAP
+   message that on datagram transports is provided by the datagram layer
+   below (UDP, DTLS).
 
-2.  Terminology
+   The message adapter also adds a way to use signaling messages to
+   perform various housekeeping operations on the TCP, see [I-D.bormann-
+   core-signaling].
 
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in
-   [RFC2119].
+   When CoAP is used over TLS then some of the housekeeping features are
+   already available with the TLS Handshake protocol; less new
+   functionality is then required.
 
-3.  Constrained Application Protocol
+   Modifications to CoAP beyond the replacement of the message layer
+   (e.g., to introduce further optimizations) are intentionally avoided.
 
-   The interaction model of CoAP over TCP is very similar to the one for
-   CoAP over UDP, with the key difference that using TCP voids the need
-   to provide certain transport layer protocol features, such as
-   reliable delivery, fragmentation and reassembly, as well as
-   congestion control, at the CoAP level.  The protocol stack is
-   illustrated in Figure 1 (derived from [RFC7252], Figure 1).
 
 
 
@@ -170,17 +170,33 @@ Bormann, et al.         Expires October 23, 2016                [Page 3]
 Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
 
+2.  Terminology
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   [RFC2119].
+
+3.  Message Adapter Protocol
+
+   The interaction model of CoAP over TCP is very similar to the one for
+   CoAP over UDP, with the key difference that using TCP voids the need
+   to provide certain transport layer protocol features at the CoAP
+   level, such as reliable delivery, fragmentation and reassembly, as
+   well as congestion control.  The protocol stack is illustrated in
+   Figure 1 (derived from [RFC7252], Figure 1).
+
            +----------------------+
            |      Application     |
            +----------------------+
            +----------------------+
-           |  Requests/Responses  |  CoAP (RFC7252)
+           |  Requests/Responses  |  CoAP (RFC 7252)
            |----------------------|
-           |    Message adapter   |  This Document
+           |    Message Adapter   |  This Document
            +----------------------+
-           +-----------+    ^
-           |    TLS    |    |
-           +-----------+    v
+           +-----------+      ^
+           |    TLS    |  or  |
+           +-----------+      v
            +----------------------+
            |          TCP         |
            +----------------------+
@@ -201,6 +217,15 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
    those ACK messages that have a piggy-backed response) into untyped
    messages.
 
+
+
+
+
+Bormann, et al.         Expires October 23, 2016                [Page 4]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
+
    Similarly, there is no need to detect duplicate delivery of a
    message.  In UDP CoAP, the Message ID is used for relating
    acknowledgements to Confirmable messages as well as for duplicate
@@ -218,14 +243,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
    A response is sent back as defined in [RFC7252], as illustrated in
    Figure 3 (derived from [RFC7252], Figure 6).
 
-
-
-
-Bormann, et al.         Expires October 23, 2016                [Page 4]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
            Client                Server
               |                    |
               | (no type) [------] |
@@ -240,13 +257,30 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
               |<-------------------+
               |                    |
 
-                                 Figure 3
+           Figure 3: Untyped messages carrying Request/Response.
 
 4.  Message Format
 
    The CoAP message format defined in [RFC7252], as shown in Figure 4,
    relies on the datagram transport (UDP, or DTLS over UDP) for keeping
-   the individual messages separate.
+   the individual messages separate and for providing length
+   information.
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2016                [Page 5]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -268,19 +302,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
    adjusted CoAP header format with a modified structure for the fixed
    header (first 4 bytes of the UDP CoAP header), which includes the
    length information of variable size, shown here as an 8-bit length.
-
-
-
-
-
-
-
-
-
-Bormann, et al.         Expires October 23, 2016                [Page 5]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -309,6 +330,14 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
          initial byte and indicates the length of options/payload minus
          269.
 
+
+
+
+Bormann, et al.         Expires October 23, 2016                [Page 6]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
+
       15:  A 32-bit unsigned integer in network byte order follows the
          initial byte and indicates the length of options/payload minus
          65805.
@@ -331,13 +360,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
              Figure 6: CoAP Header with elided Length Header.
 
-
-
-Bormann, et al.         Expires October 23, 2016                [Page 6]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
    For example: A CoAP message just containing a 2.03 code with the
    token 7f and no options or payload would be encoded as shown in
    Figure 7.
@@ -354,6 +376,23 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
     Token =               0x7f
 
                       Figure 7: CoAP Header Example.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2016                [Page 7]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -385,15 +424,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
    The semantics of the other CoAP header fields are left unchanged.
 
-
-
-
-
-Bormann, et al.         Expires October 23, 2016                [Page 7]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
 4.1.  Discussion
 
    One observation is that, over a reliable byte stream transport, the
@@ -410,6 +440,15 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
       any use of a Block option;
 
    o  large messages might also cause undesired head-of-line blocking;
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2016                [Page 8]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
 
    o  the 2-byte message length field causes another, larger upper bound
       to the message length.
@@ -439,17 +478,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
    connection has no bearing on the meaning of the CoAP terms client and
    server.
 
-
-
-
-
-
-
-Bormann, et al.         Expires October 23, 2016                [Page 8]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
 6.  CoAP URI
 
    CoAP [RFC7252] defines the "coap" and "coaps" URI schemes for
@@ -470,6 +498,13 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
    the same authority (the same host listening to the same port).  The
    schemes constitute distinct namespaces and, in combination with the
    authority, are considered to be distinct origin servers.
+
+
+
+Bormann, et al.         Expires October 23, 2016                [Page 9]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
 
 6.1.  coap+tcp URI scheme
 
@@ -496,33 +531,21 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
       given, then the default port 443 is assumed (this is different
       from the default port for "coaps", i.e., CoAP over DTLS over UDP).
 
-   o  When CoAP is exchanged over TLS port 443 then the "TLS Application
+   o  When CoAP is exchanged over TLS port 443, the "TLS Application
       Layer Protocol Negotiation Extension" [RFC7301] MUST be used to
-
-
-
-Bormann, et al.         Expires October 23, 2016                [Page 9]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
-      allow demultiplexing at the server-side unless out-of-band
-      information ensures that the client only interacts with a server
-      that is able to demultiplex CoAP messages over port 443.  This
-      would, for example, be true for many IoT deployments where clients
-      are pre-configured to only ever talk with specific servers.
-      [[alwaysalpn: Shouldn't we simply always require ALPN?  The
-      protocol should not be defined in such a way that it depends on
-      some undefined pre-configuration mechanism. --cabo]]
+      allow demultiplexing at the server-side.
 
 7.  Security Considerations
 
-   This document defines how to convey CoAP over TCP and TLS.  It does
-   not introduce new vulnerabilities beyond those described already in
-   the CoAP specification.  CoAP [RFC7252] makes use of DTLS 1.2 and
-   this specification consequently uses TLS 1.2 [RFC5246].  CoAP MUST
-   NOT be used with older versions of TLS.  Guidelines for use of cipher
-   suites and TLS extensions can be found in [I-D.ietf-dice-profile].
+   This document defines how to convey CoAP over TCP and TLS.  CoAP
+   [RFC7252] makes use of DTLS 1.2 and this specification consequently
+   uses TLS 1.2 [RFC5246].  CoAP MUST NOT be used with older versions of
+   TLS.  Guidelines for use of cipher suites and TLS extensions can be
+   found in [I-D.ietf-dice-profile].
+
+   TLS does not protect the TCP header.  This may, for example, allow an
+   on-path adversary to terminate a TCP connection prematurely by
+   spoofing a TCP reset message.
 
 8.  IANA Considerations
 
@@ -530,6 +553,14 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
    IANA is requested to assign the port number 5683 and the service name
    "coap+tcp", in accordance with [RFC6335].
+
+
+
+
+Bormann, et al.         Expires October 23, 2016               [Page 10]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
 
    Service Name.
       coap+tcp
@@ -554,14 +585,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
    Similarly, IANA is requested to assign the service name "coaps+tcp",
    in accordance with [RFC6335].  However, no separate port number is
-
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 10]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
    used for "coaps" over TCP; instead, the ALPN protocol ID defined in
    Section 8.3 is used over port 443.
 
@@ -585,6 +608,15 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
    Port Number.
       443 (see also Section 8.3 of [RFCthis]})
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2016               [Page 11]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
 
 8.2.  URI Schemes
 
@@ -610,14 +642,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
    Protocol:
       CoAP
 
-
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 11]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
    Identification Sequence:
       0x63 0x6f 0x61 0x70 ("coap")
 
@@ -627,8 +651,9 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 9.  Acknowledgements
 
    We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier
-   Delaby, Michael Koster, Matthias Kovatsch, Szymon Sasin, Andrew
-   Summers, and Zach Shelby for their feedback.
+   Delaby, Christian Groves, Klaus Hartke, Julien Vermillard, Gengyu
+   Wei, Michael Koster, Matthias Kovatsch, Szymon Sasin, David Navarro,
+   Achim Kraus, Andrew Summers, and Zach Shelby for their feedback.
 
 10.  References
 
@@ -638,6 +663,16 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
               Tschofenig, H. and T. Fossati, "TLS/DTLS Profiles for the
               Internet of Things", draft-ietf-dice-profile-17 (work in
               progress), October 2015.
+
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2016               [Page 12]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
 
    [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
               RFC 793, DOI 10.17487/RFC0793, September 1981,
@@ -663,17 +698,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
               Negotiation Extension", RFC 7301, DOI 10.17487/RFC7301,
               July 2014, <http://www.rfc-editor.org/info/rfc7301>.
 
-
-
-
-
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 12]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
    [RFC7595]  Thaler, D., Ed., Hansen, T., and T. Hardie, "Guidelines
               and Registration Procedures for URI Schemes", BCP 35,
               RFC 7595, DOI 10.17487/RFC7595, June 2015,
@@ -696,6 +720,16 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
               "CoAP Simple Congestion Control/Advanced", draft-bormann-
               core-cocoa-03 (work in progress), October 2015.
 
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2016               [Page 13]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
+
+
    [I-D.ietf-core-block]
               Bormann, C. and Z. Shelby, "Block-wise transfers in CoAP",
               draft-ietf-core-block-20 (work in progress), April 2016.
@@ -717,19 +751,6 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
 Authors' Addresses
 
-
-
-
-
-
-
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 13]
-
-Internet-Draft         TCP/TLS Transport for CoAP             April 2016
-
-
    Carsten Bormann (editor)
    Universitaet Bremen TZI
    Postfach 330440
@@ -748,6 +769,21 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
    Phone: +1-847-634-6700
    Email: slemay@zebra.com
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2016               [Page 14]
+
+Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
 
    Valik Solorzano Barboza
@@ -781,4 +817,24 @@ Internet-Draft         TCP/TLS Transport for CoAP             April 2016
 
 
 
-Bormann, et al.         Expires October 23, 2016               [Page 14]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2016               [Page 15]
