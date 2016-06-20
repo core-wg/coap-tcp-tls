@@ -112,36 +112,48 @@ Where NATs are still present,
 CoAP over TCP can also help with their traversal. NATs often calculate
 expiration timers
 based on the transport layer protocol being used by application protocols.
-Many NATs are built around the assumption that a transport layer protocol
+Many NATs are built around the assumption that a transport layer protocol,
 such as
-TCP gives them additional information about the session life cycle
+TCP, gives them additional information about the session life cycle
 and keep TCP-based NAT bindings around for a longer period. UDP, on the other
 hand,
 does not provide such information to a NAT and timeouts tend to be
 much shorter, as research confirms {{HomeGateway}}.
 
-Some environments may also benefit from the more sophisticated congestion
-control capabilities provided by many TCP implementations.
+Some environments may also benefit from the ability of TCP to exchange
+larger payloads (such as firmware images) without application layer
+segmentation and to utilize the more
+sophisticated congestion control capabilities provided by many TCP implementations.
 (Note that there is ongoing work to add more elaborate congestion control
 to CoAP as well, see {{-cocoa}}.)
 
 Finally, CoAP may be integrated into a Web environment where the front-end
 uses CoAP from IoT devices to a cloud infrastructure but the CoAP messages
 are then transported in TCP between the back-end services.
-A TCP-to-UDP gateway can be
-used at the cloud boundary to talk to the UDP-based IoT.
+A TCP-to-UDP gateway can be used at the cloud boundary to talk to the UDP-based IoT.
 
 To make IoT devices work smoothly in these demanding environments, CoAP
 needs
 to make use of a different transport protocol, namely TCP {{RFC0793}},
 in some situations secured by TLS {{RFC5246}}.
 
-The present document
-describes a shim header that conveys length information about
-each CoAP message.  Modifications to CoAP beyond the replacement
-of the message layer
-(e.g., to introduce further optimizations) are intentionally avoided.
+Conceptually, the CoAP over TCP/TLS specification replaces most of
+CoAP's message layer by a new message adapter on top of TCP or TLS
+that does provides a framing mechanism on top of the byte stream
+provided by TCP/TLS, conveying the length information about each CoAP
+message that on datagram transports is provided by the datagram layer
+below (UDP, DTLS).
 
+The message adapter also adds a way to use signaling messages to
+perform various housekeeping operations on the TCP, see
+[I-D.bormann-core-signaling].
+
+When CoAP is used over TLS then some of the housekeeping features are
+already available with the TLS Handshake protocol; less new
+functionality is then required.
+
+Modifications to CoAP beyond the replacement of the message layer
+(e.g., to introduce further optimizations) are intentionally avoided.
 
 # Terminology
 
@@ -150,28 +162,27 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
 
-# Constrained Application Protocol
+# Message Adapter Protocol
 
 The interaction model of CoAP over TCP is very similar to the one for
 CoAP over UDP, with the key difference that using TCP voids the need to
-provide certain transport layer protocol features, such as reliable
-delivery, fragmentation and reassembly, as well as congestion control,
-at the CoAP level. The protocol stack is illustrated in {{stack}} (derived
-from {{RFC7252}}, Figure 1).
-
+provide certain transport layer protocol features at the CoAP level, 
+such as reliable delivery, fragmentation and reassembly, as well as 
+congestion control. The protocol stack is illustrated in {{stack}} 
+(derived from {{RFC7252}}, Figure 1).
 
 ~~~~
         +----------------------+
         |      Application     |
         +----------------------+
         +----------------------+
-        |  Requests/Responses  |  CoAP (RFC7252)
+        |  Requests/Responses  |  CoAP (RFC 7252)
         |----------------------|
-        |    Message adapter   |  This Document
+        |    Message Adapter   |  This Document
         +----------------------+
-        +-----------+    ^
-        |    TLS    |    |
-        +-----------+    v
+        +-----------+      ^
+        |    TLS    |  or  |
+        +-----------+      v
         +----------------------+
         |          TCP         |
         +----------------------+
@@ -230,15 +241,14 @@ illustrated in {{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
            |<-------------------+
            |                    |
 ~~~~
-{: #fig-untyped2 title=Untyped messages carrying Request/Response.'}
-
+{: #fig-untyped2 title='Untyped messages carrying Request/Response.'}
 
 # Message Format
 
 The CoAP message format defined in {{RFC7252}}, as shown in 
 {{CoAP-Header}}, relies on the datagram transport (UDP, or DTLS over
-UDP) for keeping the individual messages separate.
-
+UDP) for keeping the individual messages separate and for providing 
+length information. 
 
 ~~~~
  0                   1                   2                   3
@@ -395,6 +405,7 @@ The general assumption is therefore that the block protocol will
 continue to be used over TCP, even if TCP-based applications
 occasionally do exchange messages with payload sizes larger than desirable in UDP.
 
+
 # Message Transmission
 
 As CoAP exchanges messages asynchronously over the TCP connection, the
@@ -461,29 +472,21 @@ URI scheme, with the following changes:
   the default port 443 is assumed (this is different from the default
   port for "coaps", i.e., CoAP over DTLS over UDP).
 
-* When CoAP is exchanged over TLS port 443 then the "TLS Application
-  Layer Protocol Negotiation Extension" {{-alpn}} MUST be used to allow demultiplexing
-  at the server-side unless out-of-band information ensures that the
-  client only interacts with a server that is able to demultiplex CoAP
-  messages over port 443. This would, for example, be true for many
-  IoT deployments where clients are pre-configured to
-  only ever talk with specific servers.[^alwaysalpn]
-
-[^alwaysalpn]: Shouldn't we simply always require ALPN?
-    The protocol should not be defined in such a way that it
-    depends on some undefined pre-configuration mechanism.
-{: source="cabo"}
-
+* When CoAP is exchanged over TLS port 443, the "TLS Application
+  Layer Protocol Negotiation Extension" {{-alpn}} MUST be used to allow 
+  demultiplexing at the server-side.
 
 # Security Considerations {#security}
 
-This document defines how to convey CoAP over TCP and TLS. It does not
-introduce new vulnerabilities beyond those described already in the
-CoAP specification. CoAP {{RFC7252}} makes use of DTLS 1.2 and this
+This document defines how to convey CoAP over TCP and TLS. 
+CoAP {{RFC7252}} makes use of DTLS 1.2 and this
 specification consequently uses TLS 1.2 {{RFC5246}}. CoAP MUST NOT be
 used with older versions of TLS. Guidelines for use of cipher suites
 and TLS extensions can be found in {{I-D.ietf-dice-profile}}.
 
+TLS does not protect the TCP header. This may, for example, 
+allow an on-path adversary to terminate a TCP connection prematurely 
+by spoofing a TCP reset message. 
 
 # IANA Considerations {#iana}
 
@@ -578,9 +581,11 @@ Reference:
 
 # Acknowledgements {#acknowledgements}
 
-We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby,
-Michael Koster, Matthias Kovatsch, Szymon Sasin, Andrew Summers, and Zach Shelby for their
-feedback.
+We would like to thank Stephen Berard, Geoffrey Cristallo, 
+Olivier Delaby, Christian Groves, Klaus Hartke, Julien Vermillard, 
+Gengyu Wei, Michael Koster, Matthias Kovatsch, Szymon Sasin, 
+David Navarro, Achim Kraus, Andrew Summers, and Zach Shelby 
+for their feedback.
 
 
 --- back
