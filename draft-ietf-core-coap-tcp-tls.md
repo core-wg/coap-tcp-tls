@@ -105,9 +105,14 @@ informative:
   I-D.bormann-core-cocoa: cocoa
   I-D.ietf-core-block: block
   I-D.bormann-core-block-bert: bert
+  I-D.becker-core-coap-sms-gprs: I-D.becker-core-coap-sms-gprs
+  I-D.dijk-core-sleepy-reqs: I-D.dijk-core-sleepy-reqs
   RFC0768: udp
-  RFC6347: dtls
+  RFC5234: RFC5234
+  RFC6454: RFC6454
   RFC6335: portreg
+  RFC6347: dtls
+  RFC7230: RFC7230
   HomeGateway:
     title: An experimental study of home gateway characteristics
     author:
