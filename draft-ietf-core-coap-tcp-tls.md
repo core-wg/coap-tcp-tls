@@ -19,8 +19,7 @@ area: Applications Area (app)
 wg: CORE
 date: 2016-04-21
 author:
-- role: editor
-  ins: C. Bormann
+- ins: C. Bormann
   name: Carsten Bormann
   org: Universitaet Bremen TZI
   street: Postfach 330440
@@ -56,6 +55,40 @@ author:
   country: Great Britain
   email: Hannes.tschofenig@gmx.net
   uri: http://www.tschofenig.priv.at
+- ins: T. Savolainen
+  name: Teemu Savolainen
+  org: Nokia
+  street: Hermiankatu 12 D
+  city: Tampere
+  code: 'FI-33720'
+  country: Finland
+  email: teemu.savolainen@nokia.com
+- ins: K. Hartke
+  name: Klaus Hartke
+  org: Universitaet Bremen TZI
+  street: Postfach 330440
+  city: Bremen
+  code: 'D-28359'
+  country: Germany
+  phone: "+49-421-218-63905"
+  email: hartke@tzi.org
+- ins: B. Silverajan
+  name: Bilhanan Silverajan
+  org: Tampere University of Technology
+  street: Korkeakoulunkatu 10
+  city: Tampere
+  code: 'FI-33720'
+  country: Finland
+  email: bilhanan.silverajan@tut.fi
+- role: editor
+  ins: B. Raymor
+  name: Brian Raymor
+  org: Microsoft
+  street: One Microsoft Way
+  city: Redmond
+  code: '98052'
+  country: United States of America
+  email: brian.raymor@microsoft.com
 normative:
   RFC5246: tls
   RFC7252: coap
