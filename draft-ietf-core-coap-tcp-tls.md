@@ -90,12 +90,16 @@ author:
   country: United States of America
   email: brian.raymor@microsoft.com
 normative:
-  RFC5246: tls
-  RFC7252: coap
-  RFC2119: bcp14
-  RFC7595: urireg
   RFC0793: tcp
+  RFC2119: bcp14
+  RFC3986: RFC3986
+  RFC5246: tls
+  RFC5785: RFC5785
+  RFC6455: RFC6455
+  RFC7252: coap
   RFC7301: alpn
+  RFC7595: urireg
+  RFC7641: RFC7641
   I-D.ietf-dice-profile:
 informative:
   I-D.bormann-core-cocoa: cocoa
