@@ -13,8 +13,8 @@ pi:
   subcompact: 'no'
   comments: 'yes'
   inline: 'yes'
-title: A TCP and TLS Transport for the Constrained Application Protocol (CoAP)
-abbrev: TCP/TLS Transport for CoAP
+title: CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets
+abbrev: TCP/TLS/WebSockets Transports for CoAP
 area: Applications Area (app)
 wg: CORE
 date: 2016-04-21
@@ -127,84 +127,106 @@ informative:
 
 --- abstract
 
-The Hypertext Transfer Protocol (HTTP) was designed with TCP as the underlying
-transport protocol.  The Constrained Application Protocol (CoAP), while
-inspired by HTTP, has been defined to make use of UDP instead of TCP.  Therefore,
-reliable delivery and a simple congestion control and flow control mechanism
-are provided by the message layer of the CoAP protocol.
+The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP
+instead of TCP.  The message layer of the CoAP over UDP protocol includes services for
+reliable delivery, simple congestion control, and flow control.
 
-A number of environments benefit from the use of CoAP directly over a reliable
-byte stream such as TCP, which already provides these services.  This document
-defines the use of CoAP over TCP as well as CoAP over TLS.
+Some environments would benefit from the availability of CoAP over a reliable
+transport such as TCP or WebSockets, which already provides such services.  This document
+outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports.
 
 --- middle
 
 # Introduction {#introduction}
 
 The [Constrained Application Protocol (CoAP)](#RFC7252) was designed
-for Internet of Things (IoT) deployments, assuming that UDP can be
-used unimpeded --- UDP {{RFC0768}}, or DTLS {{RFC6347}} over UDP; it is a good choice for
-transferring small amounts of data across networks that follow the IP
+for Internet of Things (IoT) deployments, assuming that UDP {{RFC0768}} 
+or DTLS {{RFC6347}} over UDP can be used unimpeded. UDP is a good choice
+for transferring small amounts of data across networks that follow the IP
 architecture.
-Some CoAP deployments, however, may have to integrate well with
-existing enterprise infrastructure, where the use of UDP-based
-protocols may not be well-received or may even be blocked by firewalls.
-Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP
-brittle, resulting in lost or malformed packets.
 
-Where NATs are still present,
-CoAP over TCP can also help with their traversal. NATs often calculate
-expiration timers
-based on the transport layer protocol being used by application protocols.
-Many NATs are built around the assumption that a transport layer protocol,
-such as
-TCP, gives them additional information about the session life cycle
-and keep TCP-based NAT bindings around for a longer period. UDP, on the other
-hand,
-does not provide such information to a NAT and timeouts tend to be
-much shorter, as research confirms {{HomeGateway}}.
+Some CoAP deployments need to integrate well with existing enterprise
+infrastructures, where UDP-based protocols may not be well-received or may
+even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for
+IoT can make the use of UDP brittle, resulting in lost or malformed packets.
+
+To address such environments, this document defines additional bindings for CoAP,
+including TCP, TLS, and WebSockets.
+
+~~~~
++-----------------------------------------------------------+
+|                                                           |
+|                        Application                        |
+|                                                           |
++-----------------------------------------------------------+
+|                                                           |
+|                           CoAP                            |
+|                  Requests and Responses                   |
+|                                                           |
++ - - - - - - - - - +-------------------+-------------------+
+|                   |                   |                   |
+|       CoAP        |     CoAP over     |     CoAP over     |
+|     Messaging     |    TCP and TLS    |    WebSockets     |
+|                   |                   |                   |
++---------+---------+---------+---------+-------------------+
+|         |         |         |         |                   |
+|   UDP   |  DTLS   |   TCP   |   TLS   |    WebSockets     |
+|         |         |         |         |                   |
++---------+---------+---------+---------+-------------------+
+~~~~
+
+Where NATs are present, CoAP over TCP can help with their traversal.
+NATs often calculate expiration timers based on the transport layer protocol
+being used by application protocols. Many NATs maintain TCP-based NAT bindings
+for longer periods based on the assumption that a transport layer protocol, such
+as TCP, offers additional information about the session life cycle. UDP, on the other
+hand, does not provide such information to a NAT and timeouts tend to be much 
+shorter, as confirmed by research {{HomeGateway}}.
 
 Some environments may also benefit from the ability of TCP to exchange
 larger payloads (such as firmware images) without application layer
-segmentation and to utilize the more
-sophisticated congestion control capabilities provided by many TCP implementations.
+segmentation and to utilize the more sophisticated congestion control
+capabilities provided by many TCP implementations.
+
 (Note that there is ongoing work to add more elaborate congestion control
 to CoAP as well, see {{-cocoa}}.)
 
-Finally, CoAP may be integrated into a Web environment where the front-end
-uses CoAP from IoT devices to a cloud infrastructure but the CoAP messages
-are then transported in TCP between the back-end services.
-A TCP-to-UDP gateway can be used at the cloud boundary to talk to the UDP-based IoT.
+CoAP may be integrated into a Web environment where the front-end
+uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
+over TCP between the back-end services. A TCP-to-UDP gateway can be used at
+the cloud boundary to communicate with the UDP-based IoT device.
 
 To make IoT devices work smoothly in these demanding environments, CoAP
-needs
-to make use of a different transport protocol, namely TCP {{RFC0793}},
+needs to make use of a different transport protocol, namely TCP {{RFC0793}},
 in some situations secured by TLS {{RFC5246}}.
 
-Conceptually, the CoAP over TCP/TLS specification replaces most of
-CoAP's message layer by a new message adapter on top of TCP or TLS
-that provides a framing mechanism on top of the byte stream
-provided by TCP/TLS, conveying the length information about each CoAP
-message that on datagram transports is provided by the datagram layer
-below (UDP, DTLS).
+Some corporate networks only allow Internet access via a HTTP proxy.
+In this case, the best transport for CoAP would be the [WebSocket Protocol](#RFC6455).
+The WebSocket protocol provides two-way communication between a client
+and a server after upgrading an [HTTP/1.1](#RFC7230) connection and may
+be available in an environment that blocks CoAP over UDP. Another scenario
+for CoAP over WebSockets is a CoAP application running inside a web browser
+without access to connectivity other than HTTP and WebSockets.
 
-The message adapter also adds a way to use signaling messages to
-perform various housekeeping operations on the TCP, see
-[I-D.bormann-core-signaling].
+This document specifies how to access resources using CoAP requests
+and responses over the WebSocket Protocol. This allows
+connectivity-limited applications to obtain end-to-end CoAP
+connectivity either by communicating CoAP directly with a CoAP server
+accessible over a WebSocket Connection or via a CoAP intermediary
+that proxies CoAP requests and responses between different transports,
+such as between WebSockets and UDP.
 
-When CoAP is used over TLS then some of the housekeeping features are
-already available with the TLS Handshake protocol; less new
-functionality is then required.
+{: #layering title='Abstract layering of CoAP extended by TCP, TLS, and WebSockets' artwork-align="center"}
 
-Modifications to CoAP beyond the replacement of the message layer
-(e.g., to introduce further optimizations) are intentionally avoided.
 
-# Terminology
+## Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
+This document assumes that readers are familiar with the terms and
+concepts that are used in {{RFC6455}} and {{RFC7252}}.
 
 # CoAP over TCP
 
@@ -284,6 +306,28 @@ A response is sent back as defined in {{RFC7252}}, as illustrated in
            |                    |
 ~~~~
 {: #fig-untyped2 title='Untyped messages carrying Request/Response.'}
+
+EDITOR: These are "leftover" paragraphs from the original Overview
+section. Keeping until I perform a complete editorial pass of the
+"roughed in" material.
+
+Conceptually, the CoAP over TCP/TLS specification replaces most of
+CoAP's message layer by a new message adapter on top of TCP or TLS
+that provides a framing mechanism on top of the byte stream
+provided by TCP/TLS, conveying the length information about each CoAP
+message that on datagram transports is provided by the datagram layer
+below (UDP, DTLS).
+
+The message adapter also adds a way to use signaling messages to
+perform various housekeeping operations on the TCP, see
+[I-D.bormann-core-signaling].
+
+When CoAP is used over TLS then some of the housekeeping features are
+already available with the TLS Handshake protocol; less new
+functionality is then required.
+
+Modifications to CoAP beyond the replacement of the message layer
+(e.g., to introduce further optimizations) are intentionally avoided.
 
 ## Message Format {#tcp-message-format}
 
@@ -1031,12 +1075,6 @@ and Gengyu Wei for their feedback.
 
 --- back
 
-# Change Log
-
-The RFC Editor is requested to remove this section at publication.
-
-## Since draft-core-coap-tcp-tls-02
-
 # CoAP over WebSocket Examples {#examples}
 
 This section gives examples for the first two configurations
@@ -1164,6 +1202,13 @@ the WebSocket connection to the client.
 ~~~~
 {: #example-2 title='A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSockets-enabled CoAP proxy'}
 
+# Change Log
+
+The RFC Editor is requested to remove this section at publication.
+
+## Since draft-core-coap-tcp-tls-02
+
+Merged draft-savolainen-core-coap-websockets-07
 <!--  LocalWords:  TCP CoAP UDP firewalling firewalled TLS IP SCTP
  -->
 <!--  LocalWords:  DCCP IoT optimizations ACKs acknowledgement TKL
