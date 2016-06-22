@@ -93,6 +93,7 @@ normative:
   RFC0793: tcp
   RFC2119: bcp14
   RFC3986: RFC3986
+  RFC4395: RFC4395
   RFC5246: tls
   RFC5785: RFC5785
   RFC6455: RFC6455
@@ -588,7 +589,7 @@ Port Number.
 {: vspace='0'}
 
 
-## URI Schemes
+## URI Scheme Registration
 
 This document registers two new URI schemes, namely "coap+tcp" and
 "coaps+tcp", for the use of CoAP over TCP and for CoAP over TLS over
@@ -603,6 +604,111 @@ exception that TCP, or TLS over TCP is used as a transport protocol.
 IANA is requested to add these new URI schemes to the registry
 established with {{-urireg}}.
 
+### coap+ws
+
+This document requests the registration of the Uniform Resource
+Identifier (URI) scheme "coap+ws". The registration request complies
+with {{RFC4395}}.
+
+URL scheme name.
+:	coap+ws
+
+Status.
+:	Permanent
+
+URI scheme syntax.
+:	Defined in Section N of [RFCthis]
+
+URI scheme semantics.
+:	The "coap+ws" URI scheme provides a way to identify resources that
+	are potentially accessible over the Constrained Application Protocol (CoAP)
+	using the WebSocket Protocol.
+
+Encoding considerations.
+:	The scheme encoding conforms to the encoding rules established for URIs
+	in {{RFC3986}}, i.e., internationalized and reserved characters are expressed
+	using UTF-8-based percent-encoding.
+
+Applications/protocols that use this URI scheme name.
+:	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.
+
+Interoperability considerations.
+:	None.
+
+Security Considerations.
+:	See Section N of [RFCthis]
+
+Contact.
+:	IETF chair \<chair@ietf.org>
+
+Author/Change controller.
+:	IESG \<iesg@ietf.org>
+
+References.
+:	[RFCthis]
+{: vspace='0'}
+
+### coap+wss
+This document requests the registration of the Uniform Resource
+Identifier (URI) scheme "coap+wss". The registration request complies
+with {{RFC4395}}.
+
+URL scheme name.
+:	coap+wss
+
+Status.
+:	Permanent
+
+URI scheme syntax.
+:	Defined in Section N of [RFCthis]
+
+URI scheme semantics.
+:	The "coap+ws" URI scheme provides a way to identify resources that
+	are potentially accessible over the Constrained Application Protocol (CoAP)
+	using the WebSocket Protocol secured with Transport Layer Security (TLS).
+
+Encoding considerations.
+:	The scheme encoding conforms to the encoding rules established for URIs
+	in {{RFC3986}}, i.e., internationalized and reserved characters are expressed
+	using UTF-8-based percent-encoding.
+
+Applications/protocols that use this URI scheme name.
+:	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol
+	secured with TLS.
+
+Interoperability considerations.
+:	None.
+
+Security Considerations.
+:	See Section N of [RFCthis]
+
+Contact.
+:	IETF chair \<chair@ietf.org>
+
+Author/Change controller.
+:	IESG \<iesg@ietf.org>
+
+References.
+:	[RFCthis]
+{: vspace='0'}
+
+## Well-Known URI Suffix Registration
+
+IANA is requested to register the 'coap' well-known URI in the "Well-Known URIs" registry. This
+registration request complies with {{RFC5785}}:
+
+URI Suffix.
+:	coap
+
+Change controller.
+:	IETF
+
+Specification document(s).
+:	[RFCthis]
+
+Related information.
+:	None.
+{: vspace='0'}
 
 ## ALPN Protocol ID {#alpnpid}
 
@@ -610,16 +716,29 @@ IANA is requested to assign the following value in the registry
 "Application Layer Protocol Negotiation (ALPN) Protocol IDs" created
 by {{-alpn}}:
 
-Protocol:
+Protocol.
 :   CoAP
 
-Identification Sequence:
+Identification Sequence.
 :   0x63 0x6f 0x61 0x70 ("coap")
 
-Reference:
+Reference.
 :   [RFCthis]
 {: vspace='0'}
 
+## WebSocket Subprotocol Registration
+
+IANA is requested to register the WebSocket CoAP subprotocol under the "WebSocket Subprotocol Name Registry":
+
+Subprotocol Identifier.
+:	coap
+
+Subprotocol Common Name.
+:	Constrained Application Protocol (CoAP)
+
+Subprotocol Definition.
+:	[RFCthis]
+{: vspace='0'}
 
 # Acknowledgements {#acknowledgements}
 
