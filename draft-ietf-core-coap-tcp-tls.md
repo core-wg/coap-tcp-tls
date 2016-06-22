@@ -99,6 +99,7 @@ normative:
   RFC6455: RFC6455
   RFC7252: coap
   RFC7301: alpn
+  RFC7525: RFC7525
   RFC7595: urireg
   RFC7641: RFC7641
   I-D.ietf-dice-profile:
@@ -524,15 +525,18 @@ URI scheme, with the following changes:
 
 # Security Considerations {#security}
 
-This document defines how to convey CoAP over TCP and TLS. 
-CoAP {{RFC7252}} makes use of DTLS 1.2 and this
-specification consequently uses TLS 1.2 {{RFC5246}}. CoAP MUST NOT be
-used with older versions of TLS. Guidelines for use of cipher suites
-and TLS extensions can be found in {{I-D.ietf-dice-profile}}.
+Implementations of CoAP MUST use TLS version 1.2 or higher for CoAP over TLS.
+The general TLS usage guidance in {{RFC7525}} SHOULD be followed.
+
+Guidelines for use of cipher suites and TLS extensions can be found in {{I-D.ietf-dice-profile}}.
 
 TLS does not protect the TCP header. This may, for example, 
 allow an on-path adversary to terminate a TCP connection prematurely 
-by spoofing a TCP reset message. 
+by spoofing a TCP reset message.
+
+CoAP over WebSockets and CoAP over TLS-secured WebSockets do not
+introduce additional security issues beyond CoAP and DTLS-secured CoAP
+respectively {{RFC7252}}. The security considerations of {{RFC6455}} apply.
 
 # IANA Considerations {#iana}
 
