@@ -183,7 +183,7 @@ in some situations secured by TLS {{RFC5246}}.
 
 Conceptually, the CoAP over TCP/TLS specification replaces most of
 CoAP's message layer by a new message adapter on top of TCP or TLS
-that does provides a framing mechanism on top of the byte stream
+that provides a framing mechanism on top of the byte stream
 provided by TCP/TLS, conveying the length information about each CoAP
 message that on datagram transports is provided by the datagram layer
 below (UDP, DTLS).
@@ -206,7 +206,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
 
-# Message Adapter Protocol
+# CoAP over TCP Message Adapter Protocol
 
 The interaction model of CoAP over TCP is very similar to the one for
 CoAP over UDP, with the key difference that using TCP voids the need to
@@ -287,7 +287,7 @@ illustrated in {{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
 ~~~~
 {: #fig-untyped2 title='Untyped messages carrying Request/Response.'}
 
-# Message Format
+# CoAP over TCP Message Format
 
 The CoAP message format defined in {{RFC7252}}, as shown in 
 {{CoAP-Header}}, relies on the datagram transport (UDP, or DTLS over
@@ -421,39 +421,11 @@ token 7f and no options or payload would be encoded as shown in {{fig-shim2}}.
 
 The semantics of the other CoAP header fields are left unchanged.
 
-## Discussion
 
-One observation is that, over a reliable byte stream transport, the message
-size limitations defined in
-Section 4.6 of {{RFC7252}} are no longer strictly necessary.
-Consenting [^how] implementations may want to interchange messages
-with payload sizes larger than 1024 bytes, potentially also obviating the
-need for the Block protocol {{-block}}.  It must be noted that
-entirely getting rid of the block protocol is
-not a generally applicable solution, as:
-
-* a UDP-to-TCP gateway may simply not have the context to convert a
-  message with a Block option into the equivalent exchange without any
-  use of a Block option;
-* large messages might also cause undesired head-of-line blocking;
-* the 2-byte message length field causes another, larger upper bound to the
-  message length.
-
-{{-bert}} proposes to extend the block-wise transfer protocol to allow
-for larger block sizes as are possible over TCP and TLS.
-
-[^how]: There is currently no defined way to arrive at this consent.
-{: source="cabo"}
-
-The general assumption is therefore that the block protocol will
-continue to be used over TCP, even if TCP-based applications
-occasionally do exchange messages with payload sizes larger than desirable in UDP.
-
-## CoAP over WebSockets {#overview}
-
-EDITOR: rough in remaining overview and resolve references
 
 # Message Transmission
+
+EDITOR: This is extremely similar to the WebSocket section of the same name.
 
 As CoAP exchanges messages asynchronously over the TCP connection, the
 client can send multiple requests without waiting for responses.  For
@@ -468,19 +440,23 @@ both the connecting host and the endpoint that accepted the connection.
 In other words, the question who initiated the TCP connection has no bearing on the
 meaning of the CoAP terms client and server.
 
+# CoAP over WebSockets {#overview}
 
-# CoAP URI {#URI}
+EDITOR: rough in remaining overview and resolve references
 
-CoAP {{RFC7252}} defines the "coap" and "coaps" URI schemes for
-identifying CoAP resources and providing a means of locating the
-resource. RFC 7252 defines these resources for use with CoAP over UDP.
 
-The present specification introduces two new URI schemes, namely "coap+tcp"
-and "coaps+tcp".  The rules from Section 6 of {{RFC7252}} apply to
-these two new URI schemes.
 
-{{RFC7252}}, Section 8 (Multicast CoAP), does not apply to the URI
-schemes defined in the present specification.
+# CoAP URIs {#URI}
+
+CoAP over UDP {{RFC7252}} defines the "coap" and "coaps" URI schemes for
+identifying CoAP resources and providing a means of locating the resource. 
+
+## CoAP over TCP and TLS URIs
+
+CoAP over TCP uses "coap_tcp" URI scheme. CoAP over TLS uses the "coaps+tcp"
+scheme. The rules from Section 6 of {{RFC7252}} apply to both of these URI schemes.
+
+{{RFC7252}}, Section 8 (Multicast CoAP) is not applicable to these schemes.
 
 Resources made available via one of the "coap+tcp" or "coaps+tcp" schemes
 have no shared identity with the other scheme or with the "coap" or
@@ -490,7 +466,7 @@ The schemes constitute distinct namespaces and, in combination with
 the authority, are considered to be distinct
 origin servers.
 
-## coap+tcp URI scheme
+### coap+tcp URI scheme
 
 ~~~~
 coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ] path-abempty
@@ -504,7 +480,7 @@ URI scheme, with the following changes:
 at which the CoAP server is located.  (If it is empty or not given,
 then the default port 5683 is assumed, as with UDP.)
 
-## coaps+tcp URI scheme {#coapstcp-uri-scheme}
+### coaps+tcp URI scheme {#coapstcp-uri-scheme}
 
 ~~~~
 coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
@@ -522,6 +498,69 @@ URI scheme, with the following changes:
 * When CoAP is exchanged over TLS port 443, the "TLS Application
   Layer Protocol Negotiation Extension" {{-alpn}} MUST be used to allow 
   demultiplexing at the server-side.
+
+## CoAP over WebSockets URIs {#uris}
+
+For the first configuration discussed in {{overview}},
+this document defines two new URIs schemes that can be used for
+identifying CoAP resources and providing a means of locating these
+resources: "coap+ws" and "coap+wss".
+
+Similar to the "coap" and "coaps" schemes, the "coap+ws" and
+"coap+wss" schemes organize resources hierarchically under a CoAP
+origin server. The key difference is that the server is potentially
+reachable on a WebSocket endpoint instead of a UDP endpoint.
+
+The WebSocket endpoint is identified by a "ws" or "wss" URI
+that is composed of the authority part of the "coap+ws" or
+"coap+wss" URI, respectively, and the well-known path
+"/.well-known/coap" {{RFC5785}}.
+The path and query parts of a "coap+ws" or "coap+wss" URI
+identify a resource within the specified endpoint which can be
+operated on by the methods defined by the CoAP protocol.
+
+The syntax of the "coap+ws" and "coap+wss" URI schemes is specified
+below in Augmented Backus-Naur Form (ABNF) {{RFC5234}}.
+The definitions of "host", "port", "path-abempty" and "query" are the
+same as in {{RFC3986}}.
+
+
+~~~~
+coap-ws-URI =
+   "coap+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+
+coap-wss-URI =
+   "coap+wss:" "//" host [ ":" port ] path-abempty [ "?" query ]
+~~~~
+{: artwork-align="center"}
+
+The port component is OPTIONAL; the default for "coap+ws" is port
+80, while the default for "coap+wss" is port 443.
+
+Fragment identifiers are not part of the request URI and thus MUST
+NOT be transmitted in a WebSocket handshake or in the URI options
+of a CoAP request.
+
+### Decomposing and Composing URIs
+
+The steps for decomposing a "coap+ws" or "coap+wss" URI into
+CoAP options are the same as specified in Section 6.4 of {{RFC7252}}
+with the following changes:
+
+* The \<scheme> component MUST be "coap+ws" or "coap+wss"
+  when converted to ASCII lowercase.
+
+* A Uri-Host Option MUST only be included in a request when
+  the \<host> component does not equal the uri-host
+  component in the Host header field in the WebSocket
+  handshake.
+
+* A Uri-Port Option MUST only be included in a request if
+  \|port\| does not equal the port component in the Host header
+  field in the WebSocket handshake.
+
+The steps to construct a URI from a request's options are
+changed accordingly.
 
 # Security Considerations {#security}
 
