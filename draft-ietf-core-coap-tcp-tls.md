@@ -448,6 +448,9 @@ The general assumption is therefore that the block protocol will
 continue to be used over TCP, even if TCP-based applications
 occasionally do exchange messages with payload sizes larger than desirable in UDP.
 
+## CoAP over WebSockets {#overview}
+
+EDITOR: rough in remaining overview and resolve references
 
 # Message Transmission
 
@@ -750,6 +753,139 @@ and Gengyu Wei for their feedback.
 
 
 --- back
+
+# Change Log
+
+The RFC Editor is requested to remove this section at publication.
+
+## Since draft-core-coap-tcp-tls-02
+
+# Examples {#examples}
+
+This section gives examples for the first two configurations
+discussed in {{overview}}.
+
+An example of the process followed by a CoAP client to retrieve the
+representation of a resource identified by a "coap+ws" URI might be as
+follows. {{example-1}} below illustrates the WebSocket and
+CoAP messages exchanged in detail.
+
+1. The CoAP client obtains the URI
+  \<coap+ws://example.org/sensors/temperature?u=Cel>,
+  for example, from a resource representation that it retrieved
+  previously.
+
+1. It establishes a WebSocket Connection to the endpoint URI composed
+  of the authority "example.org" and the well-known path
+  "/.well-known/coap", \<ws://example.org/.well-known/coap>.
+
+1. It sends a single-frame, masked, binary message containing a CoAP
+  request. The request indicates the target resource with the
+  Uri-Path ("sensors", "temperature") and Uri-Query ("u=Cel")
+  options.
+
+1. It waits for the server to return a response.
+
+1. The CoAP client uses the connection for further requests, or the
+  connection is closed.
+
+
+
+~~~~
+   CoAP        CoAP
+  Client      Server
+(WebSocket  (WebSocket
+  Client)     Server)
+
+     |          |
+     |          |
+     +=========>|  GET /.well-known/coap HTTP/1.1
+     |          |  Host: example.org
+     |          |  Upgrade: websocket
+     |          |  Connection: Upgrade
+     |          |  Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+     |          |  Sec-WebSocket-Protocol: coap
+     |          |  Sec-WebSocket-Version: 13
+     |          |
+     |<=========+  HTTP/1.1 101 Switching Protocols
+     |          |  Upgrade: websocket
+     |          |  Connection: Upgrade
+     |          |  Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+     |          |  Sec-WebSocket-Protocol: coap
+     |          |
+     |          |
+     +--------->|  Binary frame (opcode=%x2, FIN=1, MASK=1)
+     |          |    +-------------------------+
+     |          |    | GET                     |
+     |          |    | Token: 0x53             |
+     |          |    | Uri-Path: "sensors"     |
+     |          |    | Uri-Path: "temperature" |
+     |          |    | Uri-Query: "u=Cel"      |
+     |          |    +-------------------------+
+     |          |
+     |<---------+  Binary frame (opcode=%x2, FIN=1, MASK=0)
+     |          |    +-------------------------+
+     |          |    | 2.05 Content            |
+     |          |    | Token: 0x53             |
+     |          |    | Payload: "22.3 Cel"     |
+     |          |    +-------------------------+
+     :          :
+     :          :
+     |          |
+     +--------->|  Close frame (opcode=%x8, FIN=1, MASK=1)
+     |          |
+     |<---------+  Close frame (opcode=%x8, FIN=1, MASK=0)
+     |          |
+~~~~
+{: #example-1 title='A CoAP client retrieves the representation of a resource identified by a "coap+ws" URI'}
+
+{{example-2}} shows how a CoAP client uses a CoAP
+forward proxy with a WebSocket endpoint to retrieve the representation
+of the resource "coap://[2001:DB8::1]/". The use of the forward
+proxy and the address of the WebSocket endpoint are determined by the
+client from local configuration rules. The request URI is specified
+in the Proxy-Uri Option. Since the request URI uses the "coap" URI
+scheme, the proxy fulfills the request by issuing a Confirmable GET
+request over UDP to the CoAP server and returning the response over
+the WebSocket connection to the client.
+
+
+~~~~
+   CoAP        CoAP       CoAP
+  Client      Proxy      Server
+(WebSocket  (WebSocket    (UDP
+  Client)     Server)   Endpoint)
+
+     |          |          |
+     +--------->|          |  Binary frame (opcode=%x2, FIN=1, MASK=1)
+     |          |          |    +------------------------------------+
+     |          |          |    | GET                                |
+     |          |          |    | Token: 0x7d                        |
+     |          |          |    | Proxy-Uri: "coap://[2001:DB8::1]/" |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |          +--------->|  CoAP message (Ver=1, T=Con, MID=0x8f54)
+     |          |          |    +------------------------------------+
+     |          |          |    | GET                                |
+     |          |          |    | Token: 0x0a15                      |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |          |<---------+  CoAP message (Ver=1, T=Ack, MID=0x8f54)
+     |          |          |    +------------------------------------+
+     |          |          |    | 2.05 Content                       |
+     |          |          |    | Token: 0x0a15                      |
+     |          |          |    | Payload: "ready"                   |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |<---------+          |  Binary frame (opcode=%x2, FIN=1, MASK=0)
+     |          |          |    +------------------------------------+
+     |          |          |    | 2.05 Content                       |
+     |          |          |    | Token: 0x7d                        |
+     |          |          |    | Payload: "ready"                   |
+     |          |          |    +------------------------------------+
+     |          |          |
+~~~~
+{: #example-2 title='A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSockets-enabled CoAP proxy'}
 
 <!--  LocalWords:  TCP CoAP UDP firewalling firewalled TLS IP SCTP
  -->
