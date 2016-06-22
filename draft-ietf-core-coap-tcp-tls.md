@@ -743,10 +743,10 @@ Subprotocol Definition.
 # Acknowledgements {#acknowledgements}
 
 We would like to thank Stephen Berard, Geoffrey Cristallo, 
-Olivier Delaby, Christian Groves, Klaus Hartke, Julien Vermillard, 
-Gengyu Wei, Michael Koster, Matthias Kovatsch, Szymon Sasin, 
-David Navarro, Achim Kraus, Andrew Summers, and Zach Shelby 
-for their feedback.
+Olivier Delaby, Christian Groves, Klaus Hartke, Nadir Javed,
+Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
+Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, 
+and Gengyu Wei for their feedback.
 
 
 --- back
