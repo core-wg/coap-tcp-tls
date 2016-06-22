@@ -206,7 +206,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
 
-# CoAP over TCP Message Adapter Protocol
+# CoAP over TCP
 
 The interaction model of CoAP over TCP is very similar to the one for
 CoAP over UDP, with the key difference that using TCP voids the need to
@@ -265,10 +265,8 @@ dashes in {{fig-untyped1}}).
 ~~~~
 {: #fig-untyped1 title='Untyped Message Transmission over TCP.'}
 
-A
-response is sent back as defined
-in {{RFC7252}}, as
-illustrated in {{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
+A response is sent back as defined in {{RFC7252}}, as illustrated in
+{{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
 
 ~~~~
         Client                Server
@@ -287,7 +285,7 @@ illustrated in {{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
 ~~~~
 {: #fig-untyped2 title='Untyped messages carrying Request/Response.'}
 
-# CoAP over TCP Message Format
+## Message Format {#tcp-message-format}
 
 The CoAP message format defined in {{RFC7252}}, as shown in 
 {{CoAP-Header}}, relies on the datagram transport (UDP, or DTLS over
@@ -423,7 +421,7 @@ The semantics of the other CoAP header fields are left unchanged.
 
 
 
-# Message Transmission
+## Message Transmission
 
 EDITOR: This is extremely similar to the WebSocket section of the same name.
 
@@ -442,9 +440,245 @@ meaning of the CoAP terms client and server.
 
 # CoAP over WebSockets {#overview}
 
-EDITOR: rough in remaining overview and resolve references
+CoAP over WebSockets can be used in a number of configurations. The
+most basic configuration is a CoAP client seeking to retrieve or
+update a CoAP resource located at a CoAP server that exposes a
+WebSocket endpoint ({{arch-1}}). The CoAP client takes
+the role of the WebSocket client, establishes a WebSocket Connection
+and sends a CoAP request, to which the CoAP server returns a CoAP
+response. The WebSocket Connection can be used for any number of
+requests.
+
+~~~~
+ ___________                            ___________
+|           |                          |           |
+|          _|___      requests      ___|_          |
+|   CoAP  /  \  \  ------------->  /  /  \  CoAP   |
+|  Client \__/__/  <-------------  \__\__/ Server  |
+|           |         responses        |           |
+|___________|                          |___________|
+        WebSocket  =============>  WebSocket
+          Client     Connection     Server
+~~~~
+{: #arch-1 title='CoAP Client (WebSocket client) accesses CoAP Server (WebSocket server)' artwork-align="center" }
+
+The challenge in this configuration is to identify resource in the
+namespace of the CoAP server:
+When the WebSocket Protocol is used by a dedicated client directly
+(i.e., not from a web page through a web browser), the client can
+connect to any WebSocket endpoint. This means it is necessary that
+the client is able to determine both the WebSocket endpoint (identified
+by a "ws" or "wss" URI) and the path and query of the CoAP resource within
+that endpoint from the same URI. When the WebSocket Protocol is used
+from a web page, the choices are more limited {{RFC6454}}, but the challenge persists.
+
+{{uris}} proposes a new "coap+ws" URI scheme that
+identifies both a WebSocket endpoint and a resource within that
+endpoint as follows:
+
+~~~~
+      coap+ws://example.org/sensors/temperature?u=Cel
+           \______  ______/\___________  ___________/
+                  \/                   \/
+                                     Uri-Path: "sensors"
+ws://example.org/.well-known/coap    Uri-Path: "temperature"
+                                     Uri-Query: "u=Cel"
+~~~~
+{: #uri-example title='The "coap+ws" URI Scheme' artwork-align="center" }
+
+Another possible configuration is to set up a CoAP forward proxy
+at the WebSocket endpoint. Depending on what transports are available
+to the proxy, it could forward the request to a CoAP server with a
+CoAP UDP endpoint ({{arch-2}}), an SMS endpoint
+(a.k.a.&nbsp;mobile phone), or even another WebSocket endpoint. The
+client specifies the resource to be updated or retrieved in the
+Proxy-URI Option.
 
 
+~~~~
+ ___________                ___________                ___________
+|           |              |           |              |           |
+|          _|___        ___|_         _|___        ___|_          |
+|   CoAP  /  \  \ ---> /  /  \ CoAP  /  \  \ ---> /  /  \  CoAP   |
+|  Client \__/__/ <--- \__\__/ Proxy \__/__/ <--- \__\__/ Server  |
+|           |              |           |              |           |
+|___________|              |___________|              |___________|
+        WebSocket ===> WebSocket      UDP            UDP
+          Client        Server      Client          Server
+~~~~
+{: #arch-2 title='CoAP Client (WebSocket client) accesses CoAP Server (UDP server) via a CoAP proxy (WebSocket server/UDP client)' artwork-align="center"}
+
+A third possible configuration
+is a CoAP server running inside a web browser
+({{arch-3}}). The web browser initially connects to a
+WebSocket endpoint and is then reachable through the WebSocket
+server. When no connection exists, the CoAP server is not reachable;
+it therefore can be considered a
+[Sleepy Endpoint (SEP)](#I-D.dijk-core-sleepy-reqs).
+Because the WebSocket server is the only way to reach the CoAP
+server, the CoAP proxy should be a Reverse Proxy.
+
+
+~~~~
+ ___________                ___________                ___________
+|           |              |           |              |           |
+|          _|___        ___|_         _|___        ___|_          |
+|   CoAP  /  \  \ ---> /  /  \ CoAP  /  /  \ ---> /  \  \  CoAP   |
+|  Client \__/__/ <--- \__\__/ Proxy \__\__/ <--- \__/__/ Server  |
+|           |              |           |              |           |
+|___________|              |___________|              |___________|
+           UDP            UDP      WebSocket <=== WebSocket
+         Client          Server      Server        Client
+~~~~
+{: #arch-3 title='CoAP Client (UDP client) accesses sleepy CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)' artwork-align="center"}
+
+Further configurations are possible, including those where a
+WebSocket Connection is established through an HTTP proxy.
+
+CoAP over WebSockets is intentionally very similar to CoAP as defined
+over UDP. Therefore, instead of presenting CoAP over WebSockets as a
+new protocol, this document specifies it as a series of deltas from
+{{RFC7252}}.
+
+## Opening Handshake {#handshake}
+
+Before CoAP requests and responses can be exchanged, a WebSocket
+Connection needs to be established as defined in Section 4 of
+{{RFC6455}}. {{handshake-example}} shows an example.
+
+The WebSocket client MUST include the subprotocol name "coap" in
+the list of protocols, which indicates support for the protocol
+defined in this document. Any later, incompatible versions of
+CoAP or CoAP over WebSockets will use a different subprotocol
+name.
+
+The WebSocket client includes the hostname of the WebSocket server
+in the Host header field of its handshake as per {{RFC6455}}. The Host
+header field also indicates the default
+value of the Uri-Host Option in requests from the WebSocket client
+to the WebSocket server.
+
+
+~~~~
+GET /.well-known/coap HTTP/1.1
+Host: example.org
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+Sec-WebSocket-Protocol: coap
+Sec-WebSocket-Version: 13
+
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+Sec-WebSocket-Protocol: coap
+~~~~
+{: #handshake-example title='Example of an Opening Handshake' artwork-align="center"}
+
+
+## Message Format {#websocket-message-format}
+
+Once a WebSocket Connection has been established, CoAP requests and
+responses can be exchanged as WebSocket messages. Since CoAP uses a
+binary message format, the messages are transmitted in binary data
+frames as specified in Sections 5 and 6 of {{RFC6455}}.
+
+The message format is very similar to the format specified for
+[CoAP over UDP](#RFC7252). The differences
+are as follows:
+
+* Since the underlying TCP connection provides retransmissions and
+  deduplication, there is no need for the reliability mechanisms
+  provided by CoAP over UDP. This means the "T" and "Message ID" fields in
+  the CoAP message header can be elided.
+
+* Furthermore, since the CoAP version is already negotiated during
+  the opening handshake, the "Ver" field can be elided as well.
+
+
+
+~~~~
+  0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   R   |  TKL  |      Code     |    Token (TKL bytes) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Options (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|1 1 1 1 1 1 1 1|    Payload (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+{: #ws-message-format title='CoAP Message Format over WebSockets' artwork-align="center"}
+
+The resulting message format is shown in {{ws-message-format}}. The
+four most-significant bits
+of the first byte are reserved (R) and MUST be set to zero. The
+remaining fields and structure are the same as defined in {{RFC7252}}.
+
+Requests and response messages can be fragmented as specified in
+Section 5.4 of {{RFC6455}}, though typically they are
+sent unfragmented as they tend to be small and fully buffered before
+transmission. The WebSocket protocol does not provide
+means for multiplexing; if it is not desirable for a large message to
+monopolize the connection, requests and responses can be transferred in a
+blockwise fashion as defined in {{I-D.ietf-core-block}}.
+
+Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry
+either a request or a response.
+
+
+## Message Transmission {#requests-responses}
+
+CoAP requests and responses are exchanged asynchronously over the
+WebSocket Connection, i.e., a CoAP client can send multiple requests
+without waiting for a response and the CoAP server can return
+responses in any order. Responses MUST be returned over the same
+connection as the originating request. Concurrent requests are
+differentiated by their Token, which is scoped locally to the
+connection.
+
+The connection is bi-directional, so requests can be sent both by
+the entity that established the connection and the remote host.
+
+Retransmission and deduplication of messages is provided by the
+WebSocket Protocol. CoAP over WebSockets therefore does not make a
+distinction between Confirmable or Non-Confirmable messages, and does
+not provide Acknowledgement or Reset messages.
+
+Since the WebSocket Protocol provides ordered delivery of messages,
+the mechanism for reordering detection when
+[observing resources](#RFC7641) is not needed. The value of the
+Observe Option in notifications therefore MAY be empty on transmission
+and MUST be ignored on reception.
+
+
+## Connection Health {#liveliness}
+
+When a client does not receive any response for some time after
+sending a CoAP request (or, similarly, when a client observes a
+resource and it does not receive any notification for some time),
+the connection between the WebSocket client and the WebSocket
+server may be lost or temporarily disrupted without the client
+being aware of it.
+
+To check the health of the WebSocket Connection (and thereby of all
+active requests, if any), the client can send a Ping frame or an
+unsolicited Pong frame as specified in Section 5.5 of
+{{RFC6455}}. There is no way to retransmit a request without
+creating a new one. Re-registering interest in a resource is
+permitted, but entirely unnecessary.
+
+## Closing the Connection {#close}
+
+The WebSocket Connection is closed as specified in Section 7 of {{RFC6455}}.
+
+All requests for which the CoAP client has not received
+a response yet are cancelled when the connection is closed.
+If the client observes one or more resources over the WebSocket
+Connection, then the CoAP server (or intermediary in the role of
+the CoAP server) MUST remove all entries associated with the client
+from the lists of observers when the connection is closed.
 
 # CoAP URIs {#URI}
 
@@ -803,7 +1037,7 @@ The RFC Editor is requested to remove this section at publication.
 
 ## Since draft-core-coap-tcp-tls-02
 
-# Examples {#examples}
+# CoAP over WebSocket Examples {#examples}
 
 This section gives examples for the first two configurations
 discussed in {{overview}}.
