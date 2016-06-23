@@ -174,6 +174,7 @@ including TCP, TLS, and WebSockets.
 |         |         |         |         |                   |
 +---------+---------+---------+---------+-------------------+
 ~~~~
+{: #layering title='Abstract layering of CoAP extended by TCP, TLS, and WebSockets' artwork-align="center"}
 
 Where NATs are present, CoAP over TCP can help with their traversal.
 NATs often calculate expiration timers based on the transport layer protocol
@@ -215,8 +216,6 @@ connectivity either by communicating CoAP directly with a CoAP server
 accessible over a WebSocket Connection or via a CoAP intermediary
 that proxies CoAP requests and responses between different transports,
 such as between WebSockets and UDP.
-
-{: #layering title='Abstract layering of CoAP extended by TCP, TLS, and WebSockets' artwork-align="center"}
 
 
 ## Terminology
