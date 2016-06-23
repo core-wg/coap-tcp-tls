@@ -13,14 +13,13 @@ pi:
   subcompact: 'no'
   comments: 'yes'
   inline: 'yes'
-title: A TCP and TLS Transport for the Constrained Application Protocol (CoAP)
-abbrev: TCP/TLS Transport for CoAP
+title: CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets
+abbrev: TCP/TLS/WebSockets Transports for CoAP
 area: Applications Area (app)
 wg: CORE
 date: 2016-04-21
 author:
-- role: editor
-  ins: C. Bormann
+- ins: C. Bormann
   name: Carsten Bormann
   org: Universitaet Bremen TZI
   street: Postfach 330440
@@ -56,21 +55,66 @@ author:
   country: Great Britain
   email: Hannes.tschofenig@gmx.net
   uri: http://www.tschofenig.priv.at
+- ins: T. Savolainen
+  name: Teemu Savolainen
+  org: Nokia
+  street: Hermiankatu 12 D
+  city: Tampere
+  code: 'FI-33720'
+  country: Finland
+  email: teemu.savolainen@nokia.com
+- ins: K. Hartke
+  name: Klaus Hartke
+  org: Universitaet Bremen TZI
+  street: Postfach 330440
+  city: Bremen
+  code: 'D-28359'
+  country: Germany
+  phone: "+49-421-218-63905"
+  email: hartke@tzi.org
+- ins: B. Silverajan
+  name: Bilhanan Silverajan
+  org: Tampere University of Technology
+  street: Korkeakoulunkatu 10
+  city: Tampere
+  code: 'FI-33720'
+  country: Finland
+  email: bilhanan.silverajan@tut.fi
+- role: editor
+  ins: B. Raymor
+  name: Brian Raymor
+  org: Microsoft
+  street: One Microsoft Way
+  city: Redmond
+  code: '98052'
+  country: United States of America
+  email: brian.raymor@microsoft.com
 normative:
-  RFC5246: tls
-  RFC7252: coap
-  RFC2119: bcp14
-  RFC7595: urireg
   RFC0793: tcp
+  RFC2119: bcp14
+  RFC3986: RFC3986
+  RFC4395: RFC4395
+  RFC5246: tls
+  RFC5785: RFC5785
+  RFC6455: RFC6455
+  RFC7252: coap
   RFC7301: alpn
+  RFC7525: RFC7525
+  RFC7595: urireg
+  RFC7641: RFC7641
   I-D.ietf-dice-profile:
 informative:
   I-D.bormann-core-cocoa: cocoa
   I-D.ietf-core-block: block
   I-D.bormann-core-block-bert: bert
+  I-D.becker-core-coap-sms-gprs: I-D.becker-core-coap-sms-gprs
+  I-D.dijk-core-sleepy-reqs: I-D.dijk-core-sleepy-reqs
   RFC0768: udp
-  RFC6347: dtls
+  RFC5234: RFC5234
+  RFC6454: RFC6454
   RFC6335: portreg
+  RFC6347: dtls
+  RFC7230: RFC7230
   HomeGateway:
     title: An experimental study of home gateway characteristics
     author:
@@ -83,86 +127,107 @@ informative:
 
 --- abstract
 
-The Hypertext Transfer Protocol (HTTP) was designed with TCP as the underlying
-transport protocol.  The Constrained Application Protocol (CoAP), while
-inspired by HTTP, has been defined to make use of UDP instead of TCP.  Therefore,
-reliable delivery and a simple congestion control and flow control mechanism
-are provided by the message layer of the CoAP protocol.
+The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP
+instead of TCP.  The message layer of the CoAP over UDP protocol includes services for
+reliable delivery, simple congestion control, and flow control.
 
-A number of environments benefit from the use of CoAP directly over a reliable
-byte stream such as TCP, which already provides these services.  This document
-defines the use of CoAP over TCP as well as CoAP over TLS.
+Some environments would benefit from the availability of CoAP over a reliable
+transport such as TCP or WebSockets, which already provides such services.  This document
+outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports.
 
 --- middle
 
 # Introduction {#introduction}
 
 The [Constrained Application Protocol (CoAP)](#RFC7252) was designed
-for Internet of Things (IoT) deployments, assuming that UDP can be
-used unimpeded --- UDP {{RFC0768}}, or DTLS {{RFC6347}} over UDP; it is a good choice for
-transferring small amounts of data across networks that follow the IP
+for Internet of Things (IoT) deployments, assuming that UDP {{RFC0768}} 
+or DTLS {{RFC6347}} over UDP can be used unimpeded. UDP is a good choice
+for transferring small amounts of data across networks that follow the IP
 architecture.
-Some CoAP deployments, however, may have to integrate well with
-existing enterprise infrastructure, where the use of UDP-based
-protocols may not be well-received or may even be blocked by firewalls.
-Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP
-brittle, resulting in lost or malformed packets.
 
-Where NATs are still present,
-CoAP over TCP can also help with their traversal. NATs often calculate
-expiration timers
-based on the transport layer protocol being used by application protocols.
-Many NATs are built around the assumption that a transport layer protocol,
-such as
-TCP, gives them additional information about the session life cycle
-and keep TCP-based NAT bindings around for a longer period. UDP, on the other
-hand,
-does not provide such information to a NAT and timeouts tend to be
-much shorter, as research confirms {{HomeGateway}}.
+Some CoAP deployments need to integrate well with existing enterprise
+infrastructures, where UDP-based protocols may not be well-received or may
+even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for
+IoT can make the use of UDP brittle, resulting in lost or malformed packets.
+
+To address such environments, this document defines additional bindings for CoAP,
+including TCP, TLS, and WebSockets.
+
+~~~~
++-----------------------------------------------------------+
+|                                                           |
+|                        Application                        |
+|                                                           |
++-----------------------------------------------------------+
+|                                                           |
+|                           CoAP                            |
+|                  Requests and Responses                   |
+|                                                           |
++ - - - - - - - - - +-------------------+-------------------+
+|                   |                   |                   |
+|       CoAP        |     CoAP over     |     CoAP over     |
+|     Messaging     |    TCP and TLS    |    WebSockets     |
+|                   |                   |                   |
++---------+---------+---------+---------+-------------------+
+|         |         |         |         |                   |
+|   UDP   |  DTLS   |   TCP   |   TLS   |    WebSockets     |
+|         |         |         |         |                   |
++---------+---------+---------+---------+-------------------+
+~~~~
+{: #layering title='Abstract layering of CoAP extended by TCP, TLS, and WebSockets' artwork-align="center"}
+
+Where NATs are present, CoAP over TCP can help with their traversal.
+NATs often calculate expiration timers based on the transport layer protocol
+being used by application protocols. Many NATs maintain TCP-based NAT bindings
+for longer periods based on the assumption that a transport layer protocol, such
+as TCP, offers additional information about the session life cycle. UDP, on the other
+hand, does not provide such information to a NAT and timeouts tend to be much 
+shorter, as confirmed by research {{HomeGateway}}.
 
 Some environments may also benefit from the ability of TCP to exchange
 larger payloads (such as firmware images) without application layer
-segmentation and to utilize the more
-sophisticated congestion control capabilities provided by many TCP implementations.
+segmentation and to utilize the more sophisticated congestion control
+capabilities provided by many TCP implementations.
+
 (Note that there is ongoing work to add more elaborate congestion control
 to CoAP as well, see {{-cocoa}}.)
 
-Finally, CoAP may be integrated into a Web environment where the front-end
-uses CoAP from IoT devices to a cloud infrastructure but the CoAP messages
-are then transported in TCP between the back-end services.
-A TCP-to-UDP gateway can be used at the cloud boundary to talk to the UDP-based IoT.
+CoAP may be integrated into a Web environment where the front-end
+uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
+over TCP between the back-end services. A TCP-to-UDP gateway can be used at
+the cloud boundary to communicate with the UDP-based IoT device.
 
 To make IoT devices work smoothly in these demanding environments, CoAP
-needs
-to make use of a different transport protocol, namely TCP {{RFC0793}},
+needs to make use of a different transport protocol, namely TCP {{RFC0793}},
 in some situations secured by TLS {{RFC5246}}.
 
-Conceptually, the CoAP over TCP/TLS specification replaces most of
-CoAP's message layer by a new message adapter on top of TCP or TLS
-that does provides a framing mechanism on top of the byte stream
-provided by TCP/TLS, conveying the length information about each CoAP
-message that on datagram transports is provided by the datagram layer
-below (UDP, DTLS).
+Some corporate networks only allow Internet access via a HTTP proxy.
+In this case, the best transport for CoAP would be the [WebSocket Protocol](#RFC6455).
+The WebSocket protocol provides two-way communication between a client
+and a server after upgrading an [HTTP/1.1](#RFC7230) connection and may
+be available in an environment that blocks CoAP over UDP. Another scenario
+for CoAP over WebSockets is a CoAP application running inside a web browser
+without access to connectivity other than HTTP and WebSockets.
 
-The message adapter also adds a way to use signaling messages to
-perform various housekeeping operations on the TCP, see
-[I-D.bormann-core-signaling].
+This document specifies how to access resources using CoAP requests
+and responses over the WebSocket Protocol. This allows
+connectivity-limited applications to obtain end-to-end CoAP
+connectivity either by communicating CoAP directly with a CoAP server
+accessible over a WebSocket Connection or via a CoAP intermediary
+that proxies CoAP requests and responses between different transports,
+such as between WebSockets and UDP.
 
-When CoAP is used over TLS then some of the housekeeping features are
-already available with the TLS Handshake protocol; less new
-functionality is then required.
 
-Modifications to CoAP beyond the replacement of the message layer
-(e.g., to introduce further optimizations) are intentionally avoided.
-
-# Terminology
+## Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
+This document assumes that readers are familiar with the terms and
+concepts that are used in {{RFC6455}} and {{RFC7252}}.
 
-# Message Adapter Protocol
+# CoAP over TCP
 
 The interaction model of CoAP over TCP is very similar to the one for
 CoAP over UDP, with the key difference that using TCP voids the need to
@@ -221,10 +286,8 @@ dashes in {{fig-untyped1}}).
 ~~~~
 {: #fig-untyped1 title='Untyped Message Transmission over TCP.'}
 
-A
-response is sent back as defined
-in {{RFC7252}}, as
-illustrated in {{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
+A response is sent back as defined in {{RFC7252}}, as illustrated in
+{{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
 
 ~~~~
         Client                Server
@@ -243,7 +306,29 @@ illustrated in {{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
 ~~~~
 {: #fig-untyped2 title='Untyped messages carrying Request/Response.'}
 
-# Message Format
+EDITOR: These are "leftover" paragraphs from the original Overview
+section. Keeping until I perform a complete editorial pass of the
+"roughed in" material.
+
+Conceptually, the CoAP over TCP/TLS specification replaces most of
+CoAP's message layer by a new message adapter on top of TCP or TLS
+that provides a framing mechanism on top of the byte stream
+provided by TCP/TLS, conveying the length information about each CoAP
+message that on datagram transports is provided by the datagram layer
+below (UDP, DTLS).
+
+The message adapter also adds a way to use signaling messages to
+perform various housekeeping operations on the TCP, see
+[I-D.bormann-core-signaling].
+
+When CoAP is used over TLS then some of the housekeeping features are
+already available with the TLS Handshake protocol; less new
+functionality is then required.
+
+Modifications to CoAP beyond the replacement of the message layer
+(e.g., to introduce further optimizations) are intentionally avoided.
+
+## Message Format {#tcp-message-format}
 
 The CoAP message format defined in {{RFC7252}}, as shown in 
 {{CoAP-Header}}, relies on the datagram transport (UDP, or DTLS over
@@ -377,36 +462,11 @@ token 7f and no options or payload would be encoded as shown in {{fig-shim2}}.
 
 The semantics of the other CoAP header fields are left unchanged.
 
-## Discussion
-
-One observation is that, over a reliable byte stream transport, the message
-size limitations defined in
-Section 4.6 of {{RFC7252}} are no longer strictly necessary.
-Consenting [^how] implementations may want to interchange messages
-with payload sizes larger than 1024 bytes, potentially also obviating the
-need for the Block protocol {{-block}}.  It must be noted that
-entirely getting rid of the block protocol is
-not a generally applicable solution, as:
-
-* a UDP-to-TCP gateway may simply not have the context to convert a
-  message with a Block option into the equivalent exchange without any
-  use of a Block option;
-* large messages might also cause undesired head-of-line blocking;
-* the 2-byte message length field causes another, larger upper bound to the
-  message length.
-
-{{-bert}} proposes to extend the block-wise transfer protocol to allow
-for larger block sizes as are possible over TCP and TLS.
-
-[^how]: There is currently no defined way to arrive at this consent.
-{: source="cabo"}
-
-The general assumption is therefore that the block protocol will
-continue to be used over TCP, even if TCP-based applications
-occasionally do exchange messages with payload sizes larger than desirable in UDP.
 
 
-# Message Transmission
+## Message Transmission
+
+EDITOR: This is extremely similar to the WebSocket section of the same name.
 
 As CoAP exchanges messages asynchronously over the TCP connection, the
 client can send multiple requests without waiting for responses.  For
@@ -421,19 +481,259 @@ both the connecting host and the endpoint that accepted the connection.
 In other words, the question who initiated the TCP connection has no bearing on the
 meaning of the CoAP terms client and server.
 
+# CoAP over WebSockets {#overview}
 
-# CoAP URI {#URI}
+CoAP over WebSockets can be used in a number of configurations. The
+most basic configuration is a CoAP client seeking to retrieve or
+update a CoAP resource located at a CoAP server that exposes a
+WebSocket endpoint ({{arch-1}}). The CoAP client takes
+the role of the WebSocket client, establishes a WebSocket Connection
+and sends a CoAP request, to which the CoAP server returns a CoAP
+response. The WebSocket Connection can be used for any number of
+requests.
 
-CoAP {{RFC7252}} defines the "coap" and "coaps" URI schemes for
-identifying CoAP resources and providing a means of locating the
-resource. RFC 7252 defines these resources for use with CoAP over UDP.
+~~~~
+ ___________                            ___________
+|           |                          |           |
+|          _|___      requests      ___|_          |
+|   CoAP  /  \  \  ------------->  /  /  \  CoAP   |
+|  Client \__/__/  <-------------  \__\__/ Server  |
+|           |         responses        |           |
+|___________|                          |___________|
+        WebSocket  =============>  WebSocket
+          Client     Connection     Server
+~~~~
+{: #arch-1 title='CoAP Client (WebSocket client) accesses CoAP Server (WebSocket server)' artwork-align="center" }
 
-The present specification introduces two new URI schemes, namely "coap+tcp"
-and "coaps+tcp".  The rules from Section 6 of {{RFC7252}} apply to
-these two new URI schemes.
+The challenge in this configuration is to identify resource in the
+namespace of the CoAP server:
+When the WebSocket Protocol is used by a dedicated client directly
+(i.e., not from a web page through a web browser), the client can
+connect to any WebSocket endpoint. This means it is necessary that
+the client is able to determine both the WebSocket endpoint (identified
+by a "ws" or "wss" URI) and the path and query of the CoAP resource within
+that endpoint from the same URI. When the WebSocket Protocol is used
+from a web page, the choices are more limited {{RFC6454}}, but the challenge persists.
 
-{{RFC7252}}, Section 8 (Multicast CoAP), does not apply to the URI
-schemes defined in the present specification.
+{{uris}} proposes a new "coap+ws" URI scheme that
+identifies both a WebSocket endpoint and a resource within that
+endpoint as follows:
+
+~~~~
+      coap+ws://example.org/sensors/temperature?u=Cel
+           \______  ______/\___________  ___________/
+                  \/                   \/
+                                     Uri-Path: "sensors"
+ws://example.org/.well-known/coap    Uri-Path: "temperature"
+                                     Uri-Query: "u=Cel"
+~~~~
+{: #uri-example title='The "coap+ws" URI Scheme' artwork-align="center" }
+
+Another possible configuration is to set up a CoAP forward proxy
+at the WebSocket endpoint. Depending on what transports are available
+to the proxy, it could forward the request to a CoAP server with a
+CoAP UDP endpoint ({{arch-2}}), an SMS endpoint
+(a.k.a.&nbsp;mobile phone), or even another WebSocket endpoint. The
+client specifies the resource to be updated or retrieved in the
+Proxy-URI Option.
+
+
+~~~~
+ ___________                ___________                ___________
+|           |              |           |              |           |
+|          _|___        ___|_         _|___        ___|_          |
+|   CoAP  /  \  \ ---> /  /  \ CoAP  /  \  \ ---> /  /  \  CoAP   |
+|  Client \__/__/ <--- \__\__/ Proxy \__/__/ <--- \__\__/ Server  |
+|           |              |           |              |           |
+|___________|              |___________|              |___________|
+        WebSocket ===> WebSocket      UDP            UDP
+          Client        Server      Client          Server
+~~~~
+{: #arch-2 title='CoAP Client (WebSocket client) accesses CoAP Server (UDP server) via a CoAP proxy (WebSocket server/UDP client)' artwork-align="center"}
+
+A third possible configuration
+is a CoAP server running inside a web browser
+({{arch-3}}). The web browser initially connects to a
+WebSocket endpoint and is then reachable through the WebSocket
+server. When no connection exists, the CoAP server is not reachable;
+it therefore can be considered a
+[Sleepy Endpoint (SEP)](#I-D.dijk-core-sleepy-reqs).
+Because the WebSocket server is the only way to reach the CoAP
+server, the CoAP proxy should be a Reverse Proxy.
+
+
+~~~~
+ ___________                ___________                ___________
+|           |              |           |              |           |
+|          _|___        ___|_         _|___        ___|_          |
+|   CoAP  /  \  \ ---> /  /  \ CoAP  /  /  \ ---> /  \  \  CoAP   |
+|  Client \__/__/ <--- \__\__/ Proxy \__\__/ <--- \__/__/ Server  |
+|           |              |           |              |           |
+|___________|              |___________|              |___________|
+           UDP            UDP      WebSocket <=== WebSocket
+         Client          Server      Server        Client
+~~~~
+{: #arch-3 title='CoAP Client (UDP client) accesses sleepy CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)' artwork-align="center"}
+
+Further configurations are possible, including those where a
+WebSocket Connection is established through an HTTP proxy.
+
+CoAP over WebSockets is intentionally very similar to CoAP as defined
+over UDP. Therefore, instead of presenting CoAP over WebSockets as a
+new protocol, this document specifies it as a series of deltas from
+{{RFC7252}}.
+
+## Opening Handshake {#handshake}
+
+Before CoAP requests and responses can be exchanged, a WebSocket
+Connection needs to be established as defined in Section 4 of
+{{RFC6455}}. {{handshake-example}} shows an example.
+
+The WebSocket client MUST include the subprotocol name "coap" in
+the list of protocols, which indicates support for the protocol
+defined in this document. Any later, incompatible versions of
+CoAP or CoAP over WebSockets will use a different subprotocol
+name.
+
+The WebSocket client includes the hostname of the WebSocket server
+in the Host header field of its handshake as per {{RFC6455}}. The Host
+header field also indicates the default
+value of the Uri-Host Option in requests from the WebSocket client
+to the WebSocket server.
+
+
+~~~~
+GET /.well-known/coap HTTP/1.1
+Host: example.org
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+Sec-WebSocket-Protocol: coap
+Sec-WebSocket-Version: 13
+
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+Sec-WebSocket-Protocol: coap
+~~~~
+{: #handshake-example title='Example of an Opening Handshake' artwork-align="center"}
+
+
+## Message Format {#websocket-message-format}
+
+Once a WebSocket Connection has been established, CoAP requests and
+responses can be exchanged as WebSocket messages. Since CoAP uses a
+binary message format, the messages are transmitted in binary data
+frames as specified in Sections 5 and 6 of {{RFC6455}}.
+
+The message format is very similar to the format specified for
+[CoAP over UDP](#RFC7252). The differences
+are as follows:
+
+* Since the underlying TCP connection provides retransmissions and
+  deduplication, there is no need for the reliability mechanisms
+  provided by CoAP over UDP. This means the "T" and "Message ID" fields in
+  the CoAP message header can be elided.
+
+* Furthermore, since the CoAP version is already negotiated during
+  the opening handshake, the "Ver" field can be elided as well.
+
+
+
+~~~~
+  0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   R   |  TKL  |      Code     |    Token (TKL bytes) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Options (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|1 1 1 1 1 1 1 1|    Payload (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+{: #ws-message-format title='CoAP Message Format over WebSockets' artwork-align="center"}
+
+The resulting message format is shown in {{ws-message-format}}. The
+four most-significant bits
+of the first byte are reserved (R) and MUST be set to zero. The
+remaining fields and structure are the same as defined in {{RFC7252}}.
+
+Requests and response messages can be fragmented as specified in
+Section 5.4 of {{RFC6455}}, though typically they are
+sent unfragmented as they tend to be small and fully buffered before
+transmission. The WebSocket protocol does not provide
+means for multiplexing; if it is not desirable for a large message to
+monopolize the connection, requests and responses can be transferred in a
+blockwise fashion as defined in {{I-D.ietf-core-block}}.
+
+Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry
+either a request or a response.
+
+
+## Message Transmission {#requests-responses}
+
+CoAP requests and responses are exchanged asynchronously over the
+WebSocket Connection, i.e., a CoAP client can send multiple requests
+without waiting for a response and the CoAP server can return
+responses in any order. Responses MUST be returned over the same
+connection as the originating request. Concurrent requests are
+differentiated by their Token, which is scoped locally to the
+connection.
+
+The connection is bi-directional, so requests can be sent both by
+the entity that established the connection and the remote host.
+
+Retransmission and deduplication of messages is provided by the
+WebSocket Protocol. CoAP over WebSockets therefore does not make a
+distinction between Confirmable or Non-Confirmable messages, and does
+not provide Acknowledgement or Reset messages.
+
+Since the WebSocket Protocol provides ordered delivery of messages,
+the mechanism for reordering detection when
+[observing resources](#RFC7641) is not needed. The value of the
+Observe Option in notifications therefore MAY be empty on transmission
+and MUST be ignored on reception.
+
+
+## Connection Health {#liveliness}
+
+When a client does not receive any response for some time after
+sending a CoAP request (or, similarly, when a client observes a
+resource and it does not receive any notification for some time),
+the connection between the WebSocket client and the WebSocket
+server may be lost or temporarily disrupted without the client
+being aware of it.
+
+To check the health of the WebSocket Connection (and thereby of all
+active requests, if any), the client can send a Ping frame or an
+unsolicited Pong frame as specified in Section 5.5 of
+{{RFC6455}}. There is no way to retransmit a request without
+creating a new one. Re-registering interest in a resource is
+permitted, but entirely unnecessary.
+
+## Closing the Connection {#close}
+
+The WebSocket Connection is closed as specified in Section 7 of {{RFC6455}}.
+
+All requests for which the CoAP client has not received
+a response yet are cancelled when the connection is closed.
+If the client observes one or more resources over the WebSocket
+Connection, then the CoAP server (or intermediary in the role of
+the CoAP server) MUST remove all entries associated with the client
+from the lists of observers when the connection is closed.
+
+# CoAP URIs {#URI}
+
+CoAP over UDP {{RFC7252}} defines the "coap" and "coaps" URI schemes for
+identifying CoAP resources and providing a means of locating the resource. 
+
+## CoAP over TCP and TLS URIs
+
+CoAP over TCP uses "coap_tcp" URI scheme. CoAP over TLS uses the "coaps+tcp"
+scheme. The rules from Section 6 of {{RFC7252}} apply to both of these URI schemes.
+
+{{RFC7252}}, Section 8 (Multicast CoAP) is not applicable to these schemes.
 
 Resources made available via one of the "coap+tcp" or "coaps+tcp" schemes
 have no shared identity with the other scheme or with the "coap" or
@@ -443,7 +743,7 @@ The schemes constitute distinct namespaces and, in combination with
 the authority, are considered to be distinct
 origin servers.
 
-## coap+tcp URI scheme
+### coap+tcp URI scheme
 
 ~~~~
 coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ] path-abempty
@@ -457,7 +757,7 @@ URI scheme, with the following changes:
 at which the CoAP server is located.  (If it is empty or not given,
 then the default port 5683 is assumed, as with UDP.)
 
-## coaps+tcp URI scheme {#coapstcp-uri-scheme}
+### coaps+tcp URI scheme {#coapstcp-uri-scheme}
 
 ~~~~
 coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
@@ -476,17 +776,83 @@ URI scheme, with the following changes:
   Layer Protocol Negotiation Extension" {{-alpn}} MUST be used to allow 
   demultiplexing at the server-side.
 
+## CoAP over WebSockets URIs {#uris}
+
+For the first configuration discussed in {{overview}},
+this document defines two new URIs schemes that can be used for
+identifying CoAP resources and providing a means of locating these
+resources: "coap+ws" and "coap+wss".
+
+Similar to the "coap" and "coaps" schemes, the "coap+ws" and
+"coap+wss" schemes organize resources hierarchically under a CoAP
+origin server. The key difference is that the server is potentially
+reachable on a WebSocket endpoint instead of a UDP endpoint.
+
+The WebSocket endpoint is identified by a "ws" or "wss" URI
+that is composed of the authority part of the "coap+ws" or
+"coap+wss" URI, respectively, and the well-known path
+"/.well-known/coap" {{RFC5785}}.
+The path and query parts of a "coap+ws" or "coap+wss" URI
+identify a resource within the specified endpoint which can be
+operated on by the methods defined by the CoAP protocol.
+
+The syntax of the "coap+ws" and "coap+wss" URI schemes is specified
+below in Augmented Backus-Naur Form (ABNF) {{RFC5234}}.
+The definitions of "host", "port", "path-abempty" and "query" are the
+same as in {{RFC3986}}.
+
+
+~~~~
+coap-ws-URI =
+   "coap+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+
+coap-wss-URI =
+   "coap+wss:" "//" host [ ":" port ] path-abempty [ "?" query ]
+~~~~
+{: artwork-align="center"}
+
+The port component is OPTIONAL; the default for "coap+ws" is port
+80, while the default for "coap+wss" is port 443.
+
+Fragment identifiers are not part of the request URI and thus MUST
+NOT be transmitted in a WebSocket handshake or in the URI options
+of a CoAP request.
+
+### Decomposing and Composing URIs
+
+The steps for decomposing a "coap+ws" or "coap+wss" URI into
+CoAP options are the same as specified in Section 6.4 of {{RFC7252}}
+with the following changes:
+
+* The \<scheme> component MUST be "coap+ws" or "coap+wss"
+  when converted to ASCII lowercase.
+
+* A Uri-Host Option MUST only be included in a request when
+  the \<host> component does not equal the uri-host
+  component in the Host header field in the WebSocket
+  handshake.
+
+* A Uri-Port Option MUST only be included in a request if
+  \|port\| does not equal the port component in the Host header
+  field in the WebSocket handshake.
+
+The steps to construct a URI from a request's options are
+changed accordingly.
+
 # Security Considerations {#security}
 
-This document defines how to convey CoAP over TCP and TLS. 
-CoAP {{RFC7252}} makes use of DTLS 1.2 and this
-specification consequently uses TLS 1.2 {{RFC5246}}. CoAP MUST NOT be
-used with older versions of TLS. Guidelines for use of cipher suites
-and TLS extensions can be found in {{I-D.ietf-dice-profile}}.
+Implementations of CoAP MUST use TLS version 1.2 or higher for CoAP over TLS.
+The general TLS usage guidance in {{RFC7525}} SHOULD be followed.
+
+Guidelines for use of cipher suites and TLS extensions can be found in {{I-D.ietf-dice-profile}}.
 
 TLS does not protect the TCP header. This may, for example, 
 allow an on-path adversary to terminate a TCP connection prematurely 
-by spoofing a TCP reset message. 
+by spoofing a TCP reset message.
+
+CoAP over WebSockets and CoAP over TLS-secured WebSockets do not
+introduce additional security issues beyond CoAP and DTLS-secured CoAP
+respectively {{RFC7252}}. The security considerations of {{RFC6455}} apply.
 
 # IANA Considerations {#iana}
 
@@ -546,7 +912,7 @@ Port Number.
 {: vspace='0'}
 
 
-## URI Schemes
+## URI Scheme Registration
 
 This document registers two new URI schemes, namely "coap+tcp" and
 "coaps+tcp", for the use of CoAP over TCP and for CoAP over TLS over
@@ -561,6 +927,111 @@ exception that TCP, or TLS over TCP is used as a transport protocol.
 IANA is requested to add these new URI schemes to the registry
 established with {{-urireg}}.
 
+### coap+ws
+
+This document requests the registration of the Uniform Resource
+Identifier (URI) scheme "coap+ws". The registration request complies
+with {{RFC4395}}.
+
+URL scheme name.
+:	coap+ws
+
+Status.
+:	Permanent
+
+URI scheme syntax.
+:	Defined in Section N of [RFCthis]
+
+URI scheme semantics.
+:	The "coap+ws" URI scheme provides a way to identify resources that
+	are potentially accessible over the Constrained Application Protocol (CoAP)
+	using the WebSocket Protocol.
+
+Encoding considerations.
+:	The scheme encoding conforms to the encoding rules established for URIs
+	in {{RFC3986}}, i.e., internationalized and reserved characters are expressed
+	using UTF-8-based percent-encoding.
+
+Applications/protocols that use this URI scheme name.
+:	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.
+
+Interoperability considerations.
+:	None.
+
+Security Considerations.
+:	See Section N of [RFCthis]
+
+Contact.
+:	IETF chair \<chair@ietf.org>
+
+Author/Change controller.
+:	IESG \<iesg@ietf.org>
+
+References.
+:	[RFCthis]
+{: vspace='0'}
+
+### coap+wss
+This document requests the registration of the Uniform Resource
+Identifier (URI) scheme "coap+wss". The registration request complies
+with {{RFC4395}}.
+
+URL scheme name.
+:	coap+wss
+
+Status.
+:	Permanent
+
+URI scheme syntax.
+:	Defined in Section N of [RFCthis]
+
+URI scheme semantics.
+:	The "coap+ws" URI scheme provides a way to identify resources that
+	are potentially accessible over the Constrained Application Protocol (CoAP)
+	using the WebSocket Protocol secured with Transport Layer Security (TLS).
+
+Encoding considerations.
+:	The scheme encoding conforms to the encoding rules established for URIs
+	in {{RFC3986}}, i.e., internationalized and reserved characters are expressed
+	using UTF-8-based percent-encoding.
+
+Applications/protocols that use this URI scheme name.
+:	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol
+	secured with TLS.
+
+Interoperability considerations.
+:	None.
+
+Security Considerations.
+:	See Section N of [RFCthis]
+
+Contact.
+:	IETF chair \<chair@ietf.org>
+
+Author/Change controller.
+:	IESG \<iesg@ietf.org>
+
+References.
+:	[RFCthis]
+{: vspace='0'}
+
+## Well-Known URI Suffix Registration
+
+IANA is requested to register the 'coap' well-known URI in the "Well-Known URIs" registry. This
+registration request complies with {{RFC5785}}:
+
+URI Suffix.
+:	coap
+
+Change controller.
+:	IETF
+
+Specification document(s).
+:	[RFCthis]
+
+Related information.
+:	None.
+{: vspace='0'}
 
 ## ALPN Protocol ID {#alpnpid}
 
@@ -568,28 +1039,175 @@ IANA is requested to assign the following value in the registry
 "Application Layer Protocol Negotiation (ALPN) Protocol IDs" created
 by {{-alpn}}:
 
-Protocol:
+Protocol.
 :   CoAP
 
-Identification Sequence:
+Identification Sequence.
 :   0x63 0x6f 0x61 0x70 ("coap")
 
-Reference:
+Reference.
 :   [RFCthis]
 {: vspace='0'}
 
+## WebSocket Subprotocol Registration
+
+IANA is requested to register the WebSocket CoAP subprotocol under the "WebSocket Subprotocol Name Registry":
+
+Subprotocol Identifier.
+:	coap
+
+Subprotocol Common Name.
+:	Constrained Application Protocol (CoAP)
+
+Subprotocol Definition.
+:	[RFCthis]
+{: vspace='0'}
 
 # Acknowledgements {#acknowledgements}
 
 We would like to thank Stephen Berard, Geoffrey Cristallo, 
-Olivier Delaby, Christian Groves, Klaus Hartke, Julien Vermillard, 
-Gengyu Wei, Michael Koster, Matthias Kovatsch, Szymon Sasin, 
-David Navarro, Achim Kraus, Andrew Summers, and Zach Shelby 
-for their feedback.
+Olivier Delaby, Christian Groves, Klaus Hartke, Nadir Javed,
+Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
+Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, 
+and Gengyu Wei for their feedback.
 
 
 --- back
 
+# CoAP over WebSocket Examples {#examples}
+
+This section gives examples for the first two configurations
+discussed in {{overview}}.
+
+An example of the process followed by a CoAP client to retrieve the
+representation of a resource identified by a "coap+ws" URI might be as
+follows. {{example-1}} below illustrates the WebSocket and
+CoAP messages exchanged in detail.
+
+1. The CoAP client obtains the URI
+  \<coap+ws://example.org/sensors/temperature?u=Cel>,
+  for example, from a resource representation that it retrieved
+  previously.
+
+1. It establishes a WebSocket Connection to the endpoint URI composed
+  of the authority "example.org" and the well-known path
+  "/.well-known/coap", \<ws://example.org/.well-known/coap>.
+
+1. It sends a single-frame, masked, binary message containing a CoAP
+  request. The request indicates the target resource with the
+  Uri-Path ("sensors", "temperature") and Uri-Query ("u=Cel")
+  options.
+
+1. It waits for the server to return a response.
+
+1. The CoAP client uses the connection for further requests, or the
+  connection is closed.
+
+
+
+~~~~
+   CoAP        CoAP
+  Client      Server
+(WebSocket  (WebSocket
+  Client)     Server)
+
+     |          |
+     |          |
+     +=========>|  GET /.well-known/coap HTTP/1.1
+     |          |  Host: example.org
+     |          |  Upgrade: websocket
+     |          |  Connection: Upgrade
+     |          |  Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+     |          |  Sec-WebSocket-Protocol: coap
+     |          |  Sec-WebSocket-Version: 13
+     |          |
+     |<=========+  HTTP/1.1 101 Switching Protocols
+     |          |  Upgrade: websocket
+     |          |  Connection: Upgrade
+     |          |  Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+     |          |  Sec-WebSocket-Protocol: coap
+     |          |
+     |          |
+     +--------->|  Binary frame (opcode=%x2, FIN=1, MASK=1)
+     |          |    +-------------------------+
+     |          |    | GET                     |
+     |          |    | Token: 0x53             |
+     |          |    | Uri-Path: "sensors"     |
+     |          |    | Uri-Path: "temperature" |
+     |          |    | Uri-Query: "u=Cel"      |
+     |          |    +-------------------------+
+     |          |
+     |<---------+  Binary frame (opcode=%x2, FIN=1, MASK=0)
+     |          |    +-------------------------+
+     |          |    | 2.05 Content            |
+     |          |    | Token: 0x53             |
+     |          |    | Payload: "22.3 Cel"     |
+     |          |    +-------------------------+
+     :          :
+     :          :
+     |          |
+     +--------->|  Close frame (opcode=%x8, FIN=1, MASK=1)
+     |          |
+     |<---------+  Close frame (opcode=%x8, FIN=1, MASK=0)
+     |          |
+~~~~
+{: #example-1 title='A CoAP client retrieves the representation of a resource identified by a "coap+ws" URI'}
+
+{{example-2}} shows how a CoAP client uses a CoAP
+forward proxy with a WebSocket endpoint to retrieve the representation
+of the resource "coap://[2001:DB8::1]/". The use of the forward
+proxy and the address of the WebSocket endpoint are determined by the
+client from local configuration rules. The request URI is specified
+in the Proxy-Uri Option. Since the request URI uses the "coap" URI
+scheme, the proxy fulfills the request by issuing a Confirmable GET
+request over UDP to the CoAP server and returning the response over
+the WebSocket connection to the client.
+
+
+~~~~
+   CoAP        CoAP       CoAP
+  Client      Proxy      Server
+(WebSocket  (WebSocket    (UDP
+  Client)     Server)   Endpoint)
+
+     |          |          |
+     +--------->|          |  Binary frame (opcode=%x2, FIN=1, MASK=1)
+     |          |          |    +------------------------------------+
+     |          |          |    | GET                                |
+     |          |          |    | Token: 0x7d                        |
+     |          |          |    | Proxy-Uri: "coap://[2001:DB8::1]/" |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |          +--------->|  CoAP message (Ver=1, T=Con, MID=0x8f54)
+     |          |          |    +------------------------------------+
+     |          |          |    | GET                                |
+     |          |          |    | Token: 0x0a15                      |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |          |<---------+  CoAP message (Ver=1, T=Ack, MID=0x8f54)
+     |          |          |    +------------------------------------+
+     |          |          |    | 2.05 Content                       |
+     |          |          |    | Token: 0x0a15                      |
+     |          |          |    | Payload: "ready"                   |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |<---------+          |  Binary frame (opcode=%x2, FIN=1, MASK=0)
+     |          |          |    +------------------------------------+
+     |          |          |    | 2.05 Content                       |
+     |          |          |    | Token: 0x7d                        |
+     |          |          |    | Payload: "ready"                   |
+     |          |          |    +------------------------------------+
+     |          |          |
+~~~~
+{: #example-2 title='A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSockets-enabled CoAP proxy'}
+
+# Change Log
+
+The RFC Editor is requested to remove this section at publication.
+
+## Since draft-core-coap-tcp-tls-02
+
+Merged draft-savolainen-core-coap-websockets-07
 <!--  LocalWords:  TCP CoAP UDP firewalling firewalled TLS IP SCTP
  -->
 <!--  LocalWords:  DCCP IoT optimizations ACKs acknowledgement TKL
