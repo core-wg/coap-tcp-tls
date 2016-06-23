@@ -5,7 +5,7 @@
 <head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
   <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
 
-  <title>A TCP and TLS Transport for the Constrained Application Protocol (CoAP)</title>
+  <title>CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets</title>
 
   <style type="text/css">/*<![CDATA[*/
 @viewport {
@@ -269,34 +269,44 @@ li, p {
 
   <link href="#rfc.toc" rel="Contents"/>
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
-<link href="#rfc.section.2" rel="Chapter" title="2 Terminology"/>
-<link href="#rfc.section.3" rel="Chapter" title="3 Message Adapter Protocol"/>
-<link href="#rfc.section.4" rel="Chapter" title="4 Message Format"/>
-<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Discussion"/>
-<link href="#rfc.section.5" rel="Chapter" title="5 Message Transmission"/>
-<link href="#rfc.section.6" rel="Chapter" title="6 CoAP URI"/>
-<link href="#rfc.section.6.1" rel="Chapter" title="6.1 coap+tcp URI scheme"/>
-<link href="#rfc.section.6.2" rel="Chapter" title="6.2 coaps+tcp URI scheme"/>
-<link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations"/>
-<link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations"/>
-<link href="#rfc.section.8.1" rel="Chapter" title="8.1 Service Name and Port Number Registration"/>
-<link href="#rfc.section.8.2" rel="Chapter" title="8.2 URI Schemes"/>
-<link href="#rfc.section.8.3" rel="Chapter" title="8.3 ALPN Protocol ID"/>
-<link href="#rfc.section.9" rel="Chapter" title="9 Acknowledgements"/>
-<link href="#rfc.references" rel="Chapter" title="10 References"/>
-<link href="#rfc.references.1" rel="Chapter" title="10.1 Normative References"/>
-<link href="#rfc.references.2" rel="Chapter" title="10.2 Informative References"/>
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology"/>
+<link href="#rfc.section.2" rel="Chapter" title="2 CoAP over TCP"/>
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 Message Format"/>
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Message Transmission"/>
+<link href="#rfc.section.3" rel="Chapter" title="3 CoAP over WebSockets"/>
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Opening Handshake"/>
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Message Format"/>
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 Message Transmission"/>
+<link href="#rfc.section.3.4" rel="Chapter" title="3.4 Connection Health"/>
+<link href="#rfc.section.3.5" rel="Chapter" title="3.5 Closing the Connection"/>
+<link href="#rfc.section.4" rel="Chapter" title="4 CoAP URIs"/>
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 CoAP over TCP and TLS URIs"/>
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 CoAP over WebSockets URIs"/>
+<link href="#rfc.section.5" rel="Chapter" title="5 Security Considerations"/>
+<link href="#rfc.section.6" rel="Chapter" title="6 IANA Considerations"/>
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Service Name and Port Number Registration"/>
+<link href="#rfc.section.6.2" rel="Chapter" title="6.2 URI Scheme Registration"/>
+<link href="#rfc.section.6.3" rel="Chapter" title="6.3 Well-Known URI Suffix Registration"/>
+<link href="#rfc.section.6.4" rel="Chapter" title="6.4 ALPN Protocol ID"/>
+<link href="#rfc.section.6.5" rel="Chapter" title="6.5 WebSocket Subprotocol Registration"/>
+<link href="#rfc.section.7" rel="Chapter" title="7 Acknowledgements"/>
+<link href="#rfc.references" rel="Chapter" title="8 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="8.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="8.2 Informative References"/>
+<link href="#rfc.appendix.A" rel="Chapter" title="A CoAP over WebSocket Examples"/>
+<link href="#rfc.appendix.B" rel="Chapter" title="B Change Log"/>
+<link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Since draft-core-coap-tcp-tls-02"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
   <meta name="generator" content="xml2rfc version 2.5.1 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
-  <meta name="dct.creator" content="Bormann, C., Ed., Lemay, S., Solorzano Barboza, V., and H. Tschofenig" />
+  <meta name="dct.creator" content="Bormann, C., Lemay, S., Solorzano Barboza, V., Tschofenig, H., Savolainen, T., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
   <meta name="dct.issued" scheme="ISO8601" content="2016-4-21" />
-  <meta name="dct.abstract" content="The Hypertext Transfer Protocol (HTTP) was designed with TCP as the underlying transport protocol.  The Constrained Application Protocol (CoAP), while inspired by HTTP, has been defined to make use of UDP instead of TCP.  Therefore, reliable delivery and a simple congestion control and flow control mechanism are provided by the message layer of the CoAP protocol." />
-  <meta name="description" content="The Hypertext Transfer Protocol (HTTP) was designed with TCP as the underlying transport protocol.  The Constrained Application Protocol (CoAP), while inspired by HTTP, has been defined to make use of UDP instead of TCP.  Therefore, reliable delivery and a simple congestion control and flow control mechanism are provided by the message layer of the CoAP protocol." />
+  <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP.  The message layer of the CoAP over UDP protocol includes services for reliable delivery, simple congestion control, and flow control." />
+  <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP.  The message layer of the CoAP over UDP protocol includes services for reliable delivery, simple congestion control, and flow control." />
 
 </head>
 
@@ -307,7 +317,7 @@ li, p {
     
     	<tr>
   <td class="left">CORE</td>
-  <td class="right">C. Bormann, Ed.</td>
+  <td class="right">C. Bormann</td>
 </tr>
 <tr>
   <td class="left">Internet-Draft</td>
@@ -335,6 +345,38 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
+  <td class="right">T. Savolainen</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">Nokia</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">K. Hartke</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">Universitaet Bremen TZI</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">B. Silverajan</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">Tampere University of Technology</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">B. Raymor, Ed.</td>
+</tr>
+<tr>
+  <td class="left"></td>
+  <td class="right">Microsoft</td>
+</tr>
+<tr>
+  <td class="left"></td>
   <td class="right">April 21, 2016</td>
 </tr>
 
@@ -342,14 +384,14 @@ li, p {
     </tbody>
   </table>
 
-  <p class="title">A TCP and TLS Transport for the Constrained Application Protocol (CoAP)<br />
+  <p class="title">CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets<br />
   <span class="filename">draft-ietf-core-coap-tcp-tls-latest</span></p>
   
   <h1 id="rfc.abstract">
   <a href="#rfc.abstract">Abstract</a>
 </h1>
-<p>The Hypertext Transfer Protocol (HTTP) was designed with TCP as the underlying transport protocol.  The Constrained Application Protocol (CoAP), while inspired by HTTP, has been defined to make use of UDP instead of TCP.  Therefore, reliable delivery and a simple congestion control and flow control mechanism are provided by the message layer of the CoAP protocol.</p>
-<p>A number of environments benefit from the use of CoAP directly over a reliable byte stream such as TCP, which already provides these services.  This document defines the use of CoAP over TCP as well as CoAP over TLS.</p>
+<p>The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP.  The message layer of the CoAP over UDP protocol includes services for reliable delivery, simple congestion control, and flow control.</p>
+<p>Some environments would benefit from the availability of CoAP over a reliable transport such as TCP or WebSockets, which already provides such services.  This document outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports.</p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
@@ -369,43 +411,79 @@ li, p {
   <ul class="toc">
 
   	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
-<li>2.   <a href="#rfc.section.2">Terminology</a></li>
-<li>3.   <a href="#rfc.section.3">Message Adapter Protocol</a></li>
-<li>4.   <a href="#rfc.section.4">Message Format</a></li>
-<ul><li>4.1.   <a href="#rfc.section.4.1">Discussion</a></li>
-</ul><li>5.   <a href="#rfc.section.5">Message Transmission</a></li>
-<li>6.   <a href="#rfc.section.6">CoAP URI</a></li>
-<ul><li>6.1.   <a href="#rfc.section.6.1">coap+tcp URI scheme</a></li>
-<li>6.2.   <a href="#rfc.section.6.2">coaps+tcp URI scheme</a></li>
-</ul><li>7.   <a href="#rfc.section.7">Security Considerations</a></li>
-<li>8.   <a href="#rfc.section.8">IANA Considerations</a></li>
-<ul><li>8.1.   <a href="#rfc.section.8.1">Service Name and Port Number Registration</a></li>
-<li>8.2.   <a href="#rfc.section.8.2">URI Schemes</a></li>
-<li>8.3.   <a href="#rfc.section.8.3">ALPN Protocol ID</a></li>
-</ul><li>9.   <a href="#rfc.section.9">Acknowledgements</a></li>
-<li>10.   <a href="#rfc.references">References</a></li>
-<ul><li>10.1.   <a href="#rfc.references.1">Normative References</a></li>
-<li>10.2.   <a href="#rfc.references.2">Informative References</a></li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">Terminology</a></li>
+</ul><li>2.   <a href="#rfc.section.2">CoAP over TCP</a></li>
+<ul><li>2.1.   <a href="#rfc.section.2.1">Message Format</a></li>
+<li>2.2.   <a href="#rfc.section.2.2">Message Transmission</a></li>
+</ul><li>3.   <a href="#rfc.section.3">CoAP over WebSockets</a></li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">Opening Handshake</a></li>
+<li>3.2.   <a href="#rfc.section.3.2">Message Format</a></li>
+<li>3.3.   <a href="#rfc.section.3.3">Message Transmission</a></li>
+<li>3.4.   <a href="#rfc.section.3.4">Connection Health</a></li>
+<li>3.5.   <a href="#rfc.section.3.5">Closing the Connection</a></li>
+</ul><li>4.   <a href="#rfc.section.4">CoAP URIs</a></li>
+<ul><li>4.1.   <a href="#rfc.section.4.1">CoAP over TCP and TLS URIs</a></li>
+<li>4.2.   <a href="#rfc.section.4.2">CoAP over WebSockets URIs</a></li>
+</ul><li>5.   <a href="#rfc.section.5">Security Considerations</a></li>
+<li>6.   <a href="#rfc.section.6">IANA Considerations</a></li>
+<ul><li>6.1.   <a href="#rfc.section.6.1">Service Name and Port Number Registration</a></li>
+<li>6.2.   <a href="#rfc.section.6.2">URI Scheme Registration</a></li>
+<li>6.3.   <a href="#rfc.section.6.3">Well-Known URI Suffix Registration</a></li>
+<li>6.4.   <a href="#rfc.section.6.4">ALPN Protocol ID</a></li>
+<li>6.5.   <a href="#rfc.section.6.5">WebSocket Subprotocol Registration</a></li>
+</ul><li>7.   <a href="#rfc.section.7">Acknowledgements</a></li>
+<li>8.   <a href="#rfc.references">References</a></li>
+<ul><li>8.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>8.2.   <a href="#rfc.references.2">Informative References</a></li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">CoAP over WebSocket Examples</a></li>
+<li>Appendix B.   <a href="#rfc.appendix.B">Change Log</a></li>
+<ul><li>B.1.   <a href="#rfc.appendix.B.1">Since draft-core-coap-tcp-tls-02</a></li>
 </ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
   </ul>
 
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a></h1>
-<p id="rfc.section.1.p.1">The <a href="#RFC7252">Constrained Application Protocol (CoAP)</a> <cite title="NONE">[RFC7252]</cite> was designed for Internet of Things (IoT) deployments, assuming that UDP can be used unimpeded &#8212; UDP <a href="#RFC0768">[RFC0768]</a>, or DTLS <a href="#RFC6347">[RFC6347]</a> over UDP; it is a good choice for transferring small amounts of data across networks that follow the IP architecture.  Some CoAP deployments, however, may have to integrate well with existing enterprise infrastructure, where the use of UDP-based protocols may not be well-received or may even be blocked by firewalls.  Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP brittle, resulting in lost or malformed packets.</p>
-<p id="rfc.section.1.p.2">Where NATs are still present, CoAP over TCP can also help with their traversal. NATs often calculate expiration timers based on the transport layer protocol being used by application protocols.  Many NATs are built around the assumption that a transport layer protocol, such as TCP, gives them additional information about the session life cycle and keep TCP-based NAT bindings around for a longer period. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter, as research confirms <a href="#HomeGateway">[HomeGateway]</a>.</p>
-<p id="rfc.section.1.p.3">Some environments may also benefit from the ability of TCP to exchange larger payloads (such as firmware images) without application layer segmentation and to utilize the more sophisticated congestion control capabilities provided by many TCP implementations.  (Note that there is ongoing work to add more elaborate congestion control to CoAP as well, see <a href="#I-D.bormann-core-cocoa">[I-D.bormann-core-cocoa]</a>.)</p>
-<p id="rfc.section.1.p.4">Finally, CoAP may be integrated into a Web environment where the front-end uses CoAP from IoT devices to a cloud infrastructure but the CoAP messages are then transported in TCP between the back-end services.  A TCP-to-UDP gateway can be used at the cloud boundary to talk to the UDP-based IoT.</p>
-<p id="rfc.section.1.p.5">To make IoT devices work smoothly in these demanding environments, CoAP needs to make use of a different transport protocol, namely TCP <a href="#RFC0793">[RFC0793]</a>, in some situations secured by TLS <a href="#RFC5246">[RFC5246]</a>.</p>
-<p id="rfc.section.1.p.6">Conceptually, the CoAP over TCP/TLS specification replaces most of CoAP&#8217;s message layer by a new message adapter on top of TCP or TLS that does provides a framing mechanism on top of the byte stream provided by TCP/TLS, conveying the length information about each CoAP message that on datagram transports is provided by the datagram layer below (UDP, DTLS).</p>
-<p id="rfc.section.1.p.7">The message adapter also adds a way to use signaling messages to perform various housekeeping operations on the TCP, see [I-D.bormann-core-signaling].</p>
-<p id="rfc.section.1.p.8">When CoAP is used over TLS then some of the housekeeping features are already available with the TLS Handshake protocol; less new functionality is then required.</p>
-<p id="rfc.section.1.p.9">Modifications to CoAP beyond the replacement of the message layer (e.g., to introduce further optimizations) are intentionally avoided.</p>
-<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
-<p id="rfc.section.2.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
-<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#message-adapter-protocol" id="message-adapter-protocol">Message Adapter Protocol</a></h1>
-<p id="rfc.section.3.p.1">The interaction model of CoAP over TCP is very similar to the one for CoAP over UDP, with the key difference that using TCP voids the need to provide certain transport layer protocol features at the CoAP level, such as reliable delivery, fragmentation and reassembly, as well as congestion control. The protocol stack is illustrated in <a href="#stack">Figure 1</a> (derived from <a href="#RFC7252">[RFC7252]</a>, Figure 1).</p>
+<p id="rfc.section.1.p.1">The <a href="#RFC7252">Constrained Application Protocol (CoAP)</a> <cite title="NONE">[RFC7252]</cite> was designed for Internet of Things (IoT) deployments, assuming that UDP <a href="#RFC0768">[RFC0768]</a> or DTLS <a href="#RFC6347">[RFC6347]</a> over UDP can be used unimpeded. UDP is a good choice for transferring small amounts of data across networks that follow the IP architecture.</p>
+<p id="rfc.section.1.p.2">Some CoAP deployments need to integrate well with existing enterprise infrastructures, where UDP-based protocols may not be well-received or may even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP brittle, resulting in lost or malformed packets.</p>
+<p id="rfc.section.1.p.3">To address such environments, this document defines additional bindings for CoAP, including TCP, TLS, and WebSockets.</p>
 <div id="rfc.figure.1"/>
+<div id="layering"/>
+<pre>
++-----------------------------------------------------------+
+|                                                           |
+|                        Application                        |
+|                                                           |
++-----------------------------------------------------------+
+|                                                           |
+|                           CoAP                            |
+|                  Requests and Responses                   |
+|                                                           |
++ - - - - - - - - - +-------------------+-------------------+
+|                   |                   |                   |
+|       CoAP        |     CoAP over     |     CoAP over     |
+|     Messaging     |    TCP and TLS    |    WebSockets     |
+|                   |                   |                   |
++---------+---------+---------+---------+-------------------+
+|         |         |         |         |                   |
+|   UDP   |  DTLS   |   TCP   |   TLS   |    WebSockets     |
+|         |         |         |         |                   |
++---------+---------+---------+---------+-------------------+
+</pre>
+<p class="figure">Figure 1: Abstract layering of CoAP extended by TCP, TLS, and WebSockets</p>
+<p id="rfc.section.1.p.4">Where NATs are present, CoAP over TCP can help with their traversal.  NATs often calculate expiration timers based on the transport layer protocol being used by application protocols. Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption that a transport layer protocol, such as TCP, offers additional information about the session life cycle. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter, as confirmed by research <a href="#HomeGateway">[HomeGateway]</a>.</p>
+<p id="rfc.section.1.p.5">Some environments may also benefit from the ability of TCP to exchange larger payloads (such as firmware images) without application layer segmentation and to utilize the more sophisticated congestion control capabilities provided by many TCP implementations.</p>
+<p id="rfc.section.1.p.6">(Note that there is ongoing work to add more elaborate congestion control to CoAP as well, see <a href="#I-D.bormann-core-cocoa">[I-D.bormann-core-cocoa]</a>.)</p>
+<p id="rfc.section.1.p.7">CoAP may be integrated into a Web environment where the front-end uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP over TCP between the back-end services. A TCP-to-UDP gateway can be used at the cloud boundary to communicate with the UDP-based IoT device.</p>
+<p id="rfc.section.1.p.8">To make IoT devices work smoothly in these demanding environments, CoAP needs to make use of a different transport protocol, namely TCP <a href="#RFC0793">[RFC0793]</a>, in some situations secured by TLS <a href="#RFC5246">[RFC5246]</a>.</p>
+<p id="rfc.section.1.p.9">Some corporate networks only allow Internet access via a HTTP proxy.  In this case, the best transport for CoAP would be the <a href="#RFC6455">WebSocket Protocol</a> <cite title="NONE">[RFC6455]</cite>.  The WebSocket protocol provides two-way communication between a client and a server after upgrading an <a href="#RFC7230">HTTP/1.1</a> <cite title="NONE">[RFC7230]</cite> connection and may be available in an environment that blocks CoAP over UDP. Another scenario for CoAP over WebSockets is a CoAP application running inside a web browser without access to connectivity other than HTTP and WebSockets.</p>
+<p id="rfc.section.1.p.10">This document specifies how to access resources using CoAP requests and responses over the WebSocket Protocol. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a WebSocket Connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
+<h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
+<p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
+<p id="rfc.section.1.1.p.2">This document assumes that readers are familiar with the terms and concepts that are used in <a href="#RFC6455">[RFC6455]</a> and <a href="#RFC7252">[RFC7252]</a>.</p>
+<h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#coap-over-tcp" id="coap-over-tcp">CoAP over TCP</a></h1>
+<p id="rfc.section.2.p.1">The interaction model of CoAP over TCP is very similar to the one for CoAP over UDP, with the key difference that using TCP voids the need to provide certain transport layer protocol features at the CoAP level, such as reliable delivery, fragmentation and reassembly, as well as congestion control. The protocol stack is illustrated in <a href="#stack">Figure 2</a> (derived from <a href="#RFC7252">[RFC7252]</a>, Figure 1).</p>
+<div id="rfc.figure.2"/>
 <div id="stack"/>
 <pre>
         +----------------------+
@@ -423,11 +501,11 @@ li, p {
         |          TCP         |
         +----------------------+
 </pre>
-<p class="figure">Figure 1: The CoAP over TLS/TCP Protocol Stack</p>
-<p id="rfc.section.3.p.2">Since TCP offers reliable delivery, there is no need to offer a redundant acknowledgement at the CoAP messaging layer.</p>
-<p id="rfc.section.3.p.3">Since there is no need to carry around acknowledgement semantics, messages do not require a message type; no message layer acknowledgement is expected or even possible.  By the nature of TCP, messages are always transmitted reliably over TCP. <a href="#fig-untyped1">Figure 2</a> (derived from <a href="#RFC7252">[RFC7252]</a>, Figure 3) shows this message exchange graphically.  A UDP-to-TCP gateway will therefore discard all empty messages, such as empty ACKs (after operating on them at the message layer), and re-pack the contents of all non-empty CON, NON, or ACK messages (i.e., those ACK messages that have a piggy-backed response) into untyped messages.</p>
-<p id="rfc.section.3.p.4">Similarly, there is no need to detect duplicate delivery of a message.  In UDP CoAP, the Message ID is used for relating acknowledgements to Confirmable messages as well as for duplicate detection.  Since the Message ID thus is not meaningful over TCP, it is elided (as indicated by the dashes in <a href="#fig-untyped1">Figure 2</a>).</p>
-<div id="rfc.figure.2"/>
+<p class="figure">Figure 2: The CoAP over TLS/TCP Protocol Stack</p>
+<p id="rfc.section.2.p.2">Since TCP offers reliable delivery, there is no need to offer a redundant acknowledgement at the CoAP messaging layer.</p>
+<p id="rfc.section.2.p.3">Since there is no need to carry around acknowledgement semantics, messages do not require a message type; no message layer acknowledgement is expected or even possible.  By the nature of TCP, messages are always transmitted reliably over TCP. <a href="#fig-untyped1">Figure 3</a> (derived from <a href="#RFC7252">[RFC7252]</a>, Figure 3) shows this message exchange graphically.  A UDP-to-TCP gateway will therefore discard all empty messages, such as empty ACKs (after operating on them at the message layer), and re-pack the contents of all non-empty CON, NON, or ACK messages (i.e., those ACK messages that have a piggy-backed response) into untyped messages.</p>
+<p id="rfc.section.2.p.4">Similarly, there is no need to detect duplicate delivery of a message.  In UDP CoAP, the Message ID is used for relating acknowledgements to Confirmable messages as well as for duplicate detection.  Since the Message ID thus is not meaningful over TCP, it is elided (as indicated by the dashes in <a href="#fig-untyped1">Figure 3</a>).</p>
+<div id="rfc.figure.3"/>
 <div id="fig-untyped1"/>
 <pre>
         Client                Server
@@ -436,9 +514,9 @@ li, p {
            +--------------------&gt;|
            |                     |
 </pre>
-<p class="figure">Figure 2: Untyped Message Transmission over TCP.</p>
-<p id="rfc.section.3.p.5">A response is sent back as defined in <a href="#RFC7252">[RFC7252]</a>, as illustrated in <a href="#fig-untyped2">Figure 3</a> (derived from <a href="#RFC7252">[RFC7252]</a>, Figure 6).</p>
-<div id="rfc.figure.3"/>
+<p class="figure">Figure 3: Untyped Message Transmission over TCP.</p>
+<p id="rfc.section.2.p.5">A response is sent back as defined in <a href="#RFC7252">[RFC7252]</a>, as illustrated in <a href="#fig-untyped2">Figure 4</a> (derived from <a href="#RFC7252">[RFC7252]</a>, Figure 6).</p>
+<div id="rfc.figure.4"/>
 <div id="fig-untyped2"/>
 <pre>
         Client                Server
@@ -455,10 +533,15 @@ li, p {
            |&lt;-------------------+
            |                    |
 </pre>
-<p class="figure">Figure 3: Untyped messages carrying Request/Response.</p>
-<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#message-format" id="message-format">Message Format</a></h1>
-<p id="rfc.section.4.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 4</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate and for providing length information.</p>
-<div id="rfc.figure.4"/>
+<p class="figure">Figure 4: Untyped messages carrying Request/Response.</p>
+<p id="rfc.section.2.p.6">EDITOR: These are &#8220;leftover&#8221; paragraphs from the original Overview section. Keeping until I perform a complete editorial pass of the &#8220;roughed in&#8221; material.</p>
+<p id="rfc.section.2.p.7">Conceptually, the CoAP over TCP/TLS specification replaces most of CoAP&#8217;s message layer by a new message adapter on top of TCP or TLS that provides a framing mechanism on top of the byte stream provided by TCP/TLS, conveying the length information about each CoAP message that on datagram transports is provided by the datagram layer below (UDP, DTLS).</p>
+<p id="rfc.section.2.p.8">The message adapter also adds a way to use signaling messages to perform various housekeeping operations on the TCP, see [I-D.bormann-core-signaling].</p>
+<p id="rfc.section.2.p.9">When CoAP is used over TLS then some of the housekeeping features are already available with the TLS Handshake protocol; less new functionality is then required.</p>
+<p id="rfc.section.2.p.10">Modifications to CoAP beyond the replacement of the message layer (e.g., to introduce further optimizations) are intentionally avoided.</p>
+<h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#tcp-message-format" id="tcp-message-format">Message Format</a></h1>
+<p id="rfc.section.2.1.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 5</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate and for providing length information.</p>
+<div id="rfc.figure.5"/>
 <div id="CoAP-Header"/>
 <pre>
  0                   1                   2                   3
@@ -473,9 +556,9 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 4: RFC 7252 defined CoAP Message Format.</p>
-<p id="rfc.section.4.p.2">In a stream oriented transport protocol such as TCP, a form of message delimitation is needed.  For this purpose, CoAP over TCP introduces a length field with variable size. <a href="#fig-shim">Figure 5</a> shows the adjusted CoAP header format with a modified structure for the fixed header (first 4 bytes of the UDP CoAP header), which includes the length information of variable size, shown here as an 8-bit length.</p>
-<div id="rfc.figure.5"/>
+<p class="figure">Figure 5: RFC 7252 defined CoAP Message Format.</p>
+<p id="rfc.section.2.1.p.2">In a stream oriented transport protocol such as TCP, a form of message delimitation is needed.  For this purpose, CoAP over TCP introduces a length field with variable size. <a href="#fig-shim">Figure 6</a> shows the adjusted CoAP header format with a modified structure for the fixed header (first 4 bytes of the UDP CoAP header), which includes the length information of variable size, shown here as an 8-bit length.</p>
+<div id="rfc.figure.6"/>
 <div id="fig-shim"/>
 <pre>
  0                   1                   2                   3
@@ -488,8 +571,8 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 5: CoAP Header with 8-bit Length in Header.</p>
-<p id="rfc.section.4.p.3">The initial byte of the frame contains two nibbles, in a similar way to the CoAP option encoding (see Section 3.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
+<p class="figure">Figure 6: CoAP Header with 8-bit Length in Header.</p>
+<p id="rfc.section.2.1.p.3">The initial byte of the frame contains two nibbles, in a similar way to the CoAP option encoding (see Section 3.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
 <p/>
 
 <dl>
@@ -498,8 +581,8 @@ li, p {
   <dt>TKL:</dt>
   <dd style="margin-left: 8">The second nibble of the initial byte indicates the token length.</dd>
 </dl>
-<p id="rfc.section.4.p.5">The following figures show the shim headers for the 0-bit, 16-bit, and the 32-bit headers.</p>
-<div id="rfc.figure.6"/>
+<p id="rfc.section.2.1.p.5">The following figures show the shim headers for the 0-bit, 16-bit, and the 32-bit headers.</p>
+<div id="rfc.figure.7"/>
 <div id="fig-shim1"/>
 <pre>
  0                   1                   2                   3
@@ -512,9 +595,9 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 6: CoAP Header with elided Length Header.</p>
-<p id="rfc.section.4.p.6">For example: A CoAP message just containing a 2.03 code with the token 7f and no options or payload would be encoded as shown in <a href="#fig-shim2">Figure 7</a>.</p>
-<div id="rfc.figure.7"/>
+<p class="figure">Figure 7: CoAP Header with elided Length Header.</p>
+<p id="rfc.section.2.1.p.6">For example: A CoAP message just containing a 2.03 code with the token 7f and no options or payload would be encoded as shown in <a href="#fig-shim2">Figure 8</a>.</p>
+<div id="rfc.figure.8"/>
 <div id="fig-shim2"/>
 <pre>
  0                   1                   2
@@ -528,8 +611,8 @@ li, p {
  Code  =  2.03     --&gt; 0x43
  Token =               0x7f
 </pre>
-<p class="figure">Figure 7: CoAP Header Example.</p>
-<div id="rfc.figure.8"/>
+<p class="figure">Figure 8: CoAP Header Example.</p>
+<div id="rfc.figure.9"/>
 <div id="fig-shim3"/>
 <pre>
  0                   1                   2                   3
@@ -544,8 +627,8 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 8: CoAP Header with 16-bit Length in Header.</p>
-<div id="rfc.figure.9"/>
+<p class="figure">Figure 9: CoAP Header with 16-bit Length in Header.</p>
+<div id="rfc.figure.10"/>
 <div id="fig-shim4"/>
 <pre>
  0                   1                   2                   3
@@ -560,56 +643,193 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 9: CoAP Header with 32-bit Length in Header.</p>
-<p id="rfc.section.4.p.7">The semantics of the other CoAP header fields are left unchanged.</p>
-<h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> <a href="#discussion" id="discussion">Discussion</a></h1>
-<p id="rfc.section.4.1.p.1">One observation is that, over a reliable byte stream transport, the message size limitations defined in Section 4.6 of <a href="#RFC7252">[RFC7252]</a> are no longer strictly necessary.  Consenting <a id="how" class="info">[how]<span class="info">cabo: There is currently no defined way to arrive at this consent.</span></a> implementations may want to interchange messages with payload sizes larger than 1024 bytes, potentially also obviating the need for the Block protocol <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.  It must be noted that entirely getting rid of the block protocol is not a generally applicable solution, as:</p>
+<p class="figure">Figure 10: CoAP Header with 32-bit Length in Header.</p>
+<p id="rfc.section.2.1.p.7">The semantics of the other CoAP header fields are left unchanged.</p>
+<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a></h1>
+<p id="rfc.section.2.2.p.1">EDITOR: This is extremely similar to the WebSocket section of the same name.</p>
+<p id="rfc.section.2.2.p.2">As CoAP exchanges messages asynchronously over the TCP connection, the client can send multiple requests without waiting for responses.  For this reason, and due to the nature of TCP, responses are returned during the same TCP connection as the request.  In the event that the connection gets terminated, all requests that have not yet elicited a response are implicitly canceled; clients may transmit the request again once a connection is reestablished.</p>
+<p id="rfc.section.2.2.p.3">Furthermore, since TCP is bidirectional, requests can be sent from both the connecting host and the endpoint that accepted the connection.  In other words, the question who initiated the TCP connection has no bearing on the meaning of the CoAP terms client and server.</p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#overview" id="overview">CoAP over WebSockets</a></h1>
+<p id="rfc.section.3.p.1">CoAP over WebSockets can be used in a number of configurations. The most basic configuration is a CoAP client seeking to retrieve or update a CoAP resource located at a CoAP server that exposes a WebSocket endpoint (<a href="#arch-1">Figure 11</a>). The CoAP client takes the role of the WebSocket client, establishes a WebSocket Connection and sends a CoAP request, to which the CoAP server returns a CoAP response. The WebSocket Connection can be used for any number of requests.</p>
+<div id="rfc.figure.11"/>
+<div id="arch-1"/>
+<pre>
+ ___________                            ___________
+|           |                          |           |
+|          _|___      requests      ___|_          |
+|   CoAP  /  \  \  -------------&gt;  /  /  \  CoAP   |
+|  Client \__/__/  &lt;-------------  \__\__/ Server  |
+|           |         responses        |           |
+|___________|                          |___________|
+        WebSocket  =============&gt;  WebSocket
+          Client     Connection     Server
+</pre>
+<p class="figure">Figure 11: CoAP Client (WebSocket client) accesses CoAP Server (WebSocket server)</p>
+<p id="rfc.section.3.p.2">The challenge in this configuration is to identify resource in the namespace of the CoAP server: When the WebSocket Protocol is used by a dedicated client directly (i.e., not from a web page through a web browser), the client can connect to any WebSocket endpoint. This means it is necessary that the client is able to determine both the WebSocket endpoint (identified by a &#8220;ws&#8221; or &#8220;wss&#8221; URI) and the path and query of the CoAP resource within that endpoint from the same URI. When the WebSocket Protocol is used from a web page, the choices are more limited <a href="#RFC6454">[RFC6454]</a>, but the challenge persists.</p>
+<p><a href="#uris">Section 4.2</a> proposes a new &#8220;coap+ws&#8221; URI scheme that identifies both a WebSocket endpoint and a resource within that endpoint as follows:</p>
+<div id="rfc.figure.12"/>
+<div id="uri-example"/>
+<pre>
+      coap+ws://example.org/sensors/temperature?u=Cel
+           \______  ______/\___________  ___________/
+                  \/                   \/
+                                     Uri-Path: "sensors"
+ws://example.org/.well-known/coap    Uri-Path: "temperature"
+                                     Uri-Query: "u=Cel"
+</pre>
+<p class="figure">Figure 12: The "coap+ws" URI Scheme</p>
+<p id="rfc.section.3.p.4">Another possible configuration is to set up a CoAP forward proxy at the WebSocket endpoint. Depending on what transports are available to the proxy, it could forward the request to a CoAP server with a CoAP UDP endpoint (<a href="#arch-2">Figure 13</a>), an SMS endpoint (a.k.a.&#160;mobile phone), or even another WebSocket endpoint. The client specifies the resource to be updated or retrieved in the Proxy-URI Option.</p>
+<div id="rfc.figure.13"/>
+<div id="arch-2"/>
+<pre>
+ ___________                ___________                ___________
+|           |              |           |              |           |
+|          _|___        ___|_         _|___        ___|_          |
+|   CoAP  /  \  \ ---&gt; /  /  \ CoAP  /  \  \ ---&gt; /  /  \  CoAP   |
+|  Client \__/__/ &lt;--- \__\__/ Proxy \__/__/ &lt;--- \__\__/ Server  |
+|           |              |           |              |           |
+|___________|              |___________|              |___________|
+        WebSocket ===&gt; WebSocket      UDP            UDP
+          Client        Server      Client          Server
+</pre>
+<p class="figure">Figure 13: CoAP Client (WebSocket client) accesses CoAP Server (UDP server) via a CoAP proxy (WebSocket server/UDP client)</p>
+<p id="rfc.section.3.p.5">A third possible configuration is a CoAP server running inside a web browser (<a href="#arch-3">Figure 14</a>). The web browser initially connects to a WebSocket endpoint and is then reachable through the WebSocket server. When no connection exists, the CoAP server is not reachable; it therefore can be considered a <a href="#I-D.dijk-core-sleepy-reqs">Sleepy Endpoint (SEP)</a> <cite title="NONE">[I-D.dijk-core-sleepy-reqs]</cite>.  Because the WebSocket server is the only way to reach the CoAP server, the CoAP proxy should be a Reverse Proxy.</p>
+<div id="rfc.figure.14"/>
+<div id="arch-3"/>
+<pre>
+ ___________                ___________                ___________
+|           |              |           |              |           |
+|          _|___        ___|_         _|___        ___|_          |
+|   CoAP  /  \  \ ---&gt; /  /  \ CoAP  /  /  \ ---&gt; /  \  \  CoAP   |
+|  Client \__/__/ &lt;--- \__\__/ Proxy \__\__/ &lt;--- \__/__/ Server  |
+|           |              |           |              |           |
+|___________|              |___________|              |___________|
+           UDP            UDP      WebSocket &lt;=== WebSocket
+         Client          Server      Server        Client
+</pre>
+<p class="figure">Figure 14: CoAP Client (UDP client) accesses sleepy CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)</p>
+<p id="rfc.section.3.p.6">Further configurations are possible, including those where a WebSocket Connection is established through an HTTP proxy.</p>
+<p id="rfc.section.3.p.7">CoAP over WebSockets is intentionally very similar to CoAP as defined over UDP. Therefore, instead of presenting CoAP over WebSockets as a new protocol, this document specifies it as a series of deltas from <a href="#RFC7252">[RFC7252]</a>.</p>
+<h1 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#handshake" id="handshake">Opening Handshake</a></h1>
+<p id="rfc.section.3.1.p.1">Before CoAP requests and responses can be exchanged, a WebSocket Connection needs to be established as defined in Section 4 of <a href="#RFC6455">[RFC6455]</a>. <a href="#handshake-example">Figure 15</a> shows an example.</p>
+<p id="rfc.section.3.1.p.2">The WebSocket client MUST include the subprotocol name &#8220;coap&#8221; in the list of protocols, which indicates support for the protocol defined in this document. Any later, incompatible versions of CoAP or CoAP over WebSockets will use a different subprotocol name.</p>
+<p id="rfc.section.3.1.p.3">The WebSocket client includes the hostname of the WebSocket server in the Host header field of its handshake as per <a href="#RFC6455">[RFC6455]</a>. The Host header field also indicates the default value of the Uri-Host Option in requests from the WebSocket client to the WebSocket server.</p>
+<div id="rfc.figure.15"/>
+<div id="handshake-example"/>
+<pre>
+GET /.well-known/coap HTTP/1.1
+Host: example.org
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+Sec-WebSocket-Protocol: coap
+Sec-WebSocket-Version: 13
+
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+Sec-WebSocket-Protocol: coap
+</pre>
+<p class="figure">Figure 15: Example of an Opening Handshake</p>
+<h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#websocket-message-format" id="websocket-message-format">Message Format</a></h1>
+<p id="rfc.section.3.2.p.1">Once a WebSocket Connection has been established, CoAP requests and responses can be exchanged as WebSocket messages. Since CoAP uses a binary message format, the messages are transmitted in binary data frames as specified in Sections 5 and 6 of <a href="#RFC6455">[RFC6455]</a>.</p>
+<p id="rfc.section.3.2.p.2">The message format is very similar to the format specified for <a href="#RFC7252">CoAP over UDP</a> <cite title="NONE">[RFC7252]</cite>. The differences are as follows:</p>
 <p/>
 
 <ul>
-  <li>a UDP-to-TCP gateway may simply not have the context to convert a message with a Block option into the equivalent exchange without any use of a Block option;</li>
-  <li>large messages might also cause undesired head-of-line blocking;</li>
-  <li>the 2-byte message length field causes another, larger upper bound to the message length.</li>
+  <li>Since the underlying TCP connection provides retransmissions and deduplication, there is no need for the reliability mechanisms provided by CoAP over UDP. This means the &#8220;T&#8221; and &#8220;Message ID&#8221; fields in the CoAP message header can be elided.</li>
+  <li>Furthermore, since the CoAP version is already negotiated during the opening handshake, the &#8220;Ver&#8221; field can be elided as well.</li>
 </ul>
-<p><a href="#I-D.bormann-core-block-bert">[I-D.bormann-core-block-bert]</a> proposes to extend the block-wise transfer protocol to allow for larger block sizes as are possible over TCP and TLS.</p>
-<p id="rfc.section.4.1.p.4">The general assumption is therefore that the block protocol will continue to be used over TCP, even if TCP-based applications occasionally do exchange messages with payload sizes larger than desirable in UDP.</p>
-<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a></h1>
-<p id="rfc.section.5.p.1">As CoAP exchanges messages asynchronously over the TCP connection, the client can send multiple requests without waiting for responses.  For this reason, and due to the nature of TCP, responses are returned during the same TCP connection as the request.  In the event that the connection gets terminated, all requests that have not yet elicited a response are implicitly canceled; clients may transmit the request again once a connection is reestablished.</p>
-<p id="rfc.section.5.p.2">Furthermore, since TCP is bidirectional, requests can be sent from both the connecting host and the endpoint that accepted the connection.  In other words, the question who initiated the TCP connection has no bearing on the meaning of the CoAP terms client and server.</p>
-<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#URI" id="URI">CoAP URI</a></h1>
-<p id="rfc.section.6.p.1">CoAP <a href="#RFC7252">[RFC7252]</a> defines the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes for identifying CoAP resources and providing a means of locating the resource. RFC 7252 defines these resources for use with CoAP over UDP.</p>
-<p id="rfc.section.6.p.2">The present specification introduces two new URI schemes, namely &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;.  The rules from Section 6 of <a href="#RFC7252">[RFC7252]</a> apply to these two new URI schemes.</p>
-<p><a href="#RFC7252">[RFC7252]</a>, Section 8 (Multicast CoAP), does not apply to the URI schemes defined in the present specification.</p>
-<p id="rfc.section.6.p.4">Resources made available via one of the &#8220;coap+tcp&#8221; or &#8220;coaps+tcp&#8221; schemes have no shared identity with the other scheme or with the &#8220;coap&#8221; or &#8220;coaps&#8221; scheme, even if their resource identifiers indicate the same authority (the same host listening to the same port).  The schemes constitute distinct namespaces and, in combination with the authority, are considered to be distinct origin servers.</p>
-<h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#coaptcp-uri-scheme" id="coaptcp-uri-scheme">coap+tcp URI scheme</a></h1>
+<div id="rfc.figure.16"/>
+<div id="ws-message-format"/>
+<pre>
+  0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   R   |  TKL  |      Code     |    Token (TKL bytes) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Options (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|1 1 1 1 1 1 1 1|    Payload (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p class="figure">Figure 16: CoAP Message Format over WebSockets</p>
+<p id="rfc.section.3.2.p.4">The resulting message format is shown in <a href="#ws-message-format">Figure 16</a>. The four most-significant bits of the first byte are reserved (R) and MUST be set to zero. The remaining fields and structure are the same as defined in <a href="#RFC7252">[RFC7252]</a>.</p>
+<p id="rfc.section.3.2.p.5">Requests and response messages can be fragmented as specified in Section 5.4 of <a href="#RFC6455">[RFC6455]</a>, though typically they are sent unfragmented as they tend to be small and fully buffered before transmission. The WebSocket protocol does not provide means for multiplexing; if it is not desirable for a large message to monopolize the connection, requests and responses can be transferred in a blockwise fashion as defined in <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
+<p id="rfc.section.3.2.p.6">Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry either a request or a response.</p>
+<h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> <a href="#requests-responses" id="requests-responses">Message Transmission</a></h1>
+<p id="rfc.section.3.3.p.1">CoAP requests and responses are exchanged asynchronously over the WebSocket Connection, i.e., a CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
+<p id="rfc.section.3.3.p.2">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
+<p id="rfc.section.3.3.p.3">Retransmission and deduplication of messages is provided by the WebSocket Protocol. CoAP over WebSockets therefore does not make a distinction between Confirmable or Non-Confirmable messages, and does not provide Acknowledgement or Reset messages.</p>
+<p id="rfc.section.3.3.p.4">Since the WebSocket Protocol provides ordered delivery of messages, the mechanism for reordering detection when <a href="#RFC7641">observing resources</a> <cite title="NONE">[RFC7641]</cite> is not needed. The value of the Observe Option in notifications therefore MAY be empty on transmission and MUST be ignored on reception.</p>
+<h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#liveliness" id="liveliness">Connection Health</a></h1>
+<p id="rfc.section.3.4.p.1">When a client does not receive any response for some time after sending a CoAP request (or, similarly, when a client observes a resource and it does not receive any notification for some time), the connection between the WebSocket client and the WebSocket server may be lost or temporarily disrupted without the client being aware of it.</p>
+<p id="rfc.section.3.4.p.2">To check the health of the WebSocket Connection (and thereby of all active requests, if any), the client can send a Ping frame or an unsolicited Pong frame as specified in Section 5.5 of <a href="#RFC6455">[RFC6455]</a>. There is no way to retransmit a request without creating a new one. Re-registering interest in a resource is permitted, but entirely unnecessary.</p>
+<h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#close" id="close">Closing the Connection</a></h1>
+<p id="rfc.section.3.5.p.1">The WebSocket Connection is closed as specified in Section 7 of <a href="#RFC6455">[RFC6455]</a>.</p>
+<p id="rfc.section.3.5.p.2">All requests for which the CoAP client has not received a response yet are cancelled when the connection is closed.  If the client observes one or more resources over the WebSocket Connection, then the CoAP server (or intermediary in the role of the CoAP server) MUST remove all entries associated with the client from the lists of observers when the connection is closed.</p>
+<h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#URI" id="URI">CoAP URIs</a></h1>
+<p id="rfc.section.4.p.1">CoAP over UDP <a href="#RFC7252">[RFC7252]</a> defines the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes for identifying CoAP resources and providing a means of locating the resource.</p>
+<h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> <a href="#coap-over-tcp-and-tls-uris" id="coap-over-tcp-and-tls-uris">CoAP over TCP and TLS URIs</a></h1>
+<p id="rfc.section.4.1.p.1">CoAP over TCP uses &#8220;coap_tcp&#8221; URI scheme. CoAP over TLS uses the &#8220;coaps+tcp&#8221; scheme. The rules from Section 6 of <a href="#RFC7252">[RFC7252]</a> apply to both of these URI schemes.</p>
+<p><a href="#RFC7252">[RFC7252]</a>, Section 8 (Multicast CoAP) is not applicable to these schemes.</p>
+<p id="rfc.section.4.1.p.3">Resources made available via one of the &#8220;coap+tcp&#8221; or &#8220;coaps+tcp&#8221; schemes have no shared identity with the other scheme or with the &#8220;coap&#8221; or &#8220;coaps&#8221; scheme, even if their resource identifiers indicate the same authority (the same host listening to the same port).  The schemes constitute distinct namespaces and, in combination with the authority, are considered to be distinct origin servers.</p>
+<h1 id="rfc.section.4.1.1"><a href="#rfc.section.4.1.1">4.1.1.</a> <a href="#coaptcp-uri-scheme" id="coaptcp-uri-scheme">coap+tcp URI scheme</a></h1>
 <pre>
 coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ] path-abempty
                [ "?" query ]
 </pre>
-<p id="rfc.section.6.1.p.1">The semantics defined in <a href="#RFC7252">[RFC7252]</a>, Section 6.1, apply to this URI scheme, with the following changes:</p>
+<p id="rfc.section.4.1.1.p.1">The semantics defined in <a href="#RFC7252">[RFC7252]</a>, Section 6.1, apply to this URI scheme, with the following changes:</p>
 <p/>
 
 <ul>
   <li>The port subcomponent indicates the TCP port at which the CoAP server is located.  (If it is empty or not given, then the default port 5683 is assumed, as with UDP.)</li>
 </ul>
-<h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#coapstcp-uri-scheme" id="coapstcp-uri-scheme">coaps+tcp URI scheme</a></h1>
+<h1 id="rfc.section.4.1.2"><a href="#rfc.section.4.1.2">4.1.2.</a> <a href="#coapstcp-uri-scheme" id="coapstcp-uri-scheme">coaps+tcp URI scheme</a></h1>
 <pre>
 coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
                 [ "?" query ]
 </pre>
-<p id="rfc.section.6.2.p.1">The semantics defined in <a href="#RFC7252">[RFC7252]</a>, Section 6.2, apply to this URI scheme, with the following changes:</p>
+<p id="rfc.section.4.1.2.p.1">The semantics defined in <a href="#RFC7252">[RFC7252]</a>, Section 6.2, apply to this URI scheme, with the following changes:</p>
 <p/>
 
 <ul>
   <li>The port subcomponent indicates the TCP port at which the TLS server for the CoAP server is located.  If it is empty or not given, then the default port 443 is assumed (this is different from the default port for &#8220;coaps&#8221;, i.e., CoAP over DTLS over UDP).</li>
   <li>When CoAP is exchanged over TLS port 443, the &#8220;TLS Application Layer Protocol Negotiation Extension&#8221; <a href="#RFC7301">[RFC7301]</a> MUST be used to allow demultiplexing at the server-side.</li>
 </ul>
-<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#security" id="security">Security Considerations</a></h1>
-<p id="rfc.section.7.p.1">This document defines how to convey CoAP over TCP and TLS.  CoAP <a href="#RFC7252">[RFC7252]</a> makes use of DTLS 1.2 and this specification consequently uses TLS 1.2 <a href="#RFC5246">[RFC5246]</a>. CoAP MUST NOT be used with older versions of TLS. Guidelines for use of cipher suites and TLS extensions can be found in <a href="#I-D.ietf-dice-profile">[I-D.ietf-dice-profile]</a>.</p>
-<p id="rfc.section.7.p.2">TLS does not protect the TCP header. This may, for example, allow an on-path adversary to terminate a TCP connection prematurely by spoofing a TCP reset message.</p>
-<h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
-<h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#service-name-and-port-number-registration" id="service-name-and-port-number-registration">Service Name and Port Number Registration</a></h1>
-<p id="rfc.section.8.1.p.1">IANA is requested to assign the port number 5683 and the service name &#8220;coap+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>.</p>
+<h1 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a> <a href="#uris" id="uris">CoAP over WebSockets URIs</a></h1>
+<p id="rfc.section.4.2.p.1">For the first configuration discussed in <a href="#overview">Section 3</a>, this document defines two new URIs schemes that can be used for identifying CoAP resources and providing a means of locating these resources: &#8220;coap+ws&#8221; and &#8220;coap+wss&#8221;.</p>
+<p id="rfc.section.4.2.p.2">Similar to the &#8220;coap&#8221; and &#8220;coaps&#8221; schemes, the &#8220;coap+ws&#8221; and &#8220;coap+wss&#8221; schemes organize resources hierarchically under a CoAP origin server. The key difference is that the server is potentially reachable on a WebSocket endpoint instead of a UDP endpoint.</p>
+<p id="rfc.section.4.2.p.3">The WebSocket endpoint is identified by a &#8220;ws&#8221; or &#8220;wss&#8221; URI that is composed of the authority part of the &#8220;coap+ws&#8221; or &#8220;coap+wss&#8221; URI, respectively, and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a>.  The path and query parts of a &#8220;coap+ws&#8221; or &#8220;coap+wss&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by the CoAP protocol.</p>
+<p id="rfc.section.4.2.p.4">The syntax of the &#8220;coap+ws&#8221; and &#8220;coap+wss&#8221; URI schemes is specified below in Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>.  The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221; and &#8220;query&#8221; are the same as in <a href="#RFC3986">[RFC3986]</a>.</p>
+<pre>
+coap-ws-URI =
+   "coap+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+
+coap-wss-URI =
+   "coap+wss:" "//" host [ ":" port ] path-abempty [ "?" query ]
+</pre>
+<p id="rfc.section.4.2.p.5">The port component is OPTIONAL; the default for &#8220;coap+ws&#8221; is port 80, while the default for &#8220;coap+wss&#8221; is port 443.</p>
+<p id="rfc.section.4.2.p.6">Fragment identifiers are not part of the request URI and thus MUST NOT be transmitted in a WebSocket handshake or in the URI options of a CoAP request.</p>
+<h1 id="rfc.section.4.2.1"><a href="#rfc.section.4.2.1">4.2.1.</a> <a href="#decomposing-and-composing-uris" id="decomposing-and-composing-uris">Decomposing and Composing URIs</a></h1>
+<p id="rfc.section.4.2.1.p.1">The steps for decomposing a &#8220;coap+ws&#8221; or &#8220;coap+wss&#8221; URI into CoAP options are the same as specified in Section 6.4 of <a href="#RFC7252">[RFC7252]</a> with the following changes:</p>
+<p/>
+
+<ul>
+  <li>The &lt;scheme&gt; component MUST be &#8220;coap+ws&#8221; or &#8220;coap+wss&#8221; when converted to ASCII lowercase.</li>
+  <li>A Uri-Host Option MUST only be included in a request when the &lt;host&gt; component does not equal the uri-host component in the Host header field in the WebSocket handshake.</li>
+  <li>A Uri-Port Option MUST only be included in a request if |port| does not equal the port component in the Host header field in the WebSocket handshake.</li>
+</ul>
+<p id="rfc.section.4.2.1.p.3">The steps to construct a URI from a request&#8217;s options are changed accordingly.</p>
+<h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#security" id="security">Security Considerations</a></h1>
+<p id="rfc.section.5.p.1">Implementations of CoAP MUST use TLS version 1.2 or higher for CoAP over TLS.  The general TLS usage guidance in <a href="#RFC7525">[RFC7525]</a> SHOULD be followed.</p>
+<p id="rfc.section.5.p.2">Guidelines for use of cipher suites and TLS extensions can be found in <a href="#I-D.ietf-dice-profile">[I-D.ietf-dice-profile]</a>.</p>
+<p id="rfc.section.5.p.3">TLS does not protect the TCP header. This may, for example, allow an on-path adversary to terminate a TCP connection prematurely by spoofing a TCP reset message.</p>
+<p id="rfc.section.5.p.4">CoAP over WebSockets and CoAP over TLS-secured WebSockets do not introduce additional security issues beyond CoAP and DTLS-secured CoAP respectively <a href="#RFC7252">[RFC7252]</a>. The security considerations of <a href="#RFC6455">[RFC6455]</a> apply.</p>
+<h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
+<h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#service-name-and-port-number-registration" id="service-name-and-port-number-registration">Service Name and Port Number Registration</a></h1>
+<p id="rfc.section.6.1.p.1">IANA is requested to assign the port number 5683 and the service name &#8220;coap+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>.</p>
 <p/>
 
 <dl>
@@ -628,7 +848,7 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
   <dt>Port Number.</dt>
   <dd style="margin-left: 8"><br/> 5683</dd>
 </dl>
-<p id="rfc.section.8.1.p.3">Similarly, IANA is requested to assign the service name &#8220;coaps+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>.  However, no separate port number is used for &#8220;coaps&#8221; over TCP; instead, the ALPN protocol ID defined in <a href="#alpnpid">Section 8.3</a> is used over port 443.</p>
+<p id="rfc.section.6.1.p.3">Similarly, IANA is requested to assign the service name &#8220;coaps+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>.  However, no separate port number is used for &#8220;coaps&#8221; over TCP; instead, the ALPN protocol ID defined in <a href="#alpnpid">Section 6.4</a> is used over port 443.</p>
 <p/>
 
 <dl>
@@ -645,28 +865,110 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
   <dt>Reference.</dt>
   <dd style="margin-left: 8"><br/> <a href="#RFC7301">[RFC7301]</a>, [RFCthis]</dd>
   <dt>Port Number.</dt>
-  <dd style="margin-left: 8"><br/> 443  (see also <a href="#alpnpid">Section 8.3</a> of [RFCthis]})</dd>
+  <dd style="margin-left: 8"><br/> 443  (see also <a href="#alpnpid">Section 6.4</a> of [RFCthis]})</dd>
 </dl>
-<h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#uri-schemes" id="uri-schemes">URI Schemes</a></h1>
-<p id="rfc.section.8.2.p.1">This document registers two new URI schemes, namely &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, for the use of CoAP over TCP and for CoAP over TLS over TCP, respectively. The &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221; URI schemes can thus be compared to the &#8220;http&#8221; and &#8220;https&#8221; URI schemes.</p>
-<p id="rfc.section.8.2.p.2">The syntax of the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes is specified in Section 6 of <a href="#RFC7252">[RFC7252]</a> and the present document re-uses their semantics for &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, respectively, with the exception that TCP, or TLS over TCP is used as a transport protocol.</p>
-<p id="rfc.section.8.2.p.3">IANA is requested to add these new URI schemes to the registry established with <a href="#RFC7595">[RFC7595]</a>.</p>
-<h1 id="rfc.section.8.3"><a href="#rfc.section.8.3">8.3.</a> <a href="#alpnpid" id="alpnpid">ALPN Protocol ID</a></h1>
-<p id="rfc.section.8.3.p.1">IANA is requested to assign the following value in the registry &#8220;Application Layer Protocol Negotiation (ALPN) Protocol IDs&#8221; created by <a href="#RFC7301">[RFC7301]</a>:</p>
+<h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#uri-scheme-registration" id="uri-scheme-registration">URI Scheme Registration</a></h1>
+<p id="rfc.section.6.2.p.1">This document registers two new URI schemes, namely &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, for the use of CoAP over TCP and for CoAP over TLS over TCP, respectively. The &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221; URI schemes can thus be compared to the &#8220;http&#8221; and &#8220;https&#8221; URI schemes.</p>
+<p id="rfc.section.6.2.p.2">The syntax of the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes is specified in Section 6 of <a href="#RFC7252">[RFC7252]</a> and the present document re-uses their semantics for &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, respectively, with the exception that TCP, or TLS over TCP is used as a transport protocol.</p>
+<p id="rfc.section.6.2.p.3">IANA is requested to add these new URI schemes to the registry established with <a href="#RFC7595">[RFC7595]</a>.</p>
+<h1 id="rfc.section.6.2.1"><a href="#rfc.section.6.2.1">6.2.1.</a> <a href="#coapws" id="coapws">coap+ws</a></h1>
+<p id="rfc.section.6.2.1.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+ws&#8221;. The registration request complies with <a href="#RFC4395">[RFC4395]</a>.</p>
 <p/>
 
 <dl>
-  <dt>Protocol:</dt>
-  <dd style="margin-left: 8"><br/> CoAP</dd>
-  <dt>Identification Sequence:</dt>
-  <dd style="margin-left: 8"><br/> 0x63 0x6f 0x61 0x70 (&#8220;coap&#8221;)</dd>
-  <dt>Reference:</dt>
+  <dt>URL scheme name.</dt>
+  <dd style="margin-left: 8"><br/> coap+ws</dd>
+  <dt>Status.</dt>
+  <dd style="margin-left: 8"><br/> Permanent</dd>
+  <dt>URI scheme syntax.</dt>
+  <dd style="margin-left: 8"><br/> Defined in Section N of [RFCthis]</dd>
+  <dt>URI scheme semantics.</dt>
+  <dd style="margin-left: 8"><br/> The &#8220;coap+ws&#8221; URI scheme provides a way to identify resources that are potentially accessible over the Constrained Application Protocol (CoAP) using the WebSocket Protocol.</dd>
+  <dt>Encoding considerations.</dt>
+  <dd style="margin-left: 8"><br/> The scheme encoding conforms to the encoding rules established for URIs in <a href="#RFC3986">[RFC3986]</a>, i.e., internationalized and reserved characters are expressed using UTF-8-based percent-encoding.</dd>
+  <dt>Applications/protocols that use this URI scheme name.</dt>
+  <dd style="margin-left: 8"><br/> The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.</dd>
+  <dt>Interoperability considerations.</dt>
+  <dd style="margin-left: 8"><br/> None.</dd>
+  <dt>Security Considerations.</dt>
+  <dd style="margin-left: 8"><br/> See Section N of [RFCthis]</dd>
+  <dt>Contact.</dt>
+  <dd style="margin-left: 8"><br/> IETF chair &lt;chair@ietf.org&gt;</dd>
+  <dt>Author/Change controller.</dt>
+  <dd style="margin-left: 8"><br/> IESG &lt;iesg@ietf.org&gt;</dd>
+  <dt>References.</dt>
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
-<h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a></h1>
-<p id="rfc.section.9.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Christian Groves, Klaus Hartke, Julien Vermillard, Gengyu Wei, Michael Koster, Matthias Kovatsch, Szymon Sasin, David Navarro, Achim Kraus, Andrew Summers, and Zach Shelby for their feedback.</p>
-<h1 id="rfc.references"><a href="#rfc.references">10.</a> References</h1>
-<h1 id="rfc.references.1"><a href="#rfc.references.1">10.1.</a> Normative References</h1>
+<h1 id="rfc.section.6.2.2"><a href="#rfc.section.6.2.2">6.2.2.</a> <a href="#coapwss" id="coapwss">coap+wss</a></h1>
+<p id="rfc.section.6.2.2.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+wss&#8221;. The registration request complies with <a href="#RFC4395">[RFC4395]</a>.</p>
+<p/>
+
+<dl>
+  <dt>URL scheme name.</dt>
+  <dd style="margin-left: 8"><br/> coap+wss</dd>
+  <dt>Status.</dt>
+  <dd style="margin-left: 8"><br/> Permanent</dd>
+  <dt>URI scheme syntax.</dt>
+  <dd style="margin-left: 8"><br/> Defined in Section N of [RFCthis]</dd>
+  <dt>URI scheme semantics.</dt>
+  <dd style="margin-left: 8"><br/> The &#8220;coap+ws&#8221; URI scheme provides a way to identify resources that are potentially accessible over the Constrained Application Protocol (CoAP) using the WebSocket Protocol secured with Transport Layer Security (TLS).</dd>
+  <dt>Encoding considerations.</dt>
+  <dd style="margin-left: 8"><br/> The scheme encoding conforms to the encoding rules established for URIs in <a href="#RFC3986">[RFC3986]</a>, i.e., internationalized and reserved characters are expressed using UTF-8-based percent-encoding.</dd>
+  <dt>Applications/protocols that use this URI scheme name.</dt>
+  <dd style="margin-left: 8"><br/> The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol secured with TLS.</dd>
+  <dt>Interoperability considerations.</dt>
+  <dd style="margin-left: 8"><br/> None.</dd>
+  <dt>Security Considerations.</dt>
+  <dd style="margin-left: 8"><br/> See Section N of [RFCthis]</dd>
+  <dt>Contact.</dt>
+  <dd style="margin-left: 8"><br/> IETF chair &lt;chair@ietf.org&gt;</dd>
+  <dt>Author/Change controller.</dt>
+  <dd style="margin-left: 8"><br/> IESG &lt;iesg@ietf.org&gt;</dd>
+  <dt>References.</dt>
+  <dd style="margin-left: 8"><br/> [RFCthis]</dd>
+</dl>
+<h1 id="rfc.section.6.3"><a href="#rfc.section.6.3">6.3.</a> <a href="#well-known-uri-suffix-registration" id="well-known-uri-suffix-registration">Well-Known URI Suffix Registration</a></h1>
+<p id="rfc.section.6.3.p.1">IANA is requested to register the &#8216;coap&#8217; well-known URI in the &#8220;Well-Known URIs&#8221; registry. This registration request complies with <a href="#RFC5785">[RFC5785]</a>:</p>
+<p/>
+
+<dl>
+  <dt>URI Suffix.</dt>
+  <dd style="margin-left: 8"><br/> coap</dd>
+  <dt>Change controller.</dt>
+  <dd style="margin-left: 8"><br/> IETF</dd>
+  <dt>Specification document(s).</dt>
+  <dd style="margin-left: 8"><br/> [RFCthis]</dd>
+  <dt>Related information.</dt>
+  <dd style="margin-left: 8"><br/> None.</dd>
+</dl>
+<h1 id="rfc.section.6.4"><a href="#rfc.section.6.4">6.4.</a> <a href="#alpnpid" id="alpnpid">ALPN Protocol ID</a></h1>
+<p id="rfc.section.6.4.p.1">IANA is requested to assign the following value in the registry &#8220;Application Layer Protocol Negotiation (ALPN) Protocol IDs&#8221; created by <a href="#RFC7301">[RFC7301]</a>:</p>
+<p/>
+
+<dl>
+  <dt>Protocol.</dt>
+  <dd style="margin-left: 8"><br/> CoAP</dd>
+  <dt>Identification Sequence.</dt>
+  <dd style="margin-left: 8"><br/> 0x63 0x6f 0x61 0x70 (&#8220;coap&#8221;)</dd>
+  <dt>Reference.</dt>
+  <dd style="margin-left: 8"><br/> [RFCthis]</dd>
+</dl>
+<h1 id="rfc.section.6.5"><a href="#rfc.section.6.5">6.5.</a> <a href="#websocket-subprotocol-registration" id="websocket-subprotocol-registration">WebSocket Subprotocol Registration</a></h1>
+<p id="rfc.section.6.5.p.1">IANA is requested to register the WebSocket CoAP subprotocol under the &#8220;WebSocket Subprotocol Name Registry&#8221;:</p>
+<p/>
+
+<dl>
+  <dt>Subprotocol Identifier.</dt>
+  <dd style="margin-left: 8"><br/> coap</dd>
+  <dt>Subprotocol Common Name.</dt>
+  <dd style="margin-left: 8"><br/> Constrained Application Protocol (CoAP)</dd>
+  <dt>Subprotocol Definition.</dt>
+  <dd style="margin-left: 8"><br/> [RFCthis]</dd>
+</dl>
+<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a></h1>
+<p id="rfc.section.7.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Christian Groves, Klaus Hartke, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.</p>
+<h1 id="rfc.references"><a href="#rfc.references">8.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">8.1.</a> Normative References</h1>
 <table>
   <tbody>
     <tr>
@@ -689,9 +991,33 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC3986">[RFC3986]</b>
+      </td>
+      <td class="top"><a>Berners-Lee, T.</a>, <a>Fielding, R.</a> and <a>L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>", STD 66, RFC 3986, DOI 10.17487/RFC3986, January 2005.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC4395">[RFC4395]</b>
+      </td>
+      <td class="top"><a>Hansen, T.</a>, <a>Hardie, T.</a> and <a>L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc4395">Guidelines and Registration Procedures for New URI Schemes</a>", RFC 4395, DOI 10.17487/RFC4395, February 2006.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC5246">[RFC5246]</b>
       </td>
       <td class="top"><a>Dierks, T.</a> and <a>E. Rescorla</a>, "<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>", RFC 5246, DOI 10.17487/RFC5246, August 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC5785">[RFC5785]</b>
+      </td>
+      <td class="top"><a>Nottingham, M.</a> and <a>E. Hammer-Lahav</a>, "<a href="http://tools.ietf.org/html/rfc5785">Defining Well-Known Uniform Resource Identifiers (URIs)</a>", RFC 5785, DOI 10.17487/RFC5785, April 2010.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6455">[RFC6455]</b>
+      </td>
+      <td class="top"><a>Fette, I.</a> and <a>A. Melnikov</a>, "<a href="http://tools.ietf.org/html/rfc6455">The WebSocket Protocol</a>", RFC 6455, DOI 10.17487/RFC6455, December 2011.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -707,13 +1033,25 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC7525">[RFC7525]</b>
+      </td>
+      <td class="top"><a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="http://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC7595">[RFC7595]</b>
       </td>
       <td class="top"><a>Thaler, D.</a>, <a>Hansen, T.</a> and <a>T. Hardie</a>, "<a href="http://tools.ietf.org/html/rfc7595">Guidelines and Registration Procedures for URI Schemes</a>", BCP 35, RFC 7595, DOI 10.17487/RFC7595, June 2015.</td>
     </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7641">[RFC7641]</b>
+      </td>
+      <td class="top"><a>Hartke, K.</a>, "<a href="http://tools.ietf.org/html/rfc7641">Observing Resources in the Constrained Application Protocol (CoAP)</a>", RFC 7641, DOI 10.17487/RFC7641, September 2015.</td>
+    </tr>
   </tbody>
 </table>
-<h1 id="rfc.references.2"><a href="#rfc.references.2">10.2.</a> Informative References</h1>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">8.2.</a> Informative References</h1>
 <table>
   <tbody>
     <tr>
@@ -724,15 +1062,27 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
     </tr>
     <tr>
       <td class="reference">
+        <b id="I-D.becker-core-coap-sms-gprs">[I-D.becker-core-coap-sms-gprs]</b>
+      </td>
+      <td class="top"><a>Becker, M.</a>, <a>Li, K.</a>, <a>Kuladinithi, K.</a> and <a>T. Poetsch</a>, "<a href="http://tools.ietf.org/html/draft-becker-core-coap-sms-gprs-05">Transport of CoAP over SMS</a>", Internet-Draft draft-becker-core-coap-sms-gprs-05, August 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="I-D.bormann-core-block-bert">[I-D.bormann-core-block-bert]</b>
       </td>
-      <td class="top"><a>Bormann, C.</a>, "<a href="http://tools.ietf.org/html/draft-bormann-core-block-bert-00">Block-wise transfers in CoAP: Extension for Reliable Transport (BERT)</a>", Internet-Draft draft-bormann-core-block-bert-00, November 2015.</td>
+      <td class="top"><a>Bormann, C.</a>, "<a href="http://tools.ietf.org/html/draft-bormann-core-block-bert-01">Block-wise transfers in CoAP: Extension for Reliable Transport (BERT)</a>", Internet-Draft draft-bormann-core-block-bert-01, June 2016.</td>
     </tr>
     <tr>
       <td class="reference">
         <b id="I-D.bormann-core-cocoa">[I-D.bormann-core-cocoa]</b>
       </td>
       <td class="top"><a>Bormann, C.</a>, <a>Betzler, A.</a>, <a>Gomez, C.</a> and <a>I. Demirkol</a>, "<a href="http://tools.ietf.org/html/draft-bormann-core-cocoa-03">CoAP Simple Congestion Control/Advanced</a>", Internet-Draft draft-bormann-core-cocoa-03, October 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.dijk-core-sleepy-reqs">[I-D.dijk-core-sleepy-reqs]</b>
+      </td>
+      <td class="top"><a>Dijk, E.</a>, "<a href="http://tools.ietf.org/html/draft-dijk-core-sleepy-reqs-00">Sleepy Devices using CoAP - Requirements</a>", Internet-Draft draft-dijk-core-sleepy-reqs-00, June 2013.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -748,6 +1098,12 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC5234">[RFC5234]</b>
+      </td>
+      <td class="top"><a>Crocker, D.</a> and <a>P. Overell</a>, "<a href="http://tools.ietf.org/html/rfc5234">Augmented BNF for Syntax Specifications: ABNF</a>", STD 68, RFC 5234, DOI 10.17487/RFC5234, January 2008.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC6335">[RFC6335]</b>
       </td>
       <td class="top"><a>Cotton, M.</a>, <a>Eggert, L.</a>, <a>Touch, J.</a>, <a>Westerlund, M.</a> and <a>S. Cheshire</a>, "<a href="http://tools.ietf.org/html/rfc6335">Internet Assigned Numbers Authority (IANA) Procedures for the Management of the Service Name and Transport Protocol Port Number Registry</a>", BCP 165, RFC 6335, DOI 10.17487/RFC6335, August 2011.</td>
@@ -758,15 +1114,131 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
       </td>
       <td class="top"><a>Rescorla, E.</a> and <a>N. Modadugu</a>, "<a href="http://tools.ietf.org/html/rfc6347">Datagram Transport Layer Security Version 1.2</a>", RFC 6347, DOI 10.17487/RFC6347, January 2012.</td>
     </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC6454">[RFC6454]</b>
+      </td>
+      <td class="top"><a>Barth, A.</a>, "<a href="http://tools.ietf.org/html/rfc6454">The Web Origin Concept</a>", RFC 6454, DOI 10.17487/RFC6454, December 2011.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7230">[RFC7230]</b>
+      </td>
+      <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
+    </tr>
   </tbody>
 </table>
+<h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#examples" id="examples">CoAP over WebSocket Examples</a></h1>
+<p id="rfc.section.A.p.1">This section gives examples for the first two configurations discussed in <a href="#overview">Section 3</a>.</p>
+<p id="rfc.section.A.p.2">An example of the process followed by a CoAP client to retrieve the representation of a resource identified by a &#8220;coap+ws&#8221; URI might be as follows. <a href="#example-1">Figure 17</a> below illustrates the WebSocket and CoAP messages exchanged in detail.</p>
+<p/>
+
+<ol>
+  <li>The CoAP client obtains the URI &lt;coap+ws://example.org/sensors/temperature?u=Cel&gt;, for example, from a resource representation that it retrieved previously.</li>
+  <li>It establishes a WebSocket Connection to the endpoint URI composed of the authority &#8220;example.org&#8221; and the well-known path &#8220;/.well-known/coap&#8221;, &lt;ws://example.org/.well-known/coap&gt;.</li>
+  <li>It sends a single-frame, masked, binary message containing a CoAP request. The request indicates the target resource with the Uri-Path (&#8220;sensors&#8221;, &#8220;temperature&#8221;) and Uri-Query (&#8220;u=Cel&#8221;) options.</li>
+  <li>It waits for the server to return a response.</li>
+  <li>The CoAP client uses the connection for further requests, or the connection is closed.</li>
+</ol>
+<div id="rfc.figure.17"/>
+<div id="example-1"/>
+<pre>
+   CoAP        CoAP
+  Client      Server
+(WebSocket  (WebSocket
+  Client)     Server)
+
+     |          |
+     |          |
+     +=========&gt;|  GET /.well-known/coap HTTP/1.1
+     |          |  Host: example.org
+     |          |  Upgrade: websocket
+     |          |  Connection: Upgrade
+     |          |  Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+     |          |  Sec-WebSocket-Protocol: coap
+     |          |  Sec-WebSocket-Version: 13
+     |          |
+     |&lt;=========+  HTTP/1.1 101 Switching Protocols
+     |          |  Upgrade: websocket
+     |          |  Connection: Upgrade
+     |          |  Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+     |          |  Sec-WebSocket-Protocol: coap
+     |          |
+     |          |
+     +---------&gt;|  Binary frame (opcode=%x2, FIN=1, MASK=1)
+     |          |    +-------------------------+
+     |          |    | GET                     |
+     |          |    | Token: 0x53             |
+     |          |    | Uri-Path: "sensors"     |
+     |          |    | Uri-Path: "temperature" |
+     |          |    | Uri-Query: "u=Cel"      |
+     |          |    +-------------------------+
+     |          |
+     |&lt;---------+  Binary frame (opcode=%x2, FIN=1, MASK=0)
+     |          |    +-------------------------+
+     |          |    | 2.05 Content            |
+     |          |    | Token: 0x53             |
+     |          |    | Payload: "22.3 Cel"     |
+     |          |    +-------------------------+
+     :          :
+     :          :
+     |          |
+     +---------&gt;|  Close frame (opcode=%x8, FIN=1, MASK=1)
+     |          |
+     |&lt;---------+  Close frame (opcode=%x8, FIN=1, MASK=0)
+     |          |
+</pre>
+<p class="figure">Figure 17: A CoAP client retrieves the representation of a resource identified by a "coap+ws" URI</p>
+<p><a href="#example-2">Figure 18</a> shows how a CoAP client uses a CoAP forward proxy with a WebSocket endpoint to retrieve the representation of the resource &#8220;coap://[2001:DB8::1]/&#8221;. The use of the forward proxy and the address of the WebSocket endpoint are determined by the client from local configuration rules. The request URI is specified in the Proxy-Uri Option. Since the request URI uses the &#8220;coap&#8221; URI scheme, the proxy fulfills the request by issuing a Confirmable GET request over UDP to the CoAP server and returning the response over the WebSocket connection to the client.</p>
+<div id="rfc.figure.18"/>
+<div id="example-2"/>
+<pre>
+   CoAP        CoAP       CoAP
+  Client      Proxy      Server
+(WebSocket  (WebSocket    (UDP
+  Client)     Server)   Endpoint)
+
+     |          |          |
+     +---------&gt;|          |  Binary frame (opcode=%x2, FIN=1, MASK=1)
+     |          |          |    +------------------------------------+
+     |          |          |    | GET                                |
+     |          |          |    | Token: 0x7d                        |
+     |          |          |    | Proxy-Uri: "coap://[2001:DB8::1]/" |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |          +---------&gt;|  CoAP message (Ver=1, T=Con, MID=0x8f54)
+     |          |          |    +------------------------------------+
+     |          |          |    | GET                                |
+     |          |          |    | Token: 0x0a15                      |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |          |&lt;---------+  CoAP message (Ver=1, T=Ack, MID=0x8f54)
+     |          |          |    +------------------------------------+
+     |          |          |    | 2.05 Content                       |
+     |          |          |    | Token: 0x0a15                      |
+     |          |          |    | Payload: "ready"                   |
+     |          |          |    +------------------------------------+
+     |          |          |
+     |&lt;---------+          |  Binary frame (opcode=%x2, FIN=1, MASK=0)
+     |          |          |    +------------------------------------+
+     |          |          |    | 2.05 Content                       |
+     |          |          |    | Token: 0x7d                        |
+     |          |          |    | Payload: "ready"                   |
+     |          |          |    +------------------------------------+
+     |          |          |
+</pre>
+<p class="figure">Figure 18: A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSockets-enabled CoAP proxy</p>
+<h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#change-log" id="change-log">Change Log</a></h1>
+<p id="rfc.section.B.p.1">The RFC Editor is requested to remove this section at publication.</p>
+<h1 id="rfc.appendix.B.1"><a href="#rfc.appendix.B.1">B.1.</a> <a href="#since-draft-core-coap-tcp-tls-02" id="since-draft-core-coap-tcp-tls-02">Since draft-core-coap-tcp-tls-02</a></h1>
+<p id="rfc.section.B.1.p.1">Merged draft-savolainen-core-coap-websockets-07 </p>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
 <div class="avoidbreak">
   <address class="vcard">
 	<span class="vcardline">
-	  <span class="fn">Carsten Bormann</span> (editor)
+	  <span class="fn">Carsten Bormann</span> 
 	  <span class="n hidden">
 		<span class="family-name">Bormann</span>
 	  </span>
@@ -857,6 +1329,96 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
 	<span class="vcardline">EMail: <a href="mailto:Hannes.tschofenig@gmx.net">Hannes.tschofenig@gmx.net</a></span>
 
 <span class="vcardline">URI: <a href="http://www.tschofenig.priv.at">http://www.tschofenig.priv.at</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Teemu Savolainen</span> 
+	  <span class="n hidden">
+		<span class="family-name">Savolainen</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Nokia</span>
+	<span class="adr">
+	  <span class="vcardline">Hermiankatu 12 D</span>
+
+	  <span class="vcardline">
+		<span class="locality">Tampere</span>,  
+		<span class="region"></span>
+		<span class="code">FI-33720</span>
+	  </span>
+	  <span class="country-name vcardline">Finland</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:teemu.savolainen@nokia.com">teemu.savolainen@nokia.com</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Klaus Hartke</span> 
+	  <span class="n hidden">
+		<span class="family-name">Hartke</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Universitaet Bremen TZI</span>
+	<span class="adr">
+	  <span class="vcardline">Postfach 330440</span>
+
+	  <span class="vcardline">
+		<span class="locality">Bremen</span>,  
+		<span class="region"></span>
+		<span class="code">D-28359</span>
+	  </span>
+	  <span class="country-name vcardline">Germany</span>
+	</span>
+	<span class="vcardline">Phone: +49-421-218-63905</span>
+
+<span class="vcardline">EMail: <a href="mailto:hartke@tzi.org">hartke@tzi.org</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Bilhanan Silverajan</span> 
+	  <span class="n hidden">
+		<span class="family-name">Silverajan</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Tampere University of Technology</span>
+	<span class="adr">
+	  <span class="vcardline">Korkeakoulunkatu 10</span>
+
+	  <span class="vcardline">
+		<span class="locality">Tampere</span>,  
+		<span class="region"></span>
+		<span class="code">FI-33720</span>
+	  </span>
+	  <span class="country-name vcardline">Finland</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:bilhanan.silverajan@tut.fi">bilhanan.silverajan@tut.fi</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Brian Raymor</span> (editor)
+	  <span class="n hidden">
+		<span class="family-name">Raymor</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Microsoft</span>
+	<span class="adr">
+	  <span class="vcardline">One Microsoft Way</span>
+
+	  <span class="vcardline">
+		<span class="locality">Redmond</span>,  
+		<span class="region"></span>
+		<span class="code">98052</span>
+	  </span>
+	  <span class="country-name vcardline">United States of America</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:brian.raymor@microsoft.com">brian.raymor@microsoft.com</a></span>
 
   </address>
 </div>
