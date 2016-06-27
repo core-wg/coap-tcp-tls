@@ -1198,7 +1198,7 @@ Merged draft-savolainen-core-coap-websockets-07
 {: numbered="no"}
 
 We would like to thank Stephen Berard, Geoffrey Cristallo, 
-Olivier Delaby, Christian Groves, Klaus Hartke, Nadir Javed,
+Olivier Delaby, Christian Groves, Nadir Javed,
 Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
 Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, 
 and Gengyu Wei for their feedback.
