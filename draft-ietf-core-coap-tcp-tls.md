@@ -3,6 +3,7 @@ stand_alone: true
 ipr: trust200902
 docname: draft-ietf-core-coap-tcp-tls-latest
 cat: std
+coding: utf-8
 pi:
   strict: 'yes'
   toc: 'yes'
@@ -55,14 +56,6 @@ author:
   country: Great Britain
   email: Hannes.tschofenig@gmx.net
   uri: http://www.tschofenig.priv.at
-- ins: T. Savolainen
-  name: Teemu Savolainen
-  org: Nokia
-  street: Hermiankatu 12 D
-  city: Tampere
-  code: 'FI-33720'
-  country: Finland
-  email: teemu.savolainen@nokia.com
 - ins: K. Hartke
   name: Klaus Hartke
   org: Universitaet Bremen TZI
@@ -1063,14 +1056,6 @@ Subprotocol Definition.
 :	[RFCthis]
 {: vspace='0'}
 
-# Acknowledgements {#acknowledgements}
-
-We would like to thank Stephen Berard, Geoffrey Cristallo, 
-Olivier Delaby, Christian Groves, Klaus Hartke, Nadir Javed,
-Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
-Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, 
-and Gengyu Wei for their feedback.
-
 
 --- back
 
@@ -1208,6 +1193,27 @@ The RFC Editor is requested to remove this section at publication.
 ## Since draft-core-coap-tcp-tls-02
 
 Merged draft-savolainen-core-coap-websockets-07
+
+# Acknowledgements {#acknowledgements}
+{: numbered="no"}
+
+We would like to thank Stephen Berard, Geoffrey Cristallo, 
+Olivier Delaby, Christian Groves, Nadir Javed,
+Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
+Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, 
+and Gengyu Wei for their feedback.
+
+# Contributors {#contributors}
+{: numbered="no"}
+
+	Teemu Savolainen
+	Nokia Technologies
+	Hatanpaan valtatie 30
+	Tampere FI-33100
+	Finland
+
+	Email: teemu.savolainen@nokia.com
+
 <!--  LocalWords:  TCP CoAP UDP firewalling firewalled TLS IP SCTP
  -->
 <!--  LocalWords:  DCCP IoT optimizations ACKs acknowledgement TKL
