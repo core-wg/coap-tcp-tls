@@ -9,8 +9,6 @@ Expires: October 23, 2016                           V. Solorzano Barboza
                                                       Zebra Technologies
                                                            H. Tschofenig
                                                                 ARM Ltd.
-                                                           T. Savolainen
-                                                                   Nokia
                                                                K. Hartke
                                                  Universitaet Bremen TZI
                                                            B. Silverajan
@@ -50,6 +48,8 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
+   This Internet-Draft will expire on October 23, 2016.
+
 
 
 
@@ -57,8 +57,6 @@ Bormann, et al.         Expires October 23, 2016                [Page 1]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
-
-   This Internet-Draft will expire on October 23, 2016.
 
 Copyright Notice
 
@@ -98,14 +96,16 @@ Table of Contents
      6.3.  Well-Known URI Suffix Registration  . . . . . . . . . . .  20
      6.4.  ALPN Protocol ID  . . . . . . . . . . . . . . . . . . . .  21
      6.5.  WebSocket Subprotocol Registration  . . . . . . . . . . .  21
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  21
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  21
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  23
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  21
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .  23
    Appendix A.  CoAP over WebSocket Examples . . . . . . . . . . . .  24
-   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  28
-     B.1.  Since draft-core-coap-tcp-tls-02  . . . . . . . . . . . .  28
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
+   Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  27
+     B.1.  Since draft-core-coap-tcp-tls-02  . . . . . . . . . . . .  27
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  27
+   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  27
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
+
 
 
 
@@ -1153,30 +1153,14 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
    Subprotocol Definition.
       [RFCthis]
 
-7.  Acknowledgements
+7.  References
 
-   We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier
-   Delaby, Christian Groves, Klaus Hartke, Nadir Javed, Michael Koster,
-   Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Zach
-   Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their
-   feedback.
-
-8.  References
-
-8.1.  Normative References
+7.1.  Normative References
 
    [I-D.ietf-dice-profile]
               Tschofenig, H. and T. Fossati, "TLS/DTLS Profiles for the
               Internet of Things", draft-ietf-dice-profile-17 (work in
               progress), October 2015.
-
-
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 21]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
-
 
    [RFC0793]  Postel, J., "Transmission Control Protocol", STD 7,
               RFC 793, DOI 10.17487/RFC0793, September 1981,
@@ -1186,6 +1170,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
+
+
+
+Bormann, et al.         Expires October 23, 2016               [Page 21]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
+
 
    [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
               Resource Identifier (URI): Generic Syntax", STD 66,
@@ -1227,6 +1218,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
               (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
               2015, <http://www.rfc-editor.org/info/rfc7525>.
 
+   [RFC7595]  Thaler, D., Ed., Hansen, T., and T. Hardie, "Guidelines
+              and Registration Procedures for URI Schemes", BCP 35,
+              RFC 7595, DOI 10.17487/RFC7595, June 2015,
+              <http://www.rfc-editor.org/info/rfc7595>.
+
+
+
+
+
 
 
 Bormann, et al.         Expires October 23, 2016               [Page 22]
@@ -1234,17 +1234,12 @@ Bormann, et al.         Expires October 23, 2016               [Page 22]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
 
-   [RFC7595]  Thaler, D., Ed., Hansen, T., and T. Hardie, "Guidelines
-              and Registration Procedures for URI Schemes", BCP 35,
-              RFC 7595, DOI 10.17487/RFC7595, June 2015,
-              <http://www.rfc-editor.org/info/rfc7595>.
-
    [RFC7641]  Hartke, K., "Observing Resources in the Constrained
               Application Protocol (CoAP)", RFC 7641,
               DOI 10.17487/RFC7641, September 2015,
               <http://www.rfc-editor.org/info/rfc7641>.
 
-8.2.  Informative References
+7.2.  Informative References
 
    [HomeGateway]
               Eggert, L., "An experimental study of home gateway
@@ -1279,6 +1274,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
               DOI 10.17487/RFC0768, August 1980,
               <http://www.rfc-editor.org/info/rfc768>.
 
+   [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
+              Specifications: ABNF", STD 68, RFC 5234,
+              DOI 10.17487/RFC5234, January 2008,
+              <http://www.rfc-editor.org/info/rfc5234>.
+
 
 
 
@@ -1289,11 +1289,6 @@ Bormann, et al.         Expires October 23, 2016               [Page 23]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
-
-   [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
-              Specifications: ABNF", STD 68, RFC 5234,
-              DOI 10.17487/RFC5234, January 2008,
-              <http://www.rfc-editor.org/info/rfc5234>.
 
    [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
               Cheshire, "Internet Assigned Numbers Authority (IANA)
@@ -1339,13 +1334,6 @@ Appendix A.  CoAP over WebSocket Examples
 
    4.  It waits for the server to return a response.
 
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 24]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
-
-
    5.  The CoAP client uses the connection for further requests, or the
        connection is closed.
 
@@ -1353,51 +1341,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 25]
+Bormann, et al.         Expires October 23, 2016               [Page 24]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
@@ -1453,7 +1397,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
 
 
-Bormann, et al.         Expires October 23, 2016               [Page 26]
+Bormann, et al.         Expires October 23, 2016               [Page 25]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
@@ -1509,7 +1453,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
 
 
-Bormann, et al.         Expires October 23, 2016               [Page 27]
+Bormann, et al.         Expires October 23, 2016               [Page 26]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
@@ -1521,6 +1465,23 @@ Appendix B.  Change Log
 B.1.  Since draft-core-coap-tcp-tls-02
 
    Merged draft-savolainen-core-coap-websockets-07
+
+Acknowledgements
+
+   We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier
+   Delaby, Christian Groves, Nadir Javed, Michael Koster, Matthias
+   Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Zach Shelby,
+   Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.
+
+Contributors
+
+       Teemu Savolainen
+       Nokia Technologies
+       Hatanpaan valtatie 30
+       Tampere FI-33100
+       Finland
+
+       Email: teemu.savolainen@nokia.com
 
 Authors' Addresses
 
@@ -1544,6 +1505,15 @@ Authors' Addresses
    Email: slemay@zebra.com
 
 
+
+
+
+
+Bormann, et al.         Expires October 23, 2016               [Page 27]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
+
+
    Valik Solorzano Barboza
    Zebra Technologies
    820 W. Jackson Blvd. suite 700
@@ -1562,21 +1532,6 @@ Authors' Addresses
 
    Email: Hannes.tschofenig@gmx.net
    URI:   http://www.tschofenig.priv.at
-
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 28]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
-
-
-   Teemu Savolainen
-   Nokia
-   Hermiankatu 12 D
-   Tampere  FI-33720
-   Finland
-
-   Email: teemu.savolainen@nokia.com
 
 
    Klaus Hartke
@@ -1610,15 +1565,4 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2016
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Bormann, et al.         Expires October 23, 2016               [Page 29]
+Bormann, et al.         Expires October 23, 2016               [Page 28]

@@ -289,20 +289,21 @@ li, p {
 <link href="#rfc.section.6.3" rel="Chapter" title="6.3 Well-Known URI Suffix Registration"/>
 <link href="#rfc.section.6.4" rel="Chapter" title="6.4 ALPN Protocol ID"/>
 <link href="#rfc.section.6.5" rel="Chapter" title="6.5 WebSocket Subprotocol Registration"/>
-<link href="#rfc.section.7" rel="Chapter" title="7 Acknowledgements"/>
-<link href="#rfc.references" rel="Chapter" title="8 References"/>
-<link href="#rfc.references.1" rel="Chapter" title="8.1 Normative References"/>
-<link href="#rfc.references.2" rel="Chapter" title="8.2 Informative References"/>
+<link href="#rfc.references" rel="Chapter" title="7 References"/>
+<link href="#rfc.references.1" rel="Chapter" title="7.1 Normative References"/>
+<link href="#rfc.references.2" rel="Chapter" title="7.2 Informative References"/>
 <link href="#rfc.appendix.A" rel="Chapter" title="A CoAP over WebSocket Examples"/>
 <link href="#rfc.appendix.B" rel="Chapter" title="B Change Log"/>
 <link href="#rfc.appendix.B.1" rel="Chapter" title="B.1 Since draft-core-coap-tcp-tls-02"/>
+<link href="#rfc.acknowledgements" rel="Chapter"/>
+<link href="#rfc.contributors" rel="Chapter"/>
 <link href="#rfc.authors" rel="Chapter"/>
 
 
   <meta name="generator" content="xml2rfc version 2.5.1 - http://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
-  <meta name="dct.creator" content="Bormann, C., Lemay, S., Solorzano Barboza, V., Tschofenig, H., Savolainen, T., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
+  <meta name="dct.creator" content="Bormann, C., Lemay, S., Solorzano Barboza, V., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
   <meta name="dct.issued" scheme="ISO8601" content="2016-4-21" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP.  The message layer of the CoAP over UDP protocol includes services for reliable delivery, simple congestion control, and flow control." />
@@ -342,14 +343,6 @@ li, p {
 <tr>
   <td class="left"></td>
   <td class="right">ARM Ltd.</td>
-</tr>
-<tr>
-  <td class="left"></td>
-  <td class="right">T. Savolainen</td>
-</tr>
-<tr>
-  <td class="left"></td>
-  <td class="right">Nokia</td>
 </tr>
 <tr>
   <td class="left"></td>
@@ -431,14 +424,15 @@ li, p {
 <li>6.3.   <a href="#rfc.section.6.3">Well-Known URI Suffix Registration</a></li>
 <li>6.4.   <a href="#rfc.section.6.4">ALPN Protocol ID</a></li>
 <li>6.5.   <a href="#rfc.section.6.5">WebSocket Subprotocol Registration</a></li>
-</ul><li>7.   <a href="#rfc.section.7">Acknowledgements</a></li>
-<li>8.   <a href="#rfc.references">References</a></li>
-<ul><li>8.1.   <a href="#rfc.references.1">Normative References</a></li>
-<li>8.2.   <a href="#rfc.references.2">Informative References</a></li>
+</ul><li>7.   <a href="#rfc.references">References</a></li>
+<ul><li>7.1.   <a href="#rfc.references.1">Normative References</a></li>
+<li>7.2.   <a href="#rfc.references.2">Informative References</a></li>
 </ul><li>Appendix A.   <a href="#rfc.appendix.A">CoAP over WebSocket Examples</a></li>
 <li>Appendix B.   <a href="#rfc.appendix.B">Change Log</a></li>
 <ul><li>B.1.   <a href="#rfc.appendix.B.1">Since draft-core-coap-tcp-tls-02</a></li>
-</ul><li><a href="#rfc.authors">Authors' Addresses</a></li>
+</ul><li><a href="#rfc.acknowledgements">Acknowledgements</a></li>
+<li><a href="#rfc.contributors">Contributors</a></li>
+<li><a href="#rfc.authors">Authors' Addresses</a></li>
 
 
   </ul>
@@ -965,10 +959,8 @@ coap-wss-URI =
   <dt>Subprotocol Definition.</dt>
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
-<h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#acknowledgements" id="acknowledgements">Acknowledgements</a></h1>
-<p id="rfc.section.7.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Christian Groves, Klaus Hartke, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.</p>
-<h1 id="rfc.references"><a href="#rfc.references">8.</a> References</h1>
-<h1 id="rfc.references.1"><a href="#rfc.references.1">8.1.</a> Normative References</h1>
+<h1 id="rfc.references"><a href="#rfc.references">7.</a> References</h1>
+<h1 id="rfc.references.1"><a href="#rfc.references.1">7.1.</a> Normative References</h1>
 <table>
   <tbody>
     <tr>
@@ -1051,7 +1043,7 @@ coap-wss-URI =
     </tr>
   </tbody>
 </table>
-<h1 id="rfc.references.2"><a href="#rfc.references.2">8.2.</a> Informative References</h1>
+<h1 id="rfc.references.2"><a href="#rfc.references.2">7.2.</a> Informative References</h1>
 <table>
   <tbody>
     <tr>
@@ -1231,7 +1223,23 @@ coap-wss-URI =
 <h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#change-log" id="change-log">Change Log</a></h1>
 <p id="rfc.section.B.p.1">The RFC Editor is requested to remove this section at publication.</p>
 <h1 id="rfc.appendix.B.1"><a href="#rfc.appendix.B.1">B.1.</a> <a href="#since-draft-core-coap-tcp-tls-02" id="since-draft-core-coap-tcp-tls-02">Since draft-core-coap-tcp-tls-02</a></h1>
-<p id="rfc.section.B.1.p.1">Merged draft-savolainen-core-coap-websockets-07 </p>
+<p id="rfc.section.B.1.p.1">Merged draft-savolainen-core-coap-websockets-07</p>
+<h1 id="rfc.acknowledgements">
+  <a href="#rfc.acknowledgements">Acknowledgements</a>
+</h1>
+<p id="rfc.section.C.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Christian Groves, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.</p>
+<h1 id="rfc.contributors">
+  <a href="#rfc.contributors">Contributors</a>
+</h1>
+<pre>
+    Teemu Savolainen
+    Nokia Technologies
+    Hatanpaan valtatie 30
+    Tampere FI-33100
+    Finland
+
+    Email: teemu.savolainen@nokia.com
+</pre>
 <h1 id="rfc.authors">
   <a href="#rfc.authors">Authors' Addresses</a>
 </h1>
@@ -1329,28 +1337,6 @@ coap-wss-URI =
 	<span class="vcardline">EMail: <a href="mailto:Hannes.tschofenig@gmx.net">Hannes.tschofenig@gmx.net</a></span>
 
 <span class="vcardline">URI: <a href="http://www.tschofenig.priv.at">http://www.tschofenig.priv.at</a></span>
-
-  </address>
-</div><div class="avoidbreak">
-  <address class="vcard">
-	<span class="vcardline">
-	  <span class="fn">Teemu Savolainen</span> 
-	  <span class="n hidden">
-		<span class="family-name">Savolainen</span>
-	  </span>
-	</span>
-	<span class="org vcardline">Nokia</span>
-	<span class="adr">
-	  <span class="vcardline">Hermiankatu 12 D</span>
-
-	  <span class="vcardline">
-		<span class="locality">Tampere</span>,  
-		<span class="region"></span>
-		<span class="code">FI-33720</span>
-	  </span>
-	  <span class="country-name vcardline">Finland</span>
-	</span>
-	<span class="vcardline">EMail: <a href="mailto:teemu.savolainen@nokia.com">teemu.savolainen@nokia.com</a></span>
 
   </address>
 </div><div class="avoidbreak">
