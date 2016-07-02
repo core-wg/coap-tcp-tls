@@ -18,7 +18,7 @@ title: CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets
 abbrev: TCP/TLS/WebSockets Transports for CoAP
 area: Applications Area (app)
 wg: CORE
-date: 2016-04-21
+#date: 2016-04-21
 author:
 - ins: C. Bormann
   name: Carsten Bormann
@@ -87,6 +87,7 @@ normative:
   RFC2119: bcp14
   RFC3986: RFC3986
   RFC4395: RFC4395
+  RFC5226: RFC5226
   RFC5246: tls
   RFC5785: RFC5785
   RFC6455: RFC6455
@@ -120,11 +121,11 @@ informative:
 --- abstract
 
 The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP
-instead of TCP.  The message layer of the CoAP over UDP protocol includes services for
+instead of TCP.  The message layer of the CoAP over UDP protocol includes support for
 reliable delivery, simple congestion control, and flow control.
 
-Some environments would benefit from the availability of CoAP over a reliable
-transport such as TCP or WebSockets, which already provides such services.  This document
+Some environments would benefit from the availability of CoAP over reliable
+transports such as TCP or WebSockets, which already provide such services.  This document
 outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports.
 
 --- middle
@@ -166,7 +167,7 @@ including TCP, TLS, and WebSockets.
 |         |         |         |         |                   |
 +---------+---------+---------+---------+-------------------+
 ~~~~
-{: #layering title='Abstract layering of CoAP extended by TCP, TLS, and WebSockets' artwork-align="center"}
+{: #layering title='Abstract Layering of CoAP extended by TCP, TLS, and WebSockets' artwork-align="center"}
 
 Where NATs are present, CoAP over TCP can help with their traversal.
 NATs often calculate expiration timers based on the transport layer protocol
@@ -174,10 +175,10 @@ being used by application protocols. Many NATs maintain TCP-based NAT bindings
 for longer periods based on the assumption that a transport layer protocol, such
 as TCP, offers additional information about the session life cycle. UDP, on the other
 hand, does not provide such information to a NAT and timeouts tend to be much 
-shorter, as confirmed by research {{HomeGateway}}.
+shorter {{HomeGateway}}.
 
 Some environments may also benefit from the ability of TCP to exchange
-larger payloads (such as firmware images) without application layer
+larger payloads such as firmware images without application layer
 segmentation and to utilize the more sophisticated congestion control
 capabilities provided by many TCP implementations.
 
@@ -189,11 +190,11 @@ uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
 over TCP between the back-end services. A TCP-to-UDP gateway can be used at
 the cloud boundary to communicate with the UDP-based IoT device.
 
-To make IoT devices work smoothly in these demanding environments, CoAP
-needs to make use of a different transport protocol, namely TCP {{RFC0793}},
+To allow IoT devices to better communicate in these demanding environments, CoAP
+needs to support different transport protocols, namely TCP {{RFC0793}},
 in some situations secured by TLS {{RFC5246}}.
 
-Some corporate networks only allow Internet access via a HTTP proxy.
+In addition, some corporate networks only allow Internet access via a HTTP proxy.
 In this case, the best transport for CoAP would be the [WebSocket Protocol](#RFC6455).
 The WebSocket protocol provides two-way communication between a client
 and a server after upgrading an [HTTP/1.1](#RFC7230) connection and may
@@ -202,13 +203,12 @@ for CoAP over WebSockets is a CoAP application running inside a web browser
 without access to connectivity other than HTTP and WebSockets.
 
 This document specifies how to access resources using CoAP requests
-and responses over the WebSocket Protocol. This allows
+and responses over the TCP/TLS and WebSocket protocols. This allows
 connectivity-limited applications to obtain end-to-end CoAP
 connectivity either by communicating CoAP directly with a CoAP server
-accessible over a WebSocket Connection or via a CoAP intermediary
+accessible over a TCP/TLS or WebSocket Connection or via a CoAP intermediary
 that proxies CoAP requests and responses between different transports,
 such as between WebSockets and UDP.
-
 
 ## Terminology
 
@@ -219,106 +219,98 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 This document assumes that readers are familiar with the terms and
 concepts that are used in {{RFC6455}} and {{RFC7252}}.
 
+BERT Option:
+:	A Block1 or Block2 option that includes an SZX value of 7.
+{: vspace='0'}
+BERT Block:
+:	The payload of a CoAP message that is affected by a BERT Option in
+	descriptive usage (Section 2.1 of [I-D.ietf-core-block]).
+{: vspace='0'}
 # CoAP over TCP
 
-The interaction model of CoAP over TCP is very similar to the one for
-CoAP over UDP, with the key difference that using TCP voids the need to
-provide certain transport layer protocol features at the CoAP level, 
-such as reliable delivery, fragmentation and reassembly, as well as 
-congestion control. The protocol stack is illustrated in {{stack}} 
-(derived from {{RFC7252}}, Figure 1).
+The request/response interaction model of CoAP TCP/TLS is similar to CoAP UDP.
+The primary differences are in the message layer. CoAP UDP supports optional
+reliability by defining four types of messages: Confirmable, Non-confirmable,
+Acknowledgement, and Reset. TCP eliminates the need for the message layer
+to support reliability. As a result, message types are not defined in CoAP TCP/TLS.
+
+The protocol stack is illustrated in {{stack}}.
 
 ~~~~
-        +----------------------+
-        |      Application     |
-        +----------------------+
-        +----------------------+
-        |  Requests/Responses  |  CoAP (RFC 7252)
-        |----------------------|
-        |    Message Adapter   |  This Document
-        +----------------------+
-        +-----------+      ^
-        |    TLS    |  or  |
-        +-----------+      v
-        +----------------------+
-        |          TCP         |
-        +----------------------+
+        +--------------------------------+
+        |          Application           |
+        +--------------------------------+
+        +--------------------------------+
+        |  Requests/Responses/Signaling  |  CoAP (RFC 7252) and This Document
+        |--------------------------------|
+        |        Message Framing         |  This Document
+        +--------------------------------+
+        +---------------+          ^
+        |      TLS      |    or    |
+        +---------------+          v
+        +--------------------------------+
+        |              TCP               |
+        +--------------------------------+
 ~~~~
-{: #stack title='The CoAP over TLS/TCP Protocol Stack'}
+{: #stack title='The CoAP over TCP/TLS Protocol Stack' }
 
-Since TCP offers reliable delivery, there is no need to offer a redundant
-acknowledgement at the CoAP messaging layer.
+## Messaging Model 
 
-Since there is no need to carry around acknowledgement semantics,
-messages do not require a message type; no
-message layer acknowledgement is expected or even possible.
-By the nature of TCP,
-messages are always transmitted
-reliably over TCP. {{fig-untyped1}} (derived from {{RFC7252}}, Figure 3) shows this
-message exchange graphically.  A UDP-to-TCP gateway will therefore discard
-all
-empty messages, such as empty ACKs (after operating on them at the
-message layer), and re-pack the contents of all non-empty CON, NON, or
-ACK messages (i.e., those ACK messages that have a piggy-backed
-response) into untyped messages.
+Conceptually, CoAP TCP/TLS replaces most of the CoAP UDP message layer
+with a framing mechanism on top of the byte stream provided by TCP/TLS,
+conveying the length information for each message that on datagram transports
+is provided by the UDP/DTLS datagram layer.
 
-Similarly, there is no need to detect duplicate delivery of a message.
-In UDP CoAP, the Message ID is used for relating acknowledgements to
-Confirmable messages as well as for duplicate detection.
-Since the Message ID thus is not meaningful over TCP, it is elided (as indicated
-by the
-dashes in {{fig-untyped1}}).
+TCP ensures reliable message transmission, so the CoAP TCP/TLS messaging
+layer is not required to support acknowledgements or detection of duplicate
+messages. As a result, both the Type and Message ID fields are no longer required
+and are removed from the CoAP over TCP message format. All messages are also untyped.
 
-~~~~
-        Client                Server
-           |                     |
-           | (no type) [------]  |
-           +-------------------->|
-           |                     |
-~~~~
-{: #fig-untyped1 title='Untyped Message Transmission over TCP.'}
-
-A response is sent back as defined in {{RFC7252}}, as illustrated in
-{{fig-untyped2}} (derived from {{RFC7252}}, Figure 6).
+{{fig-udp-flow}} illustrates a reliable request-response with the UDP message format:
 
 ~~~~
         Client                Server
            |                    |
-           | (no type) [------] |
+           |   CON [0xbc90]     |
            | GET /temperature   |
-           |   (Token 0x74)     |
+           |   (Token 0x71)     |
            +------------------->|
            |                    |
-           | (no type) [------] |
+           |   ACK [0xbc90]     |
            |   2.05 Content     |
-           |   (Token 0x74)     |
+           |   (Token 0x71)     |
            |     "22.5 C"       |
            |<-------------------+
            |                    |
 ~~~~
-{: #fig-untyped2 title='Untyped messages carrying Request/Response.'}
+{: #fig-udp-flow title='UDP reliable messages carrying Request/Response.' artwork-align="center"}
 
-EDITOR: These are "leftover" paragraphs from the original Overview
-section. Keeping until I perform a complete editorial pass of the
-"roughed in" material.
+{{fig-tcp-flow}} illustrates a reliable request-response using the TCP message format,
+which removes both the Type (no type) and Message ID fields (as indicated by the dashes):
 
-Conceptually, the CoAP over TCP/TLS specification replaces most of
-CoAP's message layer by a new message adapter on top of TCP or TLS
-that provides a framing mechanism on top of the byte stream
-provided by TCP/TLS, conveying the length information about each CoAP
-message that on datagram transports is provided by the datagram layer
-below (UDP, DTLS).
+~~~~
+        Client                Server
+           |                    |
+           | (-------) [------] |
+           | GET /temperature   |
+           |   (Token 0x71)     |
+           +------------------->|
+           |                    |
+           | (-------) [------] |
+           |   2.05 Content     |
+           |   (Token 0x71)     |
+           |     "22.5 C"       |
+           |<-------------------+
+           |                    |
+~~~~
+{: #fig-tcp-flow title='TCP reliable messages carrying Request/Response.' artwork-align="center" }
 
-The message adapter also adds a way to use signaling messages to
-perform various housekeeping operations on the TCP, see
-[I-D.bormann-core-signaling].
+### UDP-to-TCP gateways
 
-When CoAP is used over TLS then some of the housekeeping features are
-already available with the TLS Handshake protocol; less new
-functionality is then required.
-
-Modifications to CoAP beyond the replacement of the message layer
-(e.g., to introduce further optimizations) are intentionally avoided.
+A UDP-to-TCP gateway MUST discard all Empty messages after processing at the
+message layer. For Confirmable (CON), Non-Confirmable (NOM), and Acknowledgement
+(ACK) messages that are not Empty, their contents are repackaged into untyped
+messages.
 
 ## Message Format {#tcp-message-format}
 
@@ -342,12 +334,26 @@ length information.
 ~~~~
 {: #CoAP-Header title='RFC 7252 defined CoAP Message Format.'}
 
-In a stream oriented transport protocol such as TCP, a form of message 
-delimitation is needed.  For this purpose, CoAP over TCP introduces a 
-length field with variable size. {{fig-shim}} shows the adjusted CoAP 
-header format with a modified structure for the fixed header (first 4
-bytes of the UDP CoAP header), which includes the
-length information of variable size, shown here as an 8-bit length.
+The CoAP over TCP/TLS message format is very similar to the format
+specified for CoAP over UDP. The differences are as follows:
+
+* Since the underlying TCP connection provides retransmissions and
+  deduplication, there is no need for the reliability mechanisms
+  provided by CoAP over UDP. The "T" and "Message ID" fields in
+  the CoAP message header are elided.
+
+* The "Ver" field is elided as well. In constrast to the UDP message
+  layer for UDP and DTLS, the CoAP over TCP message layer does not
+  send a version number in each message. If required in the future,
+  a new Capability and Settings option (See {{negotiation}}) could be
+  defined to support version negotiation.
+
+* In a stream oriented transport protocol such as TCP, a form of message 
+  delimitation is needed.  For this purpose, CoAP over TCP introduces a 
+  length field with variable size. {{fig-shim}} shows the adjusted CoAP 
+  header format with a modified structure for the fixed header (first 4
+  bytes of the UDP CoAP header), which includes the length information of
+  variable size, shown here as an 8-bit length.
 
 ~~~~
 
@@ -363,14 +369,10 @@ length information of variable size, shown here as an 8-bit length.
 ~~~~
 {: #fig-shim title='CoAP Header with 8-bit Length in Header.'}
 
-The initial byte of the frame contains two nibbles, in a similar way
-to the CoAP option encoding (see Section 3.1 of {{RFC7252}}). 
-
 Len:
-: The first nibble, Len, is interpreted as a 4-bit unsigned integer.
-  A value between 0 and 12 directly indicates the length of message
-  in bytes starting with the first bit of the Options field. The
-  other three values have a special meaning:
+: 4-bit unsigned integer. A value between 0 and 12 directly indicates the
+  length of the message in bytes starting with the first bit of the Options
+  field. Three values are reserved for special constructs:
 
     13:
     : An 8-bit unsigned integer follows the initial byte and indicates
@@ -386,8 +388,8 @@ Len:
       initial byte and indicates the length of options/payload minus
       65805.
 
-TKL:
-: The second nibble of the initial byte indicates the token length.
+The encoding of the Len field is modeled on CoAP Options
+(see section 3.1 of {{RFC7252}}). 
 
 The following figures show the shim headers for the 0-bit, 16-bit, and 
 the 32-bit headers. 
@@ -454,139 +456,27 @@ token 7f and no options or payload would be encoded as shown in {{fig-shim2}}.
 
 The semantics of the other CoAP header fields are left unchanged.
 
-
-
 ## Message Transmission
 
-EDITOR: This is extremely similar to the WebSocket section of the same name.
+CoAP requests and responses are exchanged asynchronously over the
+TCP/TLS Connection. A CoAP client can send multiple requests
+without waiting for a response and the CoAP server can return
+responses in any order. Responses MUST be returned over the same
+connection as the originating request. Concurrent requests are
+differentiated by their Token, which is scoped locally to the
+connection.
 
-As CoAP exchanges messages asynchronously over the TCP connection, the
-client can send multiple requests without waiting for responses.  For
-this reason, and due to the nature of TCP, responses are returned
-during the same TCP connection as the request.  In the event that the
-connection gets terminated, all requests that have not yet elicited a
-response are implicitly canceled; clients may transmit the request
-again once a connection is reestablished.
+The connection is bi-directional, so requests can be sent both by
+the entity that established the connection and the remote host.
 
-Furthermore, since TCP is bidirectional, requests can be sent from
-both the connecting host and the endpoint that accepted the connection.
-In other words, the question who initiated the TCP connection has no bearing on the
-meaning of the CoAP terms client and server.
+Retransmission and deduplication of messages is provided by the
+TCP/TLS protocol. 
 
-# Interaction with Block-Wise Transfer
+Since the TCP protocol provides ordered delivery of messages,
+the mechanism for reordering detection when [observing resources](#RFC7641)
+is not needed. The value of the Observe Option in notifications MAY be
+empty on transmission and MUST be ignored on reception.
 
-The message size limitations defined in Section 4.6 of CoAP {{RFC7252}}
-are no longer strictly necessary when CoAP is used over a reliable
-byte stream transport. While this appears to obviate
-the need for the Block-wise transfer protocol {{-block}}, entirely
-getting rid of it is not a generally applicable solution, as:
-
-* large messages, such as firmware downloads, may cause undesired
-  head-of-line blocking when a single TCP connection is used;
-
-* a UDP-to-TCP gateway may simply not have the context to convert a
-  message with a Block option into the equivalent exchange without any
-  use of a Block option.
-
-This specification extends the block protocol to be
-able to make use of the larger messages over a reliable transport.
-This extension is called 'Block-Wise Extension for Reliable Transport
-(BERT)'.
-
-{{-block}} uses a message size of maximum 1024 bytes and this
-specification extends this maximum size to 1024 KiB (= 1 MiB) by
-re-interpreting the length information.
-
-The use of this new extension is signalled by sending Block1 or
-Block2 options with SZX == 7 (a "BERT option"). (SZX == 7 is a value
-that was reserved in {{-block}}.)
-
-In control usage, a BERT option is interpreted in the same way as the
-equivalent option with SZX == 6, except that it also indicates the
-capability to process BERT blocks.  As with the basic Block protocol,
-the recipient of a CoAP request with a BERT option in control usage is
-allowed to respond with a different SZX value, e.g. to send a non-BERT
-block instead.
-
-In descriptive usage, a BERT option is interpreted in the same way as
-the equivalent option with SZX == 6, except that the payload is
-allowed to contain a multiple of 1024 bytes (non-final BERT block) or
-more than 1024 bytes (final BERT block).
-
-The recipient of a non-final BERT block (M=1) conceptually partitions
-the payload into a sequence of 1024-byte blocks and acts exactly as
-if it had received this sequence in conjunction with block numbers
-starting at, and sequentially increasing from, the block number given
-in the Block option.  In other words, the entire BERT block is
-positioned at the byte position that results from multiplying the
-block number with 1024.  The position of further blocks to be
-transferred is indicated by incrementing the block number by the
-number of elements in this sequence (i.e., the size of the payload
-divided by 1024 bytes).
-
-As with SZX == 6, the recipient of a final BERT block (M=0) simply
-appends the payload at the byte position that is indicated by the
-block number multiplied with 1024.
-
-The following sub-sections provide a few examples that involve
- BERT options.  Extending the notation used in
-that section, a value of SZX == 7 is shown as "BERT", or as
-"BERT(nnn)" to indicate a payload of size nnn.
-
-In all these examples, a Block option is shown in a decomposed way
-indicating the kind of Block option (1 or 2) followed by a colon, and
-then the block number (NUM), more bit (M), and block size exponent
-(2**(SZX+4)) separated by slashes.  E.g., a Block2 Option value of 33
-would be shown as 2:2/0/32), or a Block1 Option value of 59 would be
-shown as 1:3/1/128.
-
-## Example: GET with BERT Blocks
-
-The first example, see {{fig-bert1}}, shows a GET request with a response that
-is split into three BERT blocks.  The first response contains 3072
-bytes of payload; the second, 5120; and the third, 4711.  Note how
-the block number increments to move the position inside the response
-body forward.
-
-~~~~
-CLIENT                                       SERVER
-  |                                            |
-  | GET, /status                       ------> |
-  |                                            |
-  | <------   2.05 Content, 2:0/1/BERT(3072)   |
-  |                                            |
-  | GET, /status, 2:3/0/BERT           ------> |
-  |                                            |
-  | <------   2.05 Content, 2:3/1/BERT(5120)   |
-  |                                            |
-  | GET, /status, 2:8/0/BERT          ------>  |
-  |                                            |
-  | <------   2.05 Content, 2:8/0/BERT(4711)   |
-~~~~
-{: #fig-bert1 title='GET with BERT blocks.'}
-
-## Example: PUT with BERT Blocks
-
-The following example, see {{fig-bert2}}, demonstrates a PUT exchange with
-BERT blocks.
-
-~~~~
-CLIENT                                        SERVER
-  |                                             |
-  | PUT, /options, 1:0/1/BERT(8192)     ------> |
-  |                                             |
-  | <------   2.31 Continue, 1:0/1/BERT         |
-  |                                             |
-  | PUT, /options, 1:8/1/BERT(16384)    ------> |
-  |                                             |
-  | <------   2.31 Continue, 1:8/1/BERT         |
-  |                                             |
-  | PUT, /options, 1:24/0/BERT(5683)    ------> |
-  |                                             |
-  | <------   2.04 Changed, 1:24/0/BERT         |
-  |                                             |
-~~~~
-{: #fig-bert2 title='PUT with BERT blocks.'}
 
 # CoAP over WebSockets {#overview}
 
@@ -735,18 +625,15 @@ binary message format, the messages are transmitted in binary data
 frames as specified in Sections 5 and 6 of {{RFC6455}}.
 
 The message format is very similar to the format specified for
-[CoAP over UDP](#RFC7252). The differences
-are as follows:
+[CoAP over UDP](#RFC7252). The differences are as follows:
 
 * Since the underlying TCP connection provides retransmissions and
   deduplication, there is no need for the reliability mechanisms
-  provided by CoAP over UDP. This means the "T" and "Message ID" fields in
-  the CoAP message header can be elided.
+  provided by CoAP over UDP. The "T" and "Message ID" fields in
+  the CoAP message header are elided.
 
-* Furthermore, since the CoAP version is already negotiated during
-  the opening handshake, the "Ver" field can be elided as well.
-
-
+* Furthermore, since the CoAP version is negotiated during
+  the opening handshake, the "Ver" field is elided as well.
 
 ~~~~
   0                   1                   2                   3
@@ -762,9 +649,9 @@ are as follows:
 {: #ws-message-format title='CoAP Message Format over WebSockets' artwork-align="center"}
 
 The resulting message format is shown in {{ws-message-format}}. The
-four most-significant bits
-of the first byte are reserved (R) and MUST be set to zero. The
-remaining fields and structure are the same as defined in {{RFC7252}}.
+four most-significant bits of the first byte are reserved (R) and MUST
+be set to zero. The remaining fields and structure are the same as defined
+in {{RFC7252}}.
 
 Requests and response messages can be fragmented as specified in
 Section 5.4 of {{RFC6455}}, though typically they are
@@ -802,7 +689,6 @@ the mechanism for reordering detection when
 Observe Option in notifications therefore MAY be empty on transmission
 and MUST be ignored on reception.
 
-
 ## Connection Health {#liveliness}
 
 When a client does not receive any response for some time after
@@ -830,6 +716,376 @@ Connection, then the CoAP server (or intermediary in the role of
 the CoAP server) MUST remove all entries associated with the client
 from the lists of observers when the connection is closed.
 
+# Reliable Transports and Block-Wise Transfer
+
+The message size limitations defined in Section 4.6 of CoAP {{RFC7252}}
+are no longer strictly necessary when CoAP is used over a reliable
+byte stream transport. While this appears to obviate the need for the
+Block-wise transfer protocol {{-block}}, entirely getting rid of it is not
+a generally applicable solution, as:
+
+* large messages, such as firmware downloads, may cause undesired
+  head-of-line blocking when a single TCP connection is used
+
+* a UDP-to-TCP gateway may simply not have the context to convert a
+  message with a Block option into the equivalent exchange without any
+  use of a Block option
+
+The 'Block-Wise Extension for Reliable Transport (BERT)' extends the
+Block protocol to enable the use of larger messages over a reliable
+transport.
+
+The use of this new extension is signalled by sending Block1 or
+Block2 options with SZX == 7 (a "BERT option"). SZX == 7 is a 
+reserved value in {{-block}}.
+
+In control usage, a BERT option is interpreted in the same way as the
+equivalent option with SZX == 6, except that it also indicates the
+capability to process BERT blocks.  As with the basic Block protocol,
+the recipient of a CoAP request with a BERT option in control usage is
+allowed to respond with a different SZX value, e.g. to send a non-BERT
+block instead.
+
+In descriptive usage, a BERT option is interpreted in the same way as
+the equivalent option with SZX == 6, except that the payload is
+allowed to contain a multiple of 1024 bytes (non-final BERT block) or
+more than 1024 bytes (final BERT block).
+
+The recipient of a non-final BERT block (M=1) conceptually partitions
+the payload into a sequence of 1024-byte blocks and acts exactly as
+if it had received this sequence in conjunction with block numbers
+starting at, and sequentially increasing from, the block number given
+in the Block option.  In other words, the entire BERT block is
+positioned at the byte position that results from multiplying the
+block number with 1024.  The position of further blocks to be
+transferred is indicated by incrementing the block number by the
+number of elements in this sequence (i.e., the size of the payload
+divided by 1024 bytes).
+
+As with SZX == 6, the recipient of a final BERT block (M=0) simply
+appends the payload at the byte position that is indicated by the
+block number multiplied with 1024.
+
+The following examples illustrate BERT options.  A value of SZX == 7
+is labeled as "BERT" or as "BERT(nnn)" to indicate a payload of size nnn.
+
+In all these examples, a Block option is decomposed to indicate the
+kind of Block option (1 or 2) followed by a colon, the block number (NUM),
+more bit (M), and block size exponent (2**(SZX+4)) separated by slashes.
+E.g., a Block2 Option value of 33 would be shown as 2:2/0/32), or a Block1
+Option value of 59 would be shown as 1:3/1/128.
+
+## Example: GET with BERT Blocks
+
+{{fig-bert1}} shows a GET request with a response that
+is split into three BERT blocks.  The first response contains 3072
+bytes of payload; the second, 5120; and the third, 4711.  Note how
+the block number increments to move the position inside the response
+body forward.
+
+~~~~
+CLIENT                                       SERVER
+  |                                            |
+  | GET, /status                       ------> |
+  |                                            |
+  | <------   2.05 Content, 2:0/1/BERT(3072)   |
+  |                                            |
+  | GET, /status, 2:3/0/BERT           ------> |
+  |                                            |
+  | <------   2.05 Content, 2:3/1/BERT(5120)   |
+  |                                            |
+  | GET, /status, 2:8/0/BERT          ------>  |
+  |                                            |
+  | <------   2.05 Content, 2:8/0/BERT(4711)   |
+~~~~
+{: #fig-bert1 title='GET with BERT blocks.'}
+
+## Example: PUT with BERT Blocks
+
+{{fig-bert2}} demonstrates a PUT exchange with BERT blocks.
+
+~~~~
+CLIENT                                        SERVER
+  |                                             |
+  | PUT, /options, 1:0/1/BERT(8192)     ------> |
+  |                                             |
+  | <------   2.31 Continue, 1:0/1/BERT         |
+  |                                             |
+  | PUT, /options, 1:8/1/BERT(16384)    ------> |
+  |                                             |
+  | <------   2.31 Continue, 1:8/1/BERT         |
+  |                                             |
+  | PUT, /options, 1:24/0/BERT(5683)    ------> |
+  |                                             |
+  | <------   2.04 Changed, 1:24/0/BERT         |
+  |                                             |
+~~~~
+{: #fig-bert2 title='PUT with BERT blocks.'}
+
+# Signaling
+
+The underlying reliable protocols have methods to configure connection
+properties and manage the connection. In many cases, these methods are
+inadequate for managing CoAP's use of the connection.
+
+Signaling messages are introduced to signal information about the connection.
+They define a third basic kind of messages in CoAP, after requests and responses. 
+
+Signaling messages share a common structure with the existing CoAP messages.
+There is a code, a token, options, and an optional payload. 
+
+(See Section 3 of {{-coap}} for the overall structure, as adapted to the
+specific transport.)
+
+## Signaling Codes
+
+A code in the 7.01-7.31 range indicates a Signaling message. Values in this
+range are assigned by the "CoAP Signaling Codes" sub-registry (see {{message-codes}}).
+
+For each message, there is a sender and a peer receiving the message.
+
+Payloads in Signaling messages are diagnostic payloads (see Section
+5.5.2 of {{-coap}}), unless otherwise defined by a Signaling
+message option.
+
+## Signaling Option Numbers
+
+Option numbers for Signaling messages are specific to the message
+code. They do not share the number space with CoAP options for
+request/response messages or with Signaling messages using other
+codes.
+
+Option numbers are assigned by the "CoAP Signaling Option Numbers"
+sub-registry (see {{option-codes}}).
+
+Signaling options are elective or critical as defined in Section 5.4.1
+of {{-coap}}). If a Signaling option is critical and not understood by
+the receiver, it MUST abort the connection (see {{sec-abort}}). If the
+option is understood but cannot be processed, the option documents the behavior.
+
+## Capability and Settings Messages (CSM)
+
+Capability and Settings messages are used for two purposes:
+
+* Capability options advertise a capability from the sender to the recipient.
+
+* Setting options indicate a setting that will be applied by the sender.
+
+Both capability options and setting options are cumulative,
+i.e., a capability message without any option is a no-operation (and
+can be used as such). An option that is given might override a
+previous value for the same option; the option defines how to handle
+this, if needed. Most CSM options are useful mainly as initial
+messages in the connection.
+
+Capability and Settings messages are indicated by the 7.01 code (CSM).
+
+### Server-Name Setting Option
+
+A client can indicate a default value that it wants to set for the
+Uri-Host options in the messages it sends to the server:
+
+The Server-Name option is defined as follows:
+
+| Option Number | Applies to | Option Name | Reference |
+|---------------|------------|-------------|-----------|
+|             1 | CSM        | Server-Name | [RFCthis] |
+
+Server-Name is a critical option and carries a "string" value, with the same restrictions as Uri-Host (Section
+5.10 of {{RFC7252}}: length is between 1 and 255).
+
+For TLS, the initial value for the Server-Name option is given by the SNI value.
+
+For Websockets, the initial value for the Server-Name is given by the HTTP Host header field.
+
+
+### Max-Message-Size Capability Indication Option
+
+A sender can indicate a maximum message size that it can receive.
+
+The Max-Message-Size option is defined as follows:
+
+| Option Number | Applies to | Option Name      | Reference |
+|---------------|------------|------------------|-----------|
+|             2 | CSM        | Max-Message-Size | [RFCthis] |
+
+Max-Message-Size is an elective option with a "uint" value,
+indicating the message size in bytes.  As per Section 4.6 of {{-coap}},
+the default value (and the value used when this option is not implemented)
+is 1152.  (Note that a peer implementation that relies on this option being
+indicated and having a certain minimum value will enjoy only limited interoperability.)
+
+### Block-wise Transfer Capability Option
+
+A sender can indicate that it supports the block-wise transfer
+protocol defined in {{-block}}.
+
+The Block-wise-Transfer option is defined as follows:
+
+| Option Number | Applies to | Option Name         | Reference |
+|---------------+------------+---------------------+-----------|
+|             4 | CSM        | Block-wise-Transfer | [RFCthis] |
+
+Block-wise-Transfer is an elective option with an empty value.
+If the option is not given, the peer has no information about whether
+block-wise transfers are supported by the sender or not. An implementation
+that supports block-wise transfers SHOULD indicate the Block-Wise Transfer option.
+If a Max-Message-Size option is indicated with a value that is greater than 1152
+(in the same or a different CSM message), the Block-Wise Transfer option
+also indicates support for BERT.
+
+## Protocol Version negotiation {#negotiation}
+
+CoAP is defined in {{RFC7252}} with a version number of 1.  In contrast
+to the message layer for UDP and DTLS, the CoAP over TCP message layer
+does not send the version number in each single message.  Instead,
+options for the Capability and Settings message can be used to perform
+a version negotiation.
+
+At the time of writing, there is no known reason for supporting
+version numbers different from 1.  The details of a version
+negotiation, once it is actually needed, will depend on the specifics
+of the new version(s), so the present specification makes no attempt
+to specify these details.  However, Capability and Settings messages
+have been specifically designed with a view to supporting such a
+potential future need.
+
+# Ping and Pong Messages
+
+In CoAP over TCP/TLS, Empty messages can always be sent and will be ignored. This provides
+a basic keep-alive function that can refresh NAT bindings. In contrast,
+Ping and Pong messages are a bidirectional exchange.
+
+A Ping message is responded to by a single Pong message with the same token.
+As with all Signaling messages, the recipient of a Ping or Pong message MUST
+ignore elective options it does not understand.
+
+Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).
+
+## Custody Option
+
+A peer replying to a Ping message can add a Custody Option to the Pong
+message it returns. This option indicates that the application has
+processed all request/response messages that it has received in the
+present connection ahead of the Ping message that prompted the Pong
+message. (Note that there is no definition of specific application
+semantics of "processed", but there is an expectation that the sender
+of the Ping leading to the Pong with a Custody Option should be able
+to free buffers based on this indication.)
+
+A Custody Option can also be sent in a Ping message to explicitly
+request the return of a Custody Option in the Pong message. A peer
+is always free to indicate that it has finished processing
+all previous request/response messages by sending a Custody Option
+(which is therefore elective) in a Pong message. A peer is also free
+NOT to send a Custody Option in case it is still processing previous
+request/response messages; however, it SHOULD delay its response to a
+Ping with a Custody Option until it also can return one.
+
+| Option Number | Applies to | Option Name | Reference |
+|---------------|------------|-------------|-----------|
+|             2 | Ping, Pong | Custody     | [RFCthis] |
+
+The Custody option is an elective option with an empty value.
+
+# Release Messages
+
+A release message indicates that the sender does not want to continue
+maintaining the connection and opts for an orderly shutdown; the details
+are in the options. A diagnostic payload MAY be included. A release message
+will normally be replied to by the peer by closing the TCP/TLS connection.
+Messages may be in flight when the sender decides to send a Release message.
+The general expectation is that these will still be processed.
+
+Release messages are indicated by the 7.04 code (Release).
+
+Release messages can indicate one or more reasons using elective
+options. The following options are defined:
+
+| Option Number | Applies to | Option Name         | Reference |
+|---------------|------------|---------------------|-----------|
+|             2 | Release    | Bad-Server-Name     | [RFCthis] |
+|             4 | Release    | Alternative-Address | [RFCthis] |
+|             6 | Release    | Hold-Off            | [RFCthis] |
+
+Bad-Server-Name indicates that the default as set by the CSM
+option Server-Name is unlikely to be useful for this server.  It has
+an empty value.
+
+Alternative-Address requests the peer to instead open a
+connection of the same kind as the present connection to the
+alternative transport address given.  The value is a string of the
+form "authority" as defined in Section 3.2 of {{RFC3986}}. 
+
+Hold-Off indicates that the server is requesting that the peer not
+reconnect to it for the number of seconds given in the "uint" value.
+
+# Abort Messages {#sec-abort}
+
+An abort message indicates that the sender is unable to continue
+maintaining the connection and cannot even wait for an orderly
+release. The sender shuts down the connection immediately after
+the abort (and may or may not wait for a release or abort message or
+connection shutdown in the inverse direction). A diagnostic payload
+SHOULD be included in the Abort message. Messages may be in flight
+when the sender decides to send an abort message; the general
+expectation is that these will NOT be processed.
+
+Abort messages are indicated by the 7.05 code (Abort).
+
+Abort messages can indicate one or more reasons using elective
+options. The following option is defined:
+
+| Option Number | Applies to | Option Name    | Reference |
+|---------------|------------|----------------|-----------|
+|             2 | Abort      | Bad-CSM-Option | [RFCthis] |
+
+Bad-CSM-Option indicates that the sender is unable to process the
+CSM option identified by its option number, e.g. when it is critical
+and the option number is unknown by the sender, or when there is
+parameter problem with the value of an elective option.  The value is
+a "uint".  More detailed information SHOULD be included as a diagnostic payload.
+
+One reason for an sender to generate an abort message is a general
+syntax error in the byte stream received. No specific option has been
+defined for this, as the details of that syntax error are best left to
+a diagnostic payload.
+
+# Capability and Settings examples
+
+An encoded example of a Ping message with a non-empty token is shown
+in {{fig-ping-example}}.
+
+~~~~
+    0                   1                   2
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      0x01     |      0xe2     |      0x42     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+    Len   =    0 -------> 0x01
+    TKL   =    1 ___/
+    Code  = 7.02 Ping --> 0xe2
+    Token =               0x42
+~~~~
+{: #fig-ping-example title='Ping Message Example'}
+
+An encoded example of the corresponding Pong message is shown in {{fig-pong-example}}.
+
+~~~~
+    0                   1                   2
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      0x01     |      0xe3     |      0x42     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+    Len   =    0 -------> 0x01
+    TKL   =    1 ___/
+    Code  = 7.03 Pong --> 0xe3
+    Token =               0x42
+~~~~
+{: #fig-pong-example title='Pong Message Example'}
+
 # CoAP URIs {#URI}
 
 CoAP over UDP {{RFC7252}} defines the "coap" and "coaps" URI schemes for
@@ -837,7 +1093,7 @@ identifying CoAP resources and providing a means of locating the resource.
 
 ## CoAP over TCP and TLS URIs
 
-CoAP over TCP uses "coap_tcp" URI scheme. CoAP over TLS uses the "coaps+tcp"
+CoAP over TCP uses the "coap+tcp" URI scheme. CoAP over TLS uses the "coaps+tcp"
 scheme. The rules from Section 6 of {{RFC7252}} apply to both of these URI schemes.
 
 {{RFC7252}}, Section 8 (Multicast CoAP) is not applicable to these schemes.
@@ -948,6 +1204,8 @@ changed accordingly.
 
 # Security Considerations {#security}
 
+The security considerations of {{-coap}} apply.
+
 Implementations of CoAP MUST use TLS version 1.2 or higher for CoAP over TLS.
 The general TLS usage guidance in {{RFC7525}} SHOULD be followed.
 
@@ -961,7 +1219,71 @@ CoAP over WebSockets and CoAP over TLS-secured WebSockets do not
 introduce additional security issues beyond CoAP and DTLS-secured CoAP
 respectively {{RFC7252}}. The security considerations of {{RFC6455}} apply.
 
+## Signaling Messages
+
+* The guidance given by an Alternative-Address option cannot be
+  followed blindly.  In particular, a peer MUST NOT assume that a
+  successful connection to the Alternative-Address inherits all the
+  security properties of the current connection.
+* SNI vs. Server-Name: Any security negotiated in the TLS handshake is
+  for the SNI name exchanged in the TLS handshake and checked against
+  the certificate provided by the server.  The Server-Name option
+  cannot be used to extend these security properties to the additional
+  server name.
+
 # IANA Considerations {#iana}
+
+
+## Signaling Codes {#message-codes}
+
+IANA is requested to create a third sub-registry for values of the Code field in the CoAP
+header (Section 12.1 of {{-coap}}). The name of this sub-registry is "CoAP Signaling Codes".
+
+Each entry in the sub-registry must include the Signaling Code in the range
+7.01-7.31, its name, and a reference to its documentation. 
+
+Initial entries in this sub-registry are as follows:
+
+| Code | Name    | Reference |
+|------|---------|-----------|
+| 7.01 | CSM     | [RFCthis] |
+| 7.02 | Ping    | [RFCthis] |
+| 7.03 | Pong    | [RFCthis] |
+| 7.04 | Release | [RFCthis] |
+| 7.05 | Abort   | [RFCthis] |
+{: #signal-codes title="CoAP Signal Codes" }
+
+All other Signaling Codes are Unassigned.
+
+The IANA policy for future additions to this sub-registry is "IETF
+Review or IESG Approval" as described in {{RFC5226}}.
+
+## CoAP Signaling Option Numbers Registry {#option-codes}
+
+IANA is requested to create a sub-registry for signaling options similar
+to the CoAP Option Numbers Registry (Section 12.2 of {{-coap}}), with
+the single change that a fourth column is added to the sub-registry
+that is one of the codes in the Signaling Codes subregistry ({{message-codes}}).
+
+The name of this sub-registry is "CoAP Signaling Option Numbers".
+
+Initial entries in this sub-registry are as follows:
+
+| Number | Applies to | Name                | Reference |
+|--------|------------|---------------------|-----------|
+|      1 | CSM        | Server-Name         | [RFCthis] |
+|	   2 | CSM        | Max-Message-Size    | [RFCthis] |
+|      4 | CSM        | Block-wise-Transfer | [RFCthis] |
+|      2 | Ping, Pong | Custody             | [RFCthis] |
+|      2 | Release    | Bad-Server-Name     | [RFCthis] |
+|      4 | Release    | Alternative-Address | [RFCthis] |
+|      6 | Release    | Hold-Off            | [RFCthis] |
+|      2 | Abort      | Bad-CSM-Option      | [RFCthis] |
+{: #signal-option-codes title="CoAP Signal Option Codes" cols="r l l c"}
+
+The IANA policy for future additions to this sub-registry is based on
+number ranges for the option numbers, analogous to the policy defined
+in Section 12.2 of {{-coap}}.
 
 ## Service Name and Port Number Registration
 
@@ -1307,6 +1629,8 @@ The RFC Editor is requested to remove this section at publication.
 ## Since draft-core-coap-tcp-tls-02
 
 Merged draft-savolainen-core-coap-websockets-07
+Merged draft-bormann-core-block-bert-01
+Merged draft-bormann-core-coap-sig-02
 
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
