@@ -90,8 +90,6 @@ normative:
   I-D.ietf-dice-profile:
 informative:
   I-D.ietf-core-block: block
-  I-D.becker-core-coap-sms-gprs: I-D.becker-core-coap-sms-gprs
-  I-D.dijk-core-sleepy-reqs: I-D.dijk-core-sleepy-reqs
   RFC0768: udp
   RFC5234: RFC5234
   RFC6454: RFC6454
@@ -255,7 +253,7 @@ Client                Server    Client                Server
         CoAP over UDP                CoAP over reliable
                                         transport
 ~~~~
-{: #fig-udp-flow title='Comparison between CoAP over unreliable and reliable transport.' artwork-align="center"}
+{: #fig-flow-comparison title='Comparison between CoAP over unreliable and reliable transport.' artwork-align="center"}
 
 ## UDP-to-TCP gateways
 
@@ -504,9 +502,7 @@ A third possible configuration
 is a CoAP server running inside a web browser
 ({{arch-3}}). The web browser initially connects to a
 WebSocket endpoint and is then reachable through the WebSocket
-server. When no connection exists, the CoAP server is not reachable;
-it therefore can be considered a
-[Sleepy Endpoint (SEP)](#I-D.dijk-core-sleepy-reqs).
+server. When no connection exists, the CoAP server is not reachable.
 Because the WebSocket server is the only way to reach the CoAP
 server, the CoAP proxy should be a Reverse Proxy.
 
@@ -834,7 +830,7 @@ Ping with a Custody Option until it also can return one.
 
 The Custody option is an elective option with an empty value.
 
-### Examples
+### Examples {#ping-examples}
 
 An encoded example of a Ping message with a non-empty token is shown
 in {{fig-ping-example}}.
@@ -1454,7 +1450,7 @@ Subprotocol Definition.
 
 --- back
 
-# CoAP over WebSocket Examples {#examples}
+# CoAP over WebSocket Examples {#websocket-examples}
 
 This section gives examples for the first two configurations
 discussed in {{websockets-overview}}.
