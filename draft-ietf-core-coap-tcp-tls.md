@@ -115,9 +115,9 @@ The Constrained Application Protocol (CoAP), although inspired by HTTP, was desi
 instead of TCP.  The message layer of the CoAP over UDP protocol includes support for
 reliable delivery, simple congestion control, and flow control.
 
-Some environments would benefit from the availability of CoAP over reliable
-transports such as TCP or WebSockets, which already provide such services.  This document
-outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports.
+Some environments benefit from the availability of CoAP carried over reliable
+transports such as TCP or TLS. This document outlines the changes required to use
+CoAP over TCP, TLS, and WebSockets transports.
 
 --- middle
 
