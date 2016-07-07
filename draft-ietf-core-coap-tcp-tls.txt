@@ -88,19 +88,19 @@ Table of Contents
      3.3.  Message Transmission  . . . . . . . . . . . . . . . . . .  13
      3.4.  Connection Health . . . . . . . . . . . . . . . . . . . .  14
      3.5.  Closing the Connection  . . . . . . . . . . . . . . . . .  14
-   4.  Reliable Transports and Block-Wise Transfer . . . . . . . . .  14
-     4.1.  Example: GET with BERT Blocks . . . . . . . . . . . . . .  16
-     4.2.  Example: PUT with BERT Blocks . . . . . . . . . . . . . .  16
-   5.  Signaling . . . . . . . . . . . . . . . . . . . . . . . . . .  17
-     5.1.  Signaling Codes . . . . . . . . . . . . . . . . . . . . .  17
-     5.2.  Signaling Option Numbers  . . . . . . . . . . . . . . . .  17
-     5.3.  Capability and Settings Messages (CSM)  . . . . . . . . .  18
-     5.4.  Protocol Version negotiation  . . . . . . . . . . . . . .  19
-   6.  Ping and Pong Messages  . . . . . . . . . . . . . . . . . . .  20
-     6.1.  Custody Option  . . . . . . . . . . . . . . . . . . . . .  20
-   7.  Release Messages  . . . . . . . . . . . . . . . . . . . . . .  21
-   8.  Abort Messages  . . . . . . . . . . . . . . . . . . . . . . .  21
-   9.  Capability and Settings examples  . . . . . . . . . . . . . .  22
+   4.  Signaling . . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     4.1.  Signaling Codes . . . . . . . . . . . . . . . . . . . . .  15
+     4.2.  Signaling Option Numbers  . . . . . . . . . . . . . . . .  15
+     4.3.  Capability and Settings Messages (CSM)  . . . . . . . . .  15
+     4.4.  Protocol Version negotiation  . . . . . . . . . . . . . .  17
+   5.  Ping and Pong Messages  . . . . . . . . . . . . . . . . . . .  17
+     5.1.  Custody Option  . . . . . . . . . . . . . . . . . . . . .  18
+   6.  Release Messages  . . . . . . . . . . . . . . . . . . . . . .  18
+   7.  Abort Messages  . . . . . . . . . . . . . . . . . . . . . . .  19
+   8.  Capability and Settings examples  . . . . . . . . . . . . . .  20
+   9.  Block-Wise Transfer and Reliable Transports . . . . . . . . .  20
+     9.1.  Example: GET with BERT Blocks . . . . . . . . . . . . . .  22
+     9.2.  Example: PUT with BERT Blocks . . . . . . . . . . . . . .  22
    10. CoAP URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  23
      10.1.  CoAP over TCP and TLS URIs . . . . . . . . . . . . . . .  23
      10.2.  CoAP over WebSockets URIs  . . . . . . . . . . . . . . .  24
@@ -118,7 +118,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
      12.1.  Signaling Codes  . . . . . . . . . . . . . . . . . . . .  26
      12.2.  CoAP Signaling Option Numbers Registry . . . . . . . . .  27
      12.3.  Service Name and Port Number Registration  . . . . . . .  27
-     12.4.  URI Scheme Registration  . . . . . . . . . . . . . . . .  28
+     12.4.  URI Scheme Registration  . . . . . . . . . . . . . . . .  29
      12.5.  Well-Known URI Suffix Registration . . . . . . . . . . .  31
      12.6.  ALPN Protocol ID . . . . . . . . . . . . . . . . . . . .  31
      12.7.  WebSocket Subprotocol Registration . . . . . . . . . . .  31
@@ -349,7 +349,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    o  The "Ver" field is elided as well.  In constrast to the UDP
       message layer for UDP and DTLS, the CoAP over TCP message layer
       does not send a version number in each message.  If required in
-      the future, a new Capability and Settings option (See Section 5.4)
+      the future, a new Capability and Settings option (See Section 4.4)
       could be defined to support version negotiation.
 
    o  In a stream oriented transport protocol such as TCP, a form of
@@ -764,20 +764,20 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    remove all entries associated with the client from the lists of
    observers when the connection is closed.
 
-4.  Reliable Transports and Block-Wise Transfer
+4.  Signaling
 
-   The message size limitations defined in Section 4.6 of CoAP [RFC7252]
-   are no longer strictly necessary when CoAP is used over a reliable
-   byte stream transport.  While this appears to obviate the need for
-   the Block-wise transfer protocol [I-D.ietf-core-block], entirely
-   getting rid of it is not a generally applicable solution, as:
+   The underlying reliable protocols have methods to configure
+   connection properties and manage the connection.  In many cases,
+   these methods are inadequate for managing CoAP's use of the
+   connection.
 
-   o  large messages, such as firmware downloads, may cause undesired
-      head-of-line blocking when a single TCP connection is used
+   Signaling messages are introduced to signal information about the
+   connection.  They define a third basic kind of messages in CoAP,
+   after requests and responses.
 
-   o  a UDP-to-TCP gateway may simply not have the context to convert a
-      message with a Block option into the equivalent exchange without
-      any use of a Block option
+   Signaling messages share a common structure with the existing CoAP
+   messages.  There is a code, a token, options, and an optional
+   payload.
 
 
 
@@ -785,6 +785,352 @@ Bormann, et al.          Expires January 8, 2017               [Page 14]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   (See Section 3 of [RFC7252] for the overall structure, as adapted to
+   the specific transport.)
+
+4.1.  Signaling Codes
+
+   A code in the 7.01-7.31 range indicates a Signaling message.  Values
+   in this range are assigned by the "CoAP Signaling Codes" sub-registry
+   (see Section 12.1).
+
+   For each message, there is a sender and a peer receiving the message.
+
+   Payloads in Signaling messages are diagnostic payloads (see
+   Section 5.5.2 of [RFC7252]), unless otherwise defined by a Signaling
+   message option.
+
+4.2.  Signaling Option Numbers
+
+   Option numbers for Signaling messages are specific to the message
+   code.  They do not share the number space with CoAP options for
+   request/response messages or with Signaling messages using other
+   codes.
+
+   Option numbers are assigned by the "CoAP Signaling Option Numbers"
+   sub-registry (see Section 12.2).
+
+   Signaling options are elective or critical as defined in
+   Section 5.4.1 of [RFC7252]).  If a Signaling option is critical and
+   not understood by the receiver, it MUST abort the connection (see
+   Section 7).  If the option is understood but cannot be processed, the
+   option documents the behavior.
+
+4.3.  Capability and Settings Messages (CSM)
+
+   Capability and Settings messages are used for two purposes:
+
+   o  Capability options advertise a capability from the sender to the
+      recipient.
+
+   o  Setting options indicate a setting that will be applied by the
+      sender.
+
+   Both capability options and setting options are cumulative, i.e., a
+   capability message without any option is a no-operation (and can be
+   used as such).  An option that is given might override a previous
+   value for the same option; the option defines how to handle this, if
+   needed.  Most CSM options are useful mainly as initial messages in
+   the connection.
+
+
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 15]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
+   Capability and Settings messages are indicated by the 7.01 code
+   (CSM).
+
+4.3.1.  Server-Name Setting Option
+
+   A client can indicate a default value that it wants to set for the
+   Uri-Host options in the messages it sends to the server:
+
+   The Server-Name option is defined as follows:
+
+         +---------------+------------+-------------+-----------+
+         | Option Number | Applies to | Option Name | Reference |
+         +---------------+------------+-------------+-----------+
+         | 1             | CSM        | Server-Name | [RFCthis] |
+         +---------------+------------+-------------+-----------+
+
+   Server-Name is a critical option and carries a "string" value, with
+   the same restrictions as Uri-Host (Section 5.10 of [RFC7252]: length
+   is between 1 and 255).
+
+   For TLS, the initial value for the Server-Name option is given by the
+   SNI value.
+
+   For Websockets, the initial value for the Server-Name is given by the
+   HTTP Host header field.
+
+4.3.2.  Max-Message-Size Capability Indication Option
+
+   A sender can indicate a maximum message size that it can receive.
+
+   The Max-Message-Size option is defined as follows:
+
+       +---------------+------------+------------------+-----------+
+       | Option Number | Applies to | Option Name      | Reference |
+       +---------------+------------+------------------+-----------+
+       | 2             | CSM        | Max-Message-Size | [RFCthis] |
+       +---------------+------------+------------------+-----------+
+
+   Max-Message-Size is an elective option with a "uint" value,
+   indicating the message size in bytes.  As per Section 4.6 of
+   [RFC7252], the default value (and the value used when this option is
+   not implemented) is 1152.  (Note that a peer implementation that
+   relies on this option being indicated and having a certain minimum
+   value will enjoy only limited interoperability.)
+
+
+
+
+
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 16]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
+4.3.3.  Block-wise Transfer Capability Option
+
+   A sender can indicate that it supports the block-wise transfer
+   protocol defined in [I-D.ietf-core-block].
+
+   The Block-wise-Transfer option is defined as follows:
+
+     +---------------+------------+---------------------+-----------+
+     | Option Number | Applies to | Option Name         | Reference |
+     +---------------+------------+---------------------+-----------+
+     | 4             | CSM        | Block-wise-Transfer | [RFCthis] |
+     +---------------+------------+---------------------+-----------+
+
+   Block-wise-Transfer is an elective option with an empty value.  If
+   the option is not given, the peer has no information about whether
+   block-wise transfers are supported by the sender or not.  An
+   implementation that supports block-wise transfers SHOULD indicate the
+   Block-Wise Transfer option.  If a Max-Message-Size option is
+   indicated with a value that is greater than 1152 (in the same or a
+   different CSM message), the Block-Wise Transfer option also indicates
+   support for BERT (see Section 9).
+
+4.4.  Protocol Version negotiation
+
+   CoAP is defined in [RFC7252] with a version number of 1.  In contrast
+   to the message layer for UDP and DTLS, the CoAP over TCP message
+   layer does not send the version number in each single message.
+   Instead, options for the Capability and Settings message can be used
+   to perform a version negotiation.
+
+   At the time of writing, there is no known reason for supporting
+   version numbers different from 1.  The details of a version
+   negotiation, once it is actually needed, will depend on the specifics
+   of the new version(s), so the present specification makes no attempt
+   to specify these details.  However, Capability and Settings messages
+   have been specifically designed with a view to supporting such a
+   potential future need.
+
+5.  Ping and Pong Messages
+
+   In CoAP over TCP/TLS, Empty messages can always be sent and will be
+   ignored.  This provides a basic keep-alive function that can refresh
+   NAT bindings.  In contrast, Ping and Pong messages are a
+   bidirectional exchange.
+
+   A Ping message is responded to by a single Pong message with the same
+   token.  As with all Signaling messages, the recipient of a Ping or
+   Pong message MUST ignore elective options it does not understand.
+
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 17]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
+   Ping and Pong messages are indicated by the 7.02 code (Ping) and the
+   7.03 code (Pong).
+
+5.1.  Custody Option
+
+   A peer replying to a Ping message can add a Custody Option to the
+   Pong message it returns.  This option indicates that the application
+   has processed all request/response messages that it has received in
+   the present connection ahead of the Ping message that prompted the
+   Pong message.  (Note that there is no definition of specific
+   application semantics of "processed", but there is an expectation
+   that the sender of the Ping leading to the Pong with a Custody Option
+   should be able to free buffers based on this indication.)
+
+   A Custody Option can also be sent in a Ping message to explicitly
+   request the return of a Custody Option in the Pong message.  A peer
+   is always free to indicate that it has finished processing all
+   previous request/response messages by sending a Custody Option (which
+   is therefore elective) in a Pong message.  A peer is also free NOT to
+   send a Custody Option in case it is still processing previous
+   request/response messages; however, it SHOULD delay its response to a
+   Ping with a Custody Option until it also can return one.
+
+         +---------------+------------+-------------+-----------+
+         | Option Number | Applies to | Option Name | Reference |
+         +---------------+------------+-------------+-----------+
+         | 2             | Ping, Pong | Custody     | [RFCthis] |
+         +---------------+------------+-------------+-----------+
+
+   The Custody option is an elective option with an empty value.
+
+6.  Release Messages
+
+   A release message indicates that the sender does not want to continue
+   maintaining the connection and opts for an orderly shutdown; the
+   details are in the options.  A diagnostic payload MAY be included.  A
+   release message will normally be replied to by the peer by closing
+   the TCP/TLS connection.  Messages may be in flight when the sender
+   decides to send a Release message.  The general expectation is that
+   these will still be processed.
+
+   Release messages are indicated by the 7.04 code (Release).
+
+   Release messages can indicate one or more reasons using elective
+   options.  The following options are defined:
+
+
+
+
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 18]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
+     +---------------+------------+---------------------+-----------+
+     | Option Number | Applies to | Option Name         | Reference |
+     +---------------+------------+---------------------+-----------+
+     | 2             | Release    | Bad-Server-Name     | [RFCthis] |
+     |               |            |                     |           |
+     | 4             | Release    | Alternative-Address | [RFCthis] |
+     |               |            |                     |           |
+     | 6             | Release    | Hold-Off            | [RFCthis] |
+     +---------------+------------+---------------------+-----------+
+
+   Bad-Server-Name indicates that the default as set by the CSM option
+   Server-Name is unlikely to be useful for this server.  It has an
+   empty value.
+
+   Alternative-Address requests the peer to instead open a connection of
+   the same kind as the present connection to the alternative transport
+   address given.  The value is a string of the form "authority" as
+   defined in Section 3.2 of [RFC3986].
+
+   Hold-Off indicates that the server is requesting that the peer not
+   reconnect to it for the number of seconds given in the "uint" value.
+
+7.  Abort Messages
+
+   An abort message indicates that the sender is unable to continue
+   maintaining the connection and cannot even wait for an orderly
+   release.  The sender shuts down the connection immediately after the
+   abort (and may or may not wait for a release or abort message or
+   connection shutdown in the inverse direction).  A diagnostic payload
+   SHOULD be included in the Abort message.  Messages may be in flight
+   when the sender decides to send an abort message; the general
+   expectation is that these will NOT be processed.
+
+   Abort messages are indicated by the 7.05 code (Abort).
+
+   Abort messages can indicate one or more reasons using elective
+   options.  The following option is defined:
+
+        +---------------+------------+----------------+-----------+
+        | Option Number | Applies to | Option Name    | Reference |
+        +---------------+------------+----------------+-----------+
+        | 2             | Abort      | Bad-CSM-Option | [RFCthis] |
+        +---------------+------------+----------------+-----------+
+
+   Bad-CSM-Option indicates that the sender is unable to process the CSM
+   option identified by its option number, e.g. when it is critical and
+   the option number is unknown by the sender, or when there is
+   parameter problem with the value of an elective option.  The value is
+
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 19]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
+   a "uint".  More detailed information SHOULD be included as a
+   diagnostic payload.
+
+   One reason for an sender to generate an abort message is a general
+   syntax error in the byte stream received.  No specific option has
+   been defined for this, as the details of that syntax error are best
+   left to a diagnostic payload.
+
+8.  Capability and Settings examples
+
+   An encoded example of a Ping message with a non-empty token is shown
+   in Figure 15.
+
+       0                   1                   2
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |      0x01     |      0xe2     |      0x42     |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+       Len   =    0 -------> 0x01
+       TKL   =    1 ___/
+       Code  = 7.02 Ping --> 0xe2
+       Token =               0x42
+
+                      Figure 15: Ping Message Example
+
+   An encoded example of the corresponding Pong message is shown in
+   Figure 16.
+
+       0                   1                   2
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |      0x01     |      0xe3     |      0x42     |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+       Len   =    0 -------> 0x01
+       TKL   =    1 ___/
+       Code  = 7.03 Pong --> 0xe3
+       Token =               0x42
+
+                      Figure 16: Pong Message Example
+
+9.  Block-Wise Transfer and Reliable Transports
+
+   The message size restrictions defined in Section 4.6 of CoAP
+   [RFC7252] to avoid IP fragmentation are not necessary when CoAP is
+   used over a reliable byte stream transport.  While this suggests that
+
+
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 20]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
+   the Block-wise transfer protocol [I-D.ietf-core-block] is also no
+   longer needed, it remains applicable for a number of cases:
+
+   o  large messages, such as firmware downloads, may cause undesired
+      head-of-line blocking when a single TCP connection is used
+
+   o  a UDP-to-TCP gateway may simply not have the context to convert a
+      message with a Block option into the equivalent exchange without
+      any use of a Block option
 
    The 'Block-Wise Extension for Reliable Transport (BERT)' extends the
    Block protocol to enable the use of larger messages over a reliable
@@ -825,6 +1171,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    is labeled as "BERT" or as "BERT(nnn)" to indicate a payload of size
    nnn.
 
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 21]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
    In all these examples, a Block option is decomposed to indicate the
    kind of Block option (1 or 2) followed by a colon, the block number
    (NUM), more bit (M), and block size exponent (2**(SZX+4)) separated
@@ -832,19 +1185,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    2:2/0/32), or a Block1 Option value of 59 would be shown as
    1:3/1/128.
 
+9.1.  Example: GET with BERT Blocks
 
-
-
-
-
-Bormann, et al.          Expires January 8, 2017               [Page 15]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-4.1.  Example: GET with BERT Blocks
-
-   Figure 15 shows a GET request with a response that is split into
+   Figure 17 shows a GET request with a response that is split into
    three BERT blocks.  The first response contains 3072 bytes of
    payload; the second, 5120; and the third, 4711.  Note how the block
    number increments to move the position inside the response body
@@ -864,11 +1207,32 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
      |                                            |
      | <------   2.05 Content, 2:8/0/BERT(4711)   |
 
-                     Figure 15: GET with BERT blocks.
+                     Figure 17: GET with BERT blocks.
 
-4.2.  Example: PUT with BERT Blocks
+9.2.  Example: PUT with BERT Blocks
 
-   Figure 16 demonstrates a PUT exchange with BERT blocks.
+   Figure 18 demonstrates a PUT exchange with BERT blocks.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 22]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
 
    CLIENT                                        SERVER
      |                                             |
@@ -885,367 +1249,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
      | <------   2.04 Changed, 1:24/0/BERT         |
      |                                             |
 
-                     Figure 16: PUT with BERT blocks.
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 8, 2017               [Page 16]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-5.  Signaling
-
-   The underlying reliable protocols have methods to configure
-   connection properties and manage the connection.  In many cases,
-   these methods are inadequate for managing CoAP's use of the
-   connection.
-
-   Signaling messages are introduced to signal information about the
-   connection.  They define a third basic kind of messages in CoAP,
-   after requests and responses.
-
-   Signaling messages share a common structure with the existing CoAP
-   messages.  There is a code, a token, options, and an optional
-   payload.
-
-   (See Section 3 of [RFC7252] for the overall structure, as adapted to
-   the specific transport.)
-
-5.1.  Signaling Codes
-
-   A code in the 7.01-7.31 range indicates a Signaling message.  Values
-   in this range are assigned by the "CoAP Signaling Codes" sub-registry
-   (see Section 12.1).
-
-   For each message, there is a sender and a peer receiving the message.
-
-   Payloads in Signaling messages are diagnostic payloads (see
-   Section 5.5.2 of [RFC7252]), unless otherwise defined by a Signaling
-   message option.
-
-5.2.  Signaling Option Numbers
-
-   Option numbers for Signaling messages are specific to the message
-   code.  They do not share the number space with CoAP options for
-   request/response messages or with Signaling messages using other
-   codes.
-
-   Option numbers are assigned by the "CoAP Signaling Option Numbers"
-   sub-registry (see Section 12.2).
-
-   Signaling options are elective or critical as defined in
-   Section 5.4.1 of [RFC7252]).  If a Signaling option is critical and
-   not understood by the receiver, it MUST abort the connection (see
-   Section 8).  If the option is understood but cannot be processed, the
-   option documents the behavior.
-
-
-
-
-
-
-Bormann, et al.          Expires January 8, 2017               [Page 17]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-5.3.  Capability and Settings Messages (CSM)
-
-   Capability and Settings messages are used for two purposes:
-
-   o  Capability options advertise a capability from the sender to the
-      recipient.
-
-   o  Setting options indicate a setting that will be applied by the
-      sender.
-
-   Both capability options and setting options are cumulative, i.e., a
-   capability message without any option is a no-operation (and can be
-   used as such).  An option that is given might override a previous
-   value for the same option; the option defines how to handle this, if
-   needed.  Most CSM options are useful mainly as initial messages in
-   the connection.
-
-   Capability and Settings messages are indicated by the 7.01 code
-   (CSM).
-
-5.3.1.  Server-Name Setting Option
-
-   A client can indicate a default value that it wants to set for the
-   Uri-Host options in the messages it sends to the server:
-
-   The Server-Name option is defined as follows:
-
-         +---------------+------------+-------------+-----------+
-         | Option Number | Applies to | Option Name | Reference |
-         +---------------+------------+-------------+-----------+
-         | 1             | CSM        | Server-Name | [RFCthis] |
-         +---------------+------------+-------------+-----------+
-
-   Server-Name is a critical option and carries a "string" value, with
-   the same restrictions as Uri-Host (Section 5.10 of [RFC7252]: length
-   is between 1 and 255).
-
-   For TLS, the initial value for the Server-Name option is given by the
-   SNI value.
-
-   For Websockets, the initial value for the Server-Name is given by the
-   HTTP Host header field.
-
-5.3.2.  Max-Message-Size Capability Indication Option
-
-   A sender can indicate a maximum message size that it can receive.
-
-   The Max-Message-Size option is defined as follows:
-
-
-
-Bormann, et al.          Expires January 8, 2017               [Page 18]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-       +---------------+------------+------------------+-----------+
-       | Option Number | Applies to | Option Name      | Reference |
-       +---------------+------------+------------------+-----------+
-       | 2             | CSM        | Max-Message-Size | [RFCthis] |
-       +---------------+------------+------------------+-----------+
-
-   Max-Message-Size is an elective option with a "uint" value,
-   indicating the message size in bytes.  As per Section 4.6 of
-   [RFC7252], the default value (and the value used when this option is
-   not implemented) is 1152.  (Note that a peer implementation that
-   relies on this option being indicated and having a certain minimum
-   value will enjoy only limited interoperability.)
-
-5.3.3.  Block-wise Transfer Capability Option
-
-   A sender can indicate that it supports the block-wise transfer
-   protocol defined in [I-D.ietf-core-block].
-
-   The Block-wise-Transfer option is defined as follows:
-
-     +---------------+------------+---------------------+-----------+
-     | Option Number | Applies to | Option Name         | Reference |
-     +---------------+------------+---------------------+-----------+
-     | 4             | CSM        | Block-wise-Transfer | [RFCthis] |
-     +---------------+------------+---------------------+-----------+
-
-   Block-wise-Transfer is an elective option with an empty value.  If
-   the option is not given, the peer has no information about whether
-   block-wise transfers are supported by the sender or not.  An
-   implementation that supports block-wise transfers SHOULD indicate the
-   Block-Wise Transfer option.  If a Max-Message-Size option is
-   indicated with a value that is greater than 1152 (in the same or a
-   different CSM message), the Block-Wise Transfer option also indicates
-   support for BERT.
-
-5.4.  Protocol Version negotiation
-
-   CoAP is defined in [RFC7252] with a version number of 1.  In contrast
-   to the message layer for UDP and DTLS, the CoAP over TCP message
-   layer does not send the version number in each single message.
-   Instead, options for the Capability and Settings message can be used
-   to perform a version negotiation.
-
-   At the time of writing, there is no known reason for supporting
-   version numbers different from 1.  The details of a version
-   negotiation, once it is actually needed, will depend on the specifics
-   of the new version(s), so the present specification makes no attempt
-   to specify these details.  However, Capability and Settings messages
-
-
-
-Bormann, et al.          Expires January 8, 2017               [Page 19]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-   have been specifically designed with a view to supporting such a
-   potential future need.
-
-6.  Ping and Pong Messages
-
-   In CoAP over TCP/TLS, Empty messages can always be sent and will be
-   ignored.  This provides a basic keep-alive function that can refresh
-   NAT bindings.  In contrast, Ping and Pong messages are a
-   bidirectional exchange.
-
-   A Ping message is responded to by a single Pong message with the same
-   token.  As with all Signaling messages, the recipient of a Ping or
-   Pong message MUST ignore elective options it does not understand.
-
-   Ping and Pong messages are indicated by the 7.02 code (Ping) and the
-   7.03 code (Pong).
-
-6.1.  Custody Option
-
-   A peer replying to a Ping message can add a Custody Option to the
-   Pong message it returns.  This option indicates that the application
-   has processed all request/response messages that it has received in
-   the present connection ahead of the Ping message that prompted the
-   Pong message.  (Note that there is no definition of specific
-   application semantics of "processed", but there is an expectation
-   that the sender of the Ping leading to the Pong with a Custody Option
-   should be able to free buffers based on this indication.)
-
-   A Custody Option can also be sent in a Ping message to explicitly
-   request the return of a Custody Option in the Pong message.  A peer
-   is always free to indicate that it has finished processing all
-   previous request/response messages by sending a Custody Option (which
-   is therefore elective) in a Pong message.  A peer is also free NOT to
-   send a Custody Option in case it is still processing previous
-   request/response messages; however, it SHOULD delay its response to a
-   Ping with a Custody Option until it also can return one.
-
-         +---------------+------------+-------------+-----------+
-         | Option Number | Applies to | Option Name | Reference |
-         +---------------+------------+-------------+-----------+
-         | 2             | Ping, Pong | Custody     | [RFCthis] |
-         +---------------+------------+-------------+-----------+
-
-   The Custody option is an elective option with an empty value.
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 8, 2017               [Page 20]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-7.  Release Messages
-
-   A release message indicates that the sender does not want to continue
-   maintaining the connection and opts for an orderly shutdown; the
-   details are in the options.  A diagnostic payload MAY be included.  A
-   release message will normally be replied to by the peer by closing
-   the TCP/TLS connection.  Messages may be in flight when the sender
-   decides to send a Release message.  The general expectation is that
-   these will still be processed.
-
-   Release messages are indicated by the 7.04 code (Release).
-
-   Release messages can indicate one or more reasons using elective
-   options.  The following options are defined:
-
-     +---------------+------------+---------------------+-----------+
-     | Option Number | Applies to | Option Name         | Reference |
-     +---------------+------------+---------------------+-----------+
-     | 2             | Release    | Bad-Server-Name     | [RFCthis] |
-     |               |            |                     |           |
-     | 4             | Release    | Alternative-Address | [RFCthis] |
-     |               |            |                     |           |
-     | 6             | Release    | Hold-Off            | [RFCthis] |
-     +---------------+------------+---------------------+-----------+
-
-   Bad-Server-Name indicates that the default as set by the CSM option
-   Server-Name is unlikely to be useful for this server.  It has an
-   empty value.
-
-   Alternative-Address requests the peer to instead open a connection of
-   the same kind as the present connection to the alternative transport
-   address given.  The value is a string of the form "authority" as
-   defined in Section 3.2 of [RFC3986].
-
-   Hold-Off indicates that the server is requesting that the peer not
-   reconnect to it for the number of seconds given in the "uint" value.
-
-8.  Abort Messages
-
-   An abort message indicates that the sender is unable to continue
-   maintaining the connection and cannot even wait for an orderly
-   release.  The sender shuts down the connection immediately after the
-   abort (and may or may not wait for a release or abort message or
-   connection shutdown in the inverse direction).  A diagnostic payload
-   SHOULD be included in the Abort message.  Messages may be in flight
-   when the sender decides to send an abort message; the general
-   expectation is that these will NOT be processed.
-
-
-
-
-Bormann, et al.          Expires January 8, 2017               [Page 21]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-   Abort messages are indicated by the 7.05 code (Abort).
-
-   Abort messages can indicate one or more reasons using elective
-   options.  The following option is defined:
-
-        +---------------+------------+----------------+-----------+
-        | Option Number | Applies to | Option Name    | Reference |
-        +---------------+------------+----------------+-----------+
-        | 2             | Abort      | Bad-CSM-Option | [RFCthis] |
-        +---------------+------------+----------------+-----------+
-
-   Bad-CSM-Option indicates that the sender is unable to process the CSM
-   option identified by its option number, e.g. when it is critical and
-   the option number is unknown by the sender, or when there is
-   parameter problem with the value of an elective option.  The value is
-   a "uint".  More detailed information SHOULD be included as a
-   diagnostic payload.
-
-   One reason for an sender to generate an abort message is a general
-   syntax error in the byte stream received.  No specific option has
-   been defined for this, as the details of that syntax error are best
-   left to a diagnostic payload.
-
-9.  Capability and Settings examples
-
-   An encoded example of a Ping message with a non-empty token is shown
-   in Figure 17.
-
-       0                   1                   2
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |      0x01     |      0xe2     |      0x42     |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-       Len   =    0 -------> 0x01
-       TKL   =    1 ___/
-       Code  = 7.02 Ping --> 0xe2
-       Token =               0x42
-
-                      Figure 17: Ping Message Example
-
-   An encoded example of the corresponding Pong message is shown in
-   Figure 18.
-
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 8, 2017               [Page 22]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-       0                   1                   2
-       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-      |      0x01     |      0xe3     |      0x42     |
-      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-       Len   =    0 -------> 0x01
-       TKL   =    1 ___/
-       Code  = 7.03 Pong --> 0xe3
-       Token =               0x42
-
-                      Figure 18: Pong Message Example
+                     Figure 18: PUT with BERT blocks.
 
 10.  CoAP URIs
 
@@ -1277,10 +1281,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    The semantics defined in [RFC7252], Section 6.1, apply to this URI
    scheme, with the following changes:
 
-   o  The port subcomponent indicates the TCP port at which the CoAP
-      server is located.  (If it is empty or not given, then the default
-      port 5683 is assumed, as with UDP.)
-
 
 
 
@@ -1289,6 +1289,10 @@ Bormann, et al.          Expires January 8, 2017               [Page 23]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   o  The port subcomponent indicates the TCP port at which the CoAP
+      server is located.  (If it is empty or not given, then the default
+      port 5683 is assumed, as with UDP.)
 
 10.1.2.  coaps+tcp URI scheme
 
@@ -1331,11 +1335,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    definitions of "host", "port", "path-abempty" and "query" are the
    same as in [RFC3986].
 
-     coap-ws-URI =
-        "coap+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
 
-     coap-wss-URI =
-        "coap+wss:" "//" host [ ":" port ] path-abempty [ "?" query ]
 
 
 
@@ -1345,6 +1345,12 @@ Bormann, et al.          Expires January 8, 2017               [Page 24]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+     coap-ws-URI =
+        "coap+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+
+     coap-wss-URI =
+        "coap+wss:" "//" host [ ":" port ] path-abempty [ "?" query ]
 
    The port component is OPTIONAL; the default for "coap+ws" is port 80,
    while the default for "coap+wss" is port 443.
@@ -1388,12 +1394,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    on-path adversary to terminate a TCP connection prematurely by
    spoofing a TCP reset message.
 
-   CoAP over WebSockets and CoAP over TLS-secured WebSockets do not
-   introduce additional security issues beyond CoAP and DTLS-secured
-   CoAP respectively [RFC7252].  The security considerations of
-   [RFC6455] apply.
-
-
 
 
 
@@ -1401,6 +1401,11 @@ Bormann, et al.          Expires January 8, 2017               [Page 25]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   CoAP over WebSockets and CoAP over TLS-secured WebSockets do not
+   introduce additional security issues beyond CoAP and DTLS-secured
+   CoAP respectively [RFC7252].  The security considerations of
+   [RFC6455] apply.
 
 11.1.  Signaling Messages
 
@@ -1446,17 +1451,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
    All other Signaling Codes are Unassigned.
 
-   The IANA policy for future additions to this sub-registry is "IETF
-   Review or IESG Approval" as described in [RFC5226].
-
-
-
 
 
 Bormann, et al.          Expires January 8, 2017               [Page 26]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   The IANA policy for future additions to this sub-registry is "IETF
+   Review or IESG Approval" as described in [RFC5226].
 
 12.2.  CoAP Signaling Option Numbers Registry
 
@@ -1504,15 +1507,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    Service Name.
       coap+tcp
 
-   Transport Protocol.
-      tcp
-
 
 
 Bormann, et al.          Expires January 8, 2017               [Page 27]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   Transport Protocol.
+      tcp
 
    Assignee.
       IESG <iesg@ietf.org>
@@ -1555,12 +1558,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    Port Number.
       443 (see also Section 12.6 of [RFCthis]})
 
-12.4.  URI Scheme Registration
 
-   This document registers two new URI schemes, namely "coap+tcp" and
-   "coaps+tcp", for the use of CoAP over TCP and for CoAP over TLS over
-   TCP, respectively.  The "coap+tcp" and "coaps+tcp" URI schemes can
-   thus be compared to the "http" and "https" URI schemes.
+
+
 
 
 
@@ -1569,6 +1569,13 @@ Bormann, et al.          Expires January 8, 2017               [Page 28]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+12.4.  URI Scheme Registration
+
+   This document registers two new URI schemes, namely "coap+tcp" and
+   "coaps+tcp", for the use of CoAP over TCP and for CoAP over TLS over
+   TCP, respectively.  The "coap+tcp" and "coaps+tcp" URI schemes can
+   thus be compared to the "http" and "https" URI schemes.
 
    The syntax of the "coap" and "coaps" URI schemes is specified in
    Section 6 of [RFC7252] and the present document re-uses their
@@ -1611,13 +1618,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
       None.
 
    Security Considerations.
-      See Section N of [RFCthis]
-
-   Contact.
-      IETF chair <chair@ietf.org>
-
-   Author/Change controller.
-      IESG <iesg@ietf.org>
 
 
 
@@ -1625,6 +1625,14 @@ Bormann, et al.          Expires January 8, 2017               [Page 29]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+      See Section N of [RFCthis]
+
+   Contact.
+      IETF chair <chair@ietf.org>
+
+   Author/Change controller.
+      IESG <iesg@ietf.org>
 
    References.
       [RFCthis]
@@ -1666,14 +1674,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
       See Section N of [RFCthis]
 
    Contact.
-      IETF chair <chair@ietf.org>
-
-   Author/Change controller.
-      IESG <iesg@ietf.org>
-
-   References.
-      [RFCthis]
-
 
 
 
@@ -1681,6 +1681,14 @@ Bormann, et al.          Expires January 8, 2017               [Page 30]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+      IETF chair <chair@ietf.org>
+
+   Author/Change controller.
+      IESG <iesg@ietf.org>
+
+   References.
+      [RFCthis]
 
 12.5.  Well-Known URI Suffix Registration
 
@@ -1723,20 +1731,18 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    Subprotocol Identifier.
       coap
 
-   Subprotocol Common Name.
-      Constrained Application Protocol (CoAP)
-
-   Subprotocol Definition.
-      [RFCthis]
-
-
-
 
 
 Bormann, et al.          Expires January 8, 2017               [Page 31]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   Subprotocol Common Name.
+      Constrained Application Protocol (CoAP)
+
+   Subprotocol Definition.
+      [RFCthis]
 
 13.  References
 
@@ -1781,18 +1787,16 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
               DOI 10.17487/RFC5785, April 2010,
               <http://www.rfc-editor.org/info/rfc5785>.
 
-   [RFC6455]  Fette, I. and A. Melnikov, "The WebSocket Protocol",
-              RFC 6455, DOI 10.17487/RFC6455, December 2011,
-              <http://www.rfc-editor.org/info/rfc6455>.
-
-
-
 
 
 Bormann, et al.          Expires January 8, 2017               [Page 32]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   [RFC6455]  Fette, I. and A. Melnikov, "The WebSocket Protocol",
+              RFC 6455, DOI 10.17487/RFC6455, December 2011,
+              <http://www.rfc-editor.org/info/rfc6455>.
 
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
@@ -1836,10 +1840,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
               Bormann, C. and Z. Shelby, "Block-wise transfers in CoAP",
               draft-ietf-core-block-20 (work in progress), April 2016.
 
-   [RFC0768]  Postel, J., "User Datagram Protocol", STD 6, RFC 768,
-              DOI 10.17487/RFC0768, August 1980,
-              <http://www.rfc-editor.org/info/rfc768>.
-
 
 
 
@@ -1849,6 +1849,10 @@ Bormann, et al.          Expires January 8, 2017               [Page 33]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   [RFC0768]  Postel, J., "User Datagram Protocol", STD 6, RFC 768,
+              DOI 10.17487/RFC0768, August 1980,
+              <http://www.rfc-editor.org/info/rfc768>.
 
    [RFC5234]  Crocker, D., Ed. and P. Overell, "Augmented BNF for Syntax
               Specifications: ABNF", STD 68, RFC 5234,
@@ -1893,11 +1897,7 @@ Appendix A.  CoAP over WebSocket Examples
        composed of the authority "example.org" and the well-known path
        "/.well-known/coap", <ws://example.org/.well-known/coap>.
 
-   3.  It sends a single-frame, masked, binary message containing a CoAP
-       request.  The request indicates the target resource with the Uri-
-       Path ("sensors", "temperature") and Uri-Query ("u=Cel") options.
 
-   4.  It waits for the server to return a response.
 
 
 
@@ -1906,14 +1906,14 @@ Bormann, et al.          Expires January 8, 2017               [Page 34]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
+   3.  It sends a single-frame, masked, binary message containing a CoAP
+       request.  The request indicates the target resource with the Uri-
+       Path ("sensors", "temperature") and Uri-Query ("u=Cel") options.
+
+   4.  It waits for the server to return a response.
+
    5.  The CoAP client uses the connection for further requests, or the
        connection is closed.
-
-
-
-
-
-
 
 
 
