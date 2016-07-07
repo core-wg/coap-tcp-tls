@@ -89,7 +89,6 @@ normative:
   RFC7641: RFC7641
   I-D.ietf-dice-profile:
 informative:
-  I-D.bormann-core-cocoa: cocoa
   I-D.ietf-core-block: block
   I-D.becker-core-coap-sms-gprs: I-D.becker-core-coap-sms-gprs
   I-D.dijk-core-sleepy-reqs: I-D.dijk-core-sleepy-reqs
@@ -134,31 +133,22 @@ infrastructures, where UDP-based protocols may not be well-received or may
 even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for
 IoT can make the use of UDP brittle, resulting in lost or malformed packets.
 
-To address such environments, this document defines additional bindings for CoAP,
-including TCP, TLS, and WebSockets.
+To address such environments, this document defines how to transport CoAP over TCP, 
+CoAP over TLS, and CoAP over WebSockets. {{layering}} illustrates the layering:
 
 ~~~~
-+-----------------------------------------------------------+
-|                                                           |
-|                        Application                        |
-|                                                           |
-+-----------------------------------------------------------+
-|                                                           |
-|                           CoAP                            |
-|                  Requests and Responses                   |
-|                                                           |
-+ - - - - - - - - - +-------------------+-------------------+
-|                   |                   |                   |
-|       CoAP        |     CoAP over     |     CoAP over     |
-|     Messaging     |    TCP and TLS    |    WebSockets     |
-|                   |                   |                   |
-+---------+---------+---------+---------+-------------------+
-|         |         |         |         |                   |
-|   UDP   |  DTLS   |   TCP   |   TLS   |    WebSockets     |
-|         |         |         |         |                   |
-+---------+---------+---------+---------+-------------------+
+        +--------------------------------+
+        |          Application           |
+        +--------------------------------+
+        +--------------------------------+
+        |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
+        |--------------------------------|
+        |        Message Framing         |  This Document
+        +--------------------------------+
+        |      Reliable Transport        |
+        +--------------------------------+
 ~~~~
-{: #layering title='Abstract Layering of CoAP extended by TCP, TLS, and WebSockets' artwork-align="center"}
+{: #layering title='Layering of CoAP over Reliable Transports' artwork-align="center"}
 
 Where NATs are present, CoAP over TCP can help with their traversal.
 NATs often calculate expiration timers based on the transport layer protocol
@@ -169,12 +159,9 @@ hand, does not provide such information to a NAT and timeouts tend to be much
 shorter {{HomeGateway}}.
 
 Some environments may also benefit from the ability of TCP to exchange
-larger payloads such as firmware images without application layer
+larger payloads, such as firmware images, without application layer
 segmentation and to utilize the more sophisticated congestion control
 capabilities provided by many TCP implementations.
-
-(Note that there is ongoing work to add more elaborate congestion control
-to CoAP as well, see {{-cocoa}}.)
 
 CoAP may be integrated into a Web environment where the front-end
 uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
@@ -215,8 +202,9 @@ BERT Option:
 {: vspace='0'}
 BERT Block:
 :	The payload of a CoAP message that is affected by a BERT Option in
-	descriptive usage (Section 2.1 of [I-D.ietf-core-block]).
+	descriptive usage (Section 2.1 of {{I-D.ietf-core-block}}).
 {: vspace='0'}
+
 # CoAP over TCP
 
 The request/response interaction model of CoAP TCP/TLS is similar to CoAP UDP.
@@ -224,26 +212,6 @@ The primary differences are in the message layer. CoAP UDP supports optional
 reliability by defining four types of messages: Confirmable, Non-confirmable,
 Acknowledgement, and Reset. TCP eliminates the need for the message layer
 to support reliability. As a result, message types are not defined in CoAP TCP/TLS.
-
-The protocol stack is illustrated in {{stack}}.
-
-~~~~
-        +--------------------------------+
-        |          Application           |
-        +--------------------------------+
-        +--------------------------------+
-        |  Requests/Responses/Signaling  |  CoAP (RFC 7252) and This Document
-        |--------------------------------|
-        |        Message Framing         |  This Document
-        +--------------------------------+
-        +---------------+          ^
-        |      TLS      |    or    |
-        +---------------+          v
-        +--------------------------------+
-        |              TCP               |
-        +--------------------------------+
-~~~~
-{: #stack title='The CoAP over TCP/TLS Protocol Stack' }
 
 ## Messaging Model 
 
