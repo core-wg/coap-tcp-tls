@@ -493,7 +493,7 @@ li, p {
 <p id="rfc.section.1.p.6">CoAP may be integrated into a Web environment where the front-end uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP over TCP between the back-end services. A TCP-to-UDP gateway can be used at the cloud boundary to communicate with the UDP-based IoT device.</p>
 <p id="rfc.section.1.p.7">To allow IoT devices to better communicate in these demanding environments, CoAP needs to support different transport protocols, namely TCP <a href="#RFC0793">[RFC0793]</a>, in some situations secured by TLS <a href="#RFC5246">[RFC5246]</a>.</p>
 <p id="rfc.section.1.p.8">In addition, some corporate networks only allow Internet access via a HTTP proxy.  In this case, the best transport for CoAP would be the <a href="#RFC6455">WebSocket Protocol</a> <cite title="NONE">[RFC6455]</cite>.  The WebSocket protocol provides two-way communication between a client and a server after upgrading an <a href="#RFC7230">HTTP/1.1</a> <cite title="NONE">[RFC7230]</cite> connection and may be available in an environment that blocks CoAP over UDP. Another scenario for CoAP over WebSockets is a CoAP application running inside a web browser without access to connectivity other than HTTP and WebSockets.</p>
-<p id="rfc.section.1.p.9">This document specifies how to access resources using CoAP requests and responses over the TCP/TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP/TLS or WebSocket Connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
+<p id="rfc.section.1.p.9">This document specifies how to access resources using CoAP requests and responses over the TCP/TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP/TLS or WebSocket connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
 <p id="rfc.section.1.1.p.2">This document assumes that readers are familiar with the terms and concepts that are used in <a href="#RFC6455">[RFC6455]</a> and <a href="#RFC7252">[RFC7252]</a>.</p>
@@ -654,8 +654,8 @@ li, p {
 <p id="rfc.section.2.4.p.2">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
 <p id="rfc.section.2.4.p.3">Retransmission and deduplication of messages is provided by the TCP/TLS protocol.</p>
 <p id="rfc.section.2.4.p.4">Since the TCP protocol provides ordered delivery of messages, the mechanism for reordering detection when <a href="#RFC7641">observing resources</a> <cite title="NONE">[RFC7641]</cite> is not needed. The value of the Observe Option in notifications MAY be empty on transmission and MUST be ignored on reception.</p>
-<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#overview" id="overview">CoAP over WebSockets</a></h1>
-<p id="rfc.section.3.p.1">CoAP over WebSockets can be used in a number of configurations. The most basic configuration is a CoAP client seeking to retrieve or update a CoAP resource located at a CoAP server that exposes a WebSocket endpoint (<a href="#arch-1">Figure 9</a>). The CoAP client takes the role of the WebSocket client, establishes a WebSocket Connection and sends a CoAP request, to which the CoAP server returns a CoAP response. The WebSocket Connection can be used for any number of requests.</p>
+<h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#websockets-overview" id="websockets-overview">CoAP over WebSockets</a></h1>
+<p id="rfc.section.3.p.1">CoAP over WebSockets can be used in a number of configurations. The most basic configuration is a CoAP client retrieving or updating a CoAP resource located at a CoAP server that exposes a WebSocket endpoint (<a href="#arch-1">Figure 9</a>). The CoAP client acts as the WebSocket client, establishes a WebSocket connection, and sends a CoAP request, to which the CoAP server returns a CoAP response. The WebSocket connection can be used for any number of requests.</p>
 <div id="rfc.figure.9"/>
 <div id="arch-1"/>
 <pre>
@@ -670,8 +670,8 @@ li, p {
           Client     Connection     Server
 </pre>
 <p class="figure">Figure 9: CoAP Client (WebSocket client) accesses CoAP Server (WebSocket server)</p>
-<p id="rfc.section.3.p.2">The challenge in this configuration is to identify resource in the namespace of the CoAP server: When the WebSocket Protocol is used by a dedicated client directly (i.e., not from a web page through a web browser), the client can connect to any WebSocket endpoint. This means it is necessary that the client is able to determine both the WebSocket endpoint (identified by a &#8220;ws&#8221; or &#8220;wss&#8221; URI) and the path and query of the CoAP resource within that endpoint from the same URI. When the WebSocket Protocol is used from a web page, the choices are more limited <a href="#RFC6454">[RFC6454]</a>, but the challenge persists.</p>
-<p><a href="#uris">Section 10.2</a> proposes a new &#8220;coap+ws&#8221; URI scheme that identifies both a WebSocket endpoint and a resource within that endpoint as follows:</p>
+<p id="rfc.section.3.p.2">The challenge with this configuration is how to identify a resource in the namespace of the CoAP server. When the WebSocket protocol is used by a dedicated client directly (i.e., not from a web page through a web browser), the client can connect to any WebSocket endpoint. This means it is necessary for the client to identify both the WebSocket endpoint (identified by a &#8220;ws&#8221; or &#8220;wss&#8221; URI) and the path and query of the CoAP resource within that endpoint from the same URI. When the WebSocket protocol is used from a web page, the choices are more limited <a href="#RFC6454">[RFC6454]</a>, but the challenge persists.</p>
+<p><a href="#uris">Section 10.2</a> defines a new &#8220;coap+ws&#8221; URI scheme that identifies both a WebSocket endpoint and a resource within that endpoint as follows:</p>
 <div id="rfc.figure.10"/>
 <div id="uri-example"/>
 <pre>
@@ -698,7 +698,7 @@ ws://example.org/.well-known/coap    Uri-Path: "temperature"
           Client        Server      Client          Server
 </pre>
 <p class="figure">Figure 11: CoAP Client (WebSocket client) accesses CoAP Server (UDP server) via a CoAP proxy (WebSocket server/UDP client)</p>
-<p id="rfc.section.3.p.5">A third possible configuration is a CoAP server running inside a web browser (<a href="#arch-3">Figure 12</a>). The web browser initially connects to a WebSocket endpoint and is then reachable through the WebSocket server. When no connection exists, the CoAP server is not reachable; it therefore can be considered a <a href="#I-D.dijk-core-sleepy-reqs">Sleepy Endpoint (SEP)</a> <cite title="NONE">[I-D.dijk-core-sleepy-reqs]</cite>.  Because the WebSocket server is the only way to reach the CoAP server, the CoAP proxy should be a Reverse Proxy.</p>
+<p id="rfc.section.3.p.5">A third possible configuration is a CoAP server running inside a web browser (<a href="#arch-3">Figure 12</a>). The web browser initially connects to a WebSocket endpoint and is then reachable through the WebSocket server. When no connection exists, the CoAP server is unreachable. Because the WebSocket server is the only way to reach the CoAP server, the CoAP proxy should be a Reverse Proxy.</p>
 <div id="rfc.figure.12"/>
 <div id="arch-3"/>
 <pre>
@@ -713,10 +713,10 @@ ws://example.org/.well-known/coap    Uri-Path: "temperature"
          Client          Server      Server        Client
 </pre>
 <p class="figure">Figure 12: CoAP Client (UDP client) accesses sleepy CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)</p>
-<p id="rfc.section.3.p.6">Further configurations are possible, including those where a WebSocket Connection is established through an HTTP proxy.</p>
+<p id="rfc.section.3.p.6">Further configurations are possible, including those where a WebSocket connection is established through an HTTP proxy.</p>
 <p id="rfc.section.3.p.7">CoAP over WebSockets is intentionally very similar to CoAP as defined over UDP. Therefore, instead of presenting CoAP over WebSockets as a new protocol, this document specifies it as a series of deltas from <a href="#RFC7252">[RFC7252]</a>.</p>
 <h1 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#handshake" id="handshake">Opening Handshake</a></h1>
-<p id="rfc.section.3.1.p.1">Before CoAP requests and responses can be exchanged, a WebSocket Connection needs to be established as defined in Section 4 of <a href="#RFC6455">[RFC6455]</a>. <a href="#handshake-example">Figure 13</a> shows an example.</p>
+<p id="rfc.section.3.1.p.1">Before CoAP requests and responses are exchanged, a WebSocket connection is established as defined in Section 4 of <a href="#RFC6455">[RFC6455]</a>.  <a href="#handshake-example">Figure 13</a> shows an example.</p>
 <p id="rfc.section.3.1.p.2">The WebSocket client MUST include the subprotocol name &#8220;coap&#8221; in the list of protocols, which indicates support for the protocol defined in this document. Any later, incompatible versions of CoAP or CoAP over WebSockets will use a different subprotocol name.</p>
 <p id="rfc.section.3.1.p.3">The WebSocket client includes the hostname of the WebSocket server in the Host header field of its handshake as per <a href="#RFC6455">[RFC6455]</a>. The Host header field also indicates the default value of the Uri-Host Option in requests from the WebSocket client to the WebSocket server.</p>
 <div id="rfc.figure.13"/>
@@ -738,21 +738,15 @@ Sec-WebSocket-Protocol: coap
 </pre>
 <p class="figure">Figure 13: Example of an Opening Handshake</p>
 <h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#websocket-message-format" id="websocket-message-format">Message Format</a></h1>
-<p id="rfc.section.3.2.p.1">Once a WebSocket Connection has been established, CoAP requests and responses can be exchanged as WebSocket messages. Since CoAP uses a binary message format, the messages are transmitted in binary data frames as specified in Sections 5 and 6 of <a href="#RFC6455">[RFC6455]</a>.</p>
-<p id="rfc.section.3.2.p.2">The message format is very similar to the format specified for <a href="#RFC7252">CoAP over UDP</a> <cite title="NONE">[RFC7252]</cite>. The differences are as follows:</p>
-<p/>
-
-<ul>
-  <li>Since the underlying TCP connection provides retransmissions and deduplication, there is no need for the reliability mechanisms provided by CoAP over UDP. The &#8220;T&#8221; and &#8220;Message ID&#8221; fields in the CoAP message header are elided.</li>
-  <li>Furthermore, since the CoAP version is negotiated during the opening handshake, the &#8220;Ver&#8221; field is elided as well.</li>
-</ul>
+<p id="rfc.section.3.2.p.1">Once a WebSocket connection is established, CoAP requests and responses can be exchanged as WebSocket messages. Since CoAP uses a binary message format, the messages are transmitted in binary data frames as specified in Sections 5 and 6 of <a href="#RFC6455">[RFC6455]</a>.</p>
+<p id="rfc.section.3.2.p.2">The message format shown in <a href="#ws-message-format">Figure 14</a> is the same as the CoAP over TCP message format (see <a href="#tcp-message-format">Section 2.3</a>) with one restriction. The Length (Len) field MUST be set to zero because the WebSockets frame contains the length.</p>
 <div id="rfc.figure.14"/>
 <div id="ws-message-format"/>
 <pre>
   0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   R   |  TKL  |      Code     |    Token (TKL bytes) ...
+|   Len |  TKL  |      Code     |    Token (TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -760,20 +754,20 @@ Sec-WebSocket-Protocol: coap
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
 <p class="figure">Figure 14: CoAP Message Format over WebSockets</p>
-<p id="rfc.section.3.2.p.4">The resulting message format is shown in <a href="#ws-message-format">Figure 14</a>. The four most-significant bits of the first byte are reserved (R) and MUST be set to zero. The remaining fields and structure are the same as defined in <a href="#RFC7252">[RFC7252]</a>.</p>
-<p id="rfc.section.3.2.p.5">Requests and response messages can be fragmented as specified in Section 5.4 of <a href="#RFC6455">[RFC6455]</a>, though typically they are sent unfragmented as they tend to be small and fully buffered before transmission. The WebSocket protocol does not provide means for multiplexing; if it is not desirable for a large message to monopolize the connection, requests and responses can be transferred in a blockwise fashion as defined in <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
-<p id="rfc.section.3.2.p.6">Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry either a request or a response.</p>
+<p id="rfc.section.3.2.p.3">The CoAP over TCP message format eliminates the Version field defined in CoAP over UDP. If CoAP version negotiation is required in the future, CoAP over WebSockets can address the requirement by the definition of a new subprotocol identifier that is negotiated during the opening handshake.</p>
+<p id="rfc.section.3.2.p.4">Requests and response messages can be fragmented as specified in Section 5.4 of <a href="#RFC6455">[RFC6455]</a>, though typically they are sent unfragmented as they tend to be small and fully buffered before transmission. The WebSocket protocol does not provide means for multiplexing. If it is not desirable for a large message to monopolize the connection, requests and responses can be transferred in a block-wise fashion as defined in <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
+<p id="rfc.section.3.2.p.5">Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry either a request or a response.</p>
 <h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> <a href="#requests-responses" id="requests-responses">Message Transmission</a></h1>
-<p id="rfc.section.3.3.p.1">CoAP requests and responses are exchanged asynchronously over the WebSocket Connection, i.e., a CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
+<p id="rfc.section.3.3.p.1">CoAP requests and responses are exchanged asynchronously over the WebSocket connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
 <p id="rfc.section.3.3.p.2">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
-<p id="rfc.section.3.3.p.3">Retransmission and deduplication of messages is provided by the WebSocket Protocol. CoAP over WebSockets therefore does not make a distinction between Confirmable or Non-Confirmable messages, and does not provide Acknowledgement or Reset messages.</p>
-<p id="rfc.section.3.3.p.4">Since the WebSocket Protocol provides ordered delivery of messages, the mechanism for reordering detection when <a href="#RFC7641">observing resources</a> <cite title="NONE">[RFC7641]</cite> is not needed. The value of the Observe Option in notifications therefore MAY be empty on transmission and MUST be ignored on reception.</p>
+<p id="rfc.section.3.3.p.3">Retransmission and deduplication of messages is provided by the WebSocket protocol. CoAP over WebSockets therefore does not make a distinction between Confirmable or Non-Confirmable messages, and does not provide Acknowledgement or Reset messages.</p>
+<p id="rfc.section.3.3.p.4">Since the WebSocket protocol provides ordered delivery of messages, the mechanism for reordering detection when <a href="#RFC7641">observing resources</a> <cite title="NONE">[RFC7641]</cite> is not needed. The value of the Observe Option in notifications MAY be empty on transmission and MUST be ignored on reception.</p>
 <h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#liveliness" id="liveliness">Connection Health</a></h1>
 <p id="rfc.section.3.4.p.1">When a client does not receive any response for some time after sending a CoAP request (or, similarly, when a client observes a resource and it does not receive any notification for some time), the connection between the WebSocket client and the WebSocket server may be lost or temporarily disrupted without the client being aware of it.</p>
-<p id="rfc.section.3.4.p.2">To check the health of the WebSocket Connection (and thereby of all active requests, if any), the client can send a Ping frame or an unsolicited Pong frame as specified in Section 5.5 of <a href="#RFC6455">[RFC6455]</a>. There is no way to retransmit a request without creating a new one. Re-registering interest in a resource is permitted, but entirely unnecessary.</p>
+<p id="rfc.section.3.4.p.2">To check the health of the WebSocket connection (and thereby of all active requests, if any), the client can send a Ping frame or an unsolicited Pong frame as specified in Section 5.5 of <a href="#RFC6455">[RFC6455]</a>. There is no way to retransmit a request without creating a new one. Re-registering interest in a resource is permitted, but entirely unnecessary.</p>
 <h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#close" id="close">Closing the Connection</a></h1>
-<p id="rfc.section.3.5.p.1">The WebSocket Connection is closed as specified in Section 7 of <a href="#RFC6455">[RFC6455]</a>.</p>
-<p id="rfc.section.3.5.p.2">All requests for which the CoAP client has not received a response yet are cancelled when the connection is closed.  If the client observes one or more resources over the WebSocket Connection, then the CoAP server (or intermediary in the role of the CoAP server) MUST remove all entries associated with the client from the lists of observers when the connection is closed.</p>
+<p id="rfc.section.3.5.p.1">The WebSocket connection is closed as specified in Section 7 of <a href="#RFC6455">[RFC6455]</a>.</p>
+<p id="rfc.section.3.5.p.2">All requests for which the CoAP client has not received a response yet are cancelled when the connection is closed.  If the client observes one or more resources over the WebSocket connection, then the CoAP server (or intermediary in the role of the CoAP server) MUST remove all entries associated with the client from the lists of observers when the connection is closed.</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#reliable-transports-and-block-wise-transfer" id="reliable-transports-and-block-wise-transfer">Reliable Transports and Block-Wise Transfer</a></h1>
 <p id="rfc.section.4.p.1">The message size limitations defined in Section 4.6 of CoAP <a href="#RFC7252">[RFC7252]</a> are no longer strictly necessary when CoAP is used over a reliable byte stream transport. While this appears to obviate the need for the Block-wise transfer protocol <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>, entirely getting rid of it is not a generally applicable solution, as:</p>
 <p/>
@@ -1075,9 +1069,9 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
   <li>When CoAP is exchanged over TLS port 443, the &#8220;TLS Application Layer Protocol Negotiation Extension&#8221; <a href="#RFC7301">[RFC7301]</a> MUST be used to allow demultiplexing at the server-side.</li>
 </ul>
 <h1 id="rfc.section.10.2"><a href="#rfc.section.10.2">10.2.</a> <a href="#uris" id="uris">CoAP over WebSockets URIs</a></h1>
-<p id="rfc.section.10.2.p.1">For the first configuration discussed in <a href="#overview">Section 3</a>, this document defines two new URIs schemes that can be used for identifying CoAP resources and providing a means of locating these resources: &#8220;coap+ws&#8221; and &#8220;coap+wss&#8221;.</p>
+<p id="rfc.section.10.2.p.1">For the first configuration discussed in <a href="#websockets-overview">Section 3</a>, this document defines two new URIs schemes that can be used for identifying CoAP resources and providing a means of locating these resources: &#8220;coap+ws&#8221; and &#8220;coap+wss&#8221;.</p>
 <p id="rfc.section.10.2.p.2">Similar to the &#8220;coap&#8221; and &#8220;coaps&#8221; schemes, the &#8220;coap+ws&#8221; and &#8220;coap+wss&#8221; schemes organize resources hierarchically under a CoAP origin server. The key difference is that the server is potentially reachable on a WebSocket endpoint instead of a UDP endpoint.</p>
-<p id="rfc.section.10.2.p.3">The WebSocket endpoint is identified by a &#8220;ws&#8221; or &#8220;wss&#8221; URI that is composed of the authority part of the &#8220;coap+ws&#8221; or &#8220;coap+wss&#8221; URI, respectively, and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a>.  The path and query parts of a &#8220;coap+ws&#8221; or &#8220;coap+wss&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by the CoAP protocol.</p>
+<p id="rfc.section.10.2.p.3">The WebSocket endpoint is identified by a &#8220;ws&#8221; or &#8220;wss&#8221; URI that is composed of the authority part of the &#8220;coap+ws&#8221; or &#8220;coap+wss&#8221; URI, respectively, and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a>.  The path and query parts of a &#8220;coap+ws&#8221; or &#8220;coap+wss&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by CoAP.</p>
 <p id="rfc.section.10.2.p.4">The syntax of the &#8220;coap+ws&#8221; and &#8220;coap+wss&#8221; URI schemes is specified below in Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>.  The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221; and &#8220;query&#8221; are the same as in <a href="#RFC3986">[RFC3986]</a>.</p>
 <pre>
 coap-ws-URI =
@@ -1280,7 +1274,7 @@ coap-wss-URI =
   <dt>URI scheme syntax.</dt>
   <dd style="margin-left: 8"><br/> Defined in Section N of [RFCthis]</dd>
   <dt>URI scheme semantics.</dt>
-  <dd style="margin-left: 8"><br/> The &#8220;coap+ws&#8221; URI scheme provides a way to identify resources that are potentially accessible over the Constrained Application Protocol (CoAP) using the WebSocket Protocol.</dd>
+  <dd style="margin-left: 8"><br/> The &#8220;coap+ws&#8221; URI scheme provides a way to identify resources that are potentially accessible over the Constrained Application Protocol (CoAP) using the WebSocket protocol.</dd>
   <dt>Encoding considerations.</dt>
   <dd style="margin-left: 8"><br/> The scheme encoding conforms to the encoding rules established for URIs in <a href="#RFC3986">[RFC3986]</a>, i.e., internationalized and reserved characters are expressed using UTF-8-based percent-encoding.</dd>
   <dt>Applications/protocols that use this URI scheme name.</dt>
@@ -1308,7 +1302,7 @@ coap-wss-URI =
   <dt>URI scheme syntax.</dt>
   <dd style="margin-left: 8"><br/> Defined in Section N of [RFCthis]</dd>
   <dt>URI scheme semantics.</dt>
-  <dd style="margin-left: 8"><br/> The &#8220;coap+ws&#8221; URI scheme provides a way to identify resources that are potentially accessible over the Constrained Application Protocol (CoAP) using the WebSocket Protocol secured with Transport Layer Security (TLS).</dd>
+  <dd style="margin-left: 8"><br/> The &#8220;coap+ws&#8221; URI scheme provides a way to identify resources that are potentially accessible over the Constrained Application Protocol (CoAP) using the WebSocket protocol secured with Transport Layer Security (TLS).</dd>
   <dt>Encoding considerations.</dt>
   <dd style="margin-left: 8"><br/> The scheme encoding conforms to the encoding rules established for URIs in <a href="#RFC3986">[RFC3986]</a>, i.e., internationalized and reserved characters are expressed using UTF-8-based percent-encoding.</dd>
   <dt>Applications/protocols that use this URI scheme name.</dt>
@@ -1469,12 +1463,6 @@ coap-wss-URI =
     </tr>
     <tr>
       <td class="reference">
-        <b id="I-D.dijk-core-sleepy-reqs">[I-D.dijk-core-sleepy-reqs]</b>
-      </td>
-      <td class="top"><a>Dijk, E.</a>, "<a href="http://tools.ietf.org/html/draft-dijk-core-sleepy-reqs-00">Sleepy Devices using CoAP - Requirements</a>", Internet-Draft draft-dijk-core-sleepy-reqs-00, June 2013.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="I-D.ietf-core-block">[I-D.ietf-core-block]</b>
       </td>
       <td class="top"><a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-block-20">Block-wise transfers in CoAP</a>", Internet-Draft draft-ietf-core-block-20, April 2016.</td>
@@ -1518,13 +1506,13 @@ coap-wss-URI =
   </tbody>
 </table>
 <h1 id="rfc.appendix.A"><a href="#rfc.appendix.A">Appendix A.</a> <a href="#examples" id="examples">CoAP over WebSocket Examples</a></h1>
-<p id="rfc.section.A.p.1">This section gives examples for the first two configurations discussed in <a href="#overview">Section 3</a>.</p>
+<p id="rfc.section.A.p.1">This section gives examples for the first two configurations discussed in <a href="#websockets-overview">Section 3</a>.</p>
 <p id="rfc.section.A.p.2">An example of the process followed by a CoAP client to retrieve the representation of a resource identified by a &#8220;coap+ws&#8221; URI might be as follows. <a href="#example-1">Figure 19</a> below illustrates the WebSocket and CoAP messages exchanged in detail.</p>
 <p/>
 
 <ol>
   <li>The CoAP client obtains the URI &lt;coap+ws://example.org/sensors/temperature?u=Cel&gt;, for example, from a resource representation that it retrieved previously.</li>
-  <li>It establishes a WebSocket Connection to the endpoint URI composed of the authority &#8220;example.org&#8221; and the well-known path &#8220;/.well-known/coap&#8221;, &lt;ws://example.org/.well-known/coap&gt;.</li>
+  <li>It establishes a WebSocket connection to the endpoint URI composed of the authority &#8220;example.org&#8221; and the well-known path &#8220;/.well-known/coap&#8221;, &lt;ws://example.org/.well-known/coap&gt;.</li>
   <li>It sends a single-frame, masked, binary message containing a CoAP request. The request indicates the target resource with the Uri-Path (&#8220;sensors&#8221;, &#8220;temperature&#8221;) and Uri-Query (&#8220;u=Cel&#8221;) options.</li>
   <li>It waits for the server to return a response.</li>
   <li>The CoAP client uses the connection for further requests, or the connection is closed.</li>
