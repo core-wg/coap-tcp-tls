@@ -207,7 +207,7 @@ BERT Block:
 
 # CoAP over TCP
 
-The request/response interaction model of CoAP TCP/TLS is similar to CoAP UDP.
+The request/response interaction model of CoAP TCP/TLS is the same as CoAP UDP.
 The primary differences are in the message layer. CoAP UDP supports optional
 reliability by defining four types of messages: Confirmable, Non-confirmable,
 Acknowledgement, and Reset. TCP eliminates the need for the message layer
@@ -225,46 +225,32 @@ layer is not required to support acknowledgements or detection of duplicate
 messages. As a result, both the Type and Message ID fields are no longer required
 and are removed from the CoAP over TCP message format. All messages are also untyped.
 
-{{fig-udp-flow}} illustrates a reliable request-response with the UDP message format:
+{{fig-flow-comparison}} illustrates the difference between CoAP over UDP and
+CoAP over reliable transport. The removed Type (no type) and Message ID fields
+are indicated by dashes.
 
 ~~~~
-        Client                Server
-           |                    |
-           |   CON [0xbc90]     |
-           | GET /temperature   |
-           |   (Token 0x71)     |
-           +------------------->|
-           |                    |
-           |   ACK [0xbc90]     |
-           |   2.05 Content     |
-           |   (Token 0x71)     |
-           |     "22.5 C"       |
-           |<-------------------+
-           |                    |
-~~~~
-{: #fig-udp-flow title='UDP reliable messages carrying Request/Response.' artwork-align="center"}
+ Client                Server   Client                Server
+    |                    |         |                    |
+    |   CON [0xbc90]     |         | (-------) [------] |
+    | GET /temperature   |         | GET /temperature   |
+    |   (Token 0x71)     |         |   (Token 0x71)     |
+    +------------------->|         +------------------->|
+    |                    |         |                    |
+    |   ACK [0xbc90]     |         | (-------) [------] |
+    |   2.05 Content     |         |   2.05 Content     |
+    |   (Token 0x71)     |         |   (Token 0x71)     |
+    |     "22.5 C"       |         |     "22.5 C"       |
+    |<-------------------+         |<-------------------+
+    |                    |         |                    |
 
-{{fig-tcp-flow}} illustrates a reliable request-response using the TCP message format,
-which removes both the Type (no type) and Message ID fields (as indicated by the dashes):
-
+        CoAP over UDP                CoAP over reliable
+                                         transport
 ~~~~
-        Client                Server
-           |                    |
-           | (-------) [------] |
-           | GET /temperature   |
-           |   (Token 0x71)     |
-           +------------------->|
-           |                    |
-           | (-------) [------] |
-           |   2.05 Content     |
-           |   (Token 0x71)     |
-           |     "22.5 C"       |
-           |<-------------------+
-           |                    |
-~~~~
-{: #fig-tcp-flow title='TCP reliable messages carrying Request/Response.' artwork-align="center" }
+{: #fig-flow-comparison title='Comparison between CoAP over unreliable and reliable transport.' artwork-align="center"}
 
-### UDP-to-TCP gateways
+
+## UDP-to-TCP gateways
 
 A UDP-to-TCP gateway MUST discard all Empty messages after processing at the
 message layer. For Confirmable (CON), Non-Confirmable (NOM), and Acknowledgement
@@ -309,7 +295,7 @@ specified for CoAP over UDP. The differences are as follows:
 
 * In a stream oriented transport protocol such as TCP, a form of message 
   delimitation is needed.  For this purpose, CoAP over TCP introduces a 
-  length field with variable size. {{fig-shim}} shows the adjusted CoAP 
+  length field with variable size. {{fig-frame}} shows the adjusted CoAP 
   header format with a modified structure for the fixed header (first 4
   bytes of the UDP CoAP header), which includes the length information of
   variable size, shown here as an 8-bit length.
@@ -326,7 +312,7 @@ specified for CoAP over UDP. The differences are as follows:
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-shim title='CoAP Header with 8-bit Length in Header.'}
+{: #fig-frame title='CoAP Header with 8-bit Length in Header.'}
 
 Len:
 : 4-bit unsigned integer. A value between 0 and 12 directly indicates the
@@ -364,10 +350,10 @@ the 32-bit headers.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-shim1 title='CoAP Header with elided Length Header.'}
+{: #fig-frame1 title='CoAP Header with elided Length Header.'}
 
 For example: A CoAP message just containing a 2.03 code with the
-token 7f and no options or payload would be encoded as shown in {{fig-shim2}}.
+token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 
 ~~~~
  0                   1                   2
@@ -381,7 +367,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-shim2}}.
  Code  =  2.03     --> 0x43
  Token =               0x7f
 ~~~~
-{: #fig-shim2 title='CoAP Header Example.'}
+{: #fig-frame2 title='CoAP Header Example.'}
 
 ~~~~
  0                   1                   2                   3
@@ -396,7 +382,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-shim2}}.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-shim3 title='CoAP Header with 16-bit Length in Header.'}
+{: #fig-frame3 title='CoAP Header with 16-bit Length in Header.'}
 
 ~~~~
  0                   1                   2                   3
@@ -411,14 +397,14 @@ token 7f and no options or payload would be encoded as shown in {{fig-shim2}}.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-shim4 title='CoAP Header with 32-bit Length in Header.'}
+{: #fig-frame4 title='CoAP Header with 32-bit Length in Header.'}
 
 The semantics of the other CoAP header fields are left unchanged.
 
 ## Message Transmission
 
 CoAP requests and responses are exchanged asynchronously over the
-TCP/TLS Connection. A CoAP client can send multiple requests
+TCP/TLS connection. A CoAP client can send multiple requests
 without waiting for a response and the CoAP server can return
 responses in any order. Responses MUST be returned over the same
 connection as the originating request. Concurrent requests are
