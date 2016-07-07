@@ -5,8 +5,7 @@
 CORE                                                          C. Bormann
 Internet-Draft                                   Universitaet Bremen TZI
 Intended status: Standards Track                                S. Lemay
-Expires: January 3, 2017                            V. Solorzano Barboza
-                                                      Zebra Technologies
+Expires: January 8, 2017                              Zebra Technologies
                                                            H. Tschofenig
                                                                 ARM Ltd.
                                                                K. Hartke
@@ -15,7 +14,7 @@ Expires: January 3, 2017                            V. Solorzano Barboza
                                         Tampere University of Technology
                                                           B. Raymor, Ed.
                                                                Microsoft
-                                                           July 02, 2016
+                                                           July 07, 2016
 
 
  CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets
@@ -48,12 +47,13 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 3, 2017.
+   This Internet-Draft will expire on January 8, 2017.
 
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 1]
+
+Bormann, et al.          Expires January 8, 2017                [Page 1]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 2]
+Bormann, et al.          Expires January 8, 2017                [Page 2]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -165,7 +165,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 3]
+Bormann, et al.          Expires January 8, 2017                [Page 3]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -221,7 +221,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 4]
+Bormann, et al.          Expires January 8, 2017                [Page 4]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -277,7 +277,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 5]
+Bormann, et al.          Expires January 8, 2017                [Page 5]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -333,7 +333,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 6]
+Bormann, et al.          Expires January 8, 2017                [Page 6]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -389,7 +389,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 7]
+Bormann, et al.          Expires January 8, 2017                [Page 7]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -445,7 +445,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 8]
+Bormann, et al.          Expires January 8, 2017                [Page 8]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -501,7 +501,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017                [Page 9]
+Bormann, et al.          Expires January 8, 2017                [Page 9]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -557,7 +557,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 10]
+Bormann, et al.          Expires January 8, 2017               [Page 10]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -613,7 +613,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 11]
+Bormann, et al.          Expires January 8, 2017               [Page 11]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -669,7 +669,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 12]
+Bormann, et al.          Expires January 8, 2017               [Page 12]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -725,7 +725,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 13]
+Bormann, et al.          Expires January 8, 2017               [Page 13]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -781,7 +781,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 14]
+Bormann, et al.          Expires January 8, 2017               [Page 14]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -837,7 +837,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 15]
+Bormann, et al.          Expires January 8, 2017               [Page 15]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -893,7 +893,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 16]
+Bormann, et al.          Expires January 8, 2017               [Page 16]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -949,7 +949,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 17]
+Bormann, et al.          Expires January 8, 2017               [Page 17]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1005,7 +1005,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 18]
+Bormann, et al.          Expires January 8, 2017               [Page 18]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1061,7 +1061,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 19]
+Bormann, et al.          Expires January 8, 2017               [Page 19]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1117,7 +1117,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 20]
+Bormann, et al.          Expires January 8, 2017               [Page 20]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1173,7 +1173,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 21]
+Bormann, et al.          Expires January 8, 2017               [Page 21]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1229,7 +1229,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 22]
+Bormann, et al.          Expires January 8, 2017               [Page 22]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1285,7 +1285,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 23]
+Bormann, et al.          Expires January 8, 2017               [Page 23]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1341,7 +1341,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 24]
+Bormann, et al.          Expires January 8, 2017               [Page 24]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1397,7 +1397,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 25]
+Bormann, et al.          Expires January 8, 2017               [Page 25]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1453,7 +1453,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 26]
+Bormann, et al.          Expires January 8, 2017               [Page 26]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1509,7 +1509,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 27]
+Bormann, et al.          Expires January 8, 2017               [Page 27]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1565,7 +1565,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 28]
+Bormann, et al.          Expires January 8, 2017               [Page 28]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1621,7 +1621,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 29]
+Bormann, et al.          Expires January 8, 2017               [Page 29]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1677,7 +1677,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 30]
+Bormann, et al.          Expires January 8, 2017               [Page 30]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1733,7 +1733,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 31]
+Bormann, et al.          Expires January 8, 2017               [Page 31]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1789,7 +1789,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 32]
+Bormann, et al.          Expires January 8, 2017               [Page 32]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1845,7 +1845,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 33]
+Bormann, et al.          Expires January 8, 2017               [Page 33]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1901,7 +1901,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 34]
+Bormann, et al.          Expires January 8, 2017               [Page 34]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -1957,7 +1957,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 35]
+Bormann, et al.          Expires January 8, 2017               [Page 35]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -2013,7 +2013,7 @@ Appendix A.  CoAP over WebSocket Examples
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 36]
+Bormann, et al.          Expires January 8, 2017               [Page 36]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -2069,7 +2069,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 37]
+Bormann, et al.          Expires January 8, 2017               [Page 37]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -2125,7 +2125,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 38]
+Bormann, et al.          Expires January 8, 2017               [Page 38]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -2181,7 +2181,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 39]
+Bormann, et al.          Expires January 8, 2017               [Page 39]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
@@ -2204,6 +2204,15 @@ Acknowledgements
 
 Contributors
 
+       Valik Solorzano Barboza
+       Zebra Technologies
+       820 W. Jackson Blvd. Suite 700
+       Chicago 60607
+       United States of America
+
+       Phone: +1-847-634-6700
+       Email: vsolorzanobarboza@zebra.com
+
        Teemu Savolainen
        Nokia Technologies
        Hatanpaan valtatie 30
@@ -2224,6 +2233,15 @@ Authors' Addresses
    Email: cabo@tzi.org
 
 
+
+
+
+
+Bormann, et al.          Expires January 8, 2017               [Page 40]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
    Simon Lemay
    Zebra Technologies
    820 W. Jackson Blvd. Suite 700
@@ -2232,24 +2250,6 @@ Authors' Addresses
 
    Phone: +1-847-634-6700
    Email: slemay@zebra.com
-
-
-
-
-
-Bormann, et al.          Expires January 3, 2017               [Page 40]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
-   Valik Solorzano Barboza
-   Zebra Technologies
-   820 W. Jackson Blvd. suite 700
-   Chicago  60607
-   United States of America
-
-   Phone: +1-847-634-6700
-   Email: vsolorzanobarboza@zebra.com
 
 
    Hannes Tschofenig
@@ -2293,4 +2293,4 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-Bormann, et al.          Expires January 3, 2017               [Page 41]
+Bormann, et al.          Expires January 8, 2017               [Page 41]
