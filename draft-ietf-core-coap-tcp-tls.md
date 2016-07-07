@@ -642,112 +642,6 @@ connection, then the CoAP server (or intermediary in the role of
 the CoAP server) MUST remove all entries associated with the client
 from the lists of observers when the connection is closed.
 
-# Reliable Transports and Block-Wise Transfer
-
-The message size limitations defined in Section 4.6 of CoAP {{RFC7252}}
-are no longer strictly necessary when CoAP is used over a reliable
-byte stream transport. While this appears to obviate the need for the
-Block-wise transfer protocol {{-block}}, entirely getting rid of it is not
-a generally applicable solution, as:
-
-* large messages, such as firmware downloads, may cause undesired
-  head-of-line blocking when a single TCP connection is used
-
-* a UDP-to-TCP gateway may simply not have the context to convert a
-  message with a Block option into the equivalent exchange without any
-  use of a Block option
-
-The 'Block-Wise Extension for Reliable Transport (BERT)' extends the
-Block protocol to enable the use of larger messages over a reliable
-transport.
-
-The use of this new extension is signalled by sending Block1 or
-Block2 options with SZX == 7 (a "BERT option"). SZX == 7 is a 
-reserved value in {{-block}}.
-
-In control usage, a BERT option is interpreted in the same way as the
-equivalent option with SZX == 6, except that it also indicates the
-capability to process BERT blocks.  As with the basic Block protocol,
-the recipient of a CoAP request with a BERT option in control usage is
-allowed to respond with a different SZX value, e.g. to send a non-BERT
-block instead.
-
-In descriptive usage, a BERT option is interpreted in the same way as
-the equivalent option with SZX == 6, except that the payload is
-allowed to contain a multiple of 1024 bytes (non-final BERT block) or
-more than 1024 bytes (final BERT block).
-
-The recipient of a non-final BERT block (M=1) conceptually partitions
-the payload into a sequence of 1024-byte blocks and acts exactly as
-if it had received this sequence in conjunction with block numbers
-starting at, and sequentially increasing from, the block number given
-in the Block option.  In other words, the entire BERT block is
-positioned at the byte position that results from multiplying the
-block number with 1024.  The position of further blocks to be
-transferred is indicated by incrementing the block number by the
-number of elements in this sequence (i.e., the size of the payload
-divided by 1024 bytes).
-
-As with SZX == 6, the recipient of a final BERT block (M=0) simply
-appends the payload at the byte position that is indicated by the
-block number multiplied with 1024.
-
-The following examples illustrate BERT options.  A value of SZX == 7
-is labeled as "BERT" or as "BERT(nnn)" to indicate a payload of size nnn.
-
-In all these examples, a Block option is decomposed to indicate the
-kind of Block option (1 or 2) followed by a colon, the block number (NUM),
-more bit (M), and block size exponent (2**(SZX+4)) separated by slashes.
-E.g., a Block2 Option value of 33 would be shown as 2:2/0/32), or a Block1
-Option value of 59 would be shown as 1:3/1/128.
-
-## Example: GET with BERT Blocks
-
-{{fig-bert1}} shows a GET request with a response that
-is split into three BERT blocks.  The first response contains 3072
-bytes of payload; the second, 5120; and the third, 4711.  Note how
-the block number increments to move the position inside the response
-body forward.
-
-~~~~
-CLIENT                                       SERVER
-  |                                            |
-  | GET, /status                       ------> |
-  |                                            |
-  | <------   2.05 Content, 2:0/1/BERT(3072)   |
-  |                                            |
-  | GET, /status, 2:3/0/BERT           ------> |
-  |                                            |
-  | <------   2.05 Content, 2:3/1/BERT(5120)   |
-  |                                            |
-  | GET, /status, 2:8/0/BERT          ------>  |
-  |                                            |
-  | <------   2.05 Content, 2:8/0/BERT(4711)   |
-~~~~
-{: #fig-bert1 title='GET with BERT blocks.'}
-
-## Example: PUT with BERT Blocks
-
-{{fig-bert2}} demonstrates a PUT exchange with BERT blocks.
-
-~~~~
-CLIENT                                        SERVER
-  |                                             |
-  | PUT, /options, 1:0/1/BERT(8192)     ------> |
-  |                                             |
-  | <------   2.31 Continue, 1:0/1/BERT         |
-  |                                             |
-  | PUT, /options, 1:8/1/BERT(16384)    ------> |
-  |                                             |
-  | <------   2.31 Continue, 1:8/1/BERT         |
-  |                                             |
-  | PUT, /options, 1:24/0/BERT(5683)    ------> |
-  |                                             |
-  | <------   2.04 Changed, 1:24/0/BERT         |
-  |                                             |
-~~~~
-{: #fig-bert2 title='PUT with BERT blocks.'}
-
 # Signaling
 
 The underlying reliable protocols have methods to configure connection
@@ -858,7 +752,7 @@ block-wise transfers are supported by the sender or not. An implementation
 that supports block-wise transfers SHOULD indicate the Block-Wise Transfer option.
 If a Max-Message-Size option is indicated with a value that is greater than 1152
 (in the same or a different CSM message), the Block-Wise Transfer option
-also indicates support for BERT.
+also indicates support for BERT (see {{bert}}).
 
 ## Protocol Version negotiation {#negotiation}
 
@@ -1011,6 +905,111 @@ An encoded example of the corresponding Pong message is shown in {{fig-pong-exam
     Token =               0x42
 ~~~~
 {: #fig-pong-example title='Pong Message Example'}
+
+# Block-Wise Transfer and Reliable Transports {#bert}
+
+The message size restrictions defined in Section 4.6 of CoAP {{RFC7252}}
+to avoid IP fragmentation are not necessary when CoAP is used over a reliable
+byte stream transport. While this suggests that the Block-wise transfer protocol
+{{-block}} is also no longer needed, it remains applicable for a number of cases:
+
+* large messages, such as firmware downloads, may cause undesired
+  head-of-line blocking when a single TCP connection is used
+
+* a UDP-to-TCP gateway may simply not have the context to convert a
+  message with a Block option into the equivalent exchange without any
+  use of a Block option
+
+The 'Block-Wise Extension for Reliable Transport (BERT)' extends the
+Block protocol to enable the use of larger messages over a reliable
+transport.
+
+The use of this new extension is signalled by sending Block1 or
+Block2 options with SZX == 7 (a "BERT option"). SZX == 7 is a 
+reserved value in {{-block}}.
+
+In control usage, a BERT option is interpreted in the same way as the
+equivalent option with SZX == 6, except that it also indicates the
+capability to process BERT blocks.  As with the basic Block protocol,
+the recipient of a CoAP request with a BERT option in control usage is
+allowed to respond with a different SZX value, e.g. to send a non-BERT
+block instead.
+
+In descriptive usage, a BERT option is interpreted in the same way as
+the equivalent option with SZX == 6, except that the payload is
+allowed to contain a multiple of 1024 bytes (non-final BERT block) or
+more than 1024 bytes (final BERT block).
+
+The recipient of a non-final BERT block (M=1) conceptually partitions
+the payload into a sequence of 1024-byte blocks and acts exactly as
+if it had received this sequence in conjunction with block numbers
+starting at, and sequentially increasing from, the block number given
+in the Block option.  In other words, the entire BERT block is
+positioned at the byte position that results from multiplying the
+block number with 1024.  The position of further blocks to be
+transferred is indicated by incrementing the block number by the
+number of elements in this sequence (i.e., the size of the payload
+divided by 1024 bytes).
+
+As with SZX == 6, the recipient of a final BERT block (M=0) simply
+appends the payload at the byte position that is indicated by the
+block number multiplied with 1024.
+
+The following examples illustrate BERT options.  A value of SZX == 7
+is labeled as "BERT" or as "BERT(nnn)" to indicate a payload of size nnn.
+
+In all these examples, a Block option is decomposed to indicate the
+kind of Block option (1 or 2) followed by a colon, the block number (NUM),
+more bit (M), and block size exponent (2**(SZX+4)) separated by slashes.
+E.g., a Block2 Option value of 33 would be shown as 2:2/0/32), or a Block1
+Option value of 59 would be shown as 1:3/1/128.
+
+## Example: GET with BERT Blocks
+
+{{fig-bert1}} shows a GET request with a response that
+is split into three BERT blocks.  The first response contains 3072
+bytes of payload; the second, 5120; and the third, 4711.  Note how
+the block number increments to move the position inside the response
+body forward.
+
+~~~~
+CLIENT                                       SERVER
+  |                                            |
+  | GET, /status                       ------> |
+  |                                            |
+  | <------   2.05 Content, 2:0/1/BERT(3072)   |
+  |                                            |
+  | GET, /status, 2:3/0/BERT           ------> |
+  |                                            |
+  | <------   2.05 Content, 2:3/1/BERT(5120)   |
+  |                                            |
+  | GET, /status, 2:8/0/BERT          ------>  |
+  |                                            |
+  | <------   2.05 Content, 2:8/0/BERT(4711)   |
+~~~~
+{: #fig-bert1 title='GET with BERT blocks.'}
+
+## Example: PUT with BERT Blocks
+
+{{fig-bert2}} demonstrates a PUT exchange with BERT blocks.
+
+~~~~
+CLIENT                                        SERVER
+  |                                             |
+  | PUT, /options, 1:0/1/BERT(8192)     ------> |
+  |                                             |
+  | <------   2.31 Continue, 1:0/1/BERT         |
+  |                                             |
+  | PUT, /options, 1:8/1/BERT(16384)    ------> |
+  |                                             |
+  | <------   2.31 Continue, 1:8/1/BERT         |
+  |                                             |
+  | PUT, /options, 1:24/0/BERT(5683)    ------> |
+  |                                             |
+  | <------   2.04 Changed, 1:24/0/BERT         |
+  |                                             |
+~~~~
+{: #fig-bert2 title='PUT with BERT blocks.'}
 
 # CoAP URIs {#URI}
 
