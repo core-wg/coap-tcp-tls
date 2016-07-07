@@ -38,15 +38,6 @@ author:
   country: United States of America
   phone: "+1-847-634-6700"
   email: slemay@zebra.com
-- ins: V. Solorzano Barboza
-  name: Valik Solorzano Barboza
-  org: Zebra Technologies
-  street: 820 W. Jackson Blvd. suite 700
-  city: Chicago
-  code: '60607'
-  country: United States of America
-  phone: "+1-847-634-6700"
-  email: vsolorzanobarboza@zebra.com
 - ins: H. Tschofenig
   name: Hannes Tschofenig
   org: ARM Ltd.
@@ -1643,6 +1634,15 @@ and Gengyu Wei for their feedback.
 
 # Contributors {#contributors}
 {: numbered="no"}
+
+	Valik Solorzano Barboza
+	Zebra Technologies
+	820 W. Jackson Blvd. Suite 700
+	Chicago 60607
+	United States of America
+
+	Phone: +1-847-634-6700
+	Email: vsolorzanobarboza@zebra.com
 
 	Teemu Savolainen
 	Nokia Technologies
