@@ -560,7 +560,7 @@ li, p {
 <ul>
   <li>Since the underlying TCP connection provides retransmissions and deduplication, there is no need for the reliability mechanisms provided by CoAP over UDP. The &#8220;T&#8221; and &#8220;Message ID&#8221; fields in the CoAP message header are elided.</li>
   <li>The &#8220;Ver&#8221; field is elided as well. In constrast to the UDP message layer for UDP and DTLS, the CoAP over TCP message layer does not send a version number in each message. If required in the future, a new Capability and Settings option (See <a href="#negotiation">Appendix A</a>) could be defined to support version negotiation.</li>
-  <li>In a stream oriented transport protocol such as TCP, a form of message delimitation is needed. For this purpose, CoAP over TCP introduces a length field with variable size. <a href="#fig-frame">Figure 4</a> shows the adjusted CoAP header format with a modified structure for the fixed header (first 4 bytes of the UDP CoAP header), which includes the length information of variable size, shown here as an 8-bit length.</li>
+  <li>In a stream oriented transport protocol such as TCP, a form of message delimitation is needed. For this purpose, CoAP over TCP introduces a length field with variable size. <a href="#fig-frame">Figure 4</a> shows the adjusted CoAP message format with a modified structure for the fixed header (first 4 bytes of the CoAP over UDP header), which includes the length information of variable size, shown here as an 8-bit length.</li>
 </ul>
 <div id="rfc.figure.4"/>
 <div id="fig-frame"/>
@@ -568,22 +568,22 @@ li, p {
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=13 |  TKL  | Length (8-bit)|      Code     | TKL bytes ...
+|Len=13 |  TKL  |Extended Length|      Code     | TKL bytes ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |  Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 4: CoAP Header with 8-bit Length in Header.</p>
+<p class="figure">Figure 4: CoAP frame with 8-bit Extended Length field.</p>
 <p/>
 
 <dl>
-  <dt>Len:</dt>
-  <dd style="margin-left: 8">4-bit unsigned integer. A value between 0 and 12 directly indicates the length of the message in bytes starting with the first bit of the Options field. Three values are reserved for special constructs: <dl><dt>13:</dt><dd style="margin-left: 8">An 8-bit unsigned integer follows the initial byte and indicates the length of options/payload minus 13.</dd><dt>14:</dt><dd style="margin-left: 8">A 16-bit unsigned integer in network byte order follows the initial byte and indicates the length of options/payload minus 269.</dd><dt>15:</dt><dd style="margin-left: 8">A 32-bit unsigned integer in network byte order follows the initial byte and indicates the length of options/payload minus 65805.</dd></dl><p> </p></dd>
+  <dt>Length (Len):</dt>
+  <dd style="margin-left: 8">4-bit unsigned integer. A value between 0 and 12 directly indicates the length of the message in bytes starting with the first bit of the Options field. Three values are reserved for special constructs: <dl><dt>13:</dt><dd style="margin-left: 8">An 8-bit unsigned integer (Extended Length) follows the initial byte and indicates the length of options/payload minus 13.</dd><dt>14:</dt><dd style="margin-left: 8">A 16-bit unsigned integer (Extended Length) in network byte order follows the initial byte and indicates the length of options/payload minus 269.</dd><dt>15:</dt><dd style="margin-left: 8">A 32-bit unsigned integer (Extended Length) in network byte order follows the initial byte and indicates the length of options/payload minus 65805.</dd></dl><p> </p></dd>
 </dl>
-<p id="rfc.section.2.3.p.5">The encoding of the Len field is modeled on CoAP Options (see section 3.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
-<p id="rfc.section.2.3.p.6">The following figures show the shim headers for the 0-bit, 16-bit, and the 32-bit headers.</p>
+<p id="rfc.section.2.3.p.5">The encoding of the Length field is modeled on CoAP Options (see section 3.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
+<p id="rfc.section.2.3.p.6">The following figures show the message format for the 0-bit, 16-bit, and the 32-bit variable length cases.</p>
 <div id="rfc.figure.5"/>
 <div id="fig-frame1"/>
 <pre>
@@ -597,7 +597,7 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 5: CoAP Header with elided Length Header.</p>
+<p class="figure">Figure 5: CoAP message format without an Extended Length field.</p>
 <p id="rfc.section.2.3.p.7">For example: A CoAP message just containing a 2.03 code with the token 7f and no options or payload would be encoded as shown in <a href="#fig-frame2">Figure 6</a>.</p>
 <div id="rfc.figure.6"/>
 <div id="fig-frame2"/>
@@ -613,14 +613,14 @@ li, p {
  Code  =  2.03     --&gt; 0x43
  Token =               0x7f
 </pre>
-<p class="figure">Figure 6: CoAP Header Example.</p>
+<p class="figure">Figure 6: CoAP message with no options or payload.</p>
 <div id="rfc.figure.7"/>
 <div id="fig-frame3"/>
 <pre>
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=14 |  TKL  | Length (16 bits)              |   Code        |
+|Len=14 |  TKL  | Extended Length (16 bits)     |   Code        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Token (if any, TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -629,14 +629,14 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 7: CoAP Header with 16-bit Length in Header.</p>
+<p class="figure">Figure 7: CoAP message format with 16-bit Extended Length field.</p>
 <div id="rfc.figure.8"/>
 <div id="fig-frame4"/>
 <pre>
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=15 |  TKL  | Length (32 bits)                              
+|Len=15 |  TKL  | Extended Length (32 bits)                              
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |               |    Code       |  Token (if any, TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -645,7 +645,7 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 8: CoAP Header with 32-bit Length in Header.</p>
+<p class="figure">Figure 8: CoAP message format with 32-bit Extended Length field.</p>
 <p id="rfc.section.2.3.p.8">The semantics of the other CoAP header fields are left unchanged.</p>
 <h1 id="rfc.section.2.4"><a href="#rfc.section.2.4">2.4.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a></h1>
 <p id="rfc.section.2.4.p.1">CoAP requests and responses are exchanged asynchronously over the TCP/TLS connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
