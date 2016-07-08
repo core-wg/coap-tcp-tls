@@ -799,8 +799,6 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.3.p.6">These are not default values for the option as defined in Section 5.4.4 in <a href="#RFC7252">[RFC7252]</a>.  A default value would mean that an empty Capability and Settings message would result in the option being set to its default value.</p>
 <p id="rfc.section.4.3.p.7">Capability and Settings messages are indicated by the 7.01 code (CSM).</p>
 <h1 id="rfc.section.4.3.1"><a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#server-name-setting-option" id="server-name-setting-option">Server-Name Setting Option</a></h1>
-<div id="rfc.table.1"/>
-<div id="server-name"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -828,8 +826,6 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.3.1.p.3">For Websockets, the initial value for the Server-Name Option is given by the HTTP Host header field.</p>
 <h1 id="rfc.section.4.3.2"><a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#max-message-size-capability-option" id="max-message-size-capability-option">Max-Message-Size Capability Option</a></h1>
 <p id="rfc.section.4.3.2.p.1">The sender can use the Max-Message-Size elective option to indicate the maximum message size in bytes that it can receive.</p>
-<div id="rfc.table.2"/>
-<div id="max-message-size"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -854,8 +850,6 @@ Sec-WebSocket-Protocol: coap
 </table>
 <p id="rfc.section.4.3.2.p.2">As per Section 4.6 of <a href="#RFC7252">[RFC7252]</a>, the base value (and the value used when this option is not implemented) is 1152. A peer that relies on this option being indicated with a certain minimum value will enjoy limited interoperability.</p>
 <h1 id="rfc.section.4.3.3"><a href="#rfc.section.4.3.3">4.3.3.</a> <a href="#block-wise-transfer-capability-option" id="block-wise-transfer-capability-option">Block-wise Transfer Capability Option</a></h1>
-<div id="rfc.table.3"/>
-<div id="block-wise-transfer"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -885,8 +879,6 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.4.p.2">Upon receipt of a Ping message, a single Pong message is returned with the identical token. As with all Signaling messages, the recipient of a Ping or Pong message MUST ignore elective options it does not understand.</p>
 <p id="rfc.section.4.4.p.3">Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).</p>
 <h1 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#custody-option" id="custody-option">Custody Option</a></h1>
-<div id="rfc.table.4"/>
-<div id="custody"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -915,8 +907,6 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.5.p.1">A release message indicates that the sender does not want to continue maintaining the connection and opts for an orderly shutdown; the details are in the options. A diagnostic payload MAY be included. A release message will normally be replied to by the peer by closing the TCP/TLS connection.  Messages may be in flight when the sender decides to send a Release message.  The general expectation is that these will still be processed.</p>
 <p id="rfc.section.4.5.p.2">Release messages are indicated by the 7.04 code (Release).</p>
 <p id="rfc.section.4.5.p.3">Release messages can indicate one or more reasons using elective options.  The following options are defined:</p>
-<div id="rfc.table.5"/>
-<div id="bad-server-name"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -940,8 +930,6 @@ Sec-WebSocket-Protocol: coap
   </tbody>
 </table>
 <p id="rfc.section.4.5.p.4">The Bad-Server-Name elective option indicates that the default indicated by the CSM Server-Name Option is unlikely to be useful for this server.</p>
-<div id="rfc.table.6"/>
-<div id="alternate-address"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -965,8 +953,6 @@ Sec-WebSocket-Protocol: coap
   </tbody>
 </table>
 <p id="rfc.section.4.5.p.5">The Alternative-Address elective option requests the peer to instead open a connection of the same kind as the present connection to the alternative transport address given.  Its value is in the form &#8220;authority&#8221; as defined in Section 3.2 of <a href="#RFC3986">[RFC3986]</a>.</p>
-<div id="rfc.table.7"/>
-<div id="hold-off"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -994,8 +980,6 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.6.p.1">An abort message indicates that the sender is unable to continue maintaining the connection and cannot even wait for an orderly release. The sender shuts down the connection immediately after the abort (and may or may not wait for a release or abort message or connection shutdown in the inverse direction). A diagnostic payload SHOULD be included in the Abort message. Messages may be in flight when the sender decides to send an abort message. The general expectation is that these will NOT be processed.</p>
 <p id="rfc.section.4.6.p.2">Abort messages are indicated by the 7.05 code (Abort).</p>
 <p id="rfc.section.4.6.p.3">Abort messages can indicate one or more reasons using elective options. The following option is defined:</p>
-<div id="rfc.table.8"/>
-<div id="bad-csm-option"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -1181,7 +1165,7 @@ coap-wss-URI =
 <p id="rfc.section.8.1.p.1">IANA is requested to create a third sub-registry for values of the Code field in the CoAP header (Section 12.1 of <a href="#RFC7252">[RFC7252]</a>). The name of this sub-registry is &#8220;CoAP Signaling Codes&#8221;.</p>
 <p id="rfc.section.8.1.p.2">Each entry in the sub-registry must include the Signaling Code in the range 7.01-7.31, its name, and a reference to its documentation.</p>
 <p id="rfc.section.8.1.p.3">Initial entries in this sub-registry are as follows:</p>
-<div id="rfc.table.9"/>
+<div id="rfc.table.1"/>
 <div id="signal-codes"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <caption>CoAP Signal Codes</caption>
@@ -1226,7 +1210,7 @@ coap-wss-URI =
 <p id="rfc.section.8.2.p.1">IANA is requested to create a sub-registry for signaling options similar to the CoAP Option Numbers Registry (Section 12.2 of <a href="#RFC7252">[RFC7252]</a>), with the single change that a fourth column is added to the sub-registry that is one of the codes in the Signaling Codes subregistry (<a href="#message-codes">Section 8.1</a>).</p>
 <p id="rfc.section.8.2.p.2">The name of this sub-registry is &#8220;CoAP Signaling Option Numbers&#8221;.</p>
 <p id="rfc.section.8.2.p.3">Initial entries in this sub-registry are as follows:</p>
-<div id="rfc.table.10"/>
+<div id="rfc.table.2"/>
 <div id="signal-option-codes"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <caption>CoAP Signal Option Codes</caption>
