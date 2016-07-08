@@ -510,7 +510,7 @@ reach the CoAP server, the CoAP proxy should be a Reverse Proxy.
 Further configurations are possible, including those where a
 WebSocket connection is established through an HTTP proxy.
 
-CoAP over WebSockets is intentionally very similar to CoAP as defined
+CoAP over WebSockets is intentionally very similar to CoAP
 over UDP. Therefore, instead of presenting CoAP over WebSockets as a
 new protocol, this document specifies it as a series of deltas from
 {{RFC7252}}.
