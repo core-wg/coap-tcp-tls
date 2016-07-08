@@ -206,20 +206,20 @@ BERT Block:
 
 # CoAP over TCP
 
-The request/response interaction model of CoAP TCP/TLS is the same as CoAP UDP.
-The primary differences are in the message layer. CoAP UDP supports optional
+The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.
+The primary differences are in the message layer. CoAP over UDP supports optional
 reliability by defining four types of messages: Confirmable, Non-confirmable,
 Acknowledgement, and Reset. TCP eliminates the need for the message layer
-to support reliability. As a result, message types are not defined in CoAP TCP/TLS.
+to support reliability. As a result, message types are not defined in CoAP over TCP.
 
 ## Messaging Model 
 
-Conceptually, CoAP TCP/TLS replaces most of the CoAP UDP message layer
+Conceptually, CoAP over TCP replaces most of the CoAP over UDP message layer
 with a framing mechanism on top of the byte stream provided by TCP/TLS,
 conveying the length information for each message that on datagram transports
 is provided by the UDP/DTLS datagram layer.
 
-TCP ensures reliable message transmission, so the CoAP TCP/TLS messaging
+TCP ensures reliable message transmission, so the CoAP over TCP messaging
 layer is not required to support acknowledgements or detection of duplicate
 messages. As a result, both the Type and Message ID fields are no longer required
 and are removed from the CoAP over TCP message format. All messages are also untyped.
@@ -278,7 +278,7 @@ length information.
 ~~~~
 {: #CoAP-Header title='RFC 7252 defined CoAP Message Format.'}
 
-The CoAP over TCP/TLS message format is very similar to the format
+The CoAP over TCP message format is very similar to the format
 specified for CoAP over UDP. The differences are as follows:
 
 * Since the underlying TCP connection provides retransmissions and
@@ -749,7 +749,7 @@ indicates support for BERT (see {{bert}}).
 
 ## Ping and Pong Messages
 
-In CoAP over TCP/TLS, Empty messages can always be sent and will be ignored.
+In CoAP over TCP, Empty messages can always be sent and will be ignored.
 This provides a basic keep-alive function that can refresh NAT bindings. In contrast,
 Ping and Pong messages are a bidirectional exchange.
 
