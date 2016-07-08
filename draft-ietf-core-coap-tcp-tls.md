@@ -686,7 +686,7 @@ option is understood but cannot be processed, the option documents the behavior.
 
 Capability and Settings messages are used for two purposes:
 
-* Capability options advertise the capabilities of the sender to the recipient. 
+* Each capability option advertises one capability of the sender to the recipient. 
 
 * Setting options indicate a setting that will be applied by the sender.
 
@@ -734,7 +734,7 @@ certain minimum value will enjoy limited interoperability.
 
 | Number | Applies to | Name                | Format     | Length      | Default     |
 |--------+------------+---------------------+------------+-------------+-------------+
-|      4 | CSM        | Block-wise Transfer |  empty     |      0      | (none)      |
+|      4 | CSM        | Block-wise Transfer |  empty     | 0           | (none)      |
 {: #block-wise-transfer cols="l l l r r r"}
 
 A sender can use the Block-wise Transfer elective option to indicate that it
@@ -817,7 +817,7 @@ Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}.
 
 | Number | Applies to | Name                | Format     | Length      | Default     |
 |--------+------------+---------------------+------------+-------------+-------------+
-|      6 | Release    | Hold-Off            | uint       | 0-4         | (none)      |
+|      6 | Release    | Hold-Off            | uint       | 0-3         | (none)      |
 {: #hold-off cols="l l l r r r"}
 
 The Hold-Off elective option indicates that the server is requesting that the peer not
@@ -841,7 +841,7 @@ options. The following option is defined:
 
 | Number | Applies to | Name                | Format     | Length      | Default     |
 |--------+------------+---------------------+------------+-------------+-------------+
-|      2 | Abort      | Bad-CSM-Option      | uint       | 0-4         | (none)      |
+|      2 | Abort      | Bad-CSM-Option      | uint       | 0-2         | (none)      |
 {: #bad-csm-option cols="l l l r r r"}
 
 The Bad-CSM-Option indicates that the sender is unable to process the
