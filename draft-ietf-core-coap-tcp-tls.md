@@ -588,8 +588,8 @@ protocol does not provide means for multiplexing. If it is not desirable for a
 large message to monopolize the connection, requests and responses can be
 transferred in a block-wise fashion as defined in {{I-D.ietf-core-block}}.
 
-Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry
-either a request or a response.
+Empty messages (Code 0.00) are ignored by the recipient (see also
+{{sec-ping}}).
 
 ## Message Transmission {#requests-responses}
 
@@ -755,7 +755,7 @@ Max-Message-Size Option is indicated with a value that is greater than 1152
 (in the same or a different CSM message), the Block-wise Transfer Option also
 indicates support for BERT (see {{bert}}).
 
-## Ping and Pong Messages
+## Ping and Pong Messages {#sec-ping}
 
 In CoAP over TCP, Empty messages can always be sent and will be ignored.
 This provides a basic keep-alive function that can refresh NAT bindings. In contrast,
