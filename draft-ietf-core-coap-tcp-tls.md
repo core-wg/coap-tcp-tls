@@ -289,7 +289,7 @@ specified for CoAP over UDP. The differences are as follows:
 * The "Ver" field is elided as well. In constrast to the UDP message
   layer for UDP and DTLS, the CoAP over TCP message layer does not
   send a version number in each message. If required in the future,
-  a new Capability and Settings option (See {{negotiation}}) could be
+  a new Capability and Settings Option (See {{negotiation}}) could be
   defined to support version negotiation.
 
 * In a stream oriented transport protocol such as TCP, a form of message 
@@ -510,7 +510,7 @@ reach the CoAP server, the CoAP proxy should be a Reverse Proxy.
 Further configurations are possible, including those where a
 WebSocket connection is established through an HTTP proxy.
 
-CoAP over WebSockets is intentionally very similar to CoAP as defined
+CoAP over WebSockets is intentionally very similar to CoAP
 over UDP. Therefore, instead of presenting CoAP over WebSockets as a
 new protocol, this document specifies it as a series of deltas from
 {{RFC7252}}.
@@ -588,8 +588,8 @@ protocol does not provide means for multiplexing. If it is not desirable for a
 large message to monopolize the connection, requests and responses can be
 transferred in a block-wise fashion as defined in {{I-D.ietf-core-block}}.
 
-Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry
-either a request or a response.
+Empty messages (Code 0.00) are ignored by the recipient (see also
+{{sec-ping}}).
 
 ## Message Transmission {#requests-responses}
 
@@ -684,19 +684,27 @@ option is understood but cannot be processed, the option documents the behavior.
 
 ## Capability and Settings Messages (CSM)
 
-Capability and Settings messages are used for two purposes:
+Capability and Settings messages (CSM) are used for two purposes:
 
 * Each capability option advertises one capability of the sender to the recipient. 
 
 * Setting options indicate a setting that will be applied by the sender.
 
-Most CSM options are useful mainly as initial messages in the connection.
+Most CSM Options are useful mainly as initial messages in the connection.
 
-Both capability and and setting options are cumulative,
-i.e., a capability message without any option is a no-operation (and
+Both capability and settings options are cumulative,
+i.e., a Capability and Settings message does not invalidate a previously
+made capability indication or setting even if that is not repeated, and
+a capability message without any option is a no-operation (and
 can be used as such). An option that is given might override a
 previous value for the same option; the option defines how to handle
-this, if needed. 
+this, if needed.
+
+Default values given below for CSM Options
+are not default values for the option (this would mean that an
+empty Capability and Settings message would set the option back to its
+default value).  Instead they give the base value for the Capability and
+Setting before any Capability and Settings message sends a modified value.
 
 Capability and Settings messages are indicated by the 7.01 code (CSM).
 
@@ -708,12 +716,12 @@ Capability and Settings messages are indicated by the 7.01 code (CSM).
 {: #server-name cols="l l l r r r"}
 
 A client can use the Server-Name critical option to indicate the default value
-for the Uri-Host options in the messages that it sends to the server.
-It has the same restrictions as the Uri-Host option (Section 5.10 of {{RFC7252}}.
+for the Uri-Host Options in the messages that it sends to the server.
+It has the same restrictions as the Uri-Host Option (Section 5.10 of {{RFC7252}}.
 
-For TLS, the initial value for the Server-Name option is given by the SNI value.
+For TLS, the initial value for the Server-Name Option is given by the SNI value.
 
-For Websockets, the initial value for the Server-Name option is given by the HTTP
+For Websockets, the initial value for the Server-Name Option is given by the HTTP
 Host header field.
 
 ### Max-Message-Size Capability Option
@@ -727,7 +735,7 @@ in bytes that it can receive.
 {: #max-message-size cols="l l l r r r"}
 
 As per Section 4.6 of {{-coap}}, the default value (and the value used when this option
-is not implemented) is 1152. A peer  that relies on this option being indicated with a
+is not implemented) is 1152. A peer that relies on this option being indicated with a
 certain minimum value will enjoy limited interoperability.
 
 ### Block-wise Transfer Capability Option
@@ -737,17 +745,17 @@ certain minimum value will enjoy limited interoperability.
 |      4 | CSM        | Block-wise Transfer |  empty     | 0           | (none)      |
 {: #block-wise-transfer cols="l l l r r r"}
 
-A sender can use the Block-wise Transfer elective option to indicate that it
+A sender can use the Block-wise Transfer elective Option to indicate that it
 supports the block-wise transfer protocol {{-block}}.
 
 If the option is not given, the peer has no information about whether block-wise
 transfers are supported by the sender or not. An implementation that supports
-block-wise transfers SHOULD indicate the Block-wise Transfer option. If a
-Max-Message-Size option is indicated with a value that is greater than 1152
-(in the same or a different CSM message), the Block-wise Transfer option also
+block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a
+Max-Message-Size Option is indicated with a value that is greater than 1152
+(in the same or a different CSM message), the Block-wise Transfer Option also
 indicates support for BERT (see {{bert}}).
 
-## Ping and Pong Messages
+## Ping and Pong Messages {#sec-ping}
 
 In CoAP over TCP, Empty messages can always be sent and will be ignored.
 This provides a basic keep-alive function that can refresh NAT bindings. In contrast,
@@ -772,16 +780,16 @@ processed all request/response messages that it has received in the
 present connection ahead of the Ping message that prompted the Pong
 message. (Note that there is no definition of specific application
 semantics of "processed", but there is an expectation that the sender
-of the Ping leading to the Pong with a Custody option should be able
+of the Ping leading to the Pong with a Custody Option should be able
 to free buffers based on this indication.)
 
 A Custody elective option can also be sent in a Ping message to explicitly
-request the return of a Custody option in the Pong message. A peer
+request the return of a Custody Option in the Pong message. A peer
 is always free to indicate that it has finished processing
-all previous request/response messages by sending a Custody option
-in a Pong message. A peer is also free NOT to send a Custody option in case
+all previous request/response messages by sending a Custody Option
+in a Pong message. A peer is also free NOT to send a Custody Option in case
 it is still processing previous request/response messages; however,
-it SHOULD delay its response to a Ping with a Custody option until it
+it SHOULD delay its response to a Ping with a Custody Option until it
 can also return one.
 
 ## Release Messages
@@ -804,7 +812,7 @@ The following options are defined:
 {: #bad-server-name cols="l l l r r r"}
 
 The Bad-Server-Name elective option indicates that the default indicated
-by the CSM Server-Name option is unlikely to be useful for this server.
+by the CSM Server-Name Option is unlikely to be useful for this server.
 
 | Number | Applies to | Name                | Format     | Length      | Default     |
 |--------+------------+---------------------+------------+-------------+-------------+
@@ -844,7 +852,7 @@ options. The following option is defined:
 |      2 | Abort      | Bad-CSM-Option      | uint       | 0-2         | (none)      |
 {: #bad-csm-option cols="l l l r r r"}
 
-The Bad-CSM-Option indicates that the sender is unable to process the
+The Bad-CSM-Option Option indicates that the sender is unable to process the
 CSM option identified by its option number, e.g. when it is critical
 and the option number is unknown by the sender, or when there is
 parameter problem with the value of an elective option. More detailed
@@ -901,26 +909,27 @@ byte stream transport. While this suggests that the Block-wise transfer protocol
   head-of-line blocking when a single TCP connection is used
 
 * a UDP-to-TCP gateway may simply not have the context to convert a
-  message with a Block option into the equivalent exchange without any
-  use of a Block option
+  message with a Block Option into the equivalent exchange without any
+  use of a Block Option (it would need to convert the entire
+  blockwise exchange from start to end into a single exchange)
 
 The 'Block-wise Extension for Reliable Transport (BERT)' extends the
 Block protocol to enable the use of larger messages over a reliable
 transport.
 
 The use of this new extension is signaled by sending Block1 or
-Block2 options with SZX == 7 (a "BERT option"). SZX == 7 is a 
+Block2 Options with SZX == 7 (a "BERT option"). SZX == 7 is a 
 reserved value in {{-block}}.
 
 In control usage, a BERT option is interpreted in the same way as the
-equivalent option with SZX == 6, except that it also indicates the
+equivalent Option with SZX == 6, except that it also indicates the
 capability to process BERT blocks. As with the basic Block protocol,
 the recipient of a CoAP request with a BERT option in control usage is
 allowed to respond with a different SZX value, e.g. to send a non-BERT
 block instead.
 
-In descriptive usage, a BERT option is interpreted in the same way as
-the equivalent option with SZX == 6, except that the payload is
+In descriptive usage, a BERT Option is interpreted in the same way as
+the equivalent Option with SZX == 6, except that the payload is
 allowed to contain a multiple of 1024 bytes (non-final BERT block) or
 more than 1024 bytes (final BERT block).
 
@@ -928,7 +937,7 @@ The recipient of a non-final BERT block (M=1) conceptually partitions
 the payload into a sequence of 1024-byte blocks and acts exactly as
 if it had received this sequence in conjunction with block numbers
 starting at, and sequentially increasing from, the block number given
-in the Block option. In other words, the entire BERT block is
+in the Block Option. In other words, the entire BERT block is
 positioned at the byte position that results from multiplying the
 block number with 1024. The position of further blocks to be
 transferred is indicated by incrementing the block number by the
@@ -942,8 +951,8 @@ block number multiplied with 1024.
 The following examples illustrate BERT options. A value of SZX == 7
 is labeled as "BERT" or as "BERT(nnn)" to indicate a payload of size nnn.
 
-In all these examples, a Block option is decomposed to indicate the
-kind of Block option (1 or 2) followed by a colon, the block number (NUM),
+In all these examples, a Block Option is decomposed to indicate the
+kind of Block Option (1 or 2) followed by a colon, the block number (NUM),
 more bit (M), and block size exponent (2**(SZX+4)) separated by slashes.
 E.g., a Block2 Option value of 33 would be shown as 2:2/0/32), or a Block1
 Option value of 59 would be shown as 1:3/1/128.
@@ -1130,13 +1139,13 @@ respectively {{RFC7252}}. The security considerations of {{RFC6455}} apply.
 
 ## Signaling Messages
 
-* The guidance given by an Alternative-Address option cannot be
+* The guidance given by an Alternative-Address Option cannot be
   followed blindly. In particular, a peer MUST NOT assume that a
   successful connection to the Alternative-Address inherits all the
   security properties of the current connection.
 * SNI vs. Server-Name: Any security negotiated in the TLS handshake is
   for the SNI name exchanged in the TLS handshake and checked against
-  the certificate provided by the server. The Server-Name option
+  the certificate provided by the server. The Server-Name Option
   cannot be used to extend these security properties to the additional
   server name.
 
