@@ -508,10 +508,10 @@ li, p {
   <dd style="margin-left: 8"><br/> The payload of a CoAP message that is affected by a BERT Option in descriptive usage (Section 2.1 of <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>).</dd>
 </dl>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#coap-over-tcp" id="coap-over-tcp">CoAP over TCP</a></h1>
-<p id="rfc.section.2.p.1">The request/response interaction model of CoAP TCP/TLS is the same as CoAP UDP.  The primary differences are in the message layer. CoAP UDP supports optional reliability by defining four types of messages: Confirmable, Non-confirmable, Acknowledgement, and Reset. TCP eliminates the need for the message layer to support reliability. As a result, message types are not defined in CoAP TCP/TLS.</p>
+<p id="rfc.section.2.p.1">The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.  The primary differences are in the message layer. CoAP over UDP supports optional reliability by defining four types of messages: Confirmable, Non-confirmable, Acknowledgement, and Reset. TCP eliminates the need for the message layer to support reliability. As a result, message types are not defined in CoAP over TCP.</p>
 <h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#messaging-model" id="messaging-model">Messaging Model</a></h1>
-<p id="rfc.section.2.1.p.1">Conceptually, CoAP TCP/TLS replaces most of the CoAP UDP message layer with a framing mechanism on top of the byte stream provided by TCP/TLS, conveying the length information for each message that on datagram transports is provided by the UDP/DTLS datagram layer.</p>
-<p id="rfc.section.2.1.p.2">TCP ensures reliable message transmission, so the CoAP TCP/TLS messaging layer is not required to support acknowledgements or detection of duplicate messages. As a result, both the Type and Message ID fields are no longer required and are removed from the CoAP over TCP message format. All messages are also untyped.</p>
+<p id="rfc.section.2.1.p.1">Conceptually, CoAP over TCP replaces most of the CoAP over UDP message layer with a framing mechanism on top of the byte stream provided by TCP/TLS, conveying the length information for each message that on datagram transports is provided by the UDP/DTLS datagram layer.</p>
+<p id="rfc.section.2.1.p.2">TCP ensures reliable message transmission, so the CoAP over TCP messaging layer is not required to support acknowledgements or detection of duplicate messages. As a result, both the Type and Message ID fields are no longer required and are removed from the CoAP over TCP message format. All messages are also untyped.</p>
 <p><a href="#fig-flow-comparison">Figure 2</a> illustrates the difference between CoAP over UDP and CoAP over reliable transport. The removed Type (no type) and Message ID fields are indicated by dashes.</p>
 <div id="rfc.figure.2"/>
 <div id="fig-flow-comparison"/>
@@ -554,7 +554,7 @@ li, p {
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
 <p class="figure">Figure 3: RFC 7252 defined CoAP Message Format.</p>
-<p id="rfc.section.2.3.p.2">The CoAP over TCP/TLS message format is very similar to the format specified for CoAP over UDP. The differences are as follows:</p>
+<p id="rfc.section.2.3.p.2">The CoAP over TCP message format is very similar to the format specified for CoAP over UDP. The differences are as follows:</p>
 <p/>
 
 <ul>
@@ -879,7 +879,7 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.3.3.p.1">A sender can use the Block-wise Transfer elective option to indicate that it supports the block-wise transfer protocol <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
 <p id="rfc.section.4.3.3.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not. An implementation that supports block-wise transfers SHOULD indicate the Block-wise Transfer option. If a Max-Message-Size option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer option also indicates support for BERT (see <a href="#bert">Section 5</a>).</p>
 <h1 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#ping-and-pong-messages" id="ping-and-pong-messages">Ping and Pong Messages</a></h1>
-<p id="rfc.section.4.4.p.1">In CoAP over TCP/TLS, Empty messages can always be sent and will be ignored.  This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
+<p id="rfc.section.4.4.p.1">In CoAP over TCP, Empty messages can always be sent and will be ignored.  This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
 <p id="rfc.section.4.4.p.2">Upon receipt of a Ping message, a single Pong message is returned with the identical token. As with all Signaling messages, the recipient of a Ping or Pong message MUST ignore elective options it does not understand.</p>
 <p id="rfc.section.4.4.p.3">Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).</p>
 <h1 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#custody-option" id="custody-option">Custody Option</a></h1>
