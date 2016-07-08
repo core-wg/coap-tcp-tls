@@ -724,7 +724,7 @@ in bytes that it can receive.
 
 | Number | Applies to | Name                | Format     | Length      | Default     |
 |--------+------------+---------------------+------------+-------------+-------------+
-|      2 | CSM        | Max-Message-Size    | uint       | uint_max    | 1152        |
+|      2 | CSM        | Max-Message-Size    | uint       | 0-4         | 1152        |
 {: #max-message-size cols="l l l r r r"}
 
 As per Section 4.6 of {{-coap}}, the default value (and the value used when this option
@@ -818,7 +818,7 @@ Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}.
 
 | Number | Applies to | Name                | Format     | Length      | Default     |
 |--------+------------+---------------------+------------+-------------+-------------+
-|      6 | Release    | Hold-Off            | uint       | uint_max    | (none)      |
+|      6 | Release    | Hold-Off            | uint       | 0-4         | (none)      |
 {: #hold-off cols="l l l r r r"}
 
 The Hold-Off elective option indicates that the server is requesting that the peer not
@@ -842,7 +842,7 @@ options. The following option is defined:
 
 | Number | Applies to | Name                | Format     | Length      | Default     |
 |--------+------------+---------------------+------------+-------------+-------------+
-|      2 | Abort      | Bad-CSM-Option      | uint       | uint_max    | (none)      |
+|      2 | Abort      | Bad-CSM-Option      | uint       | 0-4         | (none)      |
 {: #bad-csm-option cols="l l l r r r"}
 
 The Bad-CSM-Option indicates that the sender is unable to process the
