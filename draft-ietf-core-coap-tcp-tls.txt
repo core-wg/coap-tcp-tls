@@ -877,12 +877,12 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    The sender can use the Max-Message-Size elective option to indicate
    the maximum message size in bytes that it can receive.
 
-   +--------+---------+------------------+--------+----------+---------+
-   | Number | Applies | Name             | Format |   Length | Default |
-   |        | to      |                  |        |          |         |
-   +--------+---------+------------------+--------+----------+---------+
-   | 2      | CSM     | Max-Message-Size |   uint | uint_max |    1152 |
-   +--------+---------+------------------+--------+----------+---------+
+   +--------+-----------+------------------+--------+--------+---------+
+   | Number | Applies   | Name             | Format | Length | Default |
+   |        | to        |                  |        |        |         |
+   +--------+-----------+------------------+--------+--------+---------+
+   | 2      | CSM       | Max-Message-Size |   uint |    0-4 |    1152 |
+   +--------+-----------+------------------+--------+--------+---------+
 
                                   Table 2
 
@@ -1024,11 +1024,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    alternative transport address given.  Its value is in the form
    "authority" as defined in Section 3.2 of [RFC3986].
 
-     +--------+------------+----------+--------+----------+---------+
-     | Number | Applies to | Name     | Format |   Length | Default |
-     +--------+------------+----------+--------+----------+---------+
-     | 6      | Release    | Hold-Off |   uint | uint_max |  (none) |
-     +--------+------------+----------+--------+----------+---------+
+      +--------+------------+----------+--------+--------+---------+
+      | Number | Applies to | Name     | Format | Length | Default |
+      +--------+------------+----------+--------+--------+---------+
+      | 6      | Release    | Hold-Off |   uint |    0-4 |  (none) |
+      +--------+------------+----------+--------+--------+---------+
 
                                   Table 7
 
@@ -1066,12 +1066,11 @@ Bormann, et al.          Expires January 9, 2017               [Page 19]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
-   +--------+-----------+----------------+--------+----------+---------+
-   | Number | Applies   | Name           | Format |   Length | Default |
-   |        | to        |                |        |          |         |
-   +--------+-----------+----------------+--------+----------+---------+
-   | 2      | Abort     | Bad-CSM-Option |   uint | uint_max |  (none) |
-   +--------+-----------+----------------+--------+----------+---------+
+   +--------+------------+----------------+--------+--------+---------+
+   | Number | Applies to | Name           | Format | Length | Default |
+   +--------+------------+----------------+--------+--------+---------+
+   | 2      | Abort      | Bad-CSM-Option |   uint |    0-4 |  (none) |
+   +--------+------------+----------------+--------+--------+---------+
 
                                   Table 8
 
@@ -1106,6 +1105,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
    An encoded example of the corresponding Pong message is shown in
    Figure 16.
+
 
 
 
