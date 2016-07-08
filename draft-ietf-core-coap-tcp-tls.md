@@ -295,8 +295,8 @@ specified for CoAP over UDP. The differences are as follows:
 * In a stream oriented transport protocol such as TCP, a form of message 
   delimitation is needed. For this purpose, CoAP over TCP introduces a 
   length field with variable size. {{fig-frame}} shows the adjusted CoAP 
-  header format with a modified structure for the fixed header (first 4
-  bytes of the UDP CoAP header), which includes the length information of
+  message format with a modified structure for the fixed header (first 4
+  bytes of the CoAP over UDP header), which includes the length information of
   variable size, shown here as an 8-bit length.
 
 ~~~~
@@ -304,39 +304,38 @@ specified for CoAP over UDP. The differences are as follows:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=13 |  TKL  | Length (8-bit)|      Code     | TKL bytes ...
+|Len=13 |  TKL  |Extended Length|      Code     | TKL bytes ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |  Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame title='CoAP Header with 8-bit Length in Header.'}
+{: #fig-frame title='CoAP frame with 8-bit Extended Length field.'}
 
-Len:
+Length (Len):
 : 4-bit unsigned integer. A value between 0 and 12 directly indicates the
   length of the message in bytes starting with the first bit of the Options
   field. Three values are reserved for special constructs:
 
     13:
-    : An 8-bit unsigned integer follows the initial byte and indicates
+    : An 8-bit unsigned integer (Extended Length) follows the initial byte and indicates
       the length of options/payload minus 13.
 
     14:
-    : A 16-bit unsigned integer in network byte order follows the
+    : A 16-bit unsigned integer (Extended Length) in network byte order follows the
       initial byte and indicates the length of options/payload minus
       269.
 
     15:
-    : A 32-bit unsigned integer in network byte order follows the
+    : A 32-bit unsigned integer (Extended Length) in network byte order follows the
       initial byte and indicates the length of options/payload minus
       65805.
 
-The encoding of the Len field is modeled on CoAP Options
-(see section 3.1 of {{RFC7252}}). 
+The encoding of the Length field is modeled on CoAP Options (see section 3.1 of {{RFC7252}}). 
 
-The following figures show the shim headers for the 0-bit, 16-bit, and 
-the 32-bit headers. 
+The following figures show the message format for the 0-bit, 16-bit, and 
+the 32-bit variable length cases.
 
 ~~~~
  0                   1                   2                   3
@@ -349,7 +348,7 @@ the 32-bit headers.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame1 title='CoAP Header with elided Length Header.'}
+{: #fig-frame1 title='CoAP message format without an Extended Length field.'}
 
 For example: A CoAP message just containing a 2.03 code with the
 token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
@@ -366,13 +365,13 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
  Code  =  2.03     --> 0x43
  Token =               0x7f
 ~~~~
-{: #fig-frame2 title='CoAP Header Example.'}
+{: #fig-frame2 title='CoAP message with no options or payload.'}
 
 ~~~~
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=14 |  TKL  | Length (16 bits)              |   Code        |
+|Len=14 |  TKL  | Extended Length (16 bits)     |   Code        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Token (if any, TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -381,13 +380,13 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame3 title='CoAP Header with 16-bit Length in Header.'}
+{: #fig-frame3 title='CoAP message format with 16-bit Extended Length field.'}
 
 ~~~~
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=15 |  TKL  | Length (32 bits)                              
+|Len=15 |  TKL  | Extended Length (32 bits)                              
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |               |    Code       |  Token (if any, TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -396,7 +395,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame4 title='CoAP Header with 32-bit Length in Header.'}
+{: #fig-frame4 title='CoAP message format with 32-bit Extended Length field.'}
 
 The semantics of the other CoAP header fields are left unchanged.
 
