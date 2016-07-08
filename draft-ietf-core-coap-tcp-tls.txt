@@ -349,7 +349,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    o  The "Ver" field is elided as well.  In constrast to the UDP
       message layer for UDP and DTLS, the CoAP over TCP message layer
       does not send a version number in each message.  If required in
-      the future, a new Capability and Settings option (See Appendix A)
+      the future, a new Capability and Settings Option (See Appendix A)
       could be defined to support version negotiation.
 
    o  In a stream oriented transport protocol such as TCP, a form of
@@ -605,9 +605,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    Further configurations are possible, including those where a
    WebSocket connection is established through an HTTP proxy.
 
-   CoAP over WebSockets is intentionally very similar to CoAP as defined
-   over UDP.  Therefore, instead of presenting CoAP over WebSockets as a
-   new protocol, this document specifies it as a series of deltas from
+   CoAP over WebSockets is intentionally very similar to CoAP over UDP.
+   Therefore, instead of presenting CoAP over WebSockets as a new
+   protocol, this document specifies it as a series of deltas from
    [RFC7252].
 
 
@@ -700,8 +700,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    requests and responses can be transferred in a block-wise fashion as
    defined in [I-D.ietf-core-block].
 
-   Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry
-   either a request or a response.
+   Empty messages (Code 0.00) are ignored by the recipient (see also
+   Section 4.4).
 
 3.3.  Message Transmission
 
@@ -822,7 +822,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 4.3.  Capability and Settings Messages (CSM)
 
-   Capability and Settings messages are used for two purposes:
+   Capability and Settings messages (CSM) are used for two purposes:
 
    o  Each capability option advertises one capability of the sender to
       the recipient.
@@ -830,7 +830,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    o  Setting options indicate a setting that will be applied by the
       sender.
 
-   Most CSM options are useful mainly as initial messages in the
+   Most CSM Options are useful mainly as initial messages in the
    connection.
 
 
@@ -842,11 +842,19 @@ Bormann, et al.          Expires January 9, 2017               [Page 15]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
-   Both capability and and setting options are cumulative, i.e., a
+   Both capability and settings options are cumulative, i.e., a
+   Capability and Settings message does not invalidate a previously made
+   capability indication or setting even if that is not repeated, and a
    capability message without any option is a no-operation (and can be
    used as such).  An option that is given might override a previous
    value for the same option; the option defines how to handle this, if
    needed.
+
+   Default values given below for CSM Options are not default values for
+   the option (this would mean that an empty Capability and Settings
+   message would set the option back to its default value).  Instead
+   they give the base value for the Capability and Setting before any
+   Capability and Settings message sends a modified value.
 
    Capability and Settings messages are indicated by the 7.01 code
    (CSM).
@@ -862,20 +870,33 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
                                   Table 1
 
    A client can use the Server-Name critical option to indicate the
-   default value for the Uri-Host options in the messages that it sends
-   to the server.  It has the same restrictions as the Uri-Host option
+   default value for the Uri-Host Options in the messages that it sends
+   to the server.  It has the same restrictions as the Uri-Host Option
    (Section 5.10 of [RFC7252].
 
-   For TLS, the initial value for the Server-Name option is given by the
+   For TLS, the initial value for the Server-Name Option is given by the
    SNI value.
 
-   For Websockets, the initial value for the Server-Name option is given
+   For Websockets, the initial value for the Server-Name Option is given
    by the HTTP Host header field.
 
 4.3.2.  Max-Message-Size Capability Option
 
    The sender can use the Max-Message-Size elective option to indicate
    the maximum message size in bytes that it can receive.
+
+
+
+
+
+
+
+
+
+Bormann, et al.          Expires January 9, 2017               [Page 16]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
 
    +--------+-----------+------------------+--------+--------+---------+
    | Number | Applies   | Name             | Format | Length | Default |
@@ -891,13 +912,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    relies on this option being indicated with a certain minimum value
    will enjoy limited interoperability.
 
-
-
-Bormann, et al.          Expires January 9, 2017               [Page 16]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
 4.3.3.  Block-wise Transfer Capability Option
 
    +--------+-----------+------------------+--------+--------+---------+
@@ -910,16 +924,16 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
                                   Table 3
 
-   A sender can use the Block-wise Transfer elective option to indicate
+   A sender can use the Block-wise Transfer elective Option to indicate
    that it supports the block-wise transfer protocol
    [I-D.ietf-core-block].
 
    If the option is not given, the peer has no information about whether
    block-wise transfers are supported by the sender or not.  An
    implementation that supports block-wise transfers SHOULD indicate the
-   Block-wise Transfer option.  If a Max-Message-Size option is
+   Block-wise Transfer Option.  If a Max-Message-Size Option is
    indicated with a value that is greater than 1152 (in the same or a
-   different CSM message), the Block-wise Transfer option also indicates
+   different CSM message), the Block-wise Transfer Option also indicates
    support for BERT (see Section 5).
 
 4.4.  Ping and Pong Messages
@@ -931,6 +945,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
    Upon receipt of a Ping message, a single Pong message is returned
    with the identical token.  As with all Signaling messages, the
+
+
+
+
+Bormann, et al.          Expires January 9, 2017               [Page 17]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
    recipient of a Ping or Pong message MUST ignore elective options it
    does not understand.
 
@@ -947,13 +970,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
                                   Table 4
 
-
-
-Bormann, et al.          Expires January 9, 2017               [Page 17]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
    A peer replying to a Ping message can add a Custody elective option
    to the Pong message it returns.  This option indicates that the
    application has processed all request/response messages that it has
@@ -961,17 +977,17 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    prompted the Pong message.  (Note that there is no definition of
    specific application semantics of "processed", but there is an
    expectation that the sender of the Ping leading to the Pong with a
-   Custody option should be able to free buffers based on this
+   Custody Option should be able to free buffers based on this
    indication.)
 
    A Custody elective option can also be sent in a Ping message to
-   explicitly request the return of a Custody option in the Pong
+   explicitly request the return of a Custody Option in the Pong
    message.  A peer is always free to indicate that it has finished
    processing all previous request/response messages by sending a
-   Custody option in a Pong message.  A peer is also free NOT to send a
-   Custody option in case it is still processing previous request/
+   Custody Option in a Pong message.  A peer is also free NOT to send a
+   Custody Option in case it is still processing previous request/
    response messages; however, it SHOULD delay its response to a Ping
-   with a Custody option until it can also return one.
+   with a Custody Option until it can also return one.
 
 4.5.  Release Messages
 
@@ -985,6 +1001,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
    Release messages are indicated by the 7.04 code (Release).
 
+
+
+
+
+Bormann, et al.          Expires January 9, 2017               [Page 18]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
    Release messages can indicate one or more reasons using elective
    options.  The following options are defined:
 
@@ -997,18 +1022,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
                                   Table 5
 
    The Bad-Server-Name elective option indicates that the default
-   indicated by the CSM Server-Name option is unlikely to be useful for
+   indicated by the CSM Server-Name Option is unlikely to be useful for
    this server.
-
-
-
-
-
-
-Bormann, et al.          Expires January 9, 2017               [Page 18]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
 
    +--------+----------+-------------------+--------+--------+---------+
    | Number | Applies  | Name              | Format | Length | Default |
@@ -1043,6 +1058,14 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    release.  The sender shuts down the connection immediately after the
    abort (and may or may not wait for a release or abort message or
    connection shutdown in the inverse direction).  A diagnostic payload
+
+
+
+Bormann, et al.          Expires January 9, 2017               [Page 19]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
+
+
    SHOULD be included in the Abort message.  Messages may be in flight
    when the sender decides to send an abort message.  The general
    expectation is that these will NOT be processed.
@@ -1052,20 +1075,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    Abort messages can indicate one or more reasons using elective
    options.  The following option is defined:
 
-
-
-
-
-
-
-
-
-
-Bormann, et al.          Expires January 9, 2017               [Page 19]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
-
-
    +--------+------------+----------------+--------+--------+---------+
    | Number | Applies to | Name           | Format | Length | Default |
    +--------+------------+----------------+--------+--------+---------+
@@ -1074,11 +1083,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
                                   Table 8
 
-   The Bad-CSM-Option indicates that the sender is unable to process the
-   CSM option identified by its option number, e.g. when it is critical
-   and the option number is unknown by the sender, or when there is
-   parameter problem with the value of an elective option.  More
-   detailed information SHOULD be included as a diagnostic payload.
+   The Bad-CSM-Option Option indicates that the sender is unable to
+   process the CSM option identified by its option number, e.g. when it
+   is critical and the option number is unknown by the sender, or when
+   there is parameter problem with the value of an elective option.
+   More detailed information SHOULD be included as a diagnostic payload.
 
    One reason for an sender to generate an abort message is a general
    syntax error in the byte stream received.  No specific option has
@@ -1105,15 +1114,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
    An encoded example of the corresponding Pong message is shown in
    Figure 16.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1147,29 +1147,29 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
       head-of-line blocking when a single TCP connection is used
 
    o  a UDP-to-TCP gateway may simply not have the context to convert a
-      message with a Block option into the equivalent exchange without
-      any use of a Block option
+      message with a Block Option into the equivalent exchange without
+      any use of a Block Option (it would need to convert the entire
+      blockwise exchange from start to end into a single exchange)
 
    The 'Block-wise Extension for Reliable Transport (BERT)' extends the
    Block protocol to enable the use of larger messages over a reliable
    transport.
 
    The use of this new extension is signaled by sending Block1 or Block2
-   options with SZX == 7 (a "BERT option").  SZX == 7 is a reserved
+   Options with SZX == 7 (a "BERT option").  SZX == 7 is a reserved
    value in [I-D.ietf-core-block].
 
    In control usage, a BERT option is interpreted in the same way as the
-   equivalent option with SZX == 6, except that it also indicates the
+   equivalent Option with SZX == 6, except that it also indicates the
    capability to process BERT blocks.  As with the basic Block protocol,
    the recipient of a CoAP request with a BERT option in control usage
    is allowed to respond with a different SZX value, e.g. to send a non-
    BERT block instead.
 
-   In descriptive usage, a BERT option is interpreted in the same way as
-   the equivalent option with SZX == 6, except that the payload is
+   In descriptive usage, a BERT Option is interpreted in the same way as
+   the equivalent Option with SZX == 6, except that the payload is
    allowed to contain a multiple of 1024 bytes (non-final BERT block) or
    more than 1024 bytes (final BERT block).
-
 
 
 
@@ -1182,7 +1182,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    the payload into a sequence of 1024-byte blocks and acts exactly as
    if it had received this sequence in conjunction with block numbers
    starting at, and sequentially increasing from, the block number given
-   in the Block option.  In other words, the entire BERT block is
+   in the Block Option.  In other words, the entire BERT block is
    positioned at the byte position that results from multiplying the
    block number with 1024.  The position of further blocks to be
    transferred is indicated by incrementing the block number by the
@@ -1197,8 +1197,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    is labeled as "BERT" or as "BERT(nnn)" to indicate a payload of size
    nnn.
 
-   In all these examples, a Block option is decomposed to indicate the
-   kind of Block option (1 or 2) followed by a colon, the block number
+   In all these examples, a Block Option is decomposed to indicate the
+   kind of Block Option (1 or 2) followed by a colon, the block number
    (NUM), more bit (M), and block size exponent (2**(SZX+4)) separated
    by slashes.  E.g., a Block2 Option value of 33 would be shown as
    2:2/0/32), or a Block1 Option value of 59 would be shown as
@@ -1424,7 +1424,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 7.1.  Signaling Messages
 
-   o  The guidance given by an Alternative-Address option cannot be
+   o  The guidance given by an Alternative-Address Option cannot be
       followed blindly.  In particular, a peer MUST NOT assume that a
       successful connection to the Alternative-Address inherits all the
       security properties of the current connection.
@@ -1432,7 +1432,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    o  SNI vs. Server-Name: Any security negotiated in the TLS handshake
       is for the SNI name exchanged in the TLS handshake and checked
       against the certificate provided by the server.  The Server-Name
-      option cannot be used to extend these security properties to the
+      Option cannot be used to extend these security properties to the
       additional server name.
 
 8.  IANA Considerations
