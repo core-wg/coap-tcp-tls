@@ -711,9 +711,8 @@ Capability and Settings messages are indicated by the 7.01 code (CSM).
 ### Server-Name Setting Option
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
-|--------+------------+---------------------+------------+-------------+-------------+
+|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      1 | CSM        | Server-Name         | string     | 1-255       | (see below) |
-{: #server-name cols="l l l r r r"}
 
 A client can use the Server-Name critical option to indicate the default value
 for the Uri-Host Options in the messages that it sends to the server.
@@ -730,9 +729,8 @@ The sender can use the Max-Message-Size elective option to indicate the maximum 
 in bytes that it can receive.
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
-|--------+------------+---------------------+------------+-------------+-------------+
+|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | CSM        | Max-Message-Size    | uint       | 0-4         | 1152        |
-{: #max-message-size cols="l l l r r r"}
 
 As per Section 4.6 of {{-coap}}, the base value (and the value used when this option
 is not implemented) is 1152. A peer that relies on this option being indicated with a
@@ -741,9 +739,8 @@ certain minimum value will enjoy limited interoperability.
 ### Block-wise Transfer Capability Option
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
-|--------+------------+---------------------+------------+-------------+-------------+
+|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      4 | CSM        | Block-wise Transfer |  empty     | 0           | (none)      |
-{: #block-wise-transfer cols="l l l r r r"}
 
 A sender can use the Block-wise Transfer elective Option to indicate that it
 supports the block-wise transfer protocol {{-block}}.
@@ -770,9 +767,8 @@ Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (
 ### Custody Option
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
-|--------+------------+---------------------+------------+-------------+-------------+
+|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Ping, Pong | Custody             | empty      | 0           | (none)      |
-{: #custody cols="l l l r r r"}
 
 A peer replying to a Ping message can add a Custody elective option to the Pong
 message it returns. This option indicates that the application has
@@ -807,26 +803,23 @@ Release messages can indicate one or more reasons using elective options.
 The following options are defined:
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
-|--------+------------+---------------------+------------+-------------+-------------+
+|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Release    | Bad-Server-Name     | empty      | 0           | (none)      |
-{: #bad-server-name cols="l l l r r r"}
 
 The Bad-Server-Name elective option indicates that the default indicated
 by the CSM Server-Name Option is unlikely to be useful for this server.
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
-|--------+------------+---------------------+------------+-------------+-------------+
+|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      4 | Release    | Alternate-Address   | string     | 1-255       | (none)      |
-{: #alternate-address cols="l l l r r r"}
 
 The Alternative-Address elective option requests the peer to instead open a connection
 of the same kind as the present connection to the alternative transport address given.
 Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}. 
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
-|--------+------------+---------------------+------------+-------------+-------------+
+|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      6 | Release    | Hold-Off            | uint       | 0-3         | (none)      |
-{: #hold-off cols="l l l r r r"}
 
 The Hold-Off elective option indicates that the server is requesting that the peer not
 reconnect to it for the number of seconds given in the value.
@@ -848,9 +841,8 @@ Abort messages can indicate one or more reasons using elective
 options. The following option is defined:
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
-|--------+------------+---------------------+------------+-------------+-------------+
+|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Abort      | Bad-CSM-Option      | uint       | 0-2         | (none)      |
-{: #bad-csm-option cols="l l l r r r"}
 
 The Bad-CSM-Option Option indicates that the sender is unable to process the
 CSM option identified by its option number, e.g. when it is critical
