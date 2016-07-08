@@ -790,7 +790,7 @@ Sec-WebSocket-Protocol: coap
 <p/>
 
 <ul>
-  <li>Capability options advertise the capabilities of the sender to the recipient.</li>
+  <li>Each capability option advertises one capability of the sender to the recipient.</li>
   <li>Setting options indicate a setting that will be applied by the sender.</li>
 </ul>
 <p id="rfc.section.4.3.p.3">Most CSM options are useful mainly as initial messages in the connection.</p>
@@ -982,7 +982,7 @@ Sec-WebSocket-Protocol: coap
       <td class="left">Release</td>
       <td class="left">Hold-Off</td>
       <td class="right">uint</td>
-      <td class="right">0-4</td>
+      <td class="right">0-3</td>
       <td class="right">(none)</td>
     </tr>
   </tbody>
@@ -1011,7 +1011,7 @@ Sec-WebSocket-Protocol: coap
       <td class="left">Abort</td>
       <td class="left">Bad-CSM-Option</td>
       <td class="right">uint</td>
-      <td class="right">0-4</td>
+      <td class="right">0-2</td>
       <td class="right">(none)</td>
     </tr>
   </tbody>

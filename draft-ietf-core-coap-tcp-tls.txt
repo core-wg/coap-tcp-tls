@@ -824,8 +824,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
    Capability and Settings messages are used for two purposes:
 
-   o  Capability options advertise the capabilities of the sender to the
-      recipient.
+   o  Each capability option advertises one capability of the sender to
+      the recipient.
 
    o  Setting options indicate a setting that will be applied by the
       sender.
@@ -1027,7 +1027,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
       +--------+------------+----------+--------+--------+---------+
       | Number | Applies to | Name     | Format | Length | Default |
       +--------+------------+----------+--------+--------+---------+
-      | 6      | Release    | Hold-Off |   uint |    0-4 |  (none) |
+      | 6      | Release    | Hold-Off |   uint |    0-3 |  (none) |
       +--------+------------+----------+--------+--------+---------+
 
                                   Table 7
@@ -1069,7 +1069,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    +--------+------------+----------------+--------+--------+---------+
    | Number | Applies to | Name           | Format | Length | Default |
    +--------+------------+----------------+--------+--------+---------+
-   | 2      | Abort      | Bad-CSM-Option |   uint |    0-4 |  (none) |
+   | 2      | Abort      | Bad-CSM-Option |   uint |    0-2 |  (none) |
    +--------+------------+----------------+--------+--------+---------+
 
                                   Table 8
