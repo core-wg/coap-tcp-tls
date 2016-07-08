@@ -712,7 +712,7 @@ ws://example.org/.well-known/coap    Uri-Path: "temperature"
 </pre>
 <p class="figure">Figure 12: CoAP Client (UDP client) accesses sleepy CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)</p>
 <p id="rfc.section.3.p.6">Further configurations are possible, including those where a WebSocket connection is established through an HTTP proxy.</p>
-<p id="rfc.section.3.p.7">CoAP over WebSockets is intentionally very similar to CoAP as defined over UDP. Therefore, instead of presenting CoAP over WebSockets as a new protocol, this document specifies it as a series of deltas from <a href="#RFC7252">[RFC7252]</a>.</p>
+<p id="rfc.section.3.p.7">CoAP over WebSockets is intentionally very similar to CoAP over UDP. Therefore, instead of presenting CoAP over WebSockets as a new protocol, this document specifies it as a series of deltas from <a href="#RFC7252">[RFC7252]</a>.</p>
 <h1 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#handshake" id="handshake">Opening Handshake</a></h1>
 <p id="rfc.section.3.1.p.1">Before CoAP requests and responses are exchanged, a WebSocket connection is established as defined in Section 4 of <a href="#RFC6455">[RFC6455]</a>.  <a href="#handshake-example">Figure 13</a> shows an example.</p>
 <p id="rfc.section.3.1.p.2">The WebSocket client MUST include the subprotocol name &#8220;coap&#8221; in the list of protocols, which indicates support for the protocol defined in this document. Any later, incompatible versions of CoAP or CoAP over WebSockets will use a different subprotocol name.</p>
