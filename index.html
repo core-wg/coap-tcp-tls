@@ -535,7 +535,7 @@ li, p {
 </pre>
 <p class="figure">Figure 2: Comparison between CoAP over unreliable and reliable transport.</p>
 <h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#udp-to-tcp-gateways" id="udp-to-tcp-gateways">UDP-to-TCP gateways</a></h1>
-<p id="rfc.section.2.2.p.1">A UDP-to-TCP gateway MUST discard all Empty messages after processing at the message layer. For Confirmable (CON), Non-Confirmable (NOM), and Acknowledgement (ACK) messages that are not Empty, their contents are repackaged into untyped messages.</p>
+<p id="rfc.section.2.2.p.1">A UDP-to-TCP gateway MUST discard all Empty messages (Code 0.00) after processing at the message layer. For Confirmable (CON), Non-Confirmable (NOM), and Acknowledgement (ACK) messages that are not Empty, their contents are repackaged into untyped messages.</p>
 <h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#tcp-message-format" id="tcp-message-format">Message Format</a></h1>
 <p id="rfc.section.2.3.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 3</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate and for providing length information.</p>
 <div id="rfc.figure.3"/>
@@ -754,7 +754,7 @@ Sec-WebSocket-Protocol: coap
 <p class="figure">Figure 14: CoAP Message Format over WebSockets</p>
 <p id="rfc.section.3.2.p.3">The CoAP over TCP message format eliminates the Version field defined in CoAP over UDP. If CoAP version negotiation is required in the future, CoAP over WebSockets can address the requirement by the definition of a new subprotocol identifier that is negotiated during the opening handshake.</p>
 <p id="rfc.section.3.2.p.4">Requests and response messages can be fragmented as specified in Section 5.4 of <a href="#RFC6455">[RFC6455]</a>, though typically they are sent unfragmented as they tend to be small and fully buffered before transmission. The WebSocket protocol does not provide means for multiplexing. If it is not desirable for a large message to monopolize the connection, requests and responses can be transferred in a block-wise fashion as defined in <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
-<p id="rfc.section.3.2.p.5">Empty messages (Code 0.00) are ignored by the recipient (see also <a href="#sec-ping">Section 4.4</a>).</p>
+<p id="rfc.section.3.2.p.5">Empty messages (Code 0.00) MUST be ignored by the recipient (see also <a href="#sec-ping">Section 4.4</a>).</p>
 <h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> <a href="#requests-responses" id="requests-responses">Message Transmission</a></h1>
 <p id="rfc.section.3.3.p.1">CoAP requests and responses are exchanged asynchronously over the WebSocket connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
 <p id="rfc.section.3.3.p.2">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
@@ -794,9 +794,10 @@ Sec-WebSocket-Protocol: coap
   <li>Setting options indicate a setting that will be applied by the sender.</li>
 </ul>
 <p id="rfc.section.4.3.p.3">Most CSM Options are useful mainly as initial messages in the connection.</p>
-<p id="rfc.section.4.3.p.4">Both capability and settings options are cumulative, i.e., a Capability and Settings message does not invalidate a previously made capability indication or setting even if that is not repeated, and a capability message without any option is a no-operation (and can be used as such). An option that is given might override a previous value for the same option; the option defines how to handle this, if needed.</p>
-<p id="rfc.section.4.3.p.5">Default values given below for CSM Options are not default values for the option (this would mean that an empty Capability and Settings message would set the option back to its default value).  Instead they give the base value for the Capability and Setting before any Capability and Settings message sends a modified value.</p>
-<p id="rfc.section.4.3.p.6">Capability and Settings messages are indicated by the 7.01 code (CSM).</p>
+<p id="rfc.section.4.3.p.4">Both capability and settings options are cumulative. A Capability and Settings message does not invalidate a previously sent capability indication or setting even if it is not repeated. A capability message without any option is a no-operation (and can be used as such). An option that is sent might override a previous value for the same option. The option defines how to handle this case if needed.</p>
+<p id="rfc.section.4.3.p.5">Base values are listed below for CSM Options. These are the values for the Capability and Setting before any Capability and Settings messages sends a modified value.</p>
+<p id="rfc.section.4.3.p.6">These are not default values for the option as defined in Section 5.4.4 in <a href="#RFC7252">[RFC7252]</a>.  A default value would mean that an empty Capability and Settings message would result in the option being set to its default value.</p>
+<p id="rfc.section.4.3.p.7">Capability and Settings messages are indicated by the 7.01 code (CSM).</p>
 <h1 id="rfc.section.4.3.1"><a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#server-name-setting-option" id="server-name-setting-option">Server-Name Setting Option</a></h1>
 <div id="rfc.table.1"/>
 <div id="server-name"/>
@@ -808,7 +809,7 @@ Sec-WebSocket-Protocol: coap
       <th class="left">Name</th>
       <th class="right">Format</th>
       <th class="right">Length</th>
-      <th class="right">Default</th>
+      <th class="right">Base Value</th>
     </tr>
   </thead>
   <tbody>
@@ -837,7 +838,7 @@ Sec-WebSocket-Protocol: coap
       <th class="left">Name</th>
       <th class="right">Format</th>
       <th class="right">Length</th>
-      <th class="right">Default</th>
+      <th class="right">Base Value</th>
     </tr>
   </thead>
   <tbody>
@@ -851,7 +852,7 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.3.2.p.2">As per Section 4.6 of <a href="#RFC7252">[RFC7252]</a>, the default value (and the value used when this option is not implemented) is 1152. A peer that relies on this option being indicated with a certain minimum value will enjoy limited interoperability.</p>
+<p id="rfc.section.4.3.2.p.2">As per Section 4.6 of <a href="#RFC7252">[RFC7252]</a>, the base value (and the value used when this option is not implemented) is 1152. A peer that relies on this option being indicated with a certain minimum value will enjoy limited interoperability.</p>
 <h1 id="rfc.section.4.3.3"><a href="#rfc.section.4.3.3">4.3.3.</a> <a href="#block-wise-transfer-capability-option" id="block-wise-transfer-capability-option">Block-wise Transfer Capability Option</a></h1>
 <div id="rfc.table.3"/>
 <div id="block-wise-transfer"/>
@@ -863,7 +864,7 @@ Sec-WebSocket-Protocol: coap
       <th class="left">Name</th>
       <th class="right">Format</th>
       <th class="right">Length</th>
-      <th class="right">Default</th>
+      <th class="right">Base Value</th>
     </tr>
   </thead>
   <tbody>
@@ -880,7 +881,7 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.3.3.p.1">A sender can use the Block-wise Transfer elective Option to indicate that it supports the block-wise transfer protocol <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
 <p id="rfc.section.4.3.3.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not. An implementation that supports block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer Option also indicates support for BERT (see <a href="#bert">Section 5</a>).</p>
 <h1 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#sec-ping" id="sec-ping">Ping and Pong Messages</a></h1>
-<p id="rfc.section.4.4.p.1">In CoAP over TCP, Empty messages can always be sent and will be ignored.  This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
+<p id="rfc.section.4.4.p.1">In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient (see also <a href="#sec-ping">Section 4.4</a>). This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
 <p id="rfc.section.4.4.p.2">Upon receipt of a Ping message, a single Pong message is returned with the identical token. As with all Signaling messages, the recipient of a Ping or Pong message MUST ignore elective options it does not understand.</p>
 <p id="rfc.section.4.4.p.3">Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).</p>
 <h1 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#custody-option" id="custody-option">Custody Option</a></h1>
@@ -894,7 +895,7 @@ Sec-WebSocket-Protocol: coap
       <th class="left">Name</th>
       <th class="right">Format</th>
       <th class="right">Length</th>
-      <th class="right">Default</th>
+      <th class="right">Base Value</th>
     </tr>
   </thead>
   <tbody>
@@ -924,7 +925,7 @@ Sec-WebSocket-Protocol: coap
       <th class="left">Name</th>
       <th class="right">Format</th>
       <th class="right">Length</th>
-      <th class="right">Default</th>
+      <th class="right">Base Value</th>
     </tr>
   </thead>
   <tbody>
@@ -949,7 +950,7 @@ Sec-WebSocket-Protocol: coap
       <th class="left">Name</th>
       <th class="right">Format</th>
       <th class="right">Length</th>
-      <th class="right">Default</th>
+      <th class="right">Base Value</th>
     </tr>
   </thead>
   <tbody>
@@ -974,7 +975,7 @@ Sec-WebSocket-Protocol: coap
       <th class="left">Name</th>
       <th class="right">Format</th>
       <th class="right">Length</th>
-      <th class="right">Default</th>
+      <th class="right">Base Value</th>
     </tr>
   </thead>
   <tbody>
@@ -1003,7 +1004,7 @@ Sec-WebSocket-Protocol: coap
       <th class="left">Name</th>
       <th class="right">Format</th>
       <th class="right">Length</th>
-      <th class="right">Default</th>
+      <th class="right">Base Value</th>
     </tr>
   </thead>
   <tbody>

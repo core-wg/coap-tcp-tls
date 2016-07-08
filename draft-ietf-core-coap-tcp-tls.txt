@@ -304,10 +304,10 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 2.2.  UDP-to-TCP gateways
 
-   A UDP-to-TCP gateway MUST discard all Empty messages after processing
-   at the message layer.  For Confirmable (CON), Non-Confirmable (NOM),
-   and Acknowledgement (ACK) messages that are not Empty, their contents
-   are repackaged into untyped messages.
+   A UDP-to-TCP gateway MUST discard all Empty messages (Code 0.00)
+   after processing at the message layer.  For Confirmable (CON), Non-
+   Confirmable (NOM), and Acknowledgement (ACK) messages that are not
+   Empty, their contents are repackaged into untyped messages.
 
 2.3.  Message Format
 
@@ -700,7 +700,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    requests and responses can be transferred in a block-wise fashion as
    defined in [I-D.ietf-core-block].
 
-   Empty messages (Code 0.00) are ignored by the recipient (see also
+   Empty messages (Code 0.00) MUST be ignored by the recipient (see also
    Section 4.4).
 
 3.3.  Message Transmission
@@ -842,19 +842,22 @@ Bormann, et al.          Expires January 9, 2017               [Page 15]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
-   Both capability and settings options are cumulative, i.e., a
-   Capability and Settings message does not invalidate a previously made
-   capability indication or setting even if that is not repeated, and a
-   capability message without any option is a no-operation (and can be
-   used as such).  An option that is given might override a previous
-   value for the same option; the option defines how to handle this, if
+   Both capability and settings options are cumulative.  A Capability
+   and Settings message does not invalidate a previously sent capability
+   indication or setting even if it is not repeated.  A capability
+   message without any option is a no-operation (and can be used as
+   such).  An option that is sent might override a previous value for
+   the same option.  The option defines how to handle this case if
    needed.
 
-   Default values given below for CSM Options are not default values for
-   the option (this would mean that an empty Capability and Settings
-   message would set the option back to its default value).  Instead
-   they give the base value for the Capability and Setting before any
-   Capability and Settings message sends a modified value.
+   Base values are listed below for CSM Options.  These are the values
+   for the Capability and Setting before any Capability and Settings
+   messages sends a modified value.
+
+   These are not default values for the option as defined in
+   Section 5.4.4 in [RFC7252].  A default value would mean that an empty
+   Capability and Settings message would result in the option being set
+   to its default value.
 
    Capability and Settings messages are indicated by the 7.01 code
    (CSM).
@@ -862,7 +865,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 4.3.1.  Server-Name Setting Option
 
    +--------+------------+-------------+--------+--------+-------------+
-   | Number | Applies to | Name        | Format | Length |     Default |
+   | Number | Applies to | Name        | Format | Length |  Base Value |
    +--------+------------+-------------+--------+--------+-------------+
    | 1      | CSM        | Server-Name | string |  1-255 | (see below) |
    +--------+------------+-------------+--------+--------+-------------+
@@ -890,37 +893,34 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
 
-
-
-
 Bormann, et al.          Expires January 9, 2017               [Page 16]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
    +--------+-----------+------------------+--------+--------+---------+
-   | Number | Applies   | Name             | Format | Length | Default |
-   |        | to        |                  |        |        |         |
+   | Number | Applies   | Name             | Format | Length |    Base |
+   |        | to        |                  |        |        |   Value |
    +--------+-----------+------------------+--------+--------+---------+
    | 2      | CSM       | Max-Message-Size |   uint |    0-4 |    1152 |
    +--------+-----------+------------------+--------+--------+---------+
 
                                   Table 2
 
-   As per Section 4.6 of [RFC7252], the default value (and the value
-   used when this option is not implemented) is 1152.  A peer that
-   relies on this option being indicated with a certain minimum value
-   will enjoy limited interoperability.
+   As per Section 4.6 of [RFC7252], the base value (and the value used
+   when this option is not implemented) is 1152.  A peer that relies on
+   this option being indicated with a certain minimum value will enjoy
+   limited interoperability.
 
 4.3.3.  Block-wise Transfer Capability Option
 
-   +--------+-----------+------------------+--------+--------+---------+
-   | Number | Applies   | Name             | Format | Length | Default |
-   |        | to        |                  |        |        |         |
-   +--------+-----------+------------------+--------+--------+---------+
-   | 4      | CSM       | Block-wise       |  empty |      0 |  (none) |
-   |        |           | Transfer         |        |        |         |
-   +--------+-----------+------------------+--------+--------+---------+
+   +--------+-----------+----------------+--------+--------+-----------+
+   | Number | Applies   | Name           | Format | Length |      Base |
+   |        | to        |                |        |        |     Value |
+   +--------+-----------+----------------+--------+--------+-----------+
+   | 4      | CSM       | Block-wise     |  empty |      0 |    (none) |
+   |        |           | Transfer       |        |        |           |
+   +--------+-----------+----------------+--------+--------+-----------+
 
                                   Table 3
 
@@ -938,10 +938,10 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 4.4.  Ping and Pong Messages
 
-   In CoAP over TCP, Empty messages can always be sent and will be
-   ignored.  This provides a basic keep-alive function that can refresh
-   NAT bindings.  In contrast, Ping and Pong messages are a
-   bidirectional exchange.
+   In CoAP over TCP, Empty messages (Code 0.00) can always be sent and
+   MUST be ignored by the recipient (see also Section 4.4).  This
+   provides a basic keep-alive function that can refresh NAT bindings.
+   In contrast, Ping and Pong messages are a bidirectional exchange.
 
    Upon receipt of a Ping message, a single Pong message is returned
    with the identical token.  As with all Signaling messages, the
@@ -962,11 +962,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 4.4.1.  Custody Option
 
-       +--------+------------+---------+--------+--------+---------+
-       | Number | Applies to | Name    | Format | Length | Default |
-       +--------+------------+---------+--------+--------+---------+
-       | 2      | Ping, Pong | Custody |  empty |      0 |  (none) |
-       +--------+------------+---------+--------+--------+---------+
+     +--------+------------+---------+--------+--------+------------+
+     | Number | Applies to | Name    | Format | Length | Base Value |
+     +--------+------------+---------+--------+--------+------------+
+     | 2      | Ping, Pong | Custody |  empty |      0 |     (none) |
+     +--------+------------+---------+--------+--------+------------+
 
                                   Table 4
 
@@ -1013,11 +1013,12 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    Release messages can indicate one or more reasons using elective
    options.  The following options are defined:
 
-   +--------+------------+-----------------+--------+--------+---------+
-   | Number | Applies to | Name            | Format | Length | Default |
-   +--------+------------+-----------------+--------+--------+---------+
-   | 2      | Release    | Bad-Server-Name |  empty |      0 |  (none) |
-   +--------+------------+-----------------+--------+--------+---------+
+   +--------+-----------+-----------------+--------+--------+----------+
+   | Number | Applies   | Name            | Format | Length |     Base |
+   |        | to        |                 |        |        |    Value |
+   +--------+-----------+-----------------+--------+--------+----------+
+   | 2      | Release   | Bad-Server-Name |  empty |      0 |   (none) |
+   +--------+-----------+-----------------+--------+--------+----------+
 
                                   Table 5
 
@@ -1026,8 +1027,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    this server.
 
    +--------+----------+-------------------+--------+--------+---------+
-   | Number | Applies  | Name              | Format | Length | Default |
-   |        | to       |                   |        |        |         |
+   | Number | Applies  | Name              | Format | Length |    Base |
+   |        | to       |                   |        |        |   Value |
    +--------+----------+-------------------+--------+--------+---------+
    | 4      | Release  | Alternate-Address | string |  1-255 |  (none) |
    +--------+----------+-------------------+--------+--------+---------+
@@ -1039,11 +1040,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    alternative transport address given.  Its value is in the form
    "authority" as defined in Section 3.2 of [RFC3986].
 
-      +--------+------------+----------+--------+--------+---------+
-      | Number | Applies to | Name     | Format | Length | Default |
-      +--------+------------+----------+--------+--------+---------+
-      | 6      | Release    | Hold-Off |   uint |    0-3 |  (none) |
-      +--------+------------+----------+--------+--------+---------+
+     +--------+------------+----------+--------+--------+------------+
+     | Number | Applies to | Name     | Format | Length | Base Value |
+     +--------+------------+----------+--------+--------+------------+
+     | 6      | Release    | Hold-Off |   uint |    0-3 |     (none) |
+     +--------+------------+----------+--------+--------+------------+
 
                                   Table 7
 
@@ -1057,7 +1058,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    maintaining the connection and cannot even wait for an orderly
    release.  The sender shuts down the connection immediately after the
    abort (and may or may not wait for a release or abort message or
-   connection shutdown in the inverse direction).  A diagnostic payload
 
 
 
@@ -1066,6 +1066,7 @@ Bormann, et al.          Expires January 9, 2017               [Page 19]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
 
+   connection shutdown in the inverse direction).  A diagnostic payload
    SHOULD be included in the Abort message.  Messages may be in flight
    when the sender decides to send an abort message.  The general
    expectation is that these will NOT be processed.
@@ -1075,11 +1076,12 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    Abort messages can indicate one or more reasons using elective
    options.  The following option is defined:
 
-   +--------+------------+----------------+--------+--------+---------+
-   | Number | Applies to | Name           | Format | Length | Default |
-   +--------+------------+----------------+--------+--------+---------+
-   | 2      | Abort      | Bad-CSM-Option |   uint |    0-2 |  (none) |
-   +--------+------------+----------------+--------+--------+---------+
+   +--------+-----------+----------------+--------+--------+-----------+
+   | Number | Applies   | Name           | Format | Length |      Base |
+   |        | to        |                |        |        |     Value |
+   +--------+-----------+----------------+--------+--------+-----------+
+   | 2      | Abort     | Bad-CSM-Option |   uint |    0-2 |    (none) |
+   +--------+-----------+----------------+--------+--------+-----------+
 
                                   Table 8
 
@@ -1112,8 +1114,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
                       Figure 15: Ping Message Example
 
-   An encoded example of the corresponding Pong message is shown in
-   Figure 16.
 
 
 
@@ -1121,6 +1121,9 @@ Bormann, et al.          Expires January 9, 2017               [Page 20]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   An encoded example of the corresponding Pong message is shown in
+   Figure 16.
 
        0                   1                   2
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
@@ -1166,10 +1169,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    is allowed to respond with a different SZX value, e.g. to send a non-
    BERT block instead.
 
-   In descriptive usage, a BERT Option is interpreted in the same way as
-   the equivalent Option with SZX == 6, except that the payload is
-   allowed to contain a multiple of 1024 bytes (non-final BERT block) or
-   more than 1024 bytes (final BERT block).
+
 
 
 
@@ -1177,6 +1177,11 @@ Bormann, et al.          Expires January 9, 2017               [Page 21]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
 
+
+   In descriptive usage, a BERT Option is interpreted in the same way as
+   the equivalent Option with SZX == 6, except that the payload is
+   allowed to contain a multiple of 1024 bytes (non-final BERT block) or
+   more than 1024 bytes (final BERT block).
 
    The recipient of a non-final BERT block (M=1) conceptually partitions
    the payload into a sequence of 1024-byte blocks and acts exactly as
@@ -1211,11 +1216,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    payload; the second, 5120; and the third, 4711.  Note how the block
    number increments to move the position inside the response body
    forward.
-
-
-
-
-
 
 
 
