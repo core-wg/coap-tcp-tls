@@ -700,8 +700,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP        July 2016
    requests and responses can be transferred in a block-wise fashion as
    defined in [I-D.ietf-core-block].
 
-   Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry
-   either a request or a response.
+   Empty messages (Code 0.00) are ignored by the recipient (see also
+   Section 4.4).
 
 3.3.  Message Transmission
 
