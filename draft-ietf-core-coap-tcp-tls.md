@@ -251,7 +251,7 @@ are indicated by dashes.
 
 ## UDP-to-TCP gateways
 
-A UDP-to-TCP gateway MUST discard all Empty messages after processing at the
+A UDP-to-TCP gateway MUST discard all Empty messages (Code 0.00) after processing at the
 message layer. For Confirmable (CON), Non-Confirmable (NOM), and Acknowledgement
 (ACK) messages that are not Empty, their contents are repackaged into untyped
 messages.
@@ -588,7 +588,7 @@ protocol does not provide means for multiplexing. If it is not desirable for a
 large message to monopolize the connection, requests and responses can be
 transferred in a block-wise fashion as defined in {{I-D.ietf-core-block}}.
 
-Empty messages (Code 0.00) are ignored by the recipient (see also
+Empty messages (Code 0.00) MUST be ignored by the recipient (see also
 {{sec-ping}}).
 
 ## Message Transmission {#requests-responses}
@@ -692,25 +692,25 @@ Capability and Settings messages (CSM) are used for two purposes:
 
 Most CSM Options are useful mainly as initial messages in the connection.
 
-Both capability and settings options are cumulative,
-i.e., a Capability and Settings message does not invalidate a previously
-made capability indication or setting even if that is not repeated, and
-a capability message without any option is a no-operation (and
-can be used as such). An option that is given might override a
-previous value for the same option; the option defines how to handle
-this, if needed.
+Both capability and settings options are cumulative. A Capability and Settings
+message does not invalidate a previously sent capability indication or setting
+even if it is not repeated. A capability message without any option is a no-operation (and
+can be used as such). An option that is sent might override a previous value for
+the same option. The option defines how to handle this case if needed.
 
-Default values given below for CSM Options
-are not default values for the option (this would mean that an
-empty Capability and Settings message would set the option back to its
-default value).  Instead they give the base value for the Capability and
-Setting before any Capability and Settings message sends a modified value.
+Base values are listed below for CSM Options. These are the values for the
+Capability and Setting before any Capability and Settings messages sends a
+modified value.
+
+These are not default values for the option as defined in Section 5.4.4 in {{RFC7252}}.
+A default value would mean that an empty Capability and Settings message would result in
+the option being set to its default value. 
 
 Capability and Settings messages are indicated by the 7.01 code (CSM).
 
 ### Server-Name Setting Option
 
-| Number | Applies to | Name                | Format     | Length      | Default     |
+| Number | Applies to | Name                | Format     | Length      | Base Value  |
 |--------+------------+---------------------+------------+-------------+-------------+
 |      1 | CSM        | Server-Name         | string     | 1-255       | (see below) |
 {: #server-name cols="l l l r r r"}
@@ -729,18 +729,18 @@ Host header field.
 The sender can use the Max-Message-Size elective option to indicate the maximum message size
 in bytes that it can receive.
 
-| Number | Applies to | Name                | Format     | Length      | Default     |
+| Number | Applies to | Name                | Format     | Length      | Base Value  |
 |--------+------------+---------------------+------------+-------------+-------------+
 |      2 | CSM        | Max-Message-Size    | uint       | 0-4         | 1152        |
 {: #max-message-size cols="l l l r r r"}
 
-As per Section 4.6 of {{-coap}}, the default value (and the value used when this option
+As per Section 4.6 of {{-coap}}, the base value (and the value used when this option
 is not implemented) is 1152. A peer that relies on this option being indicated with a
 certain minimum value will enjoy limited interoperability.
 
 ### Block-wise Transfer Capability Option
 
-| Number | Applies to | Name                | Format     | Length      | Default     |
+| Number | Applies to | Name                | Format     | Length      | Base Value  |
 |--------+------------+---------------------+------------+-------------+-------------+
 |      4 | CSM        | Block-wise Transfer |  empty     | 0           | (none)      |
 {: #block-wise-transfer cols="l l l r r r"}
@@ -757,9 +757,9 @@ indicates support for BERT (see {{bert}}).
 
 ## Ping and Pong Messages {#sec-ping}
 
-In CoAP over TCP, Empty messages can always be sent and will be ignored.
-This provides a basic keep-alive function that can refresh NAT bindings. In contrast,
-Ping and Pong messages are a bidirectional exchange.
+In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored
+by the recipient (see also {{sec-ping}}). This provides a basic keep-alive function
+that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.
 
 Upon receipt of a Ping message, a single Pong message is returned with the identical
 token. As with all Signaling messages, the recipient of a Ping or Pong message MUST
@@ -769,7 +769,7 @@ Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (
 
 ### Custody Option
 
-| Number | Applies to | Name                | Format     | Length      | Default     |
+| Number | Applies to | Name                | Format     | Length      | Base Value  |
 |--------+------------+---------------------+------------+-------------+-------------+
 |      2 | Ping, Pong | Custody             | empty      | 0           | (none)      |
 {: #custody cols="l l l r r r"}
@@ -806,7 +806,7 @@ Release messages are indicated by the 7.04 code (Release).
 Release messages can indicate one or more reasons using elective options.
 The following options are defined:
 
-| Number | Applies to | Name                | Format     | Length      | Default     |
+| Number | Applies to | Name                | Format     | Length      | Base Value  |
 |--------+------------+---------------------+------------+-------------+-------------+
 |      2 | Release    | Bad-Server-Name     | empty      | 0           | (none)      |
 {: #bad-server-name cols="l l l r r r"}
@@ -814,7 +814,7 @@ The following options are defined:
 The Bad-Server-Name elective option indicates that the default indicated
 by the CSM Server-Name Option is unlikely to be useful for this server.
 
-| Number | Applies to | Name                | Format     | Length      | Default     |
+| Number | Applies to | Name                | Format     | Length      | Base Value  |
 |--------+------------+---------------------+------------+-------------+-------------+
 |      4 | Release    | Alternate-Address   | string     | 1-255       | (none)      |
 {: #alternate-address cols="l l l r r r"}
@@ -823,7 +823,7 @@ The Alternative-Address elective option requests the peer to instead open a conn
 of the same kind as the present connection to the alternative transport address given.
 Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}. 
 
-| Number | Applies to | Name                | Format     | Length      | Default     |
+| Number | Applies to | Name                | Format     | Length      | Base Value  |
 |--------+------------+---------------------+------------+-------------+-------------+
 |      6 | Release    | Hold-Off            | uint       | 0-3         | (none)      |
 {: #hold-off cols="l l l r r r"}
@@ -847,7 +847,7 @@ Abort messages are indicated by the 7.05 code (Abort).
 Abort messages can indicate one or more reasons using elective
 options. The following option is defined:
 
-| Number | Applies to | Name                | Format     | Length      | Default     |
+| Number | Applies to | Name                | Format     | Length      | Base Value  |
 |--------+------------+---------------------+------------+-------------+-------------+
 |      2 | Abort      | Bad-CSM-Option      | uint       | 0-2         | (none)      |
 {: #bad-csm-option cols="l l l r r r"}
