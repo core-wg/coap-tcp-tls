@@ -87,7 +87,7 @@ normative:
   RFC7525: RFC7525
   RFC7595: urireg
   RFC7641: RFC7641
-  I-D.ietf-dice-profile:
+  RFC7925: RFC7925
 informative:
   I-D.ietf-core-block: block
   I-D.becker-core-coap-sms-gprs: I-D.becker-core-coap-sms-gprs
@@ -1116,10 +1116,11 @@ changed accordingly.
 
 The security considerations of {{-coap}} apply.
 
-Implementations of CoAP MUST use TLS version 1.2 or higher for CoAP over TLS.
-The general TLS usage guidance in {{RFC7525}} SHOULD be followed.
+TLS version 1.2 or higher is mandatory-to-implement and MUST be enabled by default.
+An endpoint MAY immediately abort a CoAP over TLS connection that does not meet this
+requirement (see {{sec-abort}}) and SHOULD include a diagnostic payload.
 
-Guidelines for use of cipher suites and TLS extensions can be found in {{I-D.ietf-dice-profile}}.
+Guidance and recommendations in {{RFC7525}} and {{RFC7925}} SHOULD be followed.
 
 TLS does not protect the TCP header. This may, for example, 
 allow an on-path adversary to terminate a TCP connection prematurely 
