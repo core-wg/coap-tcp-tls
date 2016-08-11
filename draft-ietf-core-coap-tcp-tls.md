@@ -84,7 +84,6 @@ normative:
   RFC6455: RFC6455
   RFC7252: coap
   RFC7301: alpn
-  RFC7525: RFC7525
   RFC7595: urireg
   RFC7641: RFC7641
   RFC7925: RFC7925
@@ -1120,7 +1119,7 @@ TLS version 1.2 or higher is mandatory-to-implement and MUST be enabled by defau
 An endpoint MAY immediately abort a CoAP over TLS connection that does not meet this
 requirement (see {{sec-abort}}) and SHOULD include a diagnostic payload.
 
-Guidance and recommendations in {{RFC7525}} and {{RFC7925}} SHOULD be followed.
+The TLS usage guidance in {{RFC7925}} SHOULD be followed.
 
 TLS does not protect the TCP header. This may, for example, 
 allow an on-path adversary to terminate a TCP connection prematurely 
