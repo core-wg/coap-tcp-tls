@@ -1045,9 +1045,11 @@ URI scheme, with the following changes:
   the default port 443 is assumed (this is different from the default
   port for "coaps", i.e., CoAP over DTLS over UDP).
 
-* With the exception of TCP port 5684, implementations that support CoAP over TLS
-  MUST perform protocol negotiation in TLS {{-alpn}} using the "coap" protocol identifier
-  defined in <xref target="alpnpid"/>.
+* If the Application-Layer Protocol Negotiation Extension (ALPN) {{-alpn}} 
+  is available in the TLS protocol stack, CoAP over TLS implementations
+  MUST perform protocol negotiation in TLS using the "coap" protocol identifier
+  defined in <xref target="alpnpid"/>. In exceptional cases where ALPN is unavailable,
+  CoAP over TLS implementations MUST use port number 5684.
 
 ## CoAP over WebSockets URIs {#uris}
 
@@ -1226,7 +1228,7 @@ Port Number.
 
 IANA is requested to assign the port number 5684 and the service name "coaps+tcp",
 in accordance with {{RFC6335}}. The port number is requested to address the exceptional
-case of TLS implementations that do not support the "TLS Application Layer Protocol
+case of TLS implementations that do not support the "Application-Layer Protocol
 Negotiation Extension" {{-alpn}}.
 
 Service Name.
