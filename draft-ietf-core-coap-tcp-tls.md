@@ -1045,9 +1045,9 @@ URI scheme, with the following changes:
   the default port 443 is assumed (this is different from the default
   port for "coaps", i.e., CoAP over DTLS over UDP).
 
-* When CoAP is exchanged over TLS port 443, the "TLS Application
-  Layer Protocol Negotiation Extension" {{-alpn}} MUST be used to allow 
-  demultiplexing at the server-side.
+* With the exception of TCP port 5684, implementations that support CoAP over TLS
+  MUST perform protocol negotiation in TLS {{-alpn}} using the "coap" protocol identifier
+  defined in <xref target="alpnpid"/>.
 
 ## CoAP over WebSockets URIs {#uris}
 
@@ -1222,11 +1222,12 @@ Port Number.
 :   5683
 {: vspace='0'}
 
+## Secure Service Name and Port Number Registration
 
-Similarly, IANA is requested to assign the
-service name "coaps+tcp", in accordance with {{RFC6335}}.
-However, no separate port number is used for "coaps" over TCP; instead,
-the ALPN protocol ID defined in {{alpnpid}} is used over port 443.
+IANA is requested to assign the port number 5684 and the service name "coaps+tcp",
+in accordance with {{RFC6335}}. The port number is requested to address the exceptional
+case of TLS implementations that do not support the "TLS Application Layer Protocol
+Negotiation Extension" {{-alpn}}.
 
 Service Name.
 :   coaps+tcp
@@ -1247,7 +1248,7 @@ Reference.
 :  {{-alpn}}, [RFCthis]
 
 Port Number.
-:   443  (see also {{alpnpid}} of [RFCthis]})
+:   5684
 {: vspace='0'}
 
 
@@ -1372,11 +1373,11 @@ Related information.
 :	None.
 {: vspace='0'}
 
-## ALPN Protocol ID {#alpnpid}
+## ALPN Protocol Identifier {#alpnpid}
 
 IANA is requested to assign the following value in the registry
 "Application Layer Protocol Negotiation (ALPN) Protocol IDs" created
-by {{-alpn}}:
+by {{-alpn}}. The "coap" string identifies CoAP when used over TLS.
 
 Protocol.
 :   CoAP
