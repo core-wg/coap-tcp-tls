@@ -322,7 +322,7 @@ li, p {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-7-08" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-8-12" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -346,7 +346,7 @@ li, p {
   <td class="right">S. Lemay</td>
 </tr>
 <tr>
-  <td class="left">Expires: January 9, 2017</td>
+  <td class="left">Expires: February 13, 2017</td>
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
@@ -383,7 +383,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">July 08, 2016</td>
+  <td class="right">August 12, 2016</td>
 </tr>
 
     	
@@ -404,7 +404,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 9, 2017.</p>
+<p>This Internet-Draft will expire on February 13, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1149,8 +1149,8 @@ coap-wss-URI =
 <p id="rfc.section.6.2.1.p.3">The steps to construct a URI from a request&#8217;s options are changed accordingly.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#security" id="security">Security Considerations</a></h1>
 <p id="rfc.section.7.p.1">The security considerations of <a href="#RFC7252">[RFC7252]</a> apply.</p>
-<p id="rfc.section.7.p.2">Implementations of CoAP MUST use TLS version 1.2 or higher for CoAP over TLS.  The general TLS usage guidance in <a href="#RFC7525">[RFC7525]</a> SHOULD be followed.</p>
-<p id="rfc.section.7.p.3">Guidelines for use of cipher suites and TLS extensions can be found in <a href="#I-D.ietf-dice-profile">[I-D.ietf-dice-profile]</a>.</p>
+<p id="rfc.section.7.p.2">TLS version 1.2 or higher is mandatory-to-implement and MUST be enabled by default.  An endpoint MAY immediately abort a CoAP over TLS connection that does not meet this requirement (see <a href="#sec-abort">Section 4.6</a>) and SHOULD include a diagnostic payload.</p>
+<p id="rfc.section.7.p.3">The TLS usage guidance in <a href="#RFC7925">[RFC7925]</a> SHOULD be followed.</p>
 <p id="rfc.section.7.p.4">TLS does not protect the TCP header. This may, for example, allow an on-path adversary to terminate a TCP connection prematurely by spoofing a TCP reset message.</p>
 <p id="rfc.section.7.p.5">CoAP over WebSockets and CoAP over TLS-secured WebSockets do not introduce additional security issues beyond CoAP and DTLS-secured CoAP respectively <a href="#RFC7252">[RFC7252]</a>. The security considerations of <a href="#RFC6455">[RFC6455]</a> apply.</p>
 <h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#signaling-messages" id="signaling-messages">Signaling Messages</a></h1>
@@ -1417,12 +1417,6 @@ coap-wss-URI =
   <tbody>
     <tr>
       <td class="reference">
-        <b id="I-D.ietf-dice-profile">[I-D.ietf-dice-profile]</b>
-      </td>
-      <td class="top"><a>Tschofenig, H.</a> and <a>T. Fossati</a>, "<a href="http://tools.ietf.org/html/draft-ietf-dice-profile-17">TLS/DTLS Profiles for the Internet of Things</a>", Internet-Draft draft-ietf-dice-profile-17, October 2015.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="RFC0793">[RFC0793]</b>
       </td>
       <td class="top"><a>Postel, J.</a>, "<a href="http://tools.ietf.org/html/rfc793">Transmission Control Protocol</a>", STD 7, RFC 793, DOI 10.17487/RFC0793, September 1981.</td>
@@ -1483,12 +1477,6 @@ coap-wss-URI =
     </tr>
     <tr>
       <td class="reference">
-        <b id="RFC7525">[RFC7525]</b>
-      </td>
-      <td class="top"><a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="http://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="RFC7595">[RFC7595]</b>
       </td>
       <td class="top"><a>Thaler, D.</a>, <a>Hansen, T.</a> and <a>T. Hardie</a>, "<a href="http://tools.ietf.org/html/rfc7595">Guidelines and Registration Procedures for URI Schemes</a>", BCP 35, RFC 7595, DOI 10.17487/RFC7595, June 2015.</td>
@@ -1498,6 +1486,12 @@ coap-wss-URI =
         <b id="RFC7641">[RFC7641]</b>
       </td>
       <td class="top"><a>Hartke, K.</a>, "<a href="http://tools.ietf.org/html/rfc7641">Observing Resources in the Constrained Application Protocol (CoAP)</a>", RFC 7641, DOI 10.17487/RFC7641, September 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7925">[RFC7925]</b>
+      </td>
+      <td class="top"><a>Tschofenig, H.</a> and <a>T. Fossati</a>, "<a href="http://tools.ietf.org/html/rfc7925">Transport Layer Security (TLS) / Datagram Transport Layer Security (DTLS) Profiles for the Internet of Things</a>", RFC 7925, DOI 10.17487/RFC7925, July 2016.</td>
     </tr>
   </tbody>
 </table>
@@ -1520,7 +1514,7 @@ coap-wss-URI =
       <td class="reference">
         <b id="I-D.ietf-core-block">[I-D.ietf-core-block]</b>
       </td>
-      <td class="top"><a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-block-20">Block-wise transfers in CoAP</a>", Internet-Draft draft-ietf-core-block-20, April 2016.</td>
+      <td class="top"><a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-block-21">Block-wise transfers in CoAP</a>", Internet-Draft draft-ietf-core-block-21, July 2016.</td>
     </tr>
     <tr>
       <td class="reference">
