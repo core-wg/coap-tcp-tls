@@ -301,10 +301,11 @@ li, p {
 <link href="#rfc.section.8.1" rel="Chapter" title="8.1 Signaling Codes"/>
 <link href="#rfc.section.8.2" rel="Chapter" title="8.2 CoAP Signaling Option Numbers Registry"/>
 <link href="#rfc.section.8.3" rel="Chapter" title="8.3 Service Name and Port Number Registration"/>
-<link href="#rfc.section.8.4" rel="Chapter" title="8.4 URI Scheme Registration"/>
-<link href="#rfc.section.8.5" rel="Chapter" title="8.5 Well-Known URI Suffix Registration"/>
-<link href="#rfc.section.8.6" rel="Chapter" title="8.6 ALPN Protocol ID"/>
-<link href="#rfc.section.8.7" rel="Chapter" title="8.7 WebSocket Subprotocol Registration"/>
+<link href="#rfc.section.8.4" rel="Chapter" title="8.4 Secure Service Name and Port Number Registration"/>
+<link href="#rfc.section.8.5" rel="Chapter" title="8.5 URI Scheme Registration"/>
+<link href="#rfc.section.8.6" rel="Chapter" title="8.6 Well-Known URI Suffix Registration"/>
+<link href="#rfc.section.8.7" rel="Chapter" title="8.7 ALPN Protocol Identifier"/>
+<link href="#rfc.section.8.8" rel="Chapter" title="8.8 WebSocket Subprotocol Registration"/>
 <link href="#rfc.references" rel="Chapter" title="9 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References"/>
 <link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References"/>
@@ -449,10 +450,11 @@ li, p {
 <ul><li>8.1.   <a href="#rfc.section.8.1">Signaling Codes</a></li>
 <li>8.2.   <a href="#rfc.section.8.2">CoAP Signaling Option Numbers Registry</a></li>
 <li>8.3.   <a href="#rfc.section.8.3">Service Name and Port Number Registration</a></li>
-<li>8.4.   <a href="#rfc.section.8.4">URI Scheme Registration</a></li>
-<li>8.5.   <a href="#rfc.section.8.5">Well-Known URI Suffix Registration</a></li>
-<li>8.6.   <a href="#rfc.section.8.6">ALPN Protocol ID</a></li>
-<li>8.7.   <a href="#rfc.section.8.7">WebSocket Subprotocol Registration</a></li>
+<li>8.4.   <a href="#rfc.section.8.4">Secure Service Name and Port Number Registration</a></li>
+<li>8.5.   <a href="#rfc.section.8.5">URI Scheme Registration</a></li>
+<li>8.6.   <a href="#rfc.section.8.6">Well-Known URI Suffix Registration</a></li>
+<li>8.7.   <a href="#rfc.section.8.7">ALPN Protocol Identifier</a></li>
+<li>8.8.   <a href="#rfc.section.8.8">WebSocket Subprotocol Registration</a></li>
 </ul><li>9.   <a href="#rfc.references">References</a></li>
 <ul><li>9.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>9.2.   <a href="#rfc.references.2">Informative References</a></li>
@@ -1121,7 +1123,7 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
 
 <ul>
   <li>The port subcomponent indicates the TCP port at which the TLS server for the CoAP server is located. If it is empty or not given, then the default port 443 is assumed (this is different from the default port for &#8220;coaps&#8221;, i.e., CoAP over DTLS over UDP).</li>
-  <li>When CoAP is exchanged over TLS port 443, the &#8220;TLS Application Layer Protocol Negotiation Extension&#8221; <a href="#RFC7301">[RFC7301]</a> MUST be used to allow demultiplexing at the server-side.</li>
+  <li>If the Application-Layer Protocol Negotiation Extension (ALPN) <a href="#RFC7301">[RFC7301]</a> is available in the TLS protocol stack, CoAP over TLS implementations MUST perform protocol negotiation in TLS using the &#8220;coap&#8221; protocol identifier defined in <a href="#alpnpid">Section 8.7</a>. In exceptional cases where ALPN is unavailable, CoAP over TLS implementations MUST use port number 5684.</li>
 </ul>
 <h1 id="rfc.section.6.2"><a href="#rfc.section.6.2">6.2.</a> <a href="#uris" id="uris">CoAP over WebSockets URIs</a></h1>
 <p id="rfc.section.6.2.p.1">For the first configuration discussed in <a href="#websockets-overview">Section 3</a>, this document defines two new URIs schemes that can be used for identifying CoAP resources and providing a means of locating these resources: &#8220;coap+ws&#8221; and &#8220;coap+wss&#8221;.</p>
@@ -1294,7 +1296,8 @@ coap-wss-URI =
   <dt>Port Number.</dt>
   <dd style="margin-left: 8"><br/> 5683</dd>
 </dl>
-<p id="rfc.section.8.3.p.3">Similarly, IANA is requested to assign the service name &#8220;coaps+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>.  However, no separate port number is used for &#8220;coaps&#8221; over TCP; instead, the ALPN protocol ID defined in <a href="#alpnpid">Section 8.6</a> is used over port 443.</p>
+<h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> <a href="#secure-service-name-and-port-number-registration" id="secure-service-name-and-port-number-registration">Secure Service Name and Port Number Registration</a></h1>
+<p id="rfc.section.8.4.p.1">IANA is requested to assign the port number 5684 and the service name &#8220;coaps+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>. The port number is requested to address the exceptional case of TLS implementations that do not support the &#8220;Application-Layer Protocol Negotiation Extension&#8221; <a href="#RFC7301">[RFC7301]</a>.</p>
 <p/>
 
 <dl>
@@ -1311,14 +1314,14 @@ coap-wss-URI =
   <dt>Reference.</dt>
   <dd style="margin-left: 8"><br/> <a href="#RFC7301">[RFC7301]</a>, [RFCthis]</dd>
   <dt>Port Number.</dt>
-  <dd style="margin-left: 8"><br/> 443  (see also <a href="#alpnpid">Section 8.6</a> of [RFCthis]})</dd>
+  <dd style="margin-left: 8"><br/> 5684</dd>
 </dl>
-<h1 id="rfc.section.8.4"><a href="#rfc.section.8.4">8.4.</a> <a href="#uri-scheme-registration" id="uri-scheme-registration">URI Scheme Registration</a></h1>
-<p id="rfc.section.8.4.p.1">This document registers two new URI schemes, namely &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, for the use of CoAP over TCP and for CoAP over TLS over TCP, respectively. The &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221; URI schemes can thus be compared to the &#8220;http&#8221; and &#8220;https&#8221; URI schemes.</p>
-<p id="rfc.section.8.4.p.2">The syntax of the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes is specified in Section 6 of <a href="#RFC7252">[RFC7252]</a> and the present document re-uses their semantics for &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, respectively, with the exception that TCP, or TLS over TCP is used as a transport protocol.</p>
-<p id="rfc.section.8.4.p.3">IANA is requested to add these new URI schemes to the registry established with <a href="#RFC7595">[RFC7595]</a>.</p>
-<h1 id="rfc.section.8.4.1"><a href="#rfc.section.8.4.1">8.4.1.</a> <a href="#coapws" id="coapws">coap+ws</a></h1>
-<p id="rfc.section.8.4.1.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+ws&#8221;. The registration request complies with <a href="#RFC4395">[RFC4395]</a>.</p>
+<h1 id="rfc.section.8.5"><a href="#rfc.section.8.5">8.5.</a> <a href="#uri-scheme-registration" id="uri-scheme-registration">URI Scheme Registration</a></h1>
+<p id="rfc.section.8.5.p.1">This document registers two new URI schemes, namely &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, for the use of CoAP over TCP and for CoAP over TLS over TCP, respectively. The &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221; URI schemes can thus be compared to the &#8220;http&#8221; and &#8220;https&#8221; URI schemes.</p>
+<p id="rfc.section.8.5.p.2">The syntax of the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes is specified in Section 6 of <a href="#RFC7252">[RFC7252]</a> and the present document re-uses their semantics for &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, respectively, with the exception that TCP, or TLS over TCP is used as a transport protocol.</p>
+<p id="rfc.section.8.5.p.3">IANA is requested to add these new URI schemes to the registry established with <a href="#RFC7595">[RFC7595]</a>.</p>
+<h1 id="rfc.section.8.5.1"><a href="#rfc.section.8.5.1">8.5.1.</a> <a href="#coapws" id="coapws">coap+ws</a></h1>
+<p id="rfc.section.8.5.1.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+ws&#8221;. The registration request complies with <a href="#RFC4395">[RFC4395]</a>.</p>
 <p/>
 
 <dl>
@@ -1345,8 +1348,8 @@ coap-wss-URI =
   <dt>References.</dt>
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
-<h1 id="rfc.section.8.4.2"><a href="#rfc.section.8.4.2">8.4.2.</a> <a href="#coapwss" id="coapwss">coap+wss</a></h1>
-<p id="rfc.section.8.4.2.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+wss&#8221;. The registration request complies with <a href="#RFC4395">[RFC4395]</a>.</p>
+<h1 id="rfc.section.8.5.2"><a href="#rfc.section.8.5.2">8.5.2.</a> <a href="#coapwss" id="coapwss">coap+wss</a></h1>
+<p id="rfc.section.8.5.2.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+wss&#8221;. The registration request complies with <a href="#RFC4395">[RFC4395]</a>.</p>
 <p/>
 
 <dl>
@@ -1373,8 +1376,8 @@ coap-wss-URI =
   <dt>References.</dt>
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
-<h1 id="rfc.section.8.5"><a href="#rfc.section.8.5">8.5.</a> <a href="#well-known-uri-suffix-registration" id="well-known-uri-suffix-registration">Well-Known URI Suffix Registration</a></h1>
-<p id="rfc.section.8.5.p.1">IANA is requested to register the &#8216;coap&#8217; well-known URI in the &#8220;Well-Known URIs&#8221; registry. This registration request complies with <a href="#RFC5785">[RFC5785]</a>:</p>
+<h1 id="rfc.section.8.6"><a href="#rfc.section.8.6">8.6.</a> <a href="#well-known-uri-suffix-registration" id="well-known-uri-suffix-registration">Well-Known URI Suffix Registration</a></h1>
+<p id="rfc.section.8.6.p.1">IANA is requested to register the &#8216;coap&#8217; well-known URI in the &#8220;Well-Known URIs&#8221; registry. This registration request complies with <a href="#RFC5785">[RFC5785]</a>:</p>
 <p/>
 
 <dl>
@@ -1387,8 +1390,8 @@ coap-wss-URI =
   <dt>Related information.</dt>
   <dd style="margin-left: 8"><br/> None.</dd>
 </dl>
-<h1 id="rfc.section.8.6"><a href="#rfc.section.8.6">8.6.</a> <a href="#alpnpid" id="alpnpid">ALPN Protocol ID</a></h1>
-<p id="rfc.section.8.6.p.1">IANA is requested to assign the following value in the registry &#8220;Application Layer Protocol Negotiation (ALPN) Protocol IDs&#8221; created by <a href="#RFC7301">[RFC7301]</a>:</p>
+<h1 id="rfc.section.8.7"><a href="#rfc.section.8.7">8.7.</a> <a href="#alpnpid" id="alpnpid">ALPN Protocol Identifier</a></h1>
+<p id="rfc.section.8.7.p.1">IANA is requested to assign the following value in the registry &#8220;Application Layer Protocol Negotiation (ALPN) Protocol IDs&#8221; created by <a href="#RFC7301">[RFC7301]</a>. The &#8220;coap&#8221; string identifies CoAP when used over TLS.</p>
 <p/>
 
 <dl>
@@ -1399,8 +1402,8 @@ coap-wss-URI =
   <dt>Reference.</dt>
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
-<h1 id="rfc.section.8.7"><a href="#rfc.section.8.7">8.7.</a> <a href="#websocket-subprotocol-registration" id="websocket-subprotocol-registration">WebSocket Subprotocol Registration</a></h1>
-<p id="rfc.section.8.7.p.1">IANA is requested to register the WebSocket CoAP subprotocol under the &#8220;WebSocket Subprotocol Name Registry&#8221;:</p>
+<h1 id="rfc.section.8.8"><a href="#rfc.section.8.8">8.8.</a> <a href="#websocket-subprotocol-registration" id="websocket-subprotocol-registration">WebSocket Subprotocol Registration</a></h1>
+<p id="rfc.section.8.8.p.1">IANA is requested to register the WebSocket CoAP subprotocol under the &#8220;WebSocket Subprotocol Name Registry&#8221;:</p>
 <p/>
 
 <dl>

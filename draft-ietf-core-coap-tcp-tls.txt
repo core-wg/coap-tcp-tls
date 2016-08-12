@@ -116,10 +116,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
 
      8.2.  CoAP Signaling Option Numbers Registry  . . . . . . . . .  27
      8.3.  Service Name and Port Number Registration . . . . . . . .  27
-     8.4.  URI Scheme Registration . . . . . . . . . . . . . . . . .  29
-     8.5.  Well-Known URI Suffix Registration  . . . . . . . . . . .  31
-     8.6.  ALPN Protocol ID  . . . . . . . . . . . . . . . . . . . .  31
-     8.7.  WebSocket Subprotocol Registration  . . . . . . . . . . .  31
+     8.4.  Secure Service Name and Port Number Registration  . . . .  28
+     8.5.  URI Scheme Registration . . . . . . . . . . . . . . . . .  29
+     8.6.  Well-Known URI Suffix Registration  . . . . . . . . . . .  31
+     8.7.  ALPN Protocol Identifier  . . . . . . . . . . . . . . . .  31
+     8.8.  WebSocket Subprotocol Registration  . . . . . . . . . . .  31
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  32
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  32
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  33
@@ -161,7 +162,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
         +--------------------------------+
 
             Figure 1: Layering of CoAP over Reliable Transports
-
 
 
 
@@ -1307,9 +1307,12 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
       given, then the default port 443 is assumed (this is different
       from the default port for "coaps", i.e., CoAP over DTLS over UDP).
 
-   o  When CoAP is exchanged over TLS port 443, the "TLS Application
-      Layer Protocol Negotiation Extension" [RFC7301] MUST be used to
-      allow demultiplexing at the server-side.
+   o  If the Application-Layer Protocol Negotiation Extension (ALPN)
+      [RFC7301] is available in the TLS protocol stack, CoAP over TLS
+      implementations MUST perform protocol negotiation in TLS using the
+      "coap" protocol identifier defined in Section 8.7.  In exceptional
+      cases where ALPN is unavailable, CoAP over TLS implementations
+      MUST use port number 5684.
 
 6.2.  CoAP over WebSockets URIs
 
@@ -1334,9 +1337,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    below in Augmented Backus-Naur Form (ABNF) [RFC5234].  The
    definitions of "host", "port", "path-abempty" and "query" are the
    same as in [RFC3986].
-
-
-
 
 
 
@@ -1532,10 +1532,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    Port Number.
       5683
 
-   Similarly, IANA is requested to assign the service name "coaps+tcp",
-   in accordance with [RFC6335].  However, no separate port number is
-   used for "coaps" over TCP; instead, the ALPN protocol ID defined in
-   Section 8.6 is used over port 443.
+8.4.  Secure Service Name and Port Number Registration
+
+   IANA is requested to assign the port number 5684 and the service name
+   "coaps+tcp", in accordance with [RFC6335].  The port number is
+   requested to address the exceptional case of TLS implementations that
+   do not support the "Application-Layer Protocol Negotiation Extension"
+   [RFC7301].
 
    Service Name.
       coaps+tcp
@@ -1556,10 +1559,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
       [RFC7301], [RFCthis]
 
    Port Number.
-      443 (see also Section 8.6 of [RFCthis]})
-
-
-
+      5684
 
 
 
@@ -1570,7 +1570,7 @@ Bormann, et al.         Expires February 13, 2017              [Page 28]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
 
 
-8.4.  URI Scheme Registration
+8.5.  URI Scheme Registration
 
    This document registers two new URI schemes, namely "coap+tcp" and
    "coaps+tcp", for the use of CoAP over TCP and for CoAP over TLS over
@@ -1585,7 +1585,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    IANA is requested to add these new URI schemes to the registry
    established with [RFC7595].
 
-8.4.1.  coap+ws
+8.5.1.  coap+ws
 
    This document requests the registration of the Uniform Resource
    Identifier (URI) scheme "coap+ws".  The registration request complies
@@ -1637,7 +1637,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    References.
       [RFCthis]
 
-8.4.2.  coap+wss
+8.5.2.  coap+wss
 
    This document requests the registration of the Uniform Resource
    Identifier (URI) scheme "coap+wss".  The registration request
@@ -1690,7 +1690,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    References.
       [RFCthis]
 
-8.5.  Well-Known URI Suffix Registration
+8.6.  Well-Known URI Suffix Registration
 
    IANA is requested to register the 'coap' well-known URI in the "Well-
    Known URIs" registry.  This registration request complies with
@@ -1708,11 +1708,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    Related information.
       None.
 
-8.6.  ALPN Protocol ID
+8.7.  ALPN Protocol Identifier
 
    IANA is requested to assign the following value in the registry
    "Application Layer Protocol Negotiation (ALPN) Protocol IDs" created
-   by [RFC7301]:
+   by [RFC7301].  The "coap" string identifies CoAP when used over TLS.
 
    Protocol.
       CoAP
@@ -1723,7 +1723,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    Reference.
       [RFCthis]
 
-8.7.  WebSocket Subprotocol Registration
+8.8.  WebSocket Subprotocol Registration
 
    IANA is requested to register the WebSocket CoAP subprotocol under
    the "WebSocket Subprotocol Name Registry":
