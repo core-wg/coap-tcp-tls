@@ -255,6 +255,16 @@ message layer. For Confirmable (CON), Non-Confirmable (NOM), and Acknowledgement
 (ACK) messages that are not Empty, their contents are repackaged into untyped
 messages.
 
+## Opening Handshake {#tcp-handshake}
+
+Both the client and the server MUST send a Capability and Settings message (CSM see {{csm}})
+as its first message on the connection. This message establishes the initial settings and
+capabilities for the endpoint such as maximum message size or support for block-wise transfers.
+The absence of options in the CSM indicates that base values are assumed.
+
+Clients and servers MUST treat a missing or invalid CSM as a connection error and abort
+the connection (see {{sec-abort}}). 
+
 ## Message Format {#tcp-message-format}
 
 The CoAP message format defined in {{RFC7252}}, as shown in 
@@ -681,7 +691,7 @@ of {{-coap}}). If a Signaling option is critical and not understood by
 the receiver, it MUST abort the connection (see {{sec-abort}}). If the
 option is understood but cannot be processed, the option documents the behavior.
 
-## Capability and Settings Messages (CSM)
+## Capability and Settings Messages (CSM) {#csm}
 
 Capability and Settings messages (CSM) are used for two purposes:
 
@@ -689,7 +699,9 @@ Capability and Settings messages (CSM) are used for two purposes:
 
 * Setting options indicate a setting that will be applied by the sender.
 
-Most CSM Options are useful mainly as initial messages in the connection.
+A Capability and Settings message MUST be sent by both endpoints at the start of the
+connection and MAY be sent at any other time by either endpoint over the lifetime of
+the connection.
 
 Both capability and settings options are cumulative. A Capability and Settings
 message does not invalidate a previously sent capability indication or setting
@@ -698,7 +710,7 @@ can be used as such). An option that is sent might override a previous value for
 the same option. The option defines how to handle this case if needed.
 
 Base values are listed below for CSM Options. These are the values for the
-Capability and Setting before any Capability and Settings messages sends a
+Capability and Setting before any Capability and Settings messages send a
 modified value.
 
 These are not default values for the option as defined in Section 5.4.4 in {{RFC7252}}.
