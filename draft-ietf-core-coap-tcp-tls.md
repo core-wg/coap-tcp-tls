@@ -623,9 +623,12 @@ server may be lost or temporarily disrupted without the client
 being aware of it.
 
 To check the health of the WebSocket connection (and thereby of all
-active requests, if any), the client can send a Ping frame or an
-unsolicited Pong frame as specified in Section 5.5 of
-{{RFC6455}}. There is no way to retransmit a request without
+active requests, if any), a client can send a CoAP Ping Signaling message
+({{sec-ping}}). WebSocket Ping and unsolicited Pong frames as
+specified in Section 5.5 of {{RFC6455}} SHOULD NOT be used to ensure that
+redundant maintenance traffic is not transmitted. 
+
+There is no way to retransmit a request without
 creating a new one. Re-registering interest in a resource is
 permitted, but entirely unnecessary.
 
@@ -754,7 +757,7 @@ indicates support for BERT (see {{bert}}).
 ## Ping and Pong Messages {#sec-ping}
 
 In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored
-by the recipient (see also {{sec-ping}}). This provides a basic keep-alive function
+by the recipient. This provides a basic keep-alive function
 that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.
 
 Upon receipt of a Ping message, a single Pong message is returned with the identical
