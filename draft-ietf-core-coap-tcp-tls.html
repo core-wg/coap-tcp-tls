@@ -323,7 +323,7 @@ li, p {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-8-12" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-8-19" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -347,7 +347,7 @@ li, p {
   <td class="right">S. Lemay</td>
 </tr>
 <tr>
-  <td class="left">Expires: February 13, 2017</td>
+  <td class="left">Expires: February 20, 2017</td>
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
@@ -384,7 +384,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">August 12, 2016</td>
+  <td class="right">August 19, 2016</td>
 </tr>
 
     	
@@ -405,7 +405,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on February 13, 2017.</p>
+<p>This Internet-Draft will expire on February 20, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -764,7 +764,8 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.3.3.p.4">Since the WebSocket protocol provides ordered delivery of messages, the mechanism for reordering detection when <a href="#RFC7641">observing resources</a> <cite title="NONE">[RFC7641]</cite> is not needed. The value of the Observe Option in notifications MAY be empty on transmission and MUST be ignored on reception.</p>
 <h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#liveliness" id="liveliness">Connection Health</a></h1>
 <p id="rfc.section.3.4.p.1">When a client does not receive any response for some time after sending a CoAP request (or, similarly, when a client observes a resource and it does not receive any notification for some time), the connection between the WebSocket client and the WebSocket server may be lost or temporarily disrupted without the client being aware of it.</p>
-<p id="rfc.section.3.4.p.2">To check the health of the WebSocket connection (and thereby of all active requests, if any), the client can send a Ping frame or an unsolicited Pong frame as specified in Section 5.5 of <a href="#RFC6455">[RFC6455]</a>. There is no way to retransmit a request without creating a new one. Re-registering interest in a resource is permitted, but entirely unnecessary.</p>
+<p id="rfc.section.3.4.p.2">To check the health of the WebSocket connection (and thereby of all active requests, if any), a client can send a CoAP Ping Signaling message (<a href="#sec-ping">Section 4.4</a>). WebSocket Ping and unsolicited Pong frames as specified in Section 5.5 of <a href="#RFC6455">[RFC6455]</a> SHOULD NOT be used to ensure that redundant maintenance traffic is not transmitted.</p>
+<p id="rfc.section.3.4.p.3">There is no way to retransmit a request without creating a new one. Re-registering interest in a resource is permitted, but entirely unnecessary.</p>
 <h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#close" id="close">Closing the Connection</a></h1>
 <p id="rfc.section.3.5.p.1">The WebSocket connection is closed as specified in Section 7 of <a href="#RFC6455">[RFC6455]</a>.</p>
 <p id="rfc.section.3.5.p.2">All requests for which the CoAP client has not received a response yet are cancelled when the connection is closed.  If the client observes one or more resources over the WebSocket connection, then the CoAP server (or intermediary in the role of the CoAP server) MUST remove all entries associated with the client from the lists of observers when the connection is closed.</p>
@@ -877,7 +878,7 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.3.3.p.1">A sender can use the Block-wise Transfer elective Option to indicate that it supports the block-wise transfer protocol <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
 <p id="rfc.section.4.3.3.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not. An implementation that supports block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer Option also indicates support for BERT (see <a href="#bert">Section 5</a>).</p>
 <h1 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#sec-ping" id="sec-ping">Ping and Pong Messages</a></h1>
-<p id="rfc.section.4.4.p.1">In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient (see also <a href="#sec-ping">Section 4.4</a>). This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
+<p id="rfc.section.4.4.p.1">In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient. This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
 <p id="rfc.section.4.4.p.2">Upon receipt of a Ping message, a single Pong message is returned with the identical token. As with all Signaling messages, the recipient of a Ping or Pong message MUST ignore elective options it does not understand.</p>
 <p id="rfc.section.4.4.p.3">Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).</p>
 <h1 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#custody-option" id="custody-option">Custody Option</a></h1>
