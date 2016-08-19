@@ -1059,11 +1059,27 @@ URI scheme, with the following changes:
   the default port 443 is assumed (this is different from the default
   port for "coaps", i.e., CoAP over DTLS over UDP).
 
-* If the Application-Layer Protocol Negotiation Extension (ALPN) {{-alpn}} 
-  is available in the TLS protocol stack, CoAP over TLS implementations
-  MUST perform protocol negotiation in TLS using the "coap" protocol identifier
-  defined in <xref target="alpnpid"/>. In exceptional cases where ALPN is unavailable,
-  CoAP over TLS implementations MUST use port number 5684.
+* If a server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
+  {{-alpn}} or wishes to accommodate clients that do not support ALPN, it MAY offer a
+  coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A server
+  MAY offer coaps+tcp endpoints on ports other than TCP port 5684, which MUST be ALPN enabled.
+
+* For TCP ports other than port 5684, the client MUST use the ALPN extension to advertise
+  the "coap" protocol identifier (see {{alpnpid}}) in the list of protocols in its
+  ClientHello. If the server selects and returns the "coap" protocol identifier using the
+  ALPN extension in its ServerHello, then the connection succeeds. If the server either does
+  not negotiate the ALPN extension or returns a no_application_protocol alert, the client
+  MUST close the connection.
+
+* For TCP port 5684, a client MAY use the ALPN extension to advertise the "coap" protocol
+  identifier in the list of protocols in its ClientHello. If the server selects and returns
+  the "coap" protocol identifier using the ALPN extension in its ServerHello, then the connection
+  succeeds. If the server returns a no_application_protocol alert, then the client MUST close the
+  connection. If the server does not negotiate the ALPN extension, then coaps+tcp is implicitly
+  selected.
+
+* For TCP port 5684, if the client does not use the ALPN extension to negotiate the protocol,
+  then coaps+tcp is implicitly selected.
 
 ## CoAP over WebSockets URIs {#uris}
 
