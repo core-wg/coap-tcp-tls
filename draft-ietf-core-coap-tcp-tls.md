@@ -90,6 +90,14 @@ normative:
 informative:
   I-D.ietf-core-block: block
   I-D.becker-core-coap-sms-gprs: I-D.becker-core-coap-sms-gprs
+  LWM2M:
+    title: Lightweight Machine to Machine Technical Specification Candidate Version 1.0
+    target: http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf 
+    author:
+      org: Open Mobile Alliance
+    date:  April 2016
+    format:
+      PDF: http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf
   RFC0768: udp
   RFC5234: RFC5234
   RFC6454: RFC6454
@@ -131,7 +139,14 @@ infrastructures, where UDP-based protocols may not be well-received or may
 even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for
 IoT can make the use of UDP brittle, resulting in lost or malformed packets.
 
-To address such environments, this document defines how to transport CoAP over TCP, 
+Emerging standards such as Lightweight Machine to Machine {{LWM2M}} currently use CoAP over UDP
+as a transport and require support for CoAP over TCP to address the issues above and to protect
+investments in existing CoAP implementations and deployments. Although HTTP/2 could also potentially
+address these requirements, there would be additional costs and delays introduced by such a transition.
+Currently, there are also fewer HTTP/2 implementations available for constrained devices in
+comparison to CoAP.
+
+To address these requirements, this document defines how to transport CoAP over TCP, 
 CoAP over TLS, and CoAP over WebSockets. {{layering}} illustrates the layering:
 
 ~~~~
@@ -195,6 +210,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 This document assumes that readers are familiar with the terms and
 concepts that are used in {{RFC6455}} and {{RFC7252}}.
 
+The term "reliable transport" only refers to stream-based transport protocols such
+as TCP. 
+
 BERT Option:
 :	A Block1 or Block2 option that includes an SZX value of 7.
 {: vspace='0'}
@@ -224,7 +242,7 @@ messages. As a result, both the Type and Message ID fields are no longer require
 and are removed from the CoAP over TCP message format. All messages are also untyped.
 
 {{fig-flow-comparison}} illustrates the difference between CoAP over UDP and
-CoAP over reliable transport. The removed Type (no type) and Message ID fields
+CoAP over reliable transport. The removed Type and Message ID fields
 are indicated by dashes.
 
 ~~~~
