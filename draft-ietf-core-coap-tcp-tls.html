@@ -324,7 +324,7 @@ li, p {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-8-19" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-8-24" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -348,7 +348,7 @@ li, p {
   <td class="right">S. Lemay</td>
 </tr>
 <tr>
-  <td class="left">Expires: February 20, 2017</td>
+  <td class="left">Expires: February 25, 2017</td>
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
@@ -385,7 +385,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">August 19, 2016</td>
+  <td class="right">August 24, 2016</td>
 </tr>
 
     	
@@ -406,7 +406,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on February 20, 2017.</p>
+<p>This Internet-Draft will expire on February 25, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -474,7 +474,8 @@ li, p {
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a></h1>
 <p id="rfc.section.1.p.1">The <a href="#RFC7252">Constrained Application Protocol (CoAP)</a> <cite title="NONE">[RFC7252]</cite> was designed for Internet of Things (IoT) deployments, assuming that UDP <a href="#RFC0768">[RFC0768]</a> or DTLS <a href="#RFC6347">[RFC6347]</a> over UDP can be used unimpeded. UDP is a good choice for transferring small amounts of data across networks that follow the IP architecture.</p>
 <p id="rfc.section.1.p.2">Some CoAP deployments need to integrate well with existing enterprise infrastructures, where UDP-based protocols may not be well-received or may even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP brittle, resulting in lost or malformed packets.</p>
-<p id="rfc.section.1.p.3">To address such environments, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. <a href="#layering">Figure 1</a> illustrates the layering:</p>
+<p id="rfc.section.1.p.3">Emerging standards such as Lightweight Machine to Machine <a href="#LWM2M">[LWM2M]</a> currently use CoAP over UDP as a transport and require support for CoAP over TCP to address the issues above and to protect investments in existing CoAP implementations and deployments. Although HTTP/2 could also potentially address these requirements, there would be additional costs and delays introduced by such a transition.  Currently, there are also fewer HTTP/2 implementations available for constrained devices in comparison to CoAP.</p>
+<p id="rfc.section.1.p.4">To address these requirements, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. <a href="#layering">Figure 1</a> illustrates the layering:</p>
 <div id="rfc.figure.1"/>
 <div id="layering"/>
 <pre>
@@ -490,15 +491,16 @@ li, p {
         +--------------------------------+
 </pre>
 <p class="figure">Figure 1: Layering of CoAP over Reliable Transports</p>
-<p id="rfc.section.1.p.4">Where NATs are present, CoAP over TCP can help with their traversal.  NATs often calculate expiration timers based on the transport layer protocol being used by application protocols. Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption that a transport layer protocol, such as TCP, offers additional information about the session life cycle. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter <a href="#HomeGateway">[HomeGateway]</a>.</p>
-<p id="rfc.section.1.p.5">Some environments may also benefit from the ability of TCP to exchange larger payloads, such as firmware images, without application layer segmentation and to utilize the more sophisticated congestion control capabilities provided by many TCP implementations.</p>
-<p id="rfc.section.1.p.6">CoAP may be integrated into a Web environment where the front-end uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP over TCP between the back-end services. A TCP-to-UDP gateway can be used at the cloud boundary to communicate with the UDP-based IoT device.</p>
-<p id="rfc.section.1.p.7">To allow IoT devices to better communicate in these demanding environments, CoAP needs to support different transport protocols, namely TCP <a href="#RFC0793">[RFC0793]</a>, in some situations secured by TLS <a href="#RFC5246">[RFC5246]</a>.</p>
-<p id="rfc.section.1.p.8">In addition, some corporate networks only allow Internet access via a HTTP proxy.  In this case, the best transport for CoAP would be the <a href="#RFC6455">WebSocket Protocol</a> <cite title="NONE">[RFC6455]</cite>.  The WebSocket protocol provides two-way communication between a client and a server after upgrading an <a href="#RFC7230">HTTP/1.1</a> <cite title="NONE">[RFC7230]</cite> connection and may be available in an environment that blocks CoAP over UDP. Another scenario for CoAP over WebSockets is a CoAP application running inside a web browser without access to connectivity other than HTTP and WebSockets.</p>
-<p id="rfc.section.1.p.9">This document specifies how to access resources using CoAP requests and responses over the TCP/TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP/TLS or WebSocket connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
+<p id="rfc.section.1.p.5">Where NATs are present, CoAP over TCP can help with their traversal.  NATs often calculate expiration timers based on the transport layer protocol being used by application protocols. Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption that a transport layer protocol, such as TCP, offers additional information about the session life cycle. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter <a href="#HomeGateway">[HomeGateway]</a>.</p>
+<p id="rfc.section.1.p.6">Some environments may also benefit from the ability of TCP to exchange larger payloads, such as firmware images, without application layer segmentation and to utilize the more sophisticated congestion control capabilities provided by many TCP implementations.</p>
+<p id="rfc.section.1.p.7">CoAP may be integrated into a Web environment where the front-end uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP over TCP between the back-end services. A TCP-to-UDP gateway can be used at the cloud boundary to communicate with the UDP-based IoT device.</p>
+<p id="rfc.section.1.p.8">To allow IoT devices to better communicate in these demanding environments, CoAP needs to support different transport protocols, namely TCP <a href="#RFC0793">[RFC0793]</a>, in some situations secured by TLS <a href="#RFC5246">[RFC5246]</a>.</p>
+<p id="rfc.section.1.p.9">In addition, some corporate networks only allow Internet access via a HTTP proxy.  In this case, the best transport for CoAP would be the <a href="#RFC6455">WebSocket Protocol</a> <cite title="NONE">[RFC6455]</cite>.  The WebSocket protocol provides two-way communication between a client and a server after upgrading an <a href="#RFC7230">HTTP/1.1</a> <cite title="NONE">[RFC7230]</cite> connection and may be available in an environment that blocks CoAP over UDP. Another scenario for CoAP over WebSockets is a CoAP application running inside a web browser without access to connectivity other than HTTP and WebSockets.</p>
+<p id="rfc.section.1.p.10">This document specifies how to access resources using CoAP requests and responses over the TCP/TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP/TLS or WebSocket connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
 <p id="rfc.section.1.1.p.2">This document assumes that readers are familiar with the terms and concepts that are used in <a href="#RFC6455">[RFC6455]</a> and <a href="#RFC7252">[RFC7252]</a>.</p>
+<p id="rfc.section.1.1.p.3">The term &#8220;reliable transport&#8221; only refers to stream-based transport protocols such as TCP.</p>
 <p/>
 
 <dl>
@@ -516,7 +518,7 @@ li, p {
 <h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#messaging-model" id="messaging-model">Messaging Model</a></h1>
 <p id="rfc.section.2.1.p.1">Conceptually, CoAP over TCP replaces most of the CoAP over UDP message layer with a framing mechanism on top of the byte stream provided by TCP/TLS, conveying the length information for each message that on datagram transports is provided by the UDP/DTLS datagram layer.</p>
 <p id="rfc.section.2.1.p.2">TCP ensures reliable message transmission, so the CoAP over TCP messaging layer is not required to support acknowledgements or detection of duplicate messages. As a result, both the Type and Message ID fields are no longer required and are removed from the CoAP over TCP message format. All messages are also untyped.</p>
-<p><a href="#fig-flow-comparison">Figure 2</a> illustrates the difference between CoAP over UDP and CoAP over reliable transport. The removed Type (no type) and Message ID fields are indicated by dashes.</p>
+<p><a href="#fig-flow-comparison">Figure 2</a> illustrates the difference between CoAP over UDP and CoAP over reliable transport. The removed Type and Message ID fields are indicated by dashes.</p>
 <div id="rfc.figure.2"/>
 <div id="fig-flow-comparison"/>
 <pre>
@@ -1527,6 +1529,12 @@ coap-wss-URI =
         <b id="I-D.ietf-core-block">[I-D.ietf-core-block]</b>
       </td>
       <td class="top"><a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-block-21">Block-wise transfers in CoAP</a>", Internet-Draft draft-ietf-core-block-21, July 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="LWM2M">[LWM2M]</b>
+      </td>
+      <td class="top"><a>Open Mobile Alliance</a>, "<a href="http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf">Lightweight Machine to Machine Technical Specification Candidate Version 1.0</a>", April 2016.</td>
     </tr>
     <tr>
       <td class="reference">
