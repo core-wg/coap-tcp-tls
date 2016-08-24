@@ -1604,6 +1604,18 @@ Merged draft-savolainen-core-coap-websockets-07
 Merged draft-bormann-core-block-bert-01
 Merged draft-bormann-core-coap-sig-02
 
+## Since draft-core-coap-tcp-tls-03
+
+Editorial updates
+
+Added mandatory exchange of Capabilities and Settings messages after connecting
+
+Added support for coaps+tcp port 5684 and more details on Application-Layer Protocol Negotiation (ALPN)
+
+Added guidance on CoAP Signaling Ping-Pong versus WebSocket Ping-Pong
+
+Updated references and requirements for TLS security considerations
+
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
 
