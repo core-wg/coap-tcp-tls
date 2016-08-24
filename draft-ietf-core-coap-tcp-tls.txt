@@ -129,9 +129,10 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    Appendix B.  CoAP over WebSocket Examples . . . . . . . . . . . .  36
    Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  40
      C.1.  Since draft-core-coap-tcp-tls-02  . . . . . . . . . . . .  40
+     C.2.  Since draft-core-coap-tcp-tls-03  . . . . . . . . . . . .  40
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  40
    Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  40
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  40
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  41
 
 1.  Introduction
 
@@ -159,7 +160,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    To address these requirements, this document defines how to transport
    CoAP over TCP, CoAP over TLS, and CoAP over WebSockets.  Figure 1
    illustrates the layering:
-
 
 
 
@@ -2195,6 +2195,20 @@ C.1.  Since draft-core-coap-tcp-tls-02
    Merged draft-savolainen-core-coap-websockets-07 Merged draft-bormann-
    core-block-bert-01 Merged draft-bormann-core-coap-sig-02
 
+C.2.  Since draft-core-coap-tcp-tls-03
+
+   Editorial updates
+
+   Added mandatory exchange of Capabilities and Settings messages after
+   connecting
+
+   Added support for coaps+tcp port 5684 and more details on
+   Application-Layer Protocol Negotiation (ALPN)
+
+   Added guidance on CoAP Signaling Ping-Pong versus WebSocket Ping-Pong
+
+   Updated references and requirements for TLS security considerations
+
 Acknowledgements
 
    We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier
@@ -2221,6 +2235,13 @@ Contributors
 
        Email: teemu.savolainen@nokia.com
 
+
+
+Bormann, et al.         Expires February 25, 2017              [Page 40]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
+
+
 Authors' Addresses
 
    Carsten Bormann
@@ -2231,15 +2252,6 @@ Authors' Addresses
 
    Phone: +49-421-218-63921
    Email: cabo@tzi.org
-
-
-
-
-
-
-Bormann, et al.         Expires February 25, 2017              [Page 40]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
 
 
    Simon Lemay
@@ -2272,6 +2284,20 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
    Email: hartke@tzi.org
 
 
+
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires February 25, 2017              [Page 41]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
+
+
    Bilhanan Silverajan
    Tampere University of Technology
    Korkeakoulunkatu 10
@@ -2293,4 +2319,34 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2016
 
 
 
-Bormann, et al.         Expires February 25, 2017              [Page 41]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires February 25, 2017              [Page 42]
