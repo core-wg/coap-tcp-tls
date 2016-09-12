@@ -88,8 +88,7 @@ normative:
   RFC7641: RFC7641
   RFC7925: RFC7925
 informative:
-  I-D.ietf-core-block: block
-  I-D.becker-core-coap-sms-gprs: I-D.becker-core-coap-sms-gprs
+  RFC7959: block
   LWM2M:
     title: Lightweight Machine to Machine Technical Specification Candidate Version 1.0
     target: http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf 
@@ -218,7 +217,7 @@ BERT Option:
 {: vspace='0'}
 BERT Block:
 :	The payload of a CoAP message that is affected by a BERT Option in
-	descriptive usage (Section 2.1 of {{I-D.ietf-core-block}}).
+	descriptive usage (Section 2.1 of {{-block}}).
 {: vspace='0'}
 
 # CoAP over TCP
@@ -613,7 +612,7 @@ Section 5.4 of {{RFC6455}}, though typically they are sent unfragmented
 as they tend to be small and fully buffered before transmission. The WebSocket
 protocol does not provide means for multiplexing. If it is not desirable for a
 large message to monopolize the connection, requests and responses can be
-transferred in a block-wise fashion as defined in {{I-D.ietf-core-block}}.
+transferred in a block-wise fashion as defined in {{-block}}.
 
 Empty messages (Code 0.00) MUST be ignored by the recipient (see also
 {{sec-ping}}).
