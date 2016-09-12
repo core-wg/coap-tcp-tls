@@ -325,7 +325,7 @@ li, p {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-8-24" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-9-12" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -349,7 +349,7 @@ li, p {
   <td class="right">S. Lemay</td>
 </tr>
 <tr>
-  <td class="left">Expires: February 25, 2017</td>
+  <td class="left">Expires: March 16, 2017</td>
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
@@ -386,7 +386,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">August 24, 2016</td>
+  <td class="right">September 12, 2016</td>
 </tr>
 
     	
@@ -407,7 +407,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on February 25, 2017.</p>
+<p>This Internet-Draft will expire on March 16, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -513,7 +513,7 @@ li, p {
 
 <dl>
   <dt>BERT Block:</dt>
-  <dd style="margin-left: 8"><br/> The payload of a CoAP message that is affected by a BERT Option in descriptive usage (Section 2.1 of <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>).</dd>
+  <dd style="margin-left: 8"><br/> The payload of a CoAP message that is affected by a BERT Option in descriptive usage (Section 2.1 of <a href="#RFC7959">[RFC7959]</a>).</dd>
 </dl>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#coap-over-tcp" id="coap-over-tcp">CoAP over TCP</a></h1>
 <p id="rfc.section.2.p.1">The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.  The primary differences are in the message layer. CoAP over UDP supports optional reliability by defining four types of messages: Confirmable, Non-confirmable, Acknowledgement, and Reset. TCP eliminates the need for the message layer to support reliability. As a result, message types are not defined in CoAP over TCP.</p>
@@ -764,7 +764,7 @@ Sec-WebSocket-Protocol: coap
 </pre>
 <p class="figure">Figure 14: CoAP Message Format over WebSockets</p>
 <p id="rfc.section.3.2.p.3">The CoAP over TCP message format eliminates the Version field defined in CoAP over UDP. If CoAP version negotiation is required in the future, CoAP over WebSockets can address the requirement by the definition of a new subprotocol identifier that is negotiated during the opening handshake.</p>
-<p id="rfc.section.3.2.p.4">Requests and response messages can be fragmented as specified in Section 5.4 of <a href="#RFC6455">[RFC6455]</a>, though typically they are sent unfragmented as they tend to be small and fully buffered before transmission. The WebSocket protocol does not provide means for multiplexing. If it is not desirable for a large message to monopolize the connection, requests and responses can be transferred in a block-wise fashion as defined in <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
+<p id="rfc.section.3.2.p.4">Requests and response messages can be fragmented as specified in Section 5.4 of <a href="#RFC6455">[RFC6455]</a>, though typically they are sent unfragmented as they tend to be small and fully buffered before transmission. The WebSocket protocol does not provide means for multiplexing. If it is not desirable for a large message to monopolize the connection, requests and responses can be transferred in a block-wise fashion as defined in <a href="#RFC7959">[RFC7959]</a>.</p>
 <p id="rfc.section.3.2.p.5">Empty messages (Code 0.00) MUST be ignored by the recipient (see also <a href="#sec-ping">Section 4.4</a>).</p>
 <h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> <a href="#requests-responses" id="requests-responses">Message Transmission</a></h1>
 <p id="rfc.section.3.3.p.1">CoAP requests and responses are exchanged asynchronously over the WebSocket connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
@@ -884,7 +884,7 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.3.3.p.1">A sender can use the Block-wise Transfer elective Option to indicate that it supports the block-wise transfer protocol <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
+<p id="rfc.section.4.3.3.p.1">A sender can use the Block-wise Transfer elective Option to indicate that it supports the block-wise transfer protocol <a href="#RFC7959">[RFC7959]</a>.</p>
 <p id="rfc.section.4.3.3.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not. An implementation that supports block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer Option also indicates support for BERT (see <a href="#bert">Section 5</a>).</p>
 <h1 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#sec-ping" id="sec-ping">Ping and Pong Messages</a></h1>
 <p id="rfc.section.4.4.p.1">In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient. This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
@@ -1050,7 +1050,7 @@ Sec-WebSocket-Protocol: coap
 </pre>
 <p class="figure">Figure 16: Pong Message Example</p>
 <h1 id="rfc.section.5"><a href="#rfc.section.5">5.</a> <a href="#bert" id="bert">Block-wise Transfer and Reliable Transports</a></h1>
-<p id="rfc.section.5.p.1">The message size restrictions defined in Section 4.6 of CoAP <a href="#RFC7252">[RFC7252]</a> to avoid IP fragmentation are not necessary when CoAP is used over a reliable byte stream transport. While this suggests that the Block-wise transfer protocol <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a> is also no longer needed, it remains applicable for a number of cases:</p>
+<p id="rfc.section.5.p.1">The message size restrictions defined in Section 4.6 of CoAP <a href="#RFC7252">[RFC7252]</a> to avoid IP fragmentation are not necessary when CoAP is used over a reliable byte stream transport. While this suggests that the Block-wise transfer protocol <a href="#RFC7959">[RFC7959]</a> is also no longer needed, it remains applicable for a number of cases:</p>
 <p/>
 
 <ul>
@@ -1058,7 +1058,7 @@ Sec-WebSocket-Protocol: coap
   <li>a UDP-to-TCP gateway may simply not have the context to convert a message with a Block Option into the equivalent exchange without any use of a Block Option (it would need to convert the entire blockwise exchange from start to end into a single exchange)</li>
 </ul>
 <p id="rfc.section.5.p.3">The &#8216;Block-wise Extension for Reliable Transport (BERT)&#8217; extends the Block protocol to enable the use of larger messages over a reliable transport.</p>
-<p id="rfc.section.5.p.4">The use of this new extension is signaled by sending Block1 or Block2 Options with SZX == 7 (a &#8220;BERT option&#8221;). SZX == 7 is a reserved value in <a href="#I-D.ietf-core-block">[I-D.ietf-core-block]</a>.</p>
+<p id="rfc.section.5.p.4">The use of this new extension is signaled by sending Block1 or Block2 Options with SZX == 7 (a &#8220;BERT option&#8221;). SZX == 7 is a reserved value in <a href="#RFC7959">[RFC7959]</a>.</p>
 <p id="rfc.section.5.p.5">In control usage, a BERT option is interpreted in the same way as the equivalent Option with SZX == 6, except that it also indicates the capability to process BERT blocks. As with the basic Block protocol, the recipient of a CoAP request with a BERT option in control usage is allowed to respond with a different SZX value, e.g. to send a non-BERT block instead.</p>
 <p id="rfc.section.5.p.6">In descriptive usage, a BERT Option is interpreted in the same way as the equivalent Option with SZX == 6, except that the payload is allowed to contain a multiple of 1024 bytes (non-final BERT block) or more than 1024 bytes (final BERT block).</p>
 <p id="rfc.section.5.p.7">The recipient of a non-final BERT block (M=1) conceptually partitions the payload into a sequence of 1024-byte blocks and acts exactly as if it had received this sequence in conjunction with block numbers starting at, and sequentially increasing from, the block number given in the Block Option. In other words, the entire BERT block is positioned at the byte position that results from multiplying the block number with 1024. The position of further blocks to be transferred is indicated by incrementing the block number by the number of elements in this sequence (i.e., the size of the payload divided by 1024 bytes).</p>
@@ -1522,18 +1522,6 @@ coap-wss-URI =
     </tr>
     <tr>
       <td class="reference">
-        <b id="I-D.becker-core-coap-sms-gprs">[I-D.becker-core-coap-sms-gprs]</b>
-      </td>
-      <td class="top"><a>Becker, M.</a>, <a>Li, K.</a>, <a>Kuladinithi, K.</a> and <a>T. Poetsch</a>, "<a href="http://tools.ietf.org/html/draft-becker-core-coap-sms-gprs-05">Transport of CoAP over SMS</a>", Internet-Draft draft-becker-core-coap-sms-gprs-05, August 2014.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="I-D.ietf-core-block">[I-D.ietf-core-block]</b>
-      </td>
-      <td class="top"><a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-block-21">Block-wise transfers in CoAP</a>", Internet-Draft draft-ietf-core-block-21, July 2016.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="LWM2M">[LWM2M]</b>
       </td>
       <td class="top"><a>Open Mobile Alliance</a>, "<a href="http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf">Lightweight Machine to Machine Technical Specification Candidate Version 1.0</a>", April 2016.</td>
@@ -1573,6 +1561,12 @@ coap-wss-URI =
         <b id="RFC7230">[RFC7230]</b>
       </td>
       <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="RFC7959">[RFC7959]</b>
+      </td>
+      <td class="top"><a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="http://tools.ietf.org/html/rfc7959">Block-Wise Transfers in the Constrained Application Protocol (CoAP)</a>", RFC 7959, DOI 10.17487/RFC7959, August 2016.</td>
     </tr>
   </tbody>
 </table>
