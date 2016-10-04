@@ -3,6 +3,7 @@ stand_alone: true
 ipr: trust200902
 docname: draft-ietf-core-coap-tcp-tls-latest
 cat: std
+updates: 7641
 coding: utf-8
 pi:
   strict: 'yes'
@@ -207,7 +208,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
 This document assumes that readers are familiar with the terms and
-concepts that are used in {{RFC6455}} and {{RFC7252}}.
+concepts that are used in {{RFC6455}}, {{RFC7252}}, and {{RFC7641}}.
 
 The term "reliable transport" only refers to stream-based transport protocols such
 as TCP. 
@@ -441,12 +442,6 @@ the entity that established the connection and the remote host.
 Retransmission and deduplication of messages is provided by the
 TCP/TLS protocol. 
 
-Since the TCP protocol provides ordered delivery of messages,
-the mechanism for reordering detection when [observing resources](#RFC7641)
-is not needed. The value of the Observe Option in notifications MAY be
-empty on transmission and MUST be ignored on reception.
-
-
 # CoAP over WebSockets {#websockets-overview}
 
 CoAP over WebSockets can be used in a number of configurations. The
@@ -635,11 +630,6 @@ WebSocket protocol. CoAP over WebSockets therefore does not make a
 distinction between Confirmable or Non-Confirmable messages, and does
 not provide Acknowledgement or Reset messages.
 
-Since the WebSocket protocol provides ordered delivery of messages,
-the mechanism for reordering detection when [observing resources](#RFC7641)
-is not needed. The value of the Observe Option in notifications MAY
-be empty on transmission and MUST be ignored on reception.
-
 ## Connection Health {#liveliness}
 
 When a client does not receive any response for some time after
@@ -665,10 +655,6 @@ The WebSocket connection is closed as specified in Section 7 of {{RFC6455}}.
 
 All requests for which the CoAP client has not received
 a response yet are cancelled when the connection is closed.
-If the client observes one or more resources over the WebSocket
-connection, then the CoAP server (or intermediary in the role of
-the CoAP server) MUST remove all entries associated with the client
-from the lists of observers when the connection is closed.
 
 # Signaling
 
@@ -1455,6 +1441,45 @@ Subprotocol Definition.
 
 
 --- back
+
+# Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)
+
+## Notifications and Reordering
+
+When using the Observe Option with CoAP over UDP, notifications from the server set the option
+value to an increasing sequence number for reordering detection on the client since messages
+can arrive in a different order than they were sent. This sequence number is not required
+for CoAP over reliable transports since the TCP protocol ensures reliable and ordered delivery
+of messages. The value of the Observe Option in 2.xx notifications MAY be empty on transmission
+and MUST be ignored on reception.
+
+## Transmission and Acknowledgements
+
+For CoAP over UDP, server notifications to the client can be confirmable or non-confirmable.
+A confirmable message requires the client to either respond with an acknowledgement message or
+a reset message. An acknowledgement message indicates that the client is alive and wishes to receive
+further notifications. A reset message indicates that the client does not recognize
+the token which causes the server to remove the associated entry from the list of observers.
+
+Since TCP eliminates the need for the message layer to support reliability, CoAP over reliable
+transports does not support confirmable or non-confirmable message types. All notifications are
+delivered reliably to the client with positive acknowledgement of receipt occurring at the TCP
+level. If the client does not recognize the token in a notification, it MAY immediately abort
+the connection (see {{sec-abort}}) and SHOULD include a diagnostic payload.
+
+## Cancellation
+
+For CoAP over UDP, a client that is no longer interested in receiving notifications can "forget"
+the observation and respond to the next notification from the server with a reset message to cancel
+the observation. 
+
+For CoAP over reliable transports, a client MUST explicitly deregister by issuing a GET request
+that has the Token field set to the token of the observation to be cancelled and includes an Observe
+Option with the value set to 1 (deregister). 
+
+If the client observes one or more resources over a reliable connection, then the CoAP server
+(or intermediary in the role of the CoAP server) MUST remove all entries associated with the
+client endpoint from the lists of observers when the connection is either closed or times out.
 
 # Negotiating Protocol Versions {#negotiation}
 
