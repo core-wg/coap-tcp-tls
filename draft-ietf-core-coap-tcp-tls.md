@@ -1442,7 +1442,7 @@ Subprotocol Definition.
 
 --- back
 
-# Updates to RFC7641
+# Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)
 
 ## Notifications and Reordering
 
@@ -1473,13 +1473,13 @@ For CoAP over UDP, a client that is no longer interested in receiving notificati
 the observation and respond to the next notification from the server with a reset message to cancel
 the observation. 
 
-For CoAP over reliable transports, a client SHOULD explicitly deregister by issuing a GET request
+For CoAP over reliable transports, a client MUST explicitly deregister by issuing a GET request
 that has the Token field set to the token of the observation to be cancelled and includes an Observe
 Option with the value set to 1 (deregister). 
 
 If the client observes one or more resources over a reliable connection, then the CoAP server
 (or intermediary in the role of the CoAP server) MUST remove all entries associated with the
-client from the lists of observers when the connection is either closed or times out.
+client endpoint from the lists of observers when the connection is either closed or times out.
 
 # Negotiating Protocol Versions {#negotiation}
 
