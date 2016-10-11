@@ -1645,6 +1645,15 @@ Added guidance on CoAP Signaling Ping-Pong versus WebSocket Ping-Pong
 
 Updated references and requirements for TLS security considerations
 
+## Since draft-core-coap-tcp-tls-04
+
+Updated references
+
+Added Appendix: Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)
+
+Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow client to send
+messages before receiving server CSM
+
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
 
