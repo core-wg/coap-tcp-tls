@@ -280,6 +280,11 @@ as its first message on the connection. This message establishes the initial set
 capabilities for the endpoint such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
 
+To avoid unnecessary latency, a client MAY send additional messages without waiting to receive
+the server CSM; however, it is important to note that the server CSM might advertise capabilities
+that impact how a client is expected to communicate with the server. For example, the server CSM
+could advertise a Max-Message-Size option (See {{max-message-size}}) that is smaller than the base value (1152). 
+
 Clients and servers MUST treat a missing or invalid CSM as a connection error and abort
 the connection (see {{sec-abort}}). 
 
@@ -740,7 +745,7 @@ For TLS, the initial value for the Server-Name Option is given by the SNI value.
 For Websockets, the initial value for the Server-Name Option is given by the HTTP
 Host header field.
 
-### Max-Message-Size Capability Option
+### Max-Message-Size Capability Option {#max-message-size}
 
 The sender can use the Max-Message-Size elective option to indicate the maximum message size
 in bytes that it can receive.
@@ -831,7 +836,7 @@ by the CSM Server-Name Option is unlikely to be useful for this server.
 |      4 | Release    | Alternate-Address   | string     | 1-255       | (none)      |
 
 The Alternative-Address elective option requests the peer to instead open a connection
-of the same kind as the present connection to the alternative transport address given.
+of the same scheme as the present connection to the alternative transport address given.
 Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}. 
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
