@@ -135,6 +135,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2016
    Appendix D.  Change Log . . . . . . . . . . . . . . . . . . . . .  41
      D.1.  Since draft-core-coap-tcp-tls-02  . . . . . . . . . . . .  41
      D.2.  Since draft-core-coap-tcp-tls-03  . . . . . . . . . . . .  41
+     D.3.  Since draft-core-coap-tcp-tls-04  . . . . . . . . . . . .  41
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  41
    Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  41
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  42
@@ -161,7 +162,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2016
    additional costs and delays introduced by such a transition.
    Currently, there are also fewer HTTP/2 implementations available for
    constrained devices in comparison to CoAP.
-
 
 
 
@@ -2265,6 +2265,17 @@ D.2.  Since draft-core-coap-tcp-tls-03
 
    Updated references and requirements for TLS security considerations
 
+D.3.  Since draft-core-coap-tcp-tls-04
+
+   Updated references
+
+   Added Appendix: Updates to RFC7641 Observing Resources in the
+   Constrained Application Protocol (CoAP)
+
+   Updated Capability and Settings Message (CSM) exchange in the Opening
+   Handshake to allow client to send messages before receiving server
+   CSM
+
 Acknowledgements
 
    We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier
@@ -2273,6 +2284,19 @@ Acknowledgements
    Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.
 
 Contributors
+
+
+
+
+
+
+
+
+
+Bormann, et al.          Expires April 14, 2017                [Page 41]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2016
+
 
        Valik Solorzano Barboza
        Zebra Technologies
@@ -2290,13 +2314,6 @@ Contributors
        Finland
 
        Email: teemu.savolainen@nokia.com
-
-
-
-Bormann, et al.          Expires April 14, 2017                [Page 41]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2016
-
 
 Authors' Addresses
 
@@ -2330,6 +2347,13 @@ Authors' Addresses
    URI:   http://www.tschofenig.priv.at
 
 
+
+
+Bormann, et al.          Expires April 14, 2017                [Page 42]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2016
+
+
    Klaus Hartke
    Universitaet Bremen TZI
    Postfach 330440
@@ -2338,20 +2362,6 @@ Authors' Addresses
 
    Phone: +49-421-218-63905
    Email: hartke@tzi.org
-
-
-
-
-
-
-
-
-
-
-
-Bormann, et al.          Expires April 14, 2017                [Page 42]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2016
 
 
    Bilhanan Silverajan
@@ -2370,16 +2380,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2016
    United States of America
 
    Email: brian.raymor@microsoft.com
-
-
-
-
-
-
-
-
-
-
 
 
 
