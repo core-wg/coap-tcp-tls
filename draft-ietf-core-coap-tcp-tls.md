@@ -698,7 +698,7 @@ Option numbers are assigned by the "CoAP Signaling Option Numbers"
 sub-registry (see {{option-codes}}).
 
 Signaling options are elective or critical as defined in Section 5.4.1
-of {{-coap}}). If a Signaling option is critical and not understood by
+of {{-coap}}. If a Signaling option is critical and not understood by
 the receiver, it MUST abort the connection (see {{sec-abort}}). If the
 option is understood but cannot be processed, the option documents the behavior.
 
@@ -738,7 +738,7 @@ Capability and Settings messages are indicated by the 7.01 code (CSM).
 
 A client can use the Server-Name critical option to indicate the default value
 for the Uri-Host Options in the messages that it sends to the server.
-It has the same restrictions as the Uri-Host Option (Section 5.10 of {{RFC7252}}.
+It has the same restrictions as the Uri-Host Option (Section 5.10 of {{RFC7252}}).
 
 For TLS, the initial value for the Server-Name Option is given by the SNI value.
 
