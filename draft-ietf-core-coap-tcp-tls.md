@@ -315,10 +315,10 @@ specified for CoAP over UDP. The differences are as follows:
 
 * Since the underlying TCP connection provides retransmissions and
   deduplication, there is no need for the reliability mechanisms
-  provided by CoAP over UDP. The "T" and "Message ID" fields in
+  provided by CoAP over UDP. The Type (T) and Message ID fields in
   the CoAP message header are elided.
 
-* The "Ver" field is elided as well. In constrast to the UDP message
+* The Version (Vers) field is elided as well. In constrast to the UDP message
   layer for UDP and DTLS, the CoAP over TCP message layer does not
   send a version number in each message. If required in the future,
   a new Capability and Settings Option (See {{negotiation}}) could be
