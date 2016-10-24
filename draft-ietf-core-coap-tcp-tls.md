@@ -736,18 +736,18 @@ Capability and Settings messages are indicated by the 7.01 code (CSM).
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      1 | CSM        | Server-Name         | string     | 1-255       | (see below) |
 
-A client can use the Server-Name critical option to indicate the default value
+A client can use the critical Server-Name Option to indicate the default value
 for the Uri-Host Options in the messages that it sends to the server.
-It has the same restrictions as the Uri-Host Option (Section 5.10 of {{RFC7252}}).
+It has the same restrictions as the Uri-Host Option (Section 5.10.1 of {{RFC7252}}).
 
-For TLS, the initial value for the Server-Name Option is given by the SNI value.
+For TLS, the base value for the Server-Name Option is given by the SNI value.
 
-For Websockets, the initial value for the Server-Name Option is given by the HTTP
+For Websockets, the base value for the Server-Name Option is given by the HTTP
 Host header field.
 
 ### Max-Message-Size Capability Option {#max-message-size}
 
-The sender can use the Max-Message-Size elective option to indicate the maximum message size
+The sender can use the elective Max-Message-Size Option to indicate the maximum message size
 in bytes that it can receive.
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
@@ -764,7 +764,7 @@ certain minimum value will enjoy limited interoperability.
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      4 | CSM        | Block-wise Transfer |  empty     | 0           | (none)      |
 
-A sender can use the Block-wise Transfer elective Option to indicate that it
+A sender can use the elective Block-wise Transfer Option to indicate that it
 supports the block-wise transfer protocol {{-block}}.
 
 If the option is not given, the peer has no information about whether block-wise
@@ -792,7 +792,7 @@ Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Ping, Pong | Custody             | empty      | 0           | (none)      |
 
-A peer replying to a Ping message can add a Custody elective option to the Pong
+A peer replying to a Ping message can add an elective Custody Option to the Pong
 message it returns. This option indicates that the application has
 processed all request/response messages that it has received in the
 present connection ahead of the Ping message that prompted the Pong
@@ -801,7 +801,7 @@ semantics of "processed", but there is an expectation that the sender
 of the Ping leading to the Pong with a Custody Option should be able
 to free buffers based on this indication.)
 
-A Custody elective option can also be sent in a Ping message to explicitly
+An elective Custody Option can also be sent in a Ping message to explicitly
 request the return of a Custody Option in the Pong message. A peer
 is always free to indicate that it has finished processing
 all previous request/response messages by sending a Custody Option
@@ -812,10 +812,10 @@ can also return one.
 
 ## Release Messages
 
-A release message indicates that the sender does not want to continue
+A Release message indicates that the sender does not want to continue
 maintaining the connection and opts for an orderly shutdown; the details
-are in the options. A diagnostic payload MAY be included. A release message
-will normally be replied to by the peer by closing the TCP/TLS connection.
+are in the options. A diagnostic payload MAY be included.  A peer will normally
+respond to a Release message by closing the TCP/TLS connection. 
 Messages may be in flight when the sender decides to send a Release message.
 The general expectation is that these will still be processed.
 
@@ -828,14 +828,14 @@ The following options are defined:
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Release    | Bad-Server-Name     | empty      | 0           | (none)      |
 
-The Bad-Server-Name elective option indicates that the default indicated
+The elective Bad-Server-Name Option indicates that the default indicated
 by the CSM Server-Name Option is unlikely to be useful for this server.
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      4 | Release    | Alternate-Address   | string     | 1-255       | (none)      |
 
-The Alternative-Address elective option requests the peer to instead open a connection
+The elective Alternative-Address Option requests the peer to instead open a connection
 of the same scheme as the present connection to the alternative transport address given.
 Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}. 
 
@@ -843,18 +843,18 @@ Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}.
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      6 | Release    | Hold-Off            | uint       | 0-3         | (none)      |
 
-The Hold-Off elective option indicates that the server is requesting that the peer not
+The elective Hold-Off Option indicates that the server is requesting that the peer not
 reconnect to it for the number of seconds given in the value.
 
 ## Abort Messages {#sec-abort}
 
-An abort message indicates that the sender is unable to continue
+An Abort message indicates that the sender is unable to continue
 maintaining the connection and cannot even wait for an orderly
 release. The sender shuts down the connection immediately after
-the abort (and may or may not wait for a release or abort message or
+the abort (and may or may not wait for a Release or Abort message or
 connection shutdown in the inverse direction). A diagnostic payload
 SHOULD be included in the Abort message. Messages may be in flight
-when the sender decides to send an abort message. The general
+when the sender decides to send an Abort message. The general
 expectation is that these will NOT be processed.
 
 Abort messages are indicated by the 7.05 code (Abort).
@@ -866,13 +866,13 @@ options. The following option is defined:
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Abort      | Bad-CSM-Option      | uint       | 0-2         | (none)      |
 
-The Bad-CSM-Option Option indicates that the sender is unable to process the
+The elective Bad-CSM-Option Option indicates that the sender is unable to process the
 CSM option identified by its option number, e.g. when it is critical
 and the option number is unknown by the sender, or when there is
 parameter problem with the value of an elective option. More detailed
 information SHOULD be included as a diagnostic payload.
 
-One reason for an sender to generate an abort message is a general
+One reason for an sender to generate an Abort message is a general
 syntax error in the byte stream received. No specific option has been
 defined for this, as the details of that syntax error are best left to
 a diagnostic payload.
