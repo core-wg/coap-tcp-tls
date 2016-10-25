@@ -795,28 +795,22 @@ Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Ping, Pong | Custody             | empty      | 0           | (none)      |
 
-A peer replying to a Ping message can add an elective Custody Option to the Pong
-message it returns. This option indicates that the application has
-processed all request/response messages that it has received in the
-present connection ahead of the Ping message that prompted the Pong
-message. (Note that there is no definition of specific application
-semantics of "processed", but there is an expectation that the sender
-of the Ping leading to the Pong with a Custody Option should be able
-to free buffers based on this indication.)
+When responding to a Ping message, the receiver can include an elective
+Custody Option in the Pong message. This option indicates that the application has
+processed all the request/response messages received prior to the Ping message
+on the current connection. (Note that there is no definition of specific application
+semantics for "processed", but there is an expectation that the receiver of a Pong
+Message with a Custody Option should be able to free buffers based on this indication.)
 
-An elective Custody Option can also be sent in a Ping message to explicitly
-request the return of a Custody Option in the Pong message. A peer
-is always free to indicate that it has finished processing
-all previous request/response messages by sending a Custody Option
-in a Pong message. A peer is also free NOT to send a Custody Option in case
-it is still processing previous request/response messages; however,
-it SHOULD delay its response to a Ping with a Custody Option until it
-can also return one.
+A sender can also include an elective Custody Option in a Ping message to explicitly
+request the inclusion of an elective Custody Option in the corresponding Pong message.
+The receiver SHOULD delay its Pong message until it finishes processing all the request/response
+messages received prior to the Ping message on the current connection.
 
 ## Release Messages
 
 A Release message indicates that the sender does not want to continue
-maintaining the connection and opts for an orderly shutdown; the details
+maintaining the connection and opts for an orderly shutdown. The details
 are in the options. A diagnostic payload MAY be included.  A peer will normally
 respond to a Release message by closing the TCP/TLS connection. 
 Messages may be in flight when the sender decides to send a Release message.
