@@ -89,6 +89,7 @@ normative:
   RFC7641: RFC7641
   RFC7925: RFC7925
 informative:
+  I-D.ietf-core-cocoa: cocoa
   RFC7959: block
   LWM2M:
     title: Lightweight Machine to Machine Technical Specification Candidate Version 1.0
@@ -174,7 +175,8 @@ shorter {{HomeGateway}}.
 Some environments may also benefit from the ability of TCP to exchange
 larger payloads, such as firmware images, without application layer
 segmentation and to utilize the more sophisticated congestion control
-capabilities provided by many TCP implementations.
+capabilities provided by many TCP implementations. Note that there is
+ongoing work to add more elaborate congestion control to CoAP (see {{-cocoa}}).
 
 CoAP may be integrated into a Web environment where the front-end
 uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
