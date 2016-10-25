@@ -226,10 +226,11 @@ BERT Block:
 # CoAP over TCP
 
 The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.
-The primary differences are in the message layer. CoAP over UDP supports optional
-reliability by defining four types of messages: Confirmable, Non-confirmable,
-Acknowledgement, and Reset. TCP eliminates the need for the message layer
-to support reliability. As a result, message types are not defined in CoAP over TCP.
+The primary differences are in the message layer. The CoAP over UDP messaging layer
+supports optional reliability by defining four Types of messages: Confirmable,
+Non-confirmable, Acknowledgement, and Reset. In addition, messages include a
+Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate
+messages. 
 
 ## Messaging Model 
 
@@ -239,9 +240,9 @@ conveying the length information for each message that on datagram transports
 is provided by the UDP/DTLS datagram layer.
 
 TCP ensures reliable message transmission, so the CoAP over TCP messaging
-layer is not required to support acknowledgements or detection of duplicate
+layer is not required to support acknowledgements or to detect duplicate
 messages. As a result, both the Type and Message ID fields are no longer required
-and are removed from the CoAP over TCP message format. All messages are also untyped.
+and are removed from the CoAP over TCP message format.
 
 {{fig-flow-comparison}} illustrates the difference between CoAP over UDP and
 CoAP over reliable transport. The removed Type and Message ID fields
@@ -285,7 +286,7 @@ The absence of options in the CSM indicates that base values are assumed.
 To avoid unnecessary latency, a client MAY send additional messages without waiting to receive
 the server CSM; however, it is important to note that the server CSM might advertise capabilities
 that impact how a client is expected to communicate with the server. For example, the server CSM
-could advertise a Max-Message-Size option (See {{max-message-size}}) that is smaller than the base value (1152). 
+could advertise a Max-Message-Size option (see {{max-message-size}}) that is smaller than the base value (1152). 
 
 Clients and servers MUST treat a missing or invalid CSM as a connection error and abort
 the connection (see {{sec-abort}}). 
@@ -323,7 +324,7 @@ specified for CoAP over UDP. The differences are as follows:
 * The Version (Vers) field is elided as well. In constrast to the UDP message
   layer for UDP and DTLS, the CoAP over TCP message layer does not
   send a version number in each message. If required in the future,
-  a new Capability and Settings Option (See {{negotiation}}) could be
+  a new Capability and Settings Option (see {{negotiation}}) could be
   defined to support version negotiation.
 
 * In a stream oriented transport protocol such as TCP, a form of message 
@@ -1030,7 +1031,7 @@ identifying CoAP resources and providing a means of locating the resource.
 CoAP over TCP uses the "coap+tcp" URI scheme. CoAP over TLS uses the "coaps+tcp"
 scheme. The rules from Section 6 of {{RFC7252}} apply to both of these URI schemes.
 
-{{RFC7252}}, Section 8 (Multicast CoAP) is not applicable to these schemes.
+Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes.
 
 Resources made available via one of the "coap+tcp" or "coaps+tcp" schemes
 have no shared identity with the other scheme or with the "coap" or
@@ -1047,7 +1048,7 @@ coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ] path-abempty
                [ "?" query ]
 ~~~~
 
-The semantics defined in {{RFC7252}}, Section 6.1, apply to this
+The semantics defined in Section 6.1 of {{RFC7252}} apply to this
 URI scheme, with the following changes:
 
 * The port subcomponent indicates the TCP port
@@ -1061,7 +1062,7 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
                 [ "?" query ]
 ~~~~
 
-The semantics defined in {{RFC7252}}, Section 6.2, apply to this
+The semantics defined in Section 6.2 of {{RFC7252}} apply to this
 URI scheme, with the following changes:
 
 * The port subcomponent indicates the TCP port at which the TLS server
