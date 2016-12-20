@@ -225,7 +225,7 @@ BERT Block:
 # CoAP over TCP
 
 The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.
-The primary differences are in the message layer. The CoAP over UDP messaging layer
+The primary differences are in the message layer. The message layer of CoAP over UDP
 supports optional reliability by defining four Types of messages: Confirmable,
 Non-confirmable, Acknowledgement, and Reset. In addition, messages include a
 Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate
@@ -233,7 +233,7 @@ messages.
 
 ## Messaging Model 
 
-Conceptually, CoAP over TCP replaces most of the CoAP over UDP message layer
+Conceptually, CoAP over TCP replaces most of the message layer of CoAP over UDP
 with a framing mechanism on top of the byte stream provided by TCP/TLS,
 conveying the length information for each message that on datagram transports
 is provided by the UDP/DTLS datagram layer.
