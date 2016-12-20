@@ -265,7 +265,7 @@ are indicated by dashes.
         CoAP over UDP                CoAP over reliable
                                          transport
 ~~~~
-{: #fig-flow-comparison title='Comparison between CoAP over unreliable and reliable transport.' artwork-align="center"}
+{: #fig-flow-comparison title='Comparison between CoAP over unreliable and reliable transport' artwork-align="center"}
 
 
 ## UDP-to-TCP gateways
@@ -310,7 +310,7 @@ length information.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #CoAP-Header title='RFC 7252 defined CoAP Message Format.'}
+{: #CoAP-Header title='RFC 7252 defined CoAP Message Format'}
 
 The CoAP over TCP message format is very similar to the format
 specified for CoAP over UDP. The differences are as follows:
@@ -345,7 +345,7 @@ specified for CoAP over UDP. The differences are as follows:
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame title='CoAP frame with 8-bit Extended Length field.'}
+{: #fig-frame title='CoAP frame with 8-bit Extended Length field'}
 
 Length (Len):
 : 4-bit unsigned integer. A value between 0 and 12 directly indicates the
@@ -382,7 +382,7 @@ the 32-bit variable length cases.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame1 title='CoAP message format without an Extended Length field.'}
+{: #fig-frame1 title='CoAP message format without an Extended Length field'}
 
 For example: A CoAP message just containing a 2.03 code with the
 token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
@@ -399,7 +399,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
  Code  =  2.03     --> 0x43
  Token =               0x7f
 ~~~~
-{: #fig-frame2 title='CoAP message with no options or payload.'}
+{: #fig-frame2 title='CoAP message with no options or payload'}
 
 ~~~~
  0                   1                   2                   3
@@ -414,7 +414,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame3 title='CoAP message format with 16-bit Extended Length field.'}
+{: #fig-frame3 title='CoAP message format with 16-bit Extended Length field'}
 
 ~~~~
  0                   1                   2                   3
@@ -429,7 +429,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame4 title='CoAP message format with 32-bit Extended Length field.'}
+{: #fig-frame4 title='CoAP message format with 32-bit Extended Length field'}
 
 The semantics of the other CoAP header fields are left unchanged.
 
@@ -990,7 +990,7 @@ CLIENT                                       SERVER
   |                                            |
   | <------   2.05 Content, 2:8/0/BERT(4711)   |
 ~~~~
-{: #fig-bert1 title='GET with BERT blocks.'}
+{: #fig-bert1 title='GET with BERT blocks'}
 
 ## Example: PUT with BERT Blocks
 
@@ -1012,7 +1012,7 @@ CLIENT                                        SERVER
   | <------   2.04 Changed, 1:24/0/BERT         |
   |                                             |
 ~~~~
-{: #fig-bert2 title='PUT with BERT blocks.'}
+{: #fig-bert2 title='PUT with BERT blocks'}
 
 # CoAP URIs {#URI}
 
