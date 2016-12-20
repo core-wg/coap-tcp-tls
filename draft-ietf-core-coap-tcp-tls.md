@@ -238,8 +238,8 @@ with a framing mechanism on top of the byte stream provided by TCP/TLS,
 conveying the length information for each message that on datagram transports
 is provided by the UDP/DTLS datagram layer.
 
-TCP ensures reliable message transmission, so the CoAP over TCP messaging
-layer is not required to support acknowledgements or to detect duplicate
+TCP ensures reliable message transmission, so the message layer of CoAP over TCP
+is not required to support acknowledgements or to detect duplicate
 messages. As a result, both the Type and Message ID fields are no longer required
 and are removed from the CoAP over TCP message format.
 
@@ -267,13 +267,6 @@ are indicated by dashes.
 ~~~~
 {: #fig-flow-comparison title='Comparison between CoAP over unreliable and reliable transport' artwork-align="center"}
 
-
-## UDP-to-TCP gateways
-
-A UDP-to-TCP gateway MUST discard all Empty messages (Code 0.00) after processing at the
-message layer. For Confirmable (CON), Non-Confirmable (NOM), and Acknowledgement
-(ACK) messages that are not Empty, their contents are repackaged into untyped
-messages.
 
 ## Opening Handshake {#tcp-handshake}
 
