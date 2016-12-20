@@ -78,7 +78,6 @@ normative:
   RFC0793: tcp
   RFC2119: bcp14
   RFC3986: RFC3986
-  RFC4395: RFC4395
   RFC5226: RFC5226
   RFC5246: tls
   RFC5785: RFC5785
@@ -89,6 +88,7 @@ normative:
   RFC7641: RFC7641
   RFC7925: RFC7925
 informative:
+  I-D.ietf-core-cocoa: cocoa
   RFC7959: block
   LWM2M:
     title: Lightweight Machine to Machine Technical Specification Candidate Version 1.0
@@ -174,7 +174,8 @@ shorter {{HomeGateway}}.
 Some environments may also benefit from the ability of TCP to exchange
 larger payloads, such as firmware images, without application layer
 segmentation and to utilize the more sophisticated congestion control
-capabilities provided by many TCP implementations.
+capabilities provided by many TCP implementations. Note that there is
+ongoing work to add more elaborate congestion control to CoAP (see {{-cocoa}}).
 
 CoAP may be integrated into a Web environment where the front-end
 uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
@@ -208,7 +209,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
 This document assumes that readers are familiar with the terms and
-concepts that are used in {{RFC6455}}, {{RFC7252}}, and {{RFC7641}}.
+concepts that are used in {{RFC6455}}, {{RFC7252}}, {{RFC7641}}, and {{-block}}.
 
 The term "reliable transport" only refers to stream-based transport protocols such
 as TCP. 
@@ -224,22 +225,23 @@ BERT Block:
 # CoAP over TCP
 
 The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.
-The primary differences are in the message layer. CoAP over UDP supports optional
-reliability by defining four types of messages: Confirmable, Non-confirmable,
-Acknowledgement, and Reset. TCP eliminates the need for the message layer
-to support reliability. As a result, message types are not defined in CoAP over TCP.
+The primary differences are in the message layer. The message layer of CoAP over UDP
+supports optional reliability by defining four Types of messages: Confirmable,
+Non-confirmable, Acknowledgement, and Reset. In addition, messages include a
+Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate
+messages. 
 
 ## Messaging Model 
 
-Conceptually, CoAP over TCP replaces most of the CoAP over UDP message layer
+Conceptually, CoAP over TCP replaces most of the message layer of CoAP over UDP
 with a framing mechanism on top of the byte stream provided by TCP/TLS,
 conveying the length information for each message that on datagram transports
 is provided by the UDP/DTLS datagram layer.
 
 TCP ensures reliable message transmission, so the CoAP over TCP messaging
-layer is not required to support acknowledgements or detection of duplicate
+layer is not required to support acknowledgements or to detect duplicate
 messages. As a result, both the Type and Message ID fields are no longer required
-and are removed from the CoAP over TCP message format. All messages are also untyped.
+and are removed from the CoAP over TCP message format.
 
 {{fig-flow-comparison}} illustrates the difference between CoAP over UDP and
 CoAP over reliable transport. The removed Type and Message ID fields
@@ -263,7 +265,7 @@ are indicated by dashes.
         CoAP over UDP                CoAP over reliable
                                          transport
 ~~~~
-{: #fig-flow-comparison title='Comparison between CoAP over unreliable and reliable transport.' artwork-align="center"}
+{: #fig-flow-comparison title='Comparison between CoAP over unreliable and reliable transport' artwork-align="center"}
 
 
 ## UDP-to-TCP gateways
@@ -283,7 +285,7 @@ The absence of options in the CSM indicates that base values are assumed.
 To avoid unnecessary latency, a client MAY send additional messages without waiting to receive
 the server CSM; however, it is important to note that the server CSM might advertise capabilities
 that impact how a client is expected to communicate with the server. For example, the server CSM
-could advertise a Max-Message-Size option (See {{max-message-size}}) that is smaller than the base value (1152). 
+could advertise a Max-Message-Size option (see {{max-message-size}}) that is smaller than the base value (1152). 
 
 Clients and servers MUST treat a missing or invalid CSM as a connection error and abort
 the connection (see {{sec-abort}}). 
@@ -308,20 +310,20 @@ length information.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #CoAP-Header title='RFC 7252 defined CoAP Message Format.'}
+{: #CoAP-Header title='RFC 7252 defined CoAP Message Format'}
 
 The CoAP over TCP message format is very similar to the format
 specified for CoAP over UDP. The differences are as follows:
 
 * Since the underlying TCP connection provides retransmissions and
   deduplication, there is no need for the reliability mechanisms
-  provided by CoAP over UDP. The "T" and "Message ID" fields in
+  provided by CoAP over UDP. The Type (T) and Message ID fields in
   the CoAP message header are elided.
 
-* The "Ver" field is elided as well. In constrast to the UDP message
+* The Version (Vers) field is elided as well. In constrast to the UDP message
   layer for UDP and DTLS, the CoAP over TCP message layer does not
   send a version number in each message. If required in the future,
-  a new Capability and Settings Option (See {{negotiation}}) could be
+  a new Capability and Settings Option (see {{negotiation}}) could be
   defined to support version negotiation.
 
 * In a stream oriented transport protocol such as TCP, a form of message 
@@ -343,7 +345,7 @@ specified for CoAP over UDP. The differences are as follows:
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame title='CoAP frame with 8-bit Extended Length field.'}
+{: #fig-frame title='CoAP frame with 8-bit Extended Length field'}
 
 Length (Len):
 : 4-bit unsigned integer. A value between 0 and 12 directly indicates the
@@ -380,7 +382,7 @@ the 32-bit variable length cases.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame1 title='CoAP message format without an Extended Length field.'}
+{: #fig-frame1 title='CoAP message format without an Extended Length field'}
 
 For example: A CoAP message just containing a 2.03 code with the
 token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
@@ -397,7 +399,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
  Code  =  2.03     --> 0x43
  Token =               0x7f
 ~~~~
-{: #fig-frame2 title='CoAP message with no options or payload.'}
+{: #fig-frame2 title='CoAP message with no options or payload'}
 
 ~~~~
  0                   1                   2                   3
@@ -412,7 +414,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame3 title='CoAP message format with 16-bit Extended Length field.'}
+{: #fig-frame3 title='CoAP message format with 16-bit Extended Length field'}
 
 ~~~~
  0                   1                   2                   3
@@ -427,7 +429,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame4 title='CoAP message format with 32-bit Extended Length field.'}
+{: #fig-frame4 title='CoAP message format with 32-bit Extended Length field'}
 
 The semantics of the other CoAP header fields are left unchanged.
 
@@ -698,7 +700,7 @@ Option numbers are assigned by the "CoAP Signaling Option Numbers"
 sub-registry (see {{option-codes}}).
 
 Signaling options are elective or critical as defined in Section 5.4.1
-of {{-coap}}). If a Signaling option is critical and not understood by
+of {{-coap}}. If a Signaling option is critical and not understood by
 the receiver, it MUST abort the connection (see {{sec-abort}}). If the
 option is understood but cannot be processed, the option documents the behavior.
 
@@ -736,18 +738,18 @@ Capability and Settings messages are indicated by the 7.01 code (CSM).
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      1 | CSM        | Server-Name         | string     | 1-255       | (see below) |
 
-A client can use the Server-Name critical option to indicate the default value
+A client can use the critical Server-Name Option to indicate the default value
 for the Uri-Host Options in the messages that it sends to the server.
-It has the same restrictions as the Uri-Host Option (Section 5.10 of {{RFC7252}}.
+It has the same restrictions as the Uri-Host Option (Section 5.10.1 of {{RFC7252}}).
 
-For TLS, the initial value for the Server-Name Option is given by the SNI value.
+For TLS, the base value for the Server-Name Option is given by the SNI value.
 
-For Websockets, the initial value for the Server-Name Option is given by the HTTP
+For Websockets, the base value for the Server-Name Option is given by the HTTP
 Host header field.
 
 ### Max-Message-Size Capability Option {#max-message-size}
 
-The sender can use the Max-Message-Size elective option to indicate the maximum message size
+The sender can use the elective Max-Message-Size Option to indicate the maximum message size
 in bytes that it can receive.
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
@@ -764,7 +766,7 @@ certain minimum value will enjoy limited interoperability.
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      4 | CSM        | Block-wise Transfer |  empty     | 0           | (none)      |
 
-A sender can use the Block-wise Transfer elective Option to indicate that it
+A sender can use the elective Block-wise Transfer Option to indicate that it
 supports the block-wise transfer protocol {{-block}}.
 
 If the option is not given, the peer has no information about whether block-wise
@@ -792,30 +794,24 @@ Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Ping, Pong | Custody             | empty      | 0           | (none)      |
 
-A peer replying to a Ping message can add a Custody elective option to the Pong
-message it returns. This option indicates that the application has
-processed all request/response messages that it has received in the
-present connection ahead of the Ping message that prompted the Pong
-message. (Note that there is no definition of specific application
-semantics of "processed", but there is an expectation that the sender
-of the Ping leading to the Pong with a Custody Option should be able
-to free buffers based on this indication.)
+When responding to a Ping message, the receiver can include an elective
+Custody Option in the Pong message. This option indicates that the application has
+processed all the request/response messages received prior to the Ping message
+on the current connection. (Note that there is no definition of specific application
+semantics for "processed", but there is an expectation that the receiver of a Pong
+Message with a Custody Option should be able to free buffers based on this indication.)
 
-A Custody elective option can also be sent in a Ping message to explicitly
-request the return of a Custody Option in the Pong message. A peer
-is always free to indicate that it has finished processing
-all previous request/response messages by sending a Custody Option
-in a Pong message. A peer is also free NOT to send a Custody Option in case
-it is still processing previous request/response messages; however,
-it SHOULD delay its response to a Ping with a Custody Option until it
-can also return one.
+A sender can also include an elective Custody Option in a Ping message to explicitly
+request the inclusion of an elective Custody Option in the corresponding Pong message.
+The receiver SHOULD delay its Pong message until it finishes processing all the request/response
+messages received prior to the Ping message on the current connection.
 
 ## Release Messages
 
-A release message indicates that the sender does not want to continue
-maintaining the connection and opts for an orderly shutdown; the details
-are in the options. A diagnostic payload MAY be included. A release message
-will normally be replied to by the peer by closing the TCP/TLS connection.
+A Release message indicates that the sender does not want to continue
+maintaining the connection and opts for an orderly shutdown. The details
+are in the options. A diagnostic payload MAY be included.  A peer will normally
+respond to a Release message by closing the TCP/TLS connection. 
 Messages may be in flight when the sender decides to send a Release message.
 The general expectation is that these will still be processed.
 
@@ -828,14 +824,14 @@ The following options are defined:
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Release    | Bad-Server-Name     | empty      | 0           | (none)      |
 
-The Bad-Server-Name elective option indicates that the default indicated
+The elective Bad-Server-Name Option indicates that the default indicated
 by the CSM Server-Name Option is unlikely to be useful for this server.
 
 | Number | Applies to | Name                | Format     | Length      | Base Value  |
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      4 | Release    | Alternate-Address   | string     | 1-255       | (none)      |
 
-The Alternative-Address elective option requests the peer to instead open a connection
+The elective Alternative-Address Option requests the peer to instead open a connection
 of the same scheme as the present connection to the alternative transport address given.
 Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}. 
 
@@ -843,18 +839,18 @@ Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}.
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      6 | Release    | Hold-Off            | uint       | 0-3         | (none)      |
 
-The Hold-Off elective option indicates that the server is requesting that the peer not
+The elective Hold-Off Option indicates that the server is requesting that the peer not
 reconnect to it for the number of seconds given in the value.
 
 ## Abort Messages {#sec-abort}
 
-An abort message indicates that the sender is unable to continue
+An Abort message indicates that the sender is unable to continue
 maintaining the connection and cannot even wait for an orderly
 release. The sender shuts down the connection immediately after
-the abort (and may or may not wait for a release or abort message or
+the abort (and may or may not wait for a Release or Abort message or
 connection shutdown in the inverse direction). A diagnostic payload
 SHOULD be included in the Abort message. Messages may be in flight
-when the sender decides to send an abort message. The general
+when the sender decides to send an Abort message. The general
 expectation is that these will NOT be processed.
 
 Abort messages are indicated by the 7.05 code (Abort).
@@ -866,13 +862,13 @@ options. The following option is defined:
 |:-------+:-----------+:--------------------+-----------:+------------:+------------:+
 |      2 | Abort      | Bad-CSM-Option      | uint       | 0-2         | (none)      |
 
-The Bad-CSM-Option Option indicates that the sender is unable to process the
+The elective Bad-CSM-Option Option indicates that the sender is unable to process the
 CSM option identified by its option number, e.g. when it is critical
 and the option number is unknown by the sender, or when there is
 parameter problem with the value of an elective option. More detailed
 information SHOULD be included as a diagnostic payload.
 
-One reason for an sender to generate an abort message is a general
+One reason for an sender to generate an Abort message is a general
 syntax error in the byte stream received. No specific option has been
 defined for this, as the details of that syntax error are best left to
 a diagnostic payload.
@@ -994,7 +990,7 @@ CLIENT                                       SERVER
   |                                            |
   | <------   2.05 Content, 2:8/0/BERT(4711)   |
 ~~~~
-{: #fig-bert1 title='GET with BERT blocks.'}
+{: #fig-bert1 title='GET with BERT blocks'}
 
 ## Example: PUT with BERT Blocks
 
@@ -1016,7 +1012,7 @@ CLIENT                                        SERVER
   | <------   2.04 Changed, 1:24/0/BERT         |
   |                                             |
 ~~~~
-{: #fig-bert2 title='PUT with BERT blocks.'}
+{: #fig-bert2 title='PUT with BERT blocks'}
 
 # CoAP URIs {#URI}
 
@@ -1028,7 +1024,7 @@ identifying CoAP resources and providing a means of locating the resource.
 CoAP over TCP uses the "coap+tcp" URI scheme. CoAP over TLS uses the "coaps+tcp"
 scheme. The rules from Section 6 of {{RFC7252}} apply to both of these URI schemes.
 
-{{RFC7252}}, Section 8 (Multicast CoAP) is not applicable to these schemes.
+Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes.
 
 Resources made available via one of the "coap+tcp" or "coaps+tcp" schemes
 have no shared identity with the other scheme or with the "coap" or
@@ -1045,7 +1041,7 @@ coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ] path-abempty
                [ "?" query ]
 ~~~~
 
-The semantics defined in {{RFC7252}}, Section 6.1, apply to this
+The semantics defined in Section 6.1 of {{RFC7252}} apply to this
 URI scheme, with the following changes:
 
 * The port subcomponent indicates the TCP port
@@ -1059,7 +1055,7 @@ coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
                 [ "?" query ]
 ~~~~
 
-The semantics defined in {{RFC7252}}, Section 6.2, apply to this
+The semantics defined in Section 6.2 of {{RFC7252}} apply to this
 URI scheme, with the following changes:
 
 * The port subcomponent indicates the TCP port at which the TLS server
@@ -1191,7 +1187,7 @@ IANA is requested to create a third sub-registry for values of the Code field in
 header (Section 12.1 of {{-coap}}). The name of this sub-registry is "CoAP Signaling Codes".
 
 Each entry in the sub-registry must include the Signaling Code in the range
-7.01-7.31, its name, and a reference to its documentation. 
+7.00-7.31, its name, and a reference to its documentation. 
 
 Initial entries in this sub-registry are as follows:
 
@@ -1312,7 +1308,7 @@ established with {{-urireg}}.
 
 This document requests the registration of the Uniform Resource
 Identifier (URI) scheme "coap+ws". The registration request complies
-with {{RFC4395}}.
+with {{-urireg}}.
 
 URL scheme name.
 :	coap+ws
@@ -1355,7 +1351,7 @@ References.
 ### coap+wss
 This document requests the registration of the Uniform Resource
 Identifier (URI) scheme "coap+wss". The registration request complies
-with {{RFC4395}}.
+with {{-urireg}}.
 
 URL scheme name.
 :	coap+wss
