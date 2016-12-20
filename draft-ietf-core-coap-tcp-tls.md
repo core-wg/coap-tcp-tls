@@ -1187,7 +1187,7 @@ IANA is requested to create a third sub-registry for values of the Code field in
 header (Section 12.1 of {{-coap}}). The name of this sub-registry is "CoAP Signaling Codes".
 
 Each entry in the sub-registry must include the Signaling Code in the range
-7.01-7.31, its name, and a reference to its documentation. 
+7.00-7.31, its name, and a reference to its documentation. 
 
 Initial entries in this sub-registry are as follows:
 
