@@ -78,7 +78,6 @@ normative:
   RFC0793: tcp
   RFC2119: bcp14
   RFC3986: RFC3986
-  RFC4395: RFC4395
   RFC5226: RFC5226
   RFC5246: tls
   RFC5785: RFC5785
@@ -210,7 +209,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "OPTIONAL" in this document are to be interpreted as described in {{RFC2119}}.
 
 This document assumes that readers are familiar with the terms and
-concepts that are used in {{RFC6455}}, {{RFC7252}}, and {{RFC7641}}.
+concepts that are used in {{RFC6455}}, {{RFC7252}}, {{RFC7641}}, and {{-block}}.
 
 The term "reliable transport" only refers to stream-based transport protocols such
 as TCP. 
@@ -1309,7 +1308,7 @@ established with {{-urireg}}.
 
 This document requests the registration of the Uniform Resource
 Identifier (URI) scheme "coap+ws". The registration request complies
-with {{RFC4395}}.
+with {{-urireg}}.
 
 URL scheme name.
 :	coap+ws
@@ -1352,7 +1351,7 @@ References.
 ### coap+wss
 This document requests the registration of the Uniform Resource
 Identifier (URI) scheme "coap+wss". The registration request complies
-with {{RFC4395}}.
+with {{-urireg}}.
 
 URL scheme name.
 :	coap+wss
