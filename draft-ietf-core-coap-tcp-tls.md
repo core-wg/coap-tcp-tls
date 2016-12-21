@@ -1200,26 +1200,28 @@ Review or IESG Approval" as described in {{RFC5226}}.
 
 ## CoAP Signaling Option Numbers Registry {#option-codes}
 
-IANA is requested to create a sub-registry for signaling options similar
-to the CoAP Option Numbers Registry (Section 12.2 of {{-coap}}), with
-the single change that a fourth column is added to the sub-registry
-that is one of the codes in the Signaling Codes subregistry ({{message-codes}}).
-
+IANA is requested to create a sub-registry for Options Numbers used
+in CoAP signaling options within the "CoRE Parameters" registry.
 The name of this sub-registry is "CoAP Signaling Option Numbers".
+
+Each entry in the sub-registry must include one or more of the codes
+in the Signaling Codes subregistry ({{message-codes}}), the option
+number, the name of the option, and a reference to the option's 
+documentation.  
 
 Initial entries in this sub-registry are as follows:
 
-| Number | Applies to | Name                | Reference |
-|--------|------------|---------------------|-----------|
-|      1 | CSM        | Server-Name         | [RFCthis] |
-|	   2 | CSM        | Max-Message-Size    | [RFCthis] |
-|      4 | CSM        | Block-wise-Transfer | [RFCthis] |
-|      2 | Ping, Pong | Custody             | [RFCthis] |
-|      2 | Release    | Bad-Server-Name     | [RFCthis] |
-|      4 | Release    | Alternative-Address | [RFCthis] |
-|      6 | Release    | Hold-Off            | [RFCthis] |
-|      2 | Abort      | Bad-CSM-Option      | [RFCthis] |
-{: #signal-option-codes title="CoAP Signal Option Codes" cols="r l l c"}
+| Applies to | Number | Name                | Reference |
+|------------|--------|---------------------|-----------|
+| 7.01       |      1 | Server-Name         | [RFCthis] |
+| 7.01       |      2 | Max-Message-Size    | [RFCthis] |
+| 7.01       |      4 | Block-wise-Transfer | [RFCthis] |
+| 7.02, 7.03 |      2 | Custody             | [RFCthis] |
+| 7.04       |      2 | Bad-Server-Name     | [RFCthis] |
+| 7.04       |      4 | Alternative-Address | [RFCthis] |
+| 7.04       |      6 | Hold-Off            | [RFCthis] |
+| 7.05       |      2 | Bad-CSM-Option      | [RFCthis] |
+{: #signal-option-codes title="CoAP Signal Option Codes" cols="l r l c"}
 
 The IANA policy for future additions to this sub-registry is based on
 number ranges for the option numbers, analogous to the policy defined
