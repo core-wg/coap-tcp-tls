@@ -7,7 +7,8 @@
 
   <title>CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets</title>
 
-  <style type="text/css">/*<![CDATA[*/
+  
+<style type="text/css">/*<![CDATA[*/
 @viewport {
   zoom: 1.0;
   width: extend-to-zoom;
@@ -73,7 +74,11 @@ ul.toc li {
   padding-bottom: 5px;
   margin: 0;
 }
-ul.toc, ul.toc ul {
+ul.toc ul {
+  margin: 0;
+}
+/* xml2rfc nests ul directly inside ul which messes with the style badly */
+ul.toc, ul.toc>ul, ul.toc ul>ul {
   margin: 0 0 0 1.5em;
 }
 
@@ -208,6 +213,9 @@ ol, ul, li, p {
 li, p {
   margin-left: 0;
 }
+address {
+  font-style: normal;
+}
 
 .github-fork-ribbon-wrapper {
   display: none;
@@ -267,15 +275,15 @@ li, p {
   }
   /*]]>*/</style>
 
+
   <link href="#rfc.toc" rel="Contents"/>
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology"/>
 <link href="#rfc.section.2" rel="Chapter" title="2 CoAP over TCP"/>
 <link href="#rfc.section.2.1" rel="Chapter" title="2.1 Messaging Model"/>
-<link href="#rfc.section.2.2" rel="Chapter" title="2.2 UDP-to-TCP gateways"/>
-<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Opening Handshake"/>
-<link href="#rfc.section.2.4" rel="Chapter" title="2.4 Message Format"/>
-<link href="#rfc.section.2.5" rel="Chapter" title="2.5 Message Transmission"/>
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Opening Handshake"/>
+<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Message Format"/>
+<link href="#rfc.section.2.4" rel="Chapter" title="2.4 Message Transmission"/>
 <link href="#rfc.section.3" rel="Chapter" title="3 CoAP over WebSockets"/>
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Opening Handshake"/>
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Message Format"/>
@@ -285,11 +293,11 @@ li, p {
 <link href="#rfc.section.4" rel="Chapter" title="4 Signaling"/>
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Signaling Codes"/>
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 Signaling Option Numbers"/>
-<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Capability and Settings Messages (CSM)"/>
+<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Capabilities and Settings Messages (CSM)"/>
 <link href="#rfc.section.4.4" rel="Chapter" title="4.4 Ping and Pong Messages"/>
 <link href="#rfc.section.4.5" rel="Chapter" title="4.5 Release Messages"/>
 <link href="#rfc.section.4.6" rel="Chapter" title="4.6 Abort Messages"/>
-<link href="#rfc.section.4.7" rel="Chapter" title="4.7 Capability and Settings examples"/>
+<link href="#rfc.section.4.7" rel="Chapter" title="4.7 Capabilities and Settings examples"/>
 <link href="#rfc.section.5" rel="Chapter" title="5 Block-wise Transfer and Reliable Transports"/>
 <link href="#rfc.section.5.1" rel="Chapter" title="5.1 Example: GET with BERT Blocks"/>
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Example: PUT with BERT Blocks"/>
@@ -314,12 +322,11 @@ li, p {
 <link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 Notifications and Reordering"/>
 <link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 Transmission and Acknowledgements"/>
 <link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 Cancellation"/>
-<link href="#rfc.appendix.B" rel="Chapter" title="B Negotiating Protocol Versions"/>
-<link href="#rfc.appendix.C" rel="Chapter" title="C CoAP over WebSocket Examples"/>
-<link href="#rfc.appendix.D" rel="Chapter" title="D Change Log"/>
-<link href="#rfc.appendix.D.1" rel="Chapter" title="D.1 Since draft-core-coap-tcp-tls-02"/>
-<link href="#rfc.appendix.D.2" rel="Chapter" title="D.2 Since draft-core-coap-tcp-tls-03"/>
-<link href="#rfc.appendix.D.3" rel="Chapter" title="D.3 Since draft-core-coap-tcp-tls-04"/>
+<link href="#rfc.appendix.B" rel="Chapter" title="B CoAP over WebSocket Examples"/>
+<link href="#rfc.appendix.C" rel="Chapter" title="C Change Log"/>
+<link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 Since draft-core-coap-tcp-tls-02"/>
+<link href="#rfc.appendix.C.2" rel="Chapter" title="C.2 Since draft-core-coap-tcp-tls-03"/>
+<link href="#rfc.appendix.C.3" rel="Chapter" title="C.3 Since draft-core-coap-tcp-tls-04"/>
 <link href="#rfc.acknowledgements" rel="Chapter"/>
 <link href="#rfc.contributors" rel="Chapter"/>
 <link href="#rfc.authors" rel="Chapter"/>
@@ -330,7 +337,7 @@ li, p {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-10-11" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-12-21" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -358,7 +365,7 @@ li, p {
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-  <td class="left">Expires: April 14, 2017</td>
+  <td class="left">Expires: June 24, 2017</td>
   <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -391,7 +398,7 @@ li, p {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">October 11, 2016</td>
+  <td class="right">December 21, 2016</td>
 </tr>
 
     	
@@ -412,7 +419,7 @@ li, p {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on April 14, 2017.</p>
+<p>This Internet-Draft will expire on June 24, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -428,10 +435,9 @@ li, p {
 <ul><li>1.1.   <a href="#rfc.section.1.1">Terminology</a></li>
 </ul><li>2.   <a href="#rfc.section.2">CoAP over TCP</a></li>
 <ul><li>2.1.   <a href="#rfc.section.2.1">Messaging Model</a></li>
-<li>2.2.   <a href="#rfc.section.2.2">UDP-to-TCP gateways</a></li>
-<li>2.3.   <a href="#rfc.section.2.3">Opening Handshake</a></li>
-<li>2.4.   <a href="#rfc.section.2.4">Message Format</a></li>
-<li>2.5.   <a href="#rfc.section.2.5">Message Transmission</a></li>
+<li>2.2.   <a href="#rfc.section.2.2">Opening Handshake</a></li>
+<li>2.3.   <a href="#rfc.section.2.3">Message Format</a></li>
+<li>2.4.   <a href="#rfc.section.2.4">Message Transmission</a></li>
 </ul><li>3.   <a href="#rfc.section.3">CoAP over WebSockets</a></li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">Opening Handshake</a></li>
 <li>3.2.   <a href="#rfc.section.3.2">Message Format</a></li>
@@ -441,11 +447,11 @@ li, p {
 </ul><li>4.   <a href="#rfc.section.4">Signaling</a></li>
 <ul><li>4.1.   <a href="#rfc.section.4.1">Signaling Codes</a></li>
 <li>4.2.   <a href="#rfc.section.4.2">Signaling Option Numbers</a></li>
-<li>4.3.   <a href="#rfc.section.4.3">Capability and Settings Messages (CSM)</a></li>
+<li>4.3.   <a href="#rfc.section.4.3">Capabilities and Settings Messages (CSM)</a></li>
 <li>4.4.   <a href="#rfc.section.4.4">Ping and Pong Messages</a></li>
 <li>4.5.   <a href="#rfc.section.4.5">Release Messages</a></li>
 <li>4.6.   <a href="#rfc.section.4.6">Abort Messages</a></li>
-<li>4.7.   <a href="#rfc.section.4.7">Capability and Settings examples</a></li>
+<li>4.7.   <a href="#rfc.section.4.7">Capabilities and Settings examples</a></li>
 </ul><li>5.   <a href="#rfc.section.5">Block-wise Transfer and Reliable Transports</a></li>
 <ul><li>5.1.   <a href="#rfc.section.5.1">Example: GET with BERT Blocks</a></li>
 <li>5.2.   <a href="#rfc.section.5.2">Example: PUT with BERT Blocks</a></li>
@@ -470,12 +476,11 @@ li, p {
 <ul><li>A.1.   <a href="#rfc.appendix.A.1">Notifications and Reordering</a></li>
 <li>A.2.   <a href="#rfc.appendix.A.2">Transmission and Acknowledgements</a></li>
 <li>A.3.   <a href="#rfc.appendix.A.3">Cancellation</a></li>
-</ul><li>Appendix B.   <a href="#rfc.appendix.B">Negotiating Protocol Versions</a></li>
-<li>Appendix C.   <a href="#rfc.appendix.C">CoAP over WebSocket Examples</a></li>
-<li>Appendix D.   <a href="#rfc.appendix.D">Change Log</a></li>
-<ul><li>D.1.   <a href="#rfc.appendix.D.1">Since draft-core-coap-tcp-tls-02</a></li>
-<li>D.2.   <a href="#rfc.appendix.D.2">Since draft-core-coap-tcp-tls-03</a></li>
-<li>D.3.   <a href="#rfc.appendix.D.3">Since draft-core-coap-tcp-tls-04</a></li>
+</ul><li>Appendix B.   <a href="#rfc.appendix.B">CoAP over WebSocket Examples</a></li>
+<li>Appendix C.   <a href="#rfc.appendix.C">Change Log</a></li>
+<ul><li>C.1.   <a href="#rfc.appendix.C.1">Since draft-core-coap-tcp-tls-02</a></li>
+<li>C.2.   <a href="#rfc.appendix.C.2">Since draft-core-coap-tcp-tls-03</a></li>
+<li>C.3.   <a href="#rfc.appendix.C.3">Since draft-core-coap-tcp-tls-04</a></li>
 </ul><li><a href="#rfc.acknowledgements">Acknowledgements</a></li>
 <li><a href="#rfc.contributors">Contributors</a></li>
 <li><a href="#rfc.authors">Authors' Addresses</a></li>
@@ -504,14 +509,14 @@ li, p {
 </pre>
 <p class="figure">Figure 1: Layering of CoAP over Reliable Transports</p>
 <p id="rfc.section.1.p.5">Where NATs are present, CoAP over TCP can help with their traversal.  NATs often calculate expiration timers based on the transport layer protocol being used by application protocols. Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption that a transport layer protocol, such as TCP, offers additional information about the session life cycle. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter <a href="#HomeGateway">[HomeGateway]</a>.</p>
-<p id="rfc.section.1.p.6">Some environments may also benefit from the ability of TCP to exchange larger payloads, such as firmware images, without application layer segmentation and to utilize the more sophisticated congestion control capabilities provided by many TCP implementations.</p>
+<p id="rfc.section.1.p.6">Some environments may also benefit from the ability of TCP to exchange larger payloads, such as firmware images, without application layer segmentation and to utilize the more sophisticated congestion control capabilities provided by many TCP implementations. Note that there is ongoing work to add more elaborate congestion control to CoAP (see <a href="#I-D.ietf-core-cocoa">[I-D.ietf-core-cocoa]</a>).</p>
 <p id="rfc.section.1.p.7">CoAP may be integrated into a Web environment where the front-end uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP over TCP between the back-end services. A TCP-to-UDP gateway can be used at the cloud boundary to communicate with the UDP-based IoT device.</p>
 <p id="rfc.section.1.p.8">To allow IoT devices to better communicate in these demanding environments, CoAP needs to support different transport protocols, namely TCP <a href="#RFC0793">[RFC0793]</a>, in some situations secured by TLS <a href="#RFC5246">[RFC5246]</a>.</p>
 <p id="rfc.section.1.p.9">In addition, some corporate networks only allow Internet access via a HTTP proxy.  In this case, the best transport for CoAP would be the <a href="#RFC6455">WebSocket Protocol</a> <cite title="NONE">[RFC6455]</cite>.  The WebSocket protocol provides two-way communication between a client and a server after upgrading an <a href="#RFC7230">HTTP/1.1</a> <cite title="NONE">[RFC7230]</cite> connection and may be available in an environment that blocks CoAP over UDP. Another scenario for CoAP over WebSockets is a CoAP application running inside a web browser without access to connectivity other than HTTP and WebSockets.</p>
 <p id="rfc.section.1.p.10">This document specifies how to access resources using CoAP requests and responses over the TCP/TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP/TLS or WebSocket connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
 <h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
-<p id="rfc.section.1.1.p.2">This document assumes that readers are familiar with the terms and concepts that are used in <a href="#RFC6455">[RFC6455]</a>, <a href="#RFC7252">[RFC7252]</a>, and <a href="#RFC7641">[RFC7641]</a>.</p>
+<p id="rfc.section.1.1.p.2">This document assumes that readers are familiar with the terms and concepts that are used in <a href="#RFC6455">[RFC6455]</a>, <a href="#RFC7252">[RFC7252]</a>, <a href="#RFC7641">[RFC7641]</a>, and <a href="#RFC7959">[RFC7959]</a>.</p>
 <p id="rfc.section.1.1.p.3">The term &#8220;reliable transport&#8221; only refers to stream-based transport protocols such as TCP.</p>
 <p/>
 
@@ -526,10 +531,10 @@ li, p {
   <dd style="margin-left: 8"><br/> The payload of a CoAP message that is affected by a BERT Option in descriptive usage (Section 2.1 of <a href="#RFC7959">[RFC7959]</a>).</dd>
 </dl>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#coap-over-tcp" id="coap-over-tcp">CoAP over TCP</a></h1>
-<p id="rfc.section.2.p.1">The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.  The primary differences are in the message layer. CoAP over UDP supports optional reliability by defining four types of messages: Confirmable, Non-confirmable, Acknowledgement, and Reset. TCP eliminates the need for the message layer to support reliability. As a result, message types are not defined in CoAP over TCP.</p>
+<p id="rfc.section.2.p.1">The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.  The primary differences are in the message layer. The message layer of CoAP over UDP supports optional reliability by defining four Types of messages: Confirmable, Non-confirmable, Acknowledgement, and Reset. In addition, messages include a Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate messages.</p>
 <h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#messaging-model" id="messaging-model">Messaging Model</a></h1>
-<p id="rfc.section.2.1.p.1">Conceptually, CoAP over TCP replaces most of the CoAP over UDP message layer with a framing mechanism on top of the byte stream provided by TCP/TLS, conveying the length information for each message that on datagram transports is provided by the UDP/DTLS datagram layer.</p>
-<p id="rfc.section.2.1.p.2">TCP ensures reliable message transmission, so the CoAP over TCP messaging layer is not required to support acknowledgements or detection of duplicate messages. As a result, both the Type and Message ID fields are no longer required and are removed from the CoAP over TCP message format. All messages are also untyped.</p>
+<p id="rfc.section.2.1.p.1">Conceptually, CoAP over TCP replaces most of the message layer of CoAP over UDP with a framing mechanism on top of the byte stream provided by TCP/TLS, conveying the length information for each message that on datagram transports is provided by the UDP/DTLS datagram layer.</p>
+<p id="rfc.section.2.1.p.2">TCP ensures reliable message transmission, so the message layer of CoAP over TCP is not required to support acknowledgements or to detect duplicate messages. As a result, both the Type and Message ID fields are no longer required and are removed from the CoAP over TCP message format.</p>
 <p><a href="#fig-flow-comparison">Figure 2</a> illustrates the difference between CoAP over UDP and CoAP over reliable transport. The removed Type and Message ID fields are indicated by dashes.</p>
 <div id="rfc.figure.2"/>
 <div id="fig-flow-comparison"/>
@@ -551,15 +556,13 @@ li, p {
         CoAP over UDP                CoAP over reliable
                                          transport
 </pre>
-<p class="figure">Figure 2: Comparison between CoAP over unreliable and reliable transport.</p>
-<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#udp-to-tcp-gateways" id="udp-to-tcp-gateways">UDP-to-TCP gateways</a></h1>
-<p id="rfc.section.2.2.p.1">A UDP-to-TCP gateway MUST discard all Empty messages (Code 0.00) after processing at the message layer. For Confirmable (CON), Non-Confirmable (NOM), and Acknowledgement (ACK) messages that are not Empty, their contents are repackaged into untyped messages.</p>
-<h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#tcp-handshake" id="tcp-handshake">Opening Handshake</a></h1>
-<p id="rfc.section.2.3.p.1">Both the client and the server MUST send a Capability and Settings message (CSM see <a href="#csm">Section 4.3</a>) as its first message on the connection. This message establishes the initial settings and capabilities for the endpoint such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
-<p id="rfc.section.2.3.p.2">To avoid unnecessary latency, a client MAY send additional messages without waiting to receive the server CSM; however, it is important to note that the server CSM might advertise capabilities that impact how a client is expected to communicate with the server. For example, the server CSM could advertise a Max-Message-Size option (See <a href="#max-message-size">Section 4.3.2</a>) that is smaller than the base value (1152).</p>
-<p id="rfc.section.2.3.p.3">Clients and servers MUST treat a missing or invalid CSM as a connection error and abort the connection (see <a href="#sec-abort">Section 4.6</a>).</p>
-<h1 id="rfc.section.2.4"><a href="#rfc.section.2.4">2.4.</a> <a href="#tcp-message-format" id="tcp-message-format">Message Format</a></h1>
-<p id="rfc.section.2.4.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 3</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate and for providing length information.</p>
+<p class="figure">Figure 2: Comparison between CoAP over unreliable and reliable transport</p>
+<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#tcp-handshake" id="tcp-handshake">Opening Handshake</a></h1>
+<p id="rfc.section.2.2.p.1">Both the client and the server MUST send a Capabilities and Settings message (CSM see <a href="#csm">Section 4.3</a>) as its first message on the connection. This message establishes the initial settings and capabilities for the endpoint such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
+<p id="rfc.section.2.2.p.2">To avoid unnecessary latency, a client MAY send additional messages without waiting to receive the server CSM; however, it is important to note that the server CSM might advertise capabilities that impact how a client is expected to communicate with the server. For example, the server CSM could advertise a Max-Message-Size option (see <a href="#max-message-size">Section 4.3.2</a>) that is smaller than the base value (1152).</p>
+<p id="rfc.section.2.2.p.3">Clients and servers MUST treat a missing or invalid CSM as a connection error and abort the connection (see <a href="#sec-abort">Section 4.6</a>).</p>
+<h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#tcp-message-format" id="tcp-message-format">Message Format</a></h1>
+<p id="rfc.section.2.3.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 3</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate and for providing length information.</p>
 <div id="rfc.figure.3"/>
 <div id="CoAP-Header"/>
 <pre>
@@ -575,13 +578,13 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 3: RFC 7252 defined CoAP Message Format.</p>
-<p id="rfc.section.2.4.p.2">The CoAP over TCP message format is very similar to the format specified for CoAP over UDP. The differences are as follows:</p>
+<p class="figure">Figure 3: RFC 7252 defined CoAP Message Format</p>
+<p id="rfc.section.2.3.p.2">The CoAP over TCP message format is very similar to the format specified for CoAP over UDP. The differences are as follows:</p>
 <p/>
 
 <ul>
-  <li>Since the underlying TCP connection provides retransmissions and deduplication, there is no need for the reliability mechanisms provided by CoAP over UDP. The &#8220;T&#8221; and &#8220;Message ID&#8221; fields in the CoAP message header are elided.</li>
-  <li>The &#8220;Ver&#8221; field is elided as well. In constrast to the UDP message layer for UDP and DTLS, the CoAP over TCP message layer does not send a version number in each message. If required in the future, a new Capability and Settings Option (See <a href="#negotiation">Appendix B</a>) could be defined to support version negotiation.</li>
+  <li>Since the underlying TCP connection provides retransmissions and deduplication, there is no need for the reliability mechanisms provided by CoAP over UDP. The Type (T) and Message ID fields in the CoAP message header are elided.</li>
+  <li>The Version (Vers) field is elided as well. In contrast to the message format of CoAP over UDP, the message format for CoAP over TCP does not include a version number. CoAP is defined in <a href="#RFC7252">[RFC7252]</a> with a version number of 1. At this time, there is no known reason to support version numbers different from 1. If version negotiation needs to be addressed in the future, then Capabilities and Settings Messages (CSM see <a href="#csm">Section 4.3</a>) have been specifically designed to enable such a potential feature.</li>
   <li>In a stream oriented transport protocol such as TCP, a form of message delimitation is needed. For this purpose, CoAP over TCP introduces a length field with variable size. <a href="#fig-frame">Figure 4</a> shows the adjusted CoAP message format with a modified structure for the fixed header (first 4 bytes of the CoAP over UDP header), which includes the length information of variable size, shown here as an 8-bit length.</li>
 </ul>
 <div id="rfc.figure.4"/>
@@ -597,15 +600,15 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 4: CoAP frame with 8-bit Extended Length field.</p>
+<p class="figure">Figure 4: CoAP frame with 8-bit Extended Length field</p>
 <p/>
 
 <dl>
   <dt>Length (Len):</dt>
   <dd style="margin-left: 8">4-bit unsigned integer. A value between 0 and 12 directly indicates the length of the message in bytes starting with the first bit of the Options field. Three values are reserved for special constructs: <dl><dt>13:</dt><dd style="margin-left: 8">An 8-bit unsigned integer (Extended Length) follows the initial byte and indicates the length of options/payload minus 13.</dd><dt>14:</dt><dd style="margin-left: 8">A 16-bit unsigned integer (Extended Length) in network byte order follows the initial byte and indicates the length of options/payload minus 269.</dd><dt>15:</dt><dd style="margin-left: 8">A 32-bit unsigned integer (Extended Length) in network byte order follows the initial byte and indicates the length of options/payload minus 65805.</dd></dl><p> </p></dd>
 </dl>
-<p id="rfc.section.2.4.p.5">The encoding of the Length field is modeled on CoAP Options (see section 3.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
-<p id="rfc.section.2.4.p.6">The following figures show the message format for the 0-bit, 16-bit, and the 32-bit variable length cases.</p>
+<p id="rfc.section.2.3.p.5">The encoding of the Length field is modeled on CoAP Options (see section 3.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
+<p id="rfc.section.2.3.p.6">The following figures show the message format for the 0-bit, 16-bit, and the 32-bit variable length cases.</p>
 <div id="rfc.figure.5"/>
 <div id="fig-frame1"/>
 <pre>
@@ -619,8 +622,8 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 5: CoAP message format without an Extended Length field.</p>
-<p id="rfc.section.2.4.p.7">For example: A CoAP message just containing a 2.03 code with the token 7f and no options or payload would be encoded as shown in <a href="#fig-frame2">Figure 6</a>.</p>
+<p class="figure">Figure 5: CoAP message format without an Extended Length field</p>
+<p id="rfc.section.2.3.p.7">For example: A CoAP message just containing a 2.03 code with the token 7f and no options or payload would be encoded as shown in <a href="#fig-frame2">Figure 6</a>.</p>
 <div id="rfc.figure.6"/>
 <div id="fig-frame2"/>
 <pre>
@@ -635,7 +638,7 @@ li, p {
  Code  =  2.03     --&gt; 0x43
  Token =               0x7f
 </pre>
-<p class="figure">Figure 6: CoAP message with no options or payload.</p>
+<p class="figure">Figure 6: CoAP message with no options or payload</p>
 <div id="rfc.figure.7"/>
 <div id="fig-frame3"/>
 <pre>
@@ -651,7 +654,7 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 7: CoAP message format with 16-bit Extended Length field.</p>
+<p class="figure">Figure 7: CoAP message format with 16-bit Extended Length field</p>
 <div id="rfc.figure.8"/>
 <div id="fig-frame4"/>
 <pre>
@@ -667,12 +670,12 @@ li, p {
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
-<p class="figure">Figure 8: CoAP message format with 32-bit Extended Length field.</p>
-<p id="rfc.section.2.4.p.8">The semantics of the other CoAP header fields are left unchanged.</p>
-<h1 id="rfc.section.2.5"><a href="#rfc.section.2.5">2.5.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a></h1>
-<p id="rfc.section.2.5.p.1">CoAP requests and responses are exchanged asynchronously over the TCP/TLS connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
-<p id="rfc.section.2.5.p.2">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
-<p id="rfc.section.2.5.p.3">Retransmission and deduplication of messages is provided by the TCP/TLS protocol.</p>
+<p class="figure">Figure 8: CoAP message format with 32-bit Extended Length field</p>
+<p id="rfc.section.2.3.p.8">The semantics of the other CoAP header fields are left unchanged.</p>
+<h1 id="rfc.section.2.4"><a href="#rfc.section.2.4">2.4.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a></h1>
+<p id="rfc.section.2.4.p.1">CoAP requests and responses are exchanged asynchronously over the TCP/TLS connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
+<p id="rfc.section.2.4.p.2">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
+<p id="rfc.section.2.4.p.3">Retransmission and deduplication of messages is provided by the TCP/TLS protocol.</p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#websockets-overview" id="websockets-overview">CoAP over WebSockets</a></h1>
 <p id="rfc.section.3.p.1">CoAP over WebSockets can be used in a number of configurations. The most basic configuration is a CoAP client retrieving or updating a CoAP resource located at a CoAP server that exposes a WebSocket endpoint (<a href="#arch-1">Figure 9</a>). The CoAP client acts as the WebSocket client, establishes a WebSocket connection, and sends a CoAP request, to which the CoAP server returns a CoAP response. The WebSocket connection can be used for any number of requests.</p>
 <div id="rfc.figure.9"/>
@@ -758,7 +761,7 @@ Sec-WebSocket-Protocol: coap
 <p class="figure">Figure 13: Example of an Opening Handshake</p>
 <h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#websocket-message-format" id="websocket-message-format">Message Format</a></h1>
 <p id="rfc.section.3.2.p.1">Once a WebSocket connection is established, CoAP requests and responses can be exchanged as WebSocket messages. Since CoAP uses a binary message format, the messages are transmitted in binary data frames as specified in Sections 5 and 6 of <a href="#RFC6455">[RFC6455]</a>.</p>
-<p id="rfc.section.3.2.p.2">The message format shown in <a href="#ws-message-format">Figure 14</a> is the same as the CoAP over TCP message format (see <a href="#tcp-message-format">Section 2.4</a>) with one restriction. The Length (Len) field MUST be set to zero because the WebSockets frame contains the length.</p>
+<p id="rfc.section.3.2.p.2">The message format shown in <a href="#ws-message-format">Figure 14</a> is the same as the CoAP over TCP message format (see <a href="#tcp-message-format">Section 2.3</a>) with one restriction. The Length (Len) field MUST be set to zero because the WebSockets frame contains the length.</p>
 <div id="rfc.figure.14"/>
 <div id="ws-message-format"/>
 <pre>
@@ -792,33 +795,33 @@ Sec-WebSocket-Protocol: coap
 <p/>
 
 <ul>
-  <li>Share characteristics such as maximum message size for the connection</li>
-  <li>Shutdown the connection in an ordered fashion</li>
-  <li>Terminate the connection in response to a serious error condition</li>
+  <li>Related characteristics such as maximum message size for the connection</li>
+  <li>Shut down the connection in an orderly fashion</li>
+  <li>Provide diagnostic information when terminating a connection in response to a serious error condition</li>
 </ul>
 <p id="rfc.section.4.p.3">Signaling is a third basic kind of message in CoAP, after requests and responses.  Signaling messages share a common structure with the existing CoAP messages.  There is a code, a token, options, and an optional payload.</p>
 <p id="rfc.section.4.p.4">(See Section 3 of <a href="#RFC7252">[RFC7252]</a> for the overall structure, as adapted to the specific transport.)</p>
 <h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> <a href="#signaling-codes" id="signaling-codes">Signaling Codes</a></h1>
-<p id="rfc.section.4.1.p.1">A code in the 7.01-7.31 range indicates a Signaling message. Values in this range are assigned by the &#8220;CoAP Signaling Codes&#8221; sub-registry (see <a href="#message-codes">Section 8.1</a>).</p>
+<p id="rfc.section.4.1.p.1">A code in the 7.00-7.31 range indicates a Signaling message. Values in this range are assigned by the &#8220;CoAP Signaling Codes&#8221; sub-registry (see <a href="#message-codes">Section 8.1</a>).</p>
 <p id="rfc.section.4.1.p.2">For each message, there is a sender and a peer receiving the message.</p>
-<p id="rfc.section.4.1.p.3">Payloads in Signaling messages are diagnostic payloads (see Section 5.5.2 of <a href="#RFC7252">[RFC7252]</a>), unless otherwise defined by a Signaling message option.</p>
+<p id="rfc.section.4.1.p.3">Payloads in Signaling messages are diagnostic payloads as defined in Section 5.5.2 of <a href="#RFC7252">[RFC7252]</a>), unless otherwise defined by a Signaling message option.</p>
 <h1 id="rfc.section.4.2"><a href="#rfc.section.4.2">4.2.</a> <a href="#signaling-option-numbers" id="signaling-option-numbers">Signaling Option Numbers</a></h1>
 <p id="rfc.section.4.2.p.1">Option numbers for Signaling messages are specific to the message code. They do not share the number space with CoAP options for request/response messages or with Signaling messages using other codes.</p>
 <p id="rfc.section.4.2.p.2">Option numbers are assigned by the &#8220;CoAP Signaling Option Numbers&#8221; sub-registry (see <a href="#option-codes">Section 8.2</a>).</p>
-<p id="rfc.section.4.2.p.3">Signaling options are elective or critical as defined in Section 5.4.1 of <a href="#RFC7252">[RFC7252]</a>). If a Signaling option is critical and not understood by the receiver, it MUST abort the connection (see <a href="#sec-abort">Section 4.6</a>). If the option is understood but cannot be processed, the option documents the behavior.</p>
-<h1 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a> <a href="#csm" id="csm">Capability and Settings Messages (CSM)</a></h1>
-<p id="rfc.section.4.3.p.1">Capability and Settings messages (CSM) are used for two purposes:</p>
+<p id="rfc.section.4.2.p.3">Signaling options are elective or critical as defined in Section 5.4.1 of <a href="#RFC7252">[RFC7252]</a>. If a Signaling option is critical and not understood by the receiver, it MUST abort the connection (see <a href="#sec-abort">Section 4.6</a>). If the option is understood but cannot be processed, the option documents the behavior.</p>
+<h1 id="rfc.section.4.3"><a href="#rfc.section.4.3">4.3.</a> <a href="#csm" id="csm">Capabilities and Settings Messages (CSM)</a></h1>
+<p id="rfc.section.4.3.p.1">Capabilities and Settings messages (CSM) are used for two purposes:</p>
 <p/>
 
 <ul>
   <li>Each capability option advertises one capability of the sender to the recipient.</li>
   <li>Setting options indicate a setting that will be applied by the sender.</li>
 </ul>
-<p id="rfc.section.4.3.p.3">A Capability and Settings message MUST be sent by both endpoints at the start of the connection and MAY be sent at any other time by either endpoint over the lifetime of the connection.</p>
-<p id="rfc.section.4.3.p.4">Both capability and settings options are cumulative. A Capability and Settings message does not invalidate a previously sent capability indication or setting even if it is not repeated. A capability message without any option is a no-operation (and can be used as such). An option that is sent might override a previous value for the same option. The option defines how to handle this case if needed.</p>
-<p id="rfc.section.4.3.p.5">Base values are listed below for CSM Options. These are the values for the Capability and Setting before any Capability and Settings messages send a modified value.</p>
-<p id="rfc.section.4.3.p.6">These are not default values for the option as defined in Section 5.4.4 in <a href="#RFC7252">[RFC7252]</a>.  A default value would mean that an empty Capability and Settings message would result in the option being set to its default value.</p>
-<p id="rfc.section.4.3.p.7">Capability and Settings messages are indicated by the 7.01 code (CSM).</p>
+<p id="rfc.section.4.3.p.3">One CSM MUST be sent by both endpoints at the start of the connection. Further CSM MAY be sent at any other time by either endpoint over the lifetime of the connection.</p>
+<p id="rfc.section.4.3.p.4">Both capability and setting options are cumulative. A CSM does not invalidate a previously sent capability indication or setting even if it is not repeated. A capability message without any option is a no-operation (and can be used as such). An option that is sent might override a previous value for the same option. The option defines how to handle this case if needed.</p>
+<p id="rfc.section.4.3.p.5">Base values are listed below for CSM Options. These are the values for the capability and setting before any Capabilities and Settings messages send a modified value.</p>
+<p id="rfc.section.4.3.p.6">These are not default values for the option as defined in Section 5.4.4 in <a href="#RFC7252">[RFC7252]</a>.  A default value would mean that an empty Capabilities and Settings message would result in the option being set to its default value.</p>
+<p id="rfc.section.4.3.p.7">Capabilities and Settings messages are indicated by the 7.01 code (CSM).</p>
 <h1 id="rfc.section.4.3.1"><a href="#rfc.section.4.3.1">4.3.1.</a> <a href="#server-name-setting-option" id="server-name-setting-option">Server-Name Setting Option</a></h1>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
@@ -842,11 +845,11 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.3.1.p.1">A client can use the Server-Name critical option to indicate the default value for the Uri-Host Options in the messages that it sends to the server.  It has the same restrictions as the Uri-Host Option (Section 5.10 of <a href="#RFC7252">[RFC7252]</a>.</p>
-<p id="rfc.section.4.3.1.p.2">For TLS, the initial value for the Server-Name Option is given by the SNI value.</p>
-<p id="rfc.section.4.3.1.p.3">For Websockets, the initial value for the Server-Name Option is given by the HTTP Host header field.</p>
+<p id="rfc.section.4.3.1.p.1">A client can use the critical Server-Name Option to indicate the default value for the Uri-Host Options in the messages that it sends to the server.  It has the same restrictions as the Uri-Host Option (Section 5.10.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
+<p id="rfc.section.4.3.1.p.2">For TLS, the base value for the Server-Name Option is given by the SNI value.</p>
+<p id="rfc.section.4.3.1.p.3">For Websockets, the base value for the Server-Name Option is given by the HTTP Host header field.</p>
 <h1 id="rfc.section.4.3.2"><a href="#rfc.section.4.3.2">4.3.2.</a> <a href="#max-message-size" id="max-message-size">Max-Message-Size Capability Option</a></h1>
-<p id="rfc.section.4.3.2.p.1">The sender can use the Max-Message-Size elective option to indicate the maximum message size in bytes that it can receive.</p>
+<p id="rfc.section.4.3.2.p.1">The sender can use the elective Max-Message-Size Option to indicate the maximum message size in bytes that it can receive.</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -869,7 +872,7 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.3.2.p.2">As per Section 4.6 of <a href="#RFC7252">[RFC7252]</a>, the base value (and the value used when this option is not implemented) is 1152. A peer that relies on this option being indicated with a certain minimum value will enjoy limited interoperability.</p>
+<p id="rfc.section.4.3.2.p.2">As per Section 4.6 of <a href="#RFC7252">[RFC7252]</a>, the base value (and the value used when this option is not implemented) is 1152.</p>
 <h1 id="rfc.section.4.3.3"><a href="#rfc.section.4.3.3">4.3.3.</a> <a href="#block-wise-transfer-capability-option" id="block-wise-transfer-capability-option">Block-wise Transfer Capability Option</a></h1>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
@@ -893,7 +896,7 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.3.3.p.1">A sender can use the Block-wise Transfer elective Option to indicate that it supports the block-wise transfer protocol <a href="#RFC7959">[RFC7959]</a>.</p>
+<p id="rfc.section.4.3.3.p.1">A sender can use the elective Block-wise Transfer Option to indicate that it supports the block-wise transfer protocol <a href="#RFC7959">[RFC7959]</a>.</p>
 <p id="rfc.section.4.3.3.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not. An implementation that supports block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer Option also indicates support for BERT (see <a href="#bert">Section 5</a>).</p>
 <h1 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#sec-ping" id="sec-ping">Ping and Pong Messages</a></h1>
 <p id="rfc.section.4.4.p.1">In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient. This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
@@ -922,10 +925,10 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.4.1.p.1">A peer replying to a Ping message can add a Custody elective option to the Pong message it returns. This option indicates that the application has processed all request/response messages that it has received in the present connection ahead of the Ping message that prompted the Pong message. (Note that there is no definition of specific application semantics of &#8220;processed&#8221;, but there is an expectation that the sender of the Ping leading to the Pong with a Custody Option should be able to free buffers based on this indication.)</p>
-<p id="rfc.section.4.4.1.p.2">A Custody elective option can also be sent in a Ping message to explicitly request the return of a Custody Option in the Pong message. A peer is always free to indicate that it has finished processing all previous request/response messages by sending a Custody Option in a Pong message. A peer is also free NOT to send a Custody Option in case it is still processing previous request/response messages; however, it SHOULD delay its response to a Ping with a Custody Option until it can also return one.</p>
+<p id="rfc.section.4.4.1.p.1">When responding to a Ping message, the receiver can include an elective Custody Option in the Pong message. This option indicates that the application has processed all the request/response messages received prior to the Ping message on the current connection. (Note that there is no definition of specific application semantics for &#8220;processed&#8221;, but there is an expectation that the receiver of a Pong Message with a Custody Option should be able to free buffers based on this indication.)</p>
+<p id="rfc.section.4.4.1.p.2">A sender can also include an elective Custody Option in a Ping message to explicitly request the inclusion of an elective Custody Option in the corresponding Pong message.  The receiver SHOULD delay its Pong message until it finishes processing all the request/response messages received prior to the Ping message on the current connection.</p>
 <h1 id="rfc.section.4.5"><a href="#rfc.section.4.5">4.5.</a> <a href="#release-messages" id="release-messages">Release Messages</a></h1>
-<p id="rfc.section.4.5.p.1">A release message indicates that the sender does not want to continue maintaining the connection and opts for an orderly shutdown; the details are in the options. A diagnostic payload MAY be included. A release message will normally be replied to by the peer by closing the TCP/TLS connection.  Messages may be in flight when the sender decides to send a Release message.  The general expectation is that these will still be processed.</p>
+<p id="rfc.section.4.5.p.1">A Release message indicates that the sender does not want to continue maintaining the connection and opts for an orderly shutdown. The details are in the options. A diagnostic payload (see Section 5.5.2 of <a href="#RFC7252">[RFC7252]</a>) MAY be included.  A peer will normally respond to a Release message by closing the TCP/TLS connection.  Messages may be in flight when the sender decides to send a Release message.  The general expectation is that these will still be processed.</p>
 <p id="rfc.section.4.5.p.2">Release messages are indicated by the 7.04 code (Release).</p>
 <p id="rfc.section.4.5.p.3">Release messages can indicate one or more reasons using elective options.  The following options are defined:</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
@@ -950,7 +953,7 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.5.p.4">The Bad-Server-Name elective option indicates that the default indicated by the CSM Server-Name Option is unlikely to be useful for this server.</p>
+<p id="rfc.section.4.5.p.4">The elective Bad-Server-Name Option indicates that the default indicated by the CSM Server-Name Option is unlikely to be useful for this server.</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -973,7 +976,7 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.5.p.5">The Alternative-Address elective option requests the peer to instead open a connection of the same scheme as the present connection to the alternative transport address given.  Its value is in the form &#8220;authority&#8221; as defined in Section 3.2 of <a href="#RFC3986">[RFC3986]</a>.</p>
+<p id="rfc.section.4.5.p.5">The elective Alternative-Address Option requests the peer to instead open a connection of the same scheme as the present connection to the alternative transport address given.  Its value is in the form &#8220;authority&#8221; as defined in Section 3.2 of <a href="#RFC3986">[RFC3986]</a>.</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
   <thead>
     <tr>
@@ -996,9 +999,9 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.5.p.6">The Hold-Off elective option indicates that the server is requesting that the peer not reconnect to it for the number of seconds given in the value.</p>
+<p id="rfc.section.4.5.p.6">The elective Hold-Off Option indicates that the server is requesting that the peer not reconnect to it for the number of seconds given in the value.</p>
 <h1 id="rfc.section.4.6"><a href="#rfc.section.4.6">4.6.</a> <a href="#sec-abort" id="sec-abort">Abort Messages</a></h1>
-<p id="rfc.section.4.6.p.1">An abort message indicates that the sender is unable to continue maintaining the connection and cannot even wait for an orderly release. The sender shuts down the connection immediately after the abort (and may or may not wait for a release or abort message or connection shutdown in the inverse direction). A diagnostic payload SHOULD be included in the Abort message. Messages may be in flight when the sender decides to send an abort message. The general expectation is that these will NOT be processed.</p>
+<p id="rfc.section.4.6.p.1">An Abort message indicates that the sender is unable to continue maintaining the connection and cannot even wait for an orderly release. The sender shuts down the connection immediately after the abort (and may or may not wait for a Release or Abort message or connection shutdown in the inverse direction). A diagnostic payload (see Section 5.5.2 of <a href="#RFC7252">[RFC7252]</a>) SHOULD be included in the Abort message.  Messages may be in flight when the sender decides to send an Abort message.  The general expectation is that these will NOT be processed.</p>
 <p id="rfc.section.4.6.p.2">Abort messages are indicated by the 7.05 code (Abort).</p>
 <p id="rfc.section.4.6.p.3">Abort messages can indicate one or more reasons using elective options. The following option is defined:</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
@@ -1023,9 +1026,9 @@ Sec-WebSocket-Protocol: coap
     </tr>
   </tbody>
 </table>
-<p id="rfc.section.4.6.p.4">The Bad-CSM-Option Option indicates that the sender is unable to process the CSM option identified by its option number, e.g. when it is critical and the option number is unknown by the sender, or when there is parameter problem with the value of an elective option. More detailed information SHOULD be included as a diagnostic payload.</p>
-<p id="rfc.section.4.6.p.5">One reason for an sender to generate an abort message is a general syntax error in the byte stream received. No specific option has been defined for this, as the details of that syntax error are best left to a diagnostic payload.</p>
-<h1 id="rfc.section.4.7"><a href="#rfc.section.4.7">4.7.</a> <a href="#capability-and-settings-examples" id="capability-and-settings-examples">Capability and Settings examples</a></h1>
+<p id="rfc.section.4.6.p.4">The elective Bad-CSM-Option Option indicates that the sender is unable to process the CSM option identified by its option number, e.g. when it is critical and the option number is unknown by the sender, or when there is parameter problem with the value of an elective option. More detailed information SHOULD be included as a diagnostic payload.</p>
+<p id="rfc.section.4.6.p.5">One reason for an sender to generate an Abort message is a general syntax error in the byte stream received. No specific option has been defined for this, as the details of that syntax error are best left to a diagnostic payload.</p>
+<h1 id="rfc.section.4.7"><a href="#rfc.section.4.7">4.7.</a> <a href="#capabilities-and-settings-examples" id="capabilities-and-settings-examples">Capabilities and Settings examples</a></h1>
 <p id="rfc.section.4.7.p.1">An encoded example of a Ping message with a non-empty token is shown in <a href="#fig-ping-example">Figure 15</a>.</p>
 <div id="rfc.figure.15"/>
 <div id="fig-ping-example"/>
@@ -1093,7 +1096,7 @@ CLIENT                                       SERVER
   |                                            |
   | &lt;------   2.05 Content, 2:8/0/BERT(4711)   |
 </pre>
-<p class="figure">Figure 17: GET with BERT blocks.</p>
+<p class="figure">Figure 17: GET with BERT blocks</p>
 <h1 id="rfc.section.5.2"><a href="#rfc.section.5.2">5.2.</a> <a href="#example-put-with-bert-blocks" id="example-put-with-bert-blocks">Example: PUT with BERT Blocks</a></h1>
 <p><a href="#fig-bert2">Figure 18</a> demonstrates a PUT exchange with BERT blocks.</p>
 <div id="rfc.figure.18"/>
@@ -1114,19 +1117,19 @@ CLIENT                                        SERVER
   | &lt;------   2.04 Changed, 1:24/0/BERT         |
   |                                             |
 </pre>
-<p class="figure">Figure 18: PUT with BERT blocks.</p>
+<p class="figure">Figure 18: PUT with BERT blocks</p>
 <h1 id="rfc.section.6"><a href="#rfc.section.6">6.</a> <a href="#URI" id="URI">CoAP URIs</a></h1>
 <p id="rfc.section.6.p.1">CoAP over UDP <a href="#RFC7252">[RFC7252]</a> defines the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes for identifying CoAP resources and providing a means of locating the resource.</p>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#coap-over-tcp-and-tls-uris" id="coap-over-tcp-and-tls-uris">CoAP over TCP and TLS URIs</a></h1>
 <p id="rfc.section.6.1.p.1">CoAP over TCP uses the &#8220;coap+tcp&#8221; URI scheme. CoAP over TLS uses the &#8220;coaps+tcp&#8221; scheme. The rules from Section 6 of <a href="#RFC7252">[RFC7252]</a> apply to both of these URI schemes.</p>
-<p><a href="#RFC7252">[RFC7252]</a>, Section 8 (Multicast CoAP) is not applicable to these schemes.</p>
+<p id="rfc.section.6.1.p.2">Section 8 (Multicast CoAP) in <a href="#RFC7252">[RFC7252]</a> is not applicable to these schemes.</p>
 <p id="rfc.section.6.1.p.3">Resources made available via one of the &#8220;coap+tcp&#8221; or &#8220;coaps+tcp&#8221; schemes have no shared identity with the other scheme or with the &#8220;coap&#8221; or &#8220;coaps&#8221; scheme, even if their resource identifiers indicate the same authority (the same host listening to the same port).  The schemes constitute distinct namespaces and, in combination with the authority, are considered to be distinct origin servers.</p>
 <h1 id="rfc.section.6.1.1"><a href="#rfc.section.6.1.1">6.1.1.</a> <a href="#coaptcp-uri-scheme" id="coaptcp-uri-scheme">coap+tcp URI scheme</a></h1>
 <pre>
 coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ] path-abempty
                [ "?" query ]
 </pre>
-<p id="rfc.section.6.1.1.p.1">The semantics defined in <a href="#RFC7252">[RFC7252]</a>, Section 6.1, apply to this URI scheme, with the following changes:</p>
+<p id="rfc.section.6.1.1.p.1">The semantics defined in Section 6.1 of <a href="#RFC7252">[RFC7252]</a> apply to this URI scheme, with the following changes:</p>
 <p/>
 
 <ul>
@@ -1137,7 +1140,7 @@ coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ] path-abempty
 coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
                 [ "?" query ]
 </pre>
-<p id="rfc.section.6.1.2.p.1">The semantics defined in <a href="#RFC7252">[RFC7252]</a>, Section 6.2, apply to this URI scheme, with the following changes:</p>
+<p id="rfc.section.6.1.2.p.1">The semantics defined in Section 6.2 of <a href="#RFC7252">[RFC7252]</a> apply to this URI scheme, with the following changes:</p>
 <p/>
 
 <ul>
@@ -1173,7 +1176,7 @@ coap-wss-URI =
 <p id="rfc.section.6.2.1.p.3">The steps to construct a URI from a request&#8217;s options are changed accordingly.</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#security" id="security">Security Considerations</a></h1>
 <p id="rfc.section.7.p.1">The security considerations of <a href="#RFC7252">[RFC7252]</a> apply.</p>
-<p id="rfc.section.7.p.2">TLS version 1.2 or higher is mandatory-to-implement and MUST be enabled by default.  An endpoint MAY immediately abort a CoAP over TLS connection that does not meet this requirement (see <a href="#sec-abort">Section 4.6</a>) and SHOULD include a diagnostic payload.</p>
+<p id="rfc.section.7.p.2">TLS version 1.2 or higher is mandatory-to-implement and MUST be enabled by default.  An endpoint MAY immediately abort a CoAP over TLS connection that does not meet this requirement (see <a href="#sec-abort">Section 4.6</a>).</p>
 <p id="rfc.section.7.p.3">The TLS usage guidance in <a href="#RFC7925">[RFC7925]</a> SHOULD be followed.</p>
 <p id="rfc.section.7.p.4">TLS does not protect the TCP header. This may, for example, allow an on-path adversary to terminate a TCP connection prematurely by spoofing a TCP reset message.</p>
 <p id="rfc.section.7.p.5">CoAP over WebSockets and CoAP over TLS-secured WebSockets do not introduce additional security issues beyond CoAP and DTLS-secured CoAP respectively <a href="#RFC7252">[RFC7252]</a>. The security considerations of <a href="#RFC6455">[RFC6455]</a> apply.</p>
@@ -1187,7 +1190,7 @@ coap-wss-URI =
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a></h1>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#message-codes" id="message-codes">Signaling Codes</a></h1>
 <p id="rfc.section.8.1.p.1">IANA is requested to create a third sub-registry for values of the Code field in the CoAP header (Section 12.1 of <a href="#RFC7252">[RFC7252]</a>). The name of this sub-registry is &#8220;CoAP Signaling Codes&#8221;.</p>
-<p id="rfc.section.8.1.p.2">Each entry in the sub-registry must include the Signaling Code in the range 7.01-7.31, its name, and a reference to its documentation.</p>
+<p id="rfc.section.8.1.p.2">Each entry in the sub-registry must include the Signaling Code in the range 7.00-7.31, its name, and a reference to its documentation.</p>
 <p id="rfc.section.8.1.p.3">Initial entries in this sub-registry are as follows:</p>
 <div id="rfc.table.1"/>
 <div id="signal-codes"/>
@@ -1231,8 +1234,8 @@ coap-wss-URI =
 <p id="rfc.section.8.1.p.4">All other Signaling Codes are Unassigned.</p>
 <p id="rfc.section.8.1.p.5">The IANA policy for future additions to this sub-registry is &#8220;IETF Review or IESG Approval&#8221; as described in <a href="#RFC5226">[RFC5226]</a>.</p>
 <h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#option-codes" id="option-codes">CoAP Signaling Option Numbers Registry</a></h1>
-<p id="rfc.section.8.2.p.1">IANA is requested to create a sub-registry for signaling options similar to the CoAP Option Numbers Registry (Section 12.2 of <a href="#RFC7252">[RFC7252]</a>), with the single change that a fourth column is added to the sub-registry that is one of the codes in the Signaling Codes subregistry (<a href="#message-codes">Section 8.1</a>).</p>
-<p id="rfc.section.8.2.p.2">The name of this sub-registry is &#8220;CoAP Signaling Option Numbers&#8221;.</p>
+<p id="rfc.section.8.2.p.1">IANA is requested to create a sub-registry for Options Numbers used in CoAP signaling options within the &#8220;CoRE Parameters&#8221; registry.  The name of this sub-registry is &#8220;CoAP Signaling Option Numbers&#8221;.</p>
+<p id="rfc.section.8.2.p.2">Each entry in the sub-registry must include one or more of the codes in the Signaling Codes subregistry (<a href="#message-codes">Section 8.1</a>), the option number, the name of the option, and a reference to the option&#8217;s documentation.</p>
 <p id="rfc.section.8.2.p.3">Initial entries in this sub-registry are as follows:</p>
 <div id="rfc.table.2"/>
 <div id="signal-option-codes"/>
@@ -1240,58 +1243,58 @@ coap-wss-URI =
   <caption>CoAP Signal Option Codes</caption>
   <thead>
     <tr>
-      <th class="right">Number</th>
       <th class="left">Applies to</th>
+      <th class="right">Number</th>
       <th class="left">Name</th>
       <th class="center">Reference</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td class="left">7.01</td>
       <td class="right">1</td>
-      <td class="left">CSM</td>
       <td class="left">Server-Name</td>
       <td class="center">[RFCthis]</td>
     </tr>
     <tr>
+      <td class="left">7.01</td>
       <td class="right">2</td>
-      <td class="left">CSM</td>
       <td class="left">Max-Message-Size</td>
       <td class="center">[RFCthis]</td>
     </tr>
     <tr>
+      <td class="left">7.01</td>
       <td class="right">4</td>
-      <td class="left">CSM</td>
       <td class="left">Block-wise-Transfer</td>
       <td class="center">[RFCthis]</td>
     </tr>
     <tr>
+      <td class="left">7.02, 7.03</td>
       <td class="right">2</td>
-      <td class="left">Ping, Pong</td>
       <td class="left">Custody</td>
       <td class="center">[RFCthis]</td>
     </tr>
     <tr>
+      <td class="left">7.04</td>
       <td class="right">2</td>
-      <td class="left">Release</td>
       <td class="left">Bad-Server-Name</td>
       <td class="center">[RFCthis]</td>
     </tr>
     <tr>
+      <td class="left">7.04</td>
       <td class="right">4</td>
-      <td class="left">Release</td>
       <td class="left">Alternative-Address</td>
       <td class="center">[RFCthis]</td>
     </tr>
     <tr>
+      <td class="left">7.04</td>
       <td class="right">6</td>
-      <td class="left">Release</td>
       <td class="left">Hold-Off</td>
       <td class="center">[RFCthis]</td>
     </tr>
     <tr>
+      <td class="left">7.05</td>
       <td class="right">2</td>
-      <td class="left">Abort</td>
       <td class="left">Bad-CSM-Option</td>
       <td class="center">[RFCthis]</td>
     </tr>
@@ -1343,7 +1346,7 @@ coap-wss-URI =
 <p id="rfc.section.8.5.p.2">The syntax of the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes is specified in Section 6 of <a href="#RFC7252">[RFC7252]</a> and the present document re-uses their semantics for &#8220;coap+tcp&#8221; and &#8220;coaps+tcp&#8221;, respectively, with the exception that TCP, or TLS over TCP is used as a transport protocol.</p>
 <p id="rfc.section.8.5.p.3">IANA is requested to add these new URI schemes to the registry established with <a href="#RFC7595">[RFC7595]</a>.</p>
 <h1 id="rfc.section.8.5.1"><a href="#rfc.section.8.5.1">8.5.1.</a> <a href="#coapws" id="coapws">coap+ws</a></h1>
-<p id="rfc.section.8.5.1.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+ws&#8221;. The registration request complies with <a href="#RFC4395">[RFC4395]</a>.</p>
+<p id="rfc.section.8.5.1.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+ws&#8221;. The registration request complies with <a href="#RFC7595">[RFC7595]</a>.</p>
 <p/>
 
 <dl>
@@ -1371,7 +1374,7 @@ coap-wss-URI =
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
 <h1 id="rfc.section.8.5.2"><a href="#rfc.section.8.5.2">8.5.2.</a> <a href="#coapwss" id="coapwss">coap+wss</a></h1>
-<p id="rfc.section.8.5.2.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+wss&#8221;. The registration request complies with <a href="#RFC4395">[RFC4395]</a>.</p>
+<p id="rfc.section.8.5.2.p.1">This document requests the registration of the Uniform Resource Identifier (URI) scheme &#8220;coap+wss&#8221;. The registration request complies with <a href="#RFC7595">[RFC7595]</a>.</p>
 <p/>
 
 <dl>
@@ -1460,12 +1463,6 @@ coap-wss-URI =
     </tr>
     <tr>
       <td class="reference">
-        <b id="RFC4395">[RFC4395]</b>
-      </td>
-      <td class="top"><a>Hansen, T.</a>, <a>Hardie, T.</a> and <a>L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc4395">Guidelines and Registration Procedures for New URI Schemes</a>", RFC 4395, DOI 10.17487/RFC4395, February 2006.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="RFC5226">[RFC5226]</b>
       </td>
       <td class="top"><a>Narten, T.</a> and <a>H. Alvestrand</a>, "<a href="http://tools.ietf.org/html/rfc5226">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 5226, DOI 10.17487/RFC5226, May 2008.</td>
@@ -1531,6 +1528,12 @@ coap-wss-URI =
     </tr>
     <tr>
       <td class="reference">
+        <b id="I-D.ietf-core-cocoa">[I-D.ietf-core-cocoa]</b>
+      </td>
+      <td class="top"><a>Bormann, C.</a>, <a>Betzler, A.</a>, <a>Gomez, C.</a> and <a>I. Demirkol</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-cocoa-00">CoAP Simple Congestion Control/Advanced</a>", Internet-Draft draft-ietf-core-cocoa-00, October 2016.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="LWM2M">[LWM2M]</b>
       </td>
       <td class="top"><a>Open Mobile Alliance</a>, "<a href="http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf">Lightweight Machine to Machine Technical Specification Candidate Version 1.0</a>", April 2016.</td>
@@ -1584,17 +1587,14 @@ coap-wss-URI =
 <p id="rfc.section.A.1.p.1">When using the Observe Option with CoAP over UDP, notifications from the server set the option value to an increasing sequence number for reordering detection on the client since messages can arrive in a different order than they were sent. This sequence number is not required for CoAP over reliable transports since the TCP protocol ensures reliable and ordered delivery of messages. The value of the Observe Option in 2.xx notifications MAY be empty on transmission and MUST be ignored on reception.</p>
 <h1 id="rfc.appendix.A.2"><a href="#rfc.appendix.A.2">A.2.</a> <a href="#transmission-and-acknowledgements" id="transmission-and-acknowledgements">Transmission and Acknowledgements</a></h1>
 <p id="rfc.section.A.2.p.1">For CoAP over UDP, server notifications to the client can be confirmable or non-confirmable.  A confirmable message requires the client to either respond with an acknowledgement message or a reset message. An acknowledgement message indicates that the client is alive and wishes to receive further notifications. A reset message indicates that the client does not recognize the token which causes the server to remove the associated entry from the list of observers.</p>
-<p id="rfc.section.A.2.p.2">Since TCP eliminates the need for the message layer to support reliability, CoAP over reliable transports does not support confirmable or non-confirmable message types. All notifications are delivered reliably to the client with positive acknowledgement of receipt occurring at the TCP level. If the client does not recognize the token in a notification, it MAY immediately abort the connection (see <a href="#sec-abort">Section 4.6</a>) and SHOULD include a diagnostic payload.</p>
+<p id="rfc.section.A.2.p.2">Since TCP eliminates the need for the message layer to support reliability, CoAP over reliable transports does not support confirmable or non-confirmable message types. All notifications are delivered reliably to the client with positive acknowledgement of receipt occurring at the TCP level. If the client does not recognize the token in a notification, it MAY immediately abort the connection (see <a href="#sec-abort">Section 4.6</a>).</p>
 <h1 id="rfc.appendix.A.3"><a href="#rfc.appendix.A.3">A.3.</a> <a href="#cancellation" id="cancellation">Cancellation</a></h1>
 <p id="rfc.section.A.3.p.1">For CoAP over UDP, a client that is no longer interested in receiving notifications can &#8220;forget&#8221; the observation and respond to the next notification from the server with a reset message to cancel the observation.</p>
 <p id="rfc.section.A.3.p.2">For CoAP over reliable transports, a client MUST explicitly deregister by issuing a GET request that has the Token field set to the token of the observation to be cancelled and includes an Observe Option with the value set to 1 (deregister).</p>
 <p id="rfc.section.A.3.p.3">If the client observes one or more resources over a reliable connection, then the CoAP server (or intermediary in the role of the CoAP server) MUST remove all entries associated with the client endpoint from the lists of observers when the connection is either closed or times out.</p>
-<h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#negotiation" id="negotiation">Negotiating Protocol Versions</a></h1>
-<p id="rfc.section.B.p.1">CoAP is defined in <a href="#RFC7252">[RFC7252]</a> with a version number of 1. At this time, there is no known reason to support version numbers different from 1.</p>
-<p id="rfc.section.B.p.2">In contrast to the message layer for UDP and DTLS, the CoAP over TCP message format does not include a version number. If version negotiation needs to be addressed in the future, then Capability and Settings have been specifically designed to enable such a potential feature.</p>
-<h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#examples" id="examples">CoAP over WebSocket Examples</a></h1>
-<p id="rfc.section.C.p.1">This section gives examples for the first two configurations discussed in <a href="#websockets-overview">Section 3</a>.</p>
-<p id="rfc.section.C.p.2">An example of the process followed by a CoAP client to retrieve the representation of a resource identified by a &#8220;coap+ws&#8221; URI might be as follows. <a href="#example-1">Figure 19</a> below illustrates the WebSocket and CoAP messages exchanged in detail.</p>
+<h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#examples" id="examples">CoAP over WebSocket Examples</a></h1>
+<p id="rfc.section.B.p.1">This section gives examples for the first two configurations discussed in <a href="#websockets-overview">Section 3</a>.</p>
+<p id="rfc.section.B.p.2">An example of the process followed by a CoAP client to retrieve the representation of a resource identified by a &#8220;coap+ws&#8221; URI might be as follows. <a href="#example-1">Figure 19</a> below illustrates the WebSocket and CoAP messages exchanged in detail.</p>
 <p/>
 
 <ol>
@@ -1692,24 +1692,24 @@ coap-wss-URI =
      |          |          |
 </pre>
 <p class="figure">Figure 20: A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSockets-enabled CoAP proxy</p>
-<h1 id="rfc.appendix.D"><a href="#rfc.appendix.D">Appendix D.</a> <a href="#change-log" id="change-log">Change Log</a></h1>
-<p id="rfc.section.D.p.1">The RFC Editor is requested to remove this section at publication.</p>
-<h1 id="rfc.appendix.D.1"><a href="#rfc.appendix.D.1">D.1.</a> <a href="#since-draft-core-coap-tcp-tls-02" id="since-draft-core-coap-tcp-tls-02">Since draft-core-coap-tcp-tls-02</a></h1>
-<p id="rfc.section.D.1.p.1">Merged draft-savolainen-core-coap-websockets-07 Merged draft-bormann-core-block-bert-01 Merged draft-bormann-core-coap-sig-02</p>
-<h1 id="rfc.appendix.D.2"><a href="#rfc.appendix.D.2">D.2.</a> <a href="#since-draft-core-coap-tcp-tls-03" id="since-draft-core-coap-tcp-tls-03">Since draft-core-coap-tcp-tls-03</a></h1>
-<p id="rfc.section.D.2.p.1">Editorial updates</p>
-<p id="rfc.section.D.2.p.2">Added mandatory exchange of Capabilities and Settings messages after connecting</p>
-<p id="rfc.section.D.2.p.3">Added support for coaps+tcp port 5684 and more details on Application-Layer Protocol Negotiation (ALPN)</p>
-<p id="rfc.section.D.2.p.4">Added guidance on CoAP Signaling Ping-Pong versus WebSocket Ping-Pong</p>
-<p id="rfc.section.D.2.p.5">Updated references and requirements for TLS security considerations</p>
-<h1 id="rfc.appendix.D.3"><a href="#rfc.appendix.D.3">D.3.</a> <a href="#since-draft-core-coap-tcp-tls-04" id="since-draft-core-coap-tcp-tls-04">Since draft-core-coap-tcp-tls-04</a></h1>
-<p id="rfc.section.D.3.p.1">Updated references</p>
-<p id="rfc.section.D.3.p.2">Added Appendix: Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)</p>
-<p id="rfc.section.D.3.p.3">Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow client to send messages before receiving server CSM</p>
+<h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#change-log" id="change-log">Change Log</a></h1>
+<p id="rfc.section.C.p.1">The RFC Editor is requested to remove this section at publication.</p>
+<h1 id="rfc.appendix.C.1"><a href="#rfc.appendix.C.1">C.1.</a> <a href="#since-draft-core-coap-tcp-tls-02" id="since-draft-core-coap-tcp-tls-02">Since draft-core-coap-tcp-tls-02</a></h1>
+<p id="rfc.section.C.1.p.1">Merged draft-savolainen-core-coap-websockets-07 Merged draft-bormann-core-block-bert-01 Merged draft-bormann-core-coap-sig-02</p>
+<h1 id="rfc.appendix.C.2"><a href="#rfc.appendix.C.2">C.2.</a> <a href="#since-draft-core-coap-tcp-tls-03" id="since-draft-core-coap-tcp-tls-03">Since draft-core-coap-tcp-tls-03</a></h1>
+<p id="rfc.section.C.2.p.1">Editorial updates</p>
+<p id="rfc.section.C.2.p.2">Added mandatory exchange of Capabilities and Settings messages after connecting</p>
+<p id="rfc.section.C.2.p.3">Added support for coaps+tcp port 5684 and more details on Application-Layer Protocol Negotiation (ALPN)</p>
+<p id="rfc.section.C.2.p.4">Added guidance on CoAP Signaling Ping-Pong versus WebSocket Ping-Pong</p>
+<p id="rfc.section.C.2.p.5">Updated references and requirements for TLS security considerations</p>
+<h1 id="rfc.appendix.C.3"><a href="#rfc.appendix.C.3">C.3.</a> <a href="#since-draft-core-coap-tcp-tls-04" id="since-draft-core-coap-tcp-tls-04">Since draft-core-coap-tcp-tls-04</a></h1>
+<p id="rfc.section.C.3.p.1">Updated references</p>
+<p id="rfc.section.C.3.p.2">Added Appendix: Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)</p>
+<p id="rfc.section.C.3.p.3">Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow client to send messages before receiving server CSM</p>
 <h1 id="rfc.acknowledgements">
   <a href="#rfc.acknowledgements">Acknowledgements</a>
 </h1>
-<p id="rfc.section.E.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Christian Groves, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.</p>
+<p id="rfc.section.D.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Christian Groves, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.</p>
 <h1 id="rfc.contributors">
   <a href="#rfc.contributors">Contributors</a>
 </h1>
