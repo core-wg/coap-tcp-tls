@@ -270,7 +270,7 @@ are indicated by dashes.
 
 ## Opening Handshake {#tcp-handshake}
 
-Both the client and the server MUST send a Capability and Settings message (CSM see {{csm}})
+Both the client and the server MUST send a Capabilities and Settings message (CSM see {{csm}})
 as its first message on the connection. This message establishes the initial settings and
 capabilities for the endpoint such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
@@ -313,11 +313,12 @@ specified for CoAP over UDP. The differences are as follows:
   provided by CoAP over UDP. The Type (T) and Message ID fields in
   the CoAP message header are elided.
 
-* The Version (Vers) field is elided as well. In constrast to the UDP message
-  layer for UDP and DTLS, the CoAP over TCP message layer does not
-  send a version number in each message. If required in the future,
-  a new Capability and Settings Option (see {{negotiation}}) could be
-  defined to support version negotiation.
+* The Version (Vers) field is elided as well. In contrast to the message format
+  of CoAP over UDP, the message format for CoAP over TCP does not include a version
+  number. CoAP is defined in {{RFC7252}} with a version number of 1. At this time,
+  there is no known reason to support version numbers different from 1. If version
+  negotiation needs to be addressed in the future, then Capabilities and Settings Messages
+  (CSM see {{csm}}) have been specifically designed to enable such a potential feature.
 
 * In a stream oriented transport protocol such as TCP, a form of message 
   delimitation is needed. For this purpose, CoAP over TCP introduces a 
@@ -660,9 +661,9 @@ a response yet are cancelled when the connection is closed.
 
 Signaling messages are introduced to allow peers to:
 
-* Share characteristics such as maximum message size for the connection
-* Shutdown the connection in an ordered fashion
-* Terminate the connection in response to a serious error condition
+* Related characteristics such as maximum message size for the connection
+* Shut down the connection in an orderly fashion
+* Provide diagnostic information when terminating a connection in response to a serious error condition
 
 Signaling is a third basic kind of message in CoAP, after requests and responses. 
 Signaling messages share a common structure with the existing CoAP messages.
@@ -673,12 +674,12 @@ specific transport.)
 
 ## Signaling Codes
 
-A code in the 7.01-7.31 range indicates a Signaling message. Values in this
+A code in the 7.00-7.31 range indicates a Signaling message. Values in this
 range are assigned by the "CoAP Signaling Codes" sub-registry (see {{message-codes}}).
 
 For each message, there is a sender and a peer receiving the message.
 
-Payloads in Signaling messages are diagnostic payloads (see Section
+Payloads in Signaling messages are diagnostic payloads as defined in Section
 5.5.2 of {{-coap}}), unless otherwise defined by a Signaling
 message option.
 
@@ -697,33 +698,32 @@ of {{-coap}}. If a Signaling option is critical and not understood by
 the receiver, it MUST abort the connection (see {{sec-abort}}). If the
 option is understood but cannot be processed, the option documents the behavior.
 
-## Capability and Settings Messages (CSM) {#csm}
+## Capabilities and Settings Messages (CSM) {#csm}
 
-Capability and Settings messages (CSM) are used for two purposes:
+Capabilities and Settings messages (CSM) are used for two purposes:
 
 * Each capability option advertises one capability of the sender to the recipient. 
 
 * Setting options indicate a setting that will be applied by the sender.
 
-A Capability and Settings message MUST be sent by both endpoints at the start of the
-connection and MAY be sent at any other time by either endpoint over the lifetime of
+One CSM MUST be sent by both endpoints at the start of the connection. Further
+CSM MAY be sent at any other time by either endpoint over the lifetime of
 the connection.
 
-Both capability and settings options are cumulative. A Capability and Settings
-message does not invalidate a previously sent capability indication or setting
+Both capability and setting options are cumulative. A CSM does not invalidate a previously sent capability indication or setting
 even if it is not repeated. A capability message without any option is a no-operation (and
 can be used as such). An option that is sent might override a previous value for
 the same option. The option defines how to handle this case if needed.
 
 Base values are listed below for CSM Options. These are the values for the
-Capability and Setting before any Capability and Settings messages send a
+capability and setting before any Capabilities and Settings messages send a
 modified value.
 
 These are not default values for the option as defined in Section 5.4.4 in {{RFC7252}}.
-A default value would mean that an empty Capability and Settings message would result in
+A default value would mean that an empty Capabilities and Settings message would result in
 the option being set to its default value. 
 
-Capability and Settings messages are indicated by the 7.01 code (CSM).
+Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
 ### Server-Name Setting Option
 
@@ -750,8 +750,7 @@ in bytes that it can receive.
 |      2 | CSM        | Max-Message-Size    | uint       | 0-4         | 1152        |
 
 As per Section 4.6 of {{-coap}}, the base value (and the value used when this option
-is not implemented) is 1152. A peer that relies on this option being indicated with a
-certain minimum value will enjoy limited interoperability.
+is not implemented) is 1152. 
 
 ### Block-wise Transfer Capability Option
 
@@ -803,7 +802,8 @@ messages received prior to the Ping message on the current connection.
 
 A Release message indicates that the sender does not want to continue
 maintaining the connection and opts for an orderly shutdown. The details
-are in the options. A diagnostic payload MAY be included.  A peer will normally
+are in the options. A diagnostic payload (see Section
+5.5.2 of {{-coap}}) MAY be included.  A peer will normally
 respond to a Release message by closing the TCP/TLS connection. 
 Messages may be in flight when the sender decides to send a Release message.
 The general expectation is that these will still be processed.
@@ -842,9 +842,9 @@ maintaining the connection and cannot even wait for an orderly
 release. The sender shuts down the connection immediately after
 the abort (and may or may not wait for a Release or Abort message or
 connection shutdown in the inverse direction). A diagnostic payload
-SHOULD be included in the Abort message. Messages may be in flight
-when the sender decides to send an Abort message. The general
-expectation is that these will NOT be processed.
+(see Section 5.5.2 of {{-coap}}) SHOULD be included in the Abort message.
+Messages may be in flight when the sender decides to send an Abort message.
+The general expectation is that these will NOT be processed.
 
 Abort messages are indicated by the 7.05 code (Abort).
 
@@ -866,7 +866,7 @@ syntax error in the byte stream received. No specific option has been
 defined for this, as the details of that syntax error are best left to
 a diagnostic payload.
 
-## Capability and Settings examples
+## Capabilities and Settings examples
 
 An encoded example of a Ping message with a non-empty token is shown
 in {{fig-ping-example}}.
@@ -1147,7 +1147,7 @@ The security considerations of {{-coap}} apply.
 
 TLS version 1.2 or higher is mandatory-to-implement and MUST be enabled by default.
 An endpoint MAY immediately abort a CoAP over TLS connection that does not meet this
-requirement (see {{sec-abort}}) and SHOULD include a diagnostic payload.
+requirement (see {{sec-abort}}).
 
 The TLS usage guidance in {{RFC7925}} SHOULD be followed.
 
@@ -1459,7 +1459,7 @@ Since TCP eliminates the need for the message layer to support reliability, CoAP
 transports does not support confirmable or non-confirmable message types. All notifications are
 delivered reliably to the client with positive acknowledgement of receipt occurring at the TCP
 level. If the client does not recognize the token in a notification, it MAY immediately abort
-the connection (see {{sec-abort}}) and SHOULD include a diagnostic payload.
+the connection (see {{sec-abort}}).
 
 ## Cancellation
 
@@ -1474,16 +1474,6 @@ Option with the value set to 1 (deregister).
 If the client observes one or more resources over a reliable connection, then the CoAP server
 (or intermediary in the role of the CoAP server) MUST remove all entries associated with the
 client endpoint from the lists of observers when the connection is either closed or times out.
-
-# Negotiating Protocol Versions {#negotiation}
-
-CoAP is defined in {{RFC7252}} with a version number of 1. At this time,
-there is no known reason to support version numbers different from 1.  
-
-In contrast to the message layer for UDP and DTLS, the CoAP over TCP
-message format does not include a version number. If version negotiation
-needs to be addressed in the future, then Capability and Settings have been
-specifically designed to enable such a potential feature.
 
 # CoAP over WebSocket Examples {#examples}
 
