@@ -89,6 +89,7 @@ normative:
   RFC7925: RFC7925
 informative:
   I-D.ietf-core-cocoa: cocoa
+  I-D.ietf-core-object-security: oscoap
   RFC7959: block
   LWM2M:
     title: Lightweight Machine to Machine Technical Specification Candidate Version 1.0
@@ -113,6 +114,19 @@ informative:
     date: 2010
     seriesinfo:
       Proceedings: of the 10th annual conference on Internet measurement
+  SecurityChallenges:
+    title: Security Challenges for The Internet of Things
+    target: http://www.iab.org/wp-content/IAB-uploads/2011/03/Turner.pdf
+    author:
+    - ins: T. Polk
+      name: Tim Polk
+      org: ''
+    - ins: S. Turner
+      name: Sean Turner
+      org: ''
+    date: February 2011
+    format:
+      PDF: http://www.iab.org/wp-content/IAB-uploads/2011/03/Turner.pdf
 
 --- abstract
 
@@ -1141,19 +1155,59 @@ with the following changes:
 The steps to construct a URI from a request's options are
 changed accordingly.
 
+# Securing CoAP {#securing}
+
+Security Challenges for the Internet of Things {{SecurityChallenges}} stresses:
+
+> ... it is essential that IoT protocol suites specify a mandatory to implement
+> but optional to use security solution. This will ensure security is available
+> in all implementations, but configurable to use when not necessary (e.g., in closed environment).
+> ... even if those features stretch the capabilities of such devices.
+
+A security solution MUST be implemented to protect CoAP over TCP and MUST
+be enabled by default. This document defines the TLS binding, but alternative
+solutions at different layers in the protocol stack MAY be used to protect
+CoAP over TCP when appropriate. Note that there is ongoing work to support a
+data object-based security model that is independent of transport (see {{-oscoap}}).
+
+## TLS binding for CoAP over TCP
+
+The TLS usage guidance in {{RFC7925}} applies.
+
+During the provisioning phase, a CoAP device is provided with the
+security information that it needs, including keying materials and
+access control lists. At the end of the provisioning phase, the device
+will be in one of four security modes with the following information for
+the given mode. The "NoSec" and "RawPublicKey" modes are mandatory to
+implement.
+
+NoSec:
+
+: TLS is disabled.
+
+PreSharedKey:
+
+: TLS is enabled. The guidance in Section 4.2 of {{RFC7925}} applies.
+
+RawPublicKey:
+
+: TLS is enabled. The guidance in Section 4.3 of {{RFC7925}} applies.
+
+Certificate:
+
+: TLS is enabled. The guidance in Section 4.4 of {{RFC7925}} applies.
+
+In the "NoSec" mode, the system simply sends the packets over normal
+TCP which is indicated by the "coap+tcp" scheme and the TCP CoAP default port.
+The system is secured only by keeping attackers from being able to send
+or receive packets from the network with the CoAP nodes.
+
+The other three security modes are achieved using TLS and are indicated
+by the "coaps+tcp" scheme and TLS-secured CoAP default port.
+
 # Security Considerations {#security}
 
 The security considerations of {{-coap}} apply.
-
-TLS version 1.2 or higher is mandatory-to-implement and MUST be enabled by default.
-An endpoint MAY immediately abort a CoAP over TLS connection that does not meet this
-requirement (see {{sec-abort}}).
-
-The TLS usage guidance in {{RFC7925}} SHOULD be followed.
-
-TLS does not protect the TCP header. This may, for example, 
-allow an on-path adversary to terminate a TCP connection prematurely 
-by spoofing a TCP reset message.
 
 CoAP over WebSockets and CoAP over TLS-secured WebSockets do not
 introduce additional security issues beyond CoAP and DTLS-secured CoAP
