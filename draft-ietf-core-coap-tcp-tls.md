@@ -113,9 +113,9 @@ informative:
       org: ''
     date: 2010
     seriesinfo:
-      Proceedings: of the 10th annual conference on Internet measurement
+      Proceedings of the 10th annual conference on Internet measurement
   SecurityChallenges:
-    title: Security Challenges for The Internet of Things
+    title: Security Challenges for the Internet of Things
     target: http://www.iab.org/wp-content/IAB-uploads/2011/03/Turner.pdf
     author:
     - ins: T. Polk
@@ -125,6 +125,7 @@ informative:
       name: Sean Turner
       org: ''
     date: February 2011
+    seriesinfo: Interconnecting Smart Objects with the Internet / IAB Workshop
     format:
       PDF: http://www.iab.org/wp-content/IAB-uploads/2011/03/Turner.pdf
 
@@ -1157,7 +1158,7 @@ changed accordingly.
 
 # Securing CoAP {#securing}
 
-Security Challenges for the Internet of Things {{SecurityChallenges}} stresses:
+Security Challenges for the Internet of Things {{SecurityChallenges}} recommends:
 
 > ... it is essential that IoT protocol suites specify a mandatory to implement
 > but optional to use security solution. This will ensure security is available
@@ -1168,18 +1169,20 @@ A security solution MUST be implemented to protect CoAP over TCP and MUST
 be enabled by default. This document defines the TLS binding, but alternative
 solutions at different layers in the protocol stack MAY be used to protect
 CoAP over TCP when appropriate. Note that there is ongoing work to support a
-data object-based security model that is independent of transport (see {{-oscoap}}).
+data object-based security model for CoAP that is independent of transport
+(see {{-oscoap}}).
 
 ## TLS binding for CoAP over TCP
 
 The TLS usage guidance in {{RFC7925}} applies.
 
-During the provisioning phase, a CoAP device is provided with the
-security information that it needs, including keying materials and
-access control lists. At the end of the provisioning phase, the device
-will be in one of four security modes with the following information for
-the given mode. The "NoSec" and "RawPublicKey" modes are mandatory to
-implement.
+During the provisioning phase, a CoAP device is provided with the security information
+that it needs, including keying materials, access control lists, and authorization servers.
+At the end of the provisioning phase, the device will be in one of four security modes with
+the following information for the given mode. The "NoSec" mode in mandatory-to-implement
+for the TLS binding. The remaining mandatory-to-implement mode depends on the credential
+type used with the device. "PreSharedKey", "RawPublicKey", or "Certificate" is
+mandatory-to-implement for the TLS binding.
 
 NoSec:
 
@@ -1210,8 +1213,8 @@ by the "coaps+tcp" scheme and TLS-secured CoAP default port.
 The security considerations of {{-coap}} apply.
 
 CoAP over WebSockets and CoAP over TLS-secured WebSockets do not
-introduce additional security issues beyond CoAP and DTLS-secured CoAP
-respectively {{RFC7252}}. The security considerations of {{RFC6455}} apply.
+introduce additional security issues beyond {{-coap}}. The security
+considerations of {{RFC6455}} apply.
 
 ## Signaling Messages
 
