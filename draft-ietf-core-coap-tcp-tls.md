@@ -211,8 +211,8 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 This document assumes that readers are familiar with the terms and
 concepts that are used in {{RFC6455}}, {{RFC7252}}, {{RFC7641}}, and {{-block}}.
 
-The term "reliable transport" only refers to stream-based transport protocols such
-as TCP. 
+The term "reliable transport" is used only to refer to transport protocols such
+as TCP which provide reliable and ordered delivery of a byte-stream. 
 
 BERT Option:
 :	A Block1 or Block2 option that includes an SZX value of 7.
@@ -234,7 +234,7 @@ messages.
 ## Messaging Model 
 
 Conceptually, CoAP over TCP replaces most of the message layer of CoAP over UDP
-with a framing mechanism on top of the byte stream provided by TCP/TLS,
+with a framing mechanism on top of the byte-stream provided by TCP/TLS,
 conveying the length information for each message that on datagram transports
 is provided by the UDP/DTLS datagram layer.
 
@@ -862,7 +862,7 @@ parameter problem with the value of an elective option. More detailed
 information SHOULD be included as a diagnostic payload.
 
 One reason for an sender to generate an Abort message is a general
-syntax error in the byte stream received. No specific option has been
+syntax error in the byte-stream received. No specific option has been
 defined for this, as the details of that syntax error are best left to
 a diagnostic payload.
 
@@ -905,7 +905,7 @@ An encoded example of the corresponding Pong message is shown in {{fig-pong-exam
 
 The message size restrictions defined in Section 4.6 of CoAP {{RFC7252}}
 to avoid IP fragmentation are not necessary when CoAP is used over a reliable
-byte stream transport. While this suggests that the Block-wise transfer protocol
+transport. While this suggests that the Block-wise transfer protocol
 {{-block}} is also no longer needed, it remains applicable for a number of cases:
 
 * large messages, such as firmware downloads, may cause undesired
@@ -1473,7 +1473,7 @@ For CoAP over reliable transports, a client MUST explicitly deregister by issuin
 that has the Token field set to the token of the observation to be cancelled and includes an Observe
 Option with the value set to 1 (deregister). 
 
-If the client observes one or more resources over a reliable connection, then the CoAP server
+If the client observes one or more resources over a reliable transport, then the CoAP server
 (or intermediary in the role of the CoAP server) MUST remove all entries associated with the
 client endpoint from the lists of observers when the connection is either closed or times out.
 
