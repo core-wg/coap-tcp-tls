@@ -278,7 +278,7 @@ address {
 
   <link href="#rfc.toc" rel="Contents"/>
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction"/>
-<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology"/>
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Conventions and Terminology"/>
 <link href="#rfc.section.2" rel="Chapter" title="2 CoAP over TCP"/>
 <link href="#rfc.section.2.1" rel="Chapter" title="2.1 Messaging Model"/>
 <link href="#rfc.section.2.2" rel="Chapter" title="2.2 Opening Handshake"/>
@@ -434,7 +434,7 @@ address {
   <ul class="toc">
 
   	<li>1.   <a href="#rfc.section.1">Introduction</a></li>
-<ul><li>1.1.   <a href="#rfc.section.1.1">Terminology</a></li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">Conventions and Terminology</a></li>
 </ul><li>2.   <a href="#rfc.section.2">CoAP over TCP</a></li>
 <ul><li>2.1.   <a href="#rfc.section.2.1">Messaging Model</a></li>
 <li>2.2.   <a href="#rfc.section.2.2">Opening Handshake</a></li>
@@ -519,7 +519,7 @@ address {
 <p id="rfc.section.1.p.9">In addition, some corporate networks only allow Internet access via a HTTP proxy.  In this case, the best transport for CoAP might be the <a href="#RFC6455">WebSocket Protocol</a> <cite title="NONE">[RFC6455]</cite>.  The WebSocket protocol provides two-way communication between a client and a server after upgrading an <a href="#RFC7230">HTTP/1.1</a> <cite title="NONE">[RFC7230]</cite> connection and may be available in an environment that blocks CoAP over UDP. Another scenario for CoAP over WebSockets is a CoAP application running inside a web browser without access to connectivity other than HTTP and WebSockets.</p>
 <p id="rfc.section.1.p.10">This document specifies how to access resources using CoAP requests and responses over the TCP/TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP/TLS or WebSocket connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
 <p><a href="#observing">Appendix A</a> updates <a href="#RFC7641">Observing Resources in the Constrained Application Protocol</a> <cite title="NONE">[RFC7641]</cite> for use with CoAP over reliable transports. <a href="#RFC7641">[RFC7641]</a> is an extension to the CoAP core protocol that enables CoAP clients to &#8220;observe&#8221; a resource on a CoAP server. (The client retrieves a representation of a resource and registers to be notified by the server when the representation is updated.)</p>
-<h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a></h1>
+<h1 id="rfc.section.1.1"><a href="#rfc.section.1.1">1.1.</a> <a href="#conventions-and-terminology" id="conventions-and-terminology">Conventions and Terminology</a></h1>
 <p id="rfc.section.1.1.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
 <p id="rfc.section.1.1.p.2">This document assumes that readers are familiar with the terms and concepts that are used in <a href="#RFC6455">[RFC6455]</a>, <a href="#RFC7252">[RFC7252]</a>, <a href="#RFC7641">[RFC7641]</a>, and <a href="#RFC7959">[RFC7959]</a>.</p>
 <p id="rfc.section.1.1.p.3">The term &#8220;reliable transport&#8221; is used only to refer to transport protocols such as TCP which provide reliable and ordered delivery of a byte-stream.</p>
@@ -535,6 +535,14 @@ address {
   <dt>BERT Block:</dt>
   <dd style="margin-left: 8"><br/> The payload of a CoAP message that is affected by a BERT Option in descriptive usage (Section 2.1 of <a href="#RFC7959">[RFC7959]</a>).</dd>
 </dl>
+<p id="rfc.section.1.1.p.6">For simplicity, a Payload Marker (0xFF) is present in all examples for message formats:</p>
+<pre>
+    ...
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |1 1 1 1 1 1 1 1|    Payload (if any) ...
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre>
+<p id="rfc.section.1.1.p.7">The Payload Marker indicates the start of the optional payload and is absent for zero-length payloads (see section 3 of <a href="#RFC7252">[RFC7252]</a>).</p>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#coap-over-tcp" id="coap-over-tcp">CoAP over TCP</a></h1>
 <p id="rfc.section.2.p.1">The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.  The primary differences are in the message layer. The message layer of CoAP over UDP supports optional reliability by defining four Types of messages: Confirmable, Non-confirmable, Acknowledgement, and Reset. In addition, messages include a Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate messages.</p>
 <h1 id="rfc.section.2.1"><a href="#rfc.section.2.1">2.1.</a> <a href="#messaging-model" id="messaging-model">Messaging Model</a></h1>
@@ -773,7 +781,7 @@ Sec-WebSocket-Protocol: coap
   0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Len |  TKL  |      Code     |    Token (TKL bytes) ...
+| Len=0 |  TKL  |      Code     |    Token (TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
