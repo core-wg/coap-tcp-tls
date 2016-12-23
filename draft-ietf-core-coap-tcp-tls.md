@@ -137,7 +137,8 @@ reliable delivery, simple congestion control, and flow control.
 
 Some environments benefit from the availability of CoAP carried over reliable
 transports such as TCP or TLS. This document outlines the changes required to use
-CoAP over TCP, TLS, and WebSockets transports.
+CoAP over TCP, TLS, and WebSockets transports. It also formally updates {{RFC7641}}
+for use with these transports.
 
 --- middle
 
@@ -202,7 +203,7 @@ needs to support different transport protocols, namely TCP {{RFC0793}},
 in some situations secured by TLS {{RFC5246}}.
 
 In addition, some corporate networks only allow Internet access via a HTTP proxy.
-In this case, the best transport for CoAP would be the [WebSocket Protocol](#RFC6455).
+In this case, the best transport for CoAP might be the [WebSocket Protocol](#RFC6455).
 The WebSocket protocol provides two-way communication between a client
 and a server after upgrading an [HTTP/1.1](#RFC7230) connection and may
 be available in an environment that blocks CoAP over UDP. Another scenario
@@ -216,6 +217,12 @@ connectivity either by communicating CoAP directly with a CoAP server
 accessible over a TCP/TLS or WebSocket connection or via a CoAP intermediary
 that proxies CoAP requests and responses between different transports,
 such as between WebSockets and UDP.
+
+{{observing}} updates [Observing Resources in the Constrained Application Protocol](#RFC7641)
+for use with CoAP over reliable transports. {{RFC7641}} is an extension to the CoAP core
+protocol that enables CoAP clients to "observe" a resource on a CoAP server. (The client
+retrieves a representation of a resource and registers to be notified by the server when
+the representation is updated.)
 
 ## Terminology
 
@@ -1495,7 +1502,7 @@ Subprotocol Definition.
 
 --- back
 
-# Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)
+# Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP) {#observing}
 
 ## Notifications and Reordering
 
