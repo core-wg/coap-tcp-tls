@@ -224,7 +224,7 @@ protocol that enables CoAP clients to "observe" a resource on a CoAP server. (Th
 retrieves a representation of a resource and registers to be notified by the server when
 the representation is updated.)
 
-## Terminology
+## Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -243,6 +243,18 @@ BERT Block:
 :	The payload of a CoAP message that is affected by a BERT Option in
 	descriptive usage (Section 2.1 of {{-block}}).
 {: vspace='0'}
+
+For simplicity, a Payload Marker (0xFF) is present in all examples for message formats:
+
+~~~~
+    ...
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |1 1 1 1 1 1 1 1|    Payload (if any) ...
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+
+The Payload Marker indicates the start of the optional payload and is absent for zero-length
+payloads (see section 3 of {{RFC7252}}).
 
 # CoAP over TCP
 
@@ -611,7 +623,7 @@ the length.
   0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Len |  TKL  |      Code     |    Token (TKL bytes) ...
+| Len=0 |  TKL  |      Code     |    Token (TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
