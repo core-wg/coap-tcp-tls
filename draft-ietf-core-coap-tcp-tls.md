@@ -1426,108 +1426,103 @@ Port Number.
 :   5684
 {: vspace='0'}
 
-
 ## URI Scheme Registration
 
-This document registers two new URI schemes, namely "coap+tcp" and
-"coaps+tcp", for the use of CoAP over TCP and for CoAP over TLS over
-TCP, respectively. The "coap+tcp" and "coaps+tcp" URI schemes can thus
-be compared to the "http" and "https" URI schemes.
+URI schemes are registered within the "Uniform Resource Identifier (URI) Schemes"
+registry maintained at <http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml>.
 
-The syntax of the "coap" and "coaps" URI schemes is specified in
-Section 6 of {{RFC7252}} and the present document re-uses their
-semantics for "coap+tcp" and "coaps+tcp", respectively, with the
-exception that TCP, or TLS over TCP is used as a transport protocol.
+### coap+tcp
+IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap+tcp".
+This registration request complies with {{-urireg}}.
 
-IANA is requested to add these new URI schemes to the registry
-established with {{-urireg}}.
+Scheme name:
+:	coap+tcp
+
+Status:
+:	Permanent
+
+Applications/protocols that use this scheme name:
+:	The scheme is used by CoAP endpoints to access CoAP resources using TCP.
+
+Contact:
+:	IETF chair \<chair@ietf.org>
+
+Change controller:
+:	IESG \<iesg@ietf.org>
+
+Reference:
+:	{{coap-tcp-scheme}} in [RFCthis]
+{: vspace='0'}
+
+###coaps+tcp
+IANA is requested to register the Uniform Resource Identifier (URI) scheme "coaps+tcp".
+This registration request complies with {{-urireg}}.
+
+Scheme name:
+:	coaps+tcp
+
+Status:
+:	Permanent
+
+Applications/protocols that use this scheme name:
+:	The scheme is used by CoAP endpoints to access CoAP resources using TLS.
+
+Contact:
+:	IETF chair \<chair@ietf.org>
+
+Change controller:
+:	IESG \<iesg@ietf.org>
+
+Reference:
+:	{{coaps-tcp-scheme}} in [RFCthis]
+{: vspace='0'}
 
 ### coap+ws
 
-This document requests the registration of the Uniform Resource
-Identifier (URI) scheme "coap+ws". The registration request complies
-with {{-urireg}}.
+IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap+ws".
+This registration request complies with {{-urireg}}.
 
-URL scheme name.
+Scheme name:
 :	coap+ws
 
-Status.
+Status:
 :	Permanent
 
-URI scheme syntax.
-:	Defined in Section N of [RFCthis]
-
-URI scheme semantics.
-:	The "coap+ws" URI scheme provides a way to identify resources that
-	are potentially accessible over the Constrained Application Protocol (CoAP)
-	using the WebSocket protocol.
-
-Encoding considerations.
-:	The scheme encoding conforms to the encoding rules established for URIs
-	in {{RFC3986}}, i.e., internationalized and reserved characters are expressed
-	using UTF-8-based percent-encoding.
-
-Applications/protocols that use this URI scheme name.
+Applications/protocols that use this scheme name:
 :	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.
 
-Interoperability considerations.
-:	None.
-
-Security Considerations.
-:	See Section N of [RFCthis]
-
-Contact.
+Contact:
 :	IETF chair \<chair@ietf.org>
 
-Author/Change controller.
+Change controller:
 :	IESG \<iesg@ietf.org>
 
-References.
-:	[RFCthis]
+Reference:
+:	{{coap-ws-scheme}} in [RFCthis]
 {: vspace='0'}
 
-### coap+wss
-This document requests the registration of the Uniform Resource
-Identifier (URI) scheme "coap+wss". The registration request complies
-with {{-urireg}}.
+### coaps+ws
+IANA is requested to register the Uniform Resource Identifier (URI) scheme "coaps+ws".
+This registration request complies with {{-urireg}}.
 
-URL scheme name.
-:	coap+wss
+Scheme name:
+:	coaps+ws
 
-Status.
+Status:
 :	Permanent
 
-URI scheme syntax.
-:	Defined in Section N of [RFCthis]
-
-URI scheme semantics.
-:	The "coap+ws" URI scheme provides a way to identify resources that
-	are potentially accessible over the Constrained Application Protocol (CoAP)
-	using the WebSocket protocol secured with Transport Layer Security (TLS).
-
-Encoding considerations.
-:	The scheme encoding conforms to the encoding rules established for URIs
-	in {{RFC3986}}, i.e., internationalized and reserved characters are expressed
-	using UTF-8-based percent-encoding.
-
-Applications/protocols that use this URI scheme name.
+Applications/protocols that use this scheme name:
 :	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol
 	secured with TLS.
 
-Interoperability considerations.
-:	None.
-
-Security Considerations.
-:	See Section N of [RFCthis]
-
-Contact.
+Contact:
 :	IETF chair \<chair@ietf.org>
 
-Author/Change controller.
+Change controller:
 :	IESG \<iesg@ietf.org>
 
-References.
-:	[RFCthis]
+References:
+:	{{coaps-ws-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ## Well-Known URI Suffix Registration
