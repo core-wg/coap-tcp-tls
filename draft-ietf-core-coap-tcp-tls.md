@@ -1264,11 +1264,7 @@ The TLS usage guidance in {{RFC7925}} applies.
 
 During the provisioning phase, a CoAP device is provided with the security information
 that it needs, including keying materials, access control lists, and authorization servers.
-At the end of the provisioning phase, the device will be in one of four security modes with
-the following information for the given mode. The "NoSec" mode in mandatory-to-implement
-for the TLS binding. The remaining mandatory-to-implement mode depends on the credential
-type used with the device. "PreSharedKey", "RawPublicKey", or "Certificate" is
-mandatory-to-implement for the TLS binding.
+At the end of the provisioning phase, the device will be in one of four security modes:
 
 NoSec:
 
@@ -1286,21 +1282,20 @@ Certificate:
 
 : TLS is enabled. The guidance in Section 4.4 of {{RFC7925}} applies.
 
-In the "NoSec" mode, the system simply sends the packets over normal
+The "NoSec" mode is mandatory-to-implement. The system simply sends the packets over normal
 TCP which is indicated by the "coap+tcp" scheme and the TCP CoAP default port.
 The system is secured only by keeping attackers from being able to send
 or receive packets from the network with the CoAP nodes.
 
-The other three security modes are achieved using TLS and are indicated
-by the "coaps+tcp" scheme and TLS-secured CoAP default port.
+"PreSharedKey", "RawPublicKey", or "Certificate" is mandatory-to-implement for the TLS
+binding depending on the credential type used with the device. These security modes are
+achieved using TLS and are indicated by the "coaps+tcp" scheme and TLS-secured CoAP default port.
 
 # Security Considerations {#security}
 
-The security considerations of {{-coap}} apply.
-
-CoAP over WebSockets and CoAP over TLS-secured WebSockets do not
-introduce additional security issues beyond {{-coap}}. The security
-considerations of {{RFC6455}} apply.
+The security considerations of {{-coap}} apply. For CoAP over WebSockets and
+CoAP over TLS-secured WebSockets, the security considerations of {{RFC6455}}
+also apply.
 
 ## Signaling Messages
 
