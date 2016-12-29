@@ -481,7 +481,7 @@ TCP/TLS protocol.
 
 CoAP over WebSockets can be used in a number of configurations. The
 most basic configuration is a CoAP client retrieving or updating a
-CoAP resource located at a CoAP server that exposes a WebSocket endpoint
+CoAP resource located on a CoAP server that exposes a WebSocket endpoint
 ({{arch-1}}). The CoAP client acts as the WebSocket client, establishes
 a WebSocket connection, and sends a CoAP request, to which the CoAP server
 returns a CoAP response. The WebSocket connection can be used for any number
@@ -548,15 +548,10 @@ reach the CoAP server, the CoAP proxy should be a Reverse Proxy.
            UDP            UDP      WebSocket <=== WebSocket
          Client          Server      Server        Client
 ~~~~
-{: #arch-3 title='CoAP Client (UDP client) accesses sleepy CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)' artwork-align="center"}
+{: #arch-3 title='CoAP Client (UDP client) accesses CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)' artwork-align="center"}
 
 Further configurations are possible, including those where a
 WebSocket connection is established through an HTTP proxy.
-
-CoAP over WebSockets is intentionally very similar to CoAP
-over UDP. Therefore, instead of presenting CoAP over WebSockets as a
-new protocol, this document specifies it as a series of deltas from
-{{RFC7252}}.
 
 ## Opening Handshake {#handshake}
 
@@ -602,7 +597,7 @@ binary message format, the messages are transmitted in binary data
 frames as specified in Sections 5 and 6 of {{RFC6455}}.
 
 The message format shown in {{ws-message-format}} is the same as the CoAP
-over TCP message format (see {{tcp-message-format}}) with one restriction. The
+over TCP message format (see {{tcp-message-format}}) with one change. The
 Length (Len) field MUST be set to zero because the WebSockets frame contains
 the length.
 
@@ -619,10 +614,11 @@ the length.
 ~~~~
 {: #ws-message-format title='CoAP Message Format over WebSockets' artwork-align="center"}
 
-The CoAP over TCP message format eliminates the Version field defined in
-CoAP over UDP. If CoAP version negotiation is required in the future,
-CoAP over WebSockets can address the requirement by the definition of a
-new subprotocol identifier that is negotiated during the opening handshake.
+As with CoAP over TCP, the message format for CoAP over Websockets
+eliminates the Version field defined in CoAP over UDP. If CoAP version
+negotiation is required in the future, CoAP over WebSockets can address
+the requirement by the definition of a new subprotocol identifier that is
+negotiated during the opening handshake.
 
 Requests and response messages can be fragmented as specified in
 Section 5.4 of {{RFC6455}}, though typically they are sent unfragmented
@@ -630,9 +626,6 @@ as they tend to be small and fully buffered before transmission. The WebSocket
 protocol does not provide means for multiplexing. If it is not desirable for a
 large message to monopolize the connection, requests and responses can be
 transferred in a block-wise fashion as defined in {{-block}}.
-
-Empty messages (Code 0.00) MUST be ignored by the recipient (see also
-{{sec-ping}}).
 
 ## Message Transmission {#requests-responses}
 
@@ -647,7 +640,7 @@ connection.
 The connection is bi-directional, so requests can be sent both by
 the entity that established the connection and the remote host.
 
-Retransmission and deduplication of messages is provided by the
+As with CoAP over TCP, retransmission and deduplication of messages is provided by the
 WebSocket protocol. CoAP over WebSockets therefore does not make a
 distinction between Confirmable or Non-Confirmable messages, and does
 not provide Acknowledgement or Reset messages.
@@ -666,17 +659,6 @@ active requests, if any), a client can send a CoAP Ping Signaling message
 ({{sec-ping}}). WebSocket Ping and unsolicited Pong frames as
 specified in Section 5.5 of {{RFC6455}} SHOULD NOT be used to ensure that
 redundant maintenance traffic is not transmitted. 
-
-There is no way to retransmit a request without
-creating a new one. Re-registering interest in a resource is
-permitted, but entirely unnecessary.
-
-## Closing the Connection {#close}
-
-The WebSocket connection is closed as specified in Section 7 of {{RFC6455}}.
-
-All requests for which the CoAP client has not received
-a response yet are cancelled when the connection is closed.
 
 # Signaling
 
