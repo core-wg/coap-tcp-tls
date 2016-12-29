@@ -1578,6 +1578,16 @@ delivered reliably to the client with positive acknowledgement of receipt occurr
 level. If the client does not recognize the token in a notification, it MAY immediately abort
 the connection (see {{sec-abort}}).
 
+## Freshness
+
+For CoAP over UDP, if a client does not receive a notification for some
+time, it MAY send a new GET request with the same token as the original request to
+re-register its interest in a resource and verify that the server is still
+responsive. For CoAP over reliable transports, it is more efficient to check
+the health of the connection (and all its active observations) by sending a CoAP
+Ping Signaling message ({{sec-ping}}) rather than individual requests to confirm
+active observations.
+
 ## Cancellation
 
 For CoAP over UDP, a client that is no longer interested in receiving notifications can "forget"
