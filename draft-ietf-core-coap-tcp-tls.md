@@ -503,31 +503,18 @@ of requests.
 The challenge with this configuration is how to identify a resource in the
 namespace of the CoAP server. When the WebSocket protocol is used by
 a dedicated client directly (i.e., not from a web page through a web browser),
-the client can connect to any WebSocket endpoint. This means it is necessary for
-the client to identify both the WebSocket endpoint (identified
-by a "ws" or "wss" URI) and the path and query of the CoAP resource within
-that endpoint from the same URI. When the WebSocket protocol is used
-from a web page, the choices are more limited {{RFC6454}}, but the challenge persists.
-
-{{uris}} defines a new "coap+ws" URI scheme that identifies both a WebSocket endpoint
-and a resource within that endpoint as follows:
-
-~~~~
-      coap+ws://example.org/sensors/temperature?u=Cel
-           \______  ______/\___________  ___________/
-                  \/                   \/
-                                     Uri-Path: "sensors"
-ws://example.org/.well-known/coap    Uri-Path: "temperature"
-                                     Uri-Query: "u=Cel"
-~~~~
-{: #uri-example title='The "coap+ws" URI Scheme' artwork-align="center" }
+the client can connect to any WebSocket endpoint. {{coap-ws-scheme}} and
+{{coaps-ws-scheme}} define new URI schemes that enable the client to identify
+both a WebSocket endpoint and the path and query of the CoAP resource within that
+endpoint. When the WebSocket protocol is used from a web page, the choices are more
+limited {{RFC6454}}, but the challenge persists.
 
 Another possible configuration is to set up a CoAP forward proxy
 at the WebSocket endpoint. Depending on what transports are available
 to the proxy, it could forward the request to a CoAP server with a
 CoAP UDP endpoint ({{arch-2}}), an SMS endpoint (a.k.a.&nbsp;mobile phone),
 or even another WebSocket endpoint. The client specifies the resource to be
-updated or retrieved in the Proxy-URI Option.
+updated or retrieved in the Proxy-Uri Option.
 
 
 ~~~~
@@ -1041,139 +1028,219 @@ CLIENT                                        SERVER
 ~~~~
 {: #fig-bert2 title='PUT with BERT blocks'}
 
-# CoAP URIs {#URI}
+# CoAP over Reliable Transport URIs {#URI}
 
-CoAP over UDP {{RFC7252}} defines the "coap" and "coaps" URI schemes for
-identifying CoAP resources and providing a means of locating the resource. 
+CoAP over UDP {{RFC7252}} defines the "coap" and "coaps" URI schemes. This document
+introduces four additional URI schemes for identifying CoAP resources and providing a
+means of locating the resource:
 
-## CoAP over TCP and TLS URIs
+* the "coap+tcp" URI scheme for CoAP over TCP
+* the "coaps+tcp" URI scheme for CoAP over TCP secured by TLS
+* the "coap+ws" URI scheme for CoAP over WebSockets
+* the "coaps+ws" URI scheme for CoAP over WebSockets secured by TLS
 
-CoAP over TCP uses the "coap+tcp" URI scheme. CoAP over TLS uses the "coaps+tcp"
-scheme. The rules from Section 6 of {{RFC7252}} apply to both of these URI schemes.
+Resources made available via these schemes have no shared identity even if their
+resource identifiers indicate the same authority (the same host listening to the same
+TCP port). They are distinct namespaces and are considered to be distinct origin servers.
 
-Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes.
+The syntax for the URI schemes in this section are specified using
+Augmented Backus-Naur Form (ABNF) [RFC5234]. The definitions of "host",
+"port", "path-abempty", and "query" are adopted from [RFC3986]. 
 
-Resources made available via one of the "coap+tcp" or "coaps+tcp" schemes
-have no shared identity with the other scheme or with the "coap" or
-"coaps" scheme, even if their resource identifiers indicate the
-same authority (the same host listening to the same port).
-The schemes constitute distinct namespaces and, in combination with
-the authority, are considered to be distinct
-origin servers.
+Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes. 
 
-### coap+tcp URI scheme
+## coap+tcp URI scheme {#coap-tcp-scheme}
 
-~~~~
-coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ] path-abempty
-               [ "?" query ]
-~~~~
-
-The semantics defined in Section 6.1 of {{RFC7252}} apply to this
-URI scheme, with the following changes:
-
-* The port subcomponent indicates the TCP port
-at which the CoAP server is located. (If it is empty or not given,
-then the default port 5683 is assumed, as with UDP.)
-
-### coaps+tcp URI scheme {#coapstcp-uri-scheme}
+The "coap+tcp" URI scheme identifies CoAP resources that are intended to be accessible
+using CoAP over TCP.
 
 ~~~~
-coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ] path-abempty
-                [ "?" query ]
+coap+tcp-URI =
+   "coap+tcp:" "//" host [ ":" port ] path-abempty [ "?" query ]
 ~~~~
+{: artwork-align="center"}
 
-The semantics defined in Section 6.2 of {{RFC7252}} apply to this
-URI scheme, with the following changes:
+The syntax defined in Section 6.1 of {{RFC7252}} applies to this URI scheme with the following changes:
+
+* The port subcomponent indicates the TCP port at which the CoAP server is located.
+(If it is empty or not given, then the default port 5683 is assumed, as with UDP.)
+
+Encoding considerations:
+:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+
+Interoperability considerations:
+:	None.
+
+Security considerations:
+:	See Section 11.1 of {{RFC7252}}.
+
+## coaps+tcp URI scheme {#coaps-tcp-scheme}
+
+The "coaps+tcp" URI scheme identifies CoAP resources that are intended to be accessible
+using CoAP over TCP secured with TLS.
+
+~~~~
+coaps+tcp-URI =
+   "coaps+tcp:" "//" host [ ":" port ] path-abempty [ "?" query ]
+~~~~
+{: artwork-align="center"}
+
+The syntax defined in Section 6.2 of {{RFC7252}} applies to this URI scheme, with the following changes:
 
 * The port subcomponent indicates the TCP port at which the TLS server
   for the CoAP server is located. If it is empty or not given, then
   the default port 443 is assumed (this is different from the default
   port for "coaps", i.e., CoAP over DTLS over UDP).
 
-* If a server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
-  {{-alpn}} or wishes to accommodate clients that do not support ALPN, it MAY offer a
-  coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A server
+* If a TCP server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
+  {{-alpn}} or wishes to accommodate TCP clients that do not support ALPN, it MAY offer a
+  coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A TCP server
   MAY offer coaps+tcp endpoints on ports other than TCP port 5684, which MUST be ALPN enabled.
 
-* For TCP ports other than port 5684, the client MUST use the ALPN extension to advertise
+* For TCP ports other than port 5684, the TCP client MUST use the ALPN extension to advertise
   the "coap" protocol identifier (see {{alpnpid}}) in the list of protocols in its
-  ClientHello. If the server selects and returns the "coap" protocol identifier using the
-  ALPN extension in its ServerHello, then the connection succeeds. If the server either does
-  not negotiate the ALPN extension or returns a no_application_protocol alert, the client
+  ClientHello. If the TCP server selects and returns the "coap" protocol identifier using the
+  ALPN extension in its ServerHello, then the connection succeeds. If the TCP server either does
+  not negotiate the ALPN extension or returns a no_application_protocol alert, the TCP client
   MUST close the connection.
 
-* For TCP port 5684, a client MAY use the ALPN extension to advertise the "coap" protocol
-  identifier in the list of protocols in its ClientHello. If the server selects and returns
+* For TCP port 5684, a TCP client MAY use the ALPN extension to advertise the "coap" protocol
+  identifier in the list of protocols in its ClientHello. If the TCP server selects and returns
   the "coap" protocol identifier using the ALPN extension in its ServerHello, then the connection
-  succeeds. If the server returns a no_application_protocol alert, then the client MUST close the
-  connection. If the server does not negotiate the ALPN extension, then coaps+tcp is implicitly
+  succeeds. If the TCP server returns a no_application_protocol alert, then the TCP client MUST close the
+  connection. If the TCP server does not negotiate the ALPN extension, then coaps+tcp is implicitly
   selected.
 
-* For TCP port 5684, if the client does not use the ALPN extension to negotiate the protocol,
+* For TCP port 5684, if the TCP client does not use the ALPN extension to negotiate the protocol,
   then coaps+tcp is implicitly selected.
 
-## CoAP over WebSockets URIs {#uris}
+Encoding considerations:
+:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
-For the first configuration discussed in {{websockets-overview}},
-this document defines two new URIs schemes that can be used for
-identifying CoAP resources and providing a means of locating these
-resources: "coap+ws" and "coap+wss".
+Interoperability considerations:
+:	None.
 
-Similar to the "coap" and "coaps" schemes, the "coap+ws" and
-"coap+wss" schemes organize resources hierarchically under a CoAP
-origin server. The key difference is that the server is potentially
-reachable on a WebSocket endpoint instead of a UDP endpoint.
+Security considerations:
+:	See Section 11.1 of {{RFC7252}}.
 
-The WebSocket endpoint is identified by a "ws" or "wss" URI
-that is composed of the authority part of the "coap+ws" or
-"coap+wss" URI, respectively, and the well-known path
-"/.well-known/coap" {{RFC5785}}.
-The path and query parts of a "coap+ws" or "coap+wss" URI
-identify a resource within the specified endpoint which can be
-operated on by the methods defined by CoAP.
+## coap+ws URI scheme {#coap-ws-scheme}
 
-The syntax of the "coap+ws" and "coap+wss" URI schemes is specified
-below in Augmented Backus-Naur Form (ABNF) {{RFC5234}}.
-The definitions of "host", "port", "path-abempty" and "query" are the
-same as in {{RFC3986}}.
-
+The "coap+ws" URI scheme identifies CoAP resources that are intended to be accessible
+using CoAP over WebSockets.
 
 ~~~~
 coap-ws-URI =
    "coap+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
-
-coap-wss-URI =
-   "coap+wss:" "//" host [ ":" port ] path-abempty [ "?" query ]
 ~~~~
 {: artwork-align="center"}
 
-The port component is OPTIONAL; the default for "coap+ws" is port
-80, while the default for "coap+wss" is port 443.
+The port component is OPTIONAL. The default is port 80.
 
-Fragment identifiers are not part of the request URI and thus MUST
-NOT be transmitted in a WebSocket handshake or in the URI options
-of a CoAP request.
+The WebSocket endpoint is identified by a "ws" URI that is composed of the authority
+part of the "coap+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
+The path and query parts of a "coap+ws" URI identify a resource within the specified
+endpoint which can be operated on by the methods defined by CoAP:
 
-### Decomposing and Composing URIs
+~~~~
+      coap+ws://example.org/sensors/temperature?u=Cel
+           \______  ______/\___________  ___________/
+                  \/                   \/
+                                     Uri-Path: "sensors"
+ws://example.org/.well-known/coap    Uri-Path: "temperature"
+                                     Uri-Query: "u=Cel"
+~~~~
+{: #coap-ws-example title='The "coap+ws" URI Scheme' artwork-align="center" }
 
-The steps for decomposing a "coap+ws" or "coap+wss" URI into
-CoAP options are the same as specified in Section 6.4 of {{RFC7252}}
-with the following changes:
+Encoding considerations:
+:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
-* The \<scheme> component MUST be "coap+ws" or "coap+wss"
-  when converted to ASCII lowercase.
+Interoperability considerations:
+:	None.
 
-* A Uri-Host Option MUST only be included in a request when
-  the \<host> component does not equal the uri-host
-  component in the Host header field in the WebSocket
-  handshake.
+Security considerations:
+:	See Section 11.1 of {{RFC7252}}.
 
-* A Uri-Port Option MUST only be included in a request if
-  \|port\| does not equal the port component in the Host header
-  field in the WebSocket handshake.
+## coaps+ws URI scheme {#coaps-ws-scheme}
 
-The steps to construct a URI from a request's options are
-changed accordingly.
+The "coaps+ws" URI scheme identifies CoAP resources that are intended to be accessible
+using CoAP over WebSockets secured by TLS.
+
+~~~~
+coaps-ws-URI =
+   "coaps+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+~~~~
+{: artwork-align="center"}
+
+The port component is OPTIONAL. The default is port 443.
+
+The WebSocket endpoint is identified by a "wss" URI that is composed of the authority
+part of the "coaps+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
+The path and query parts of a "coaps+ws" URI identify a resource within the specified
+endpoint which can be operated on by the methods defined by CoAP.
+
+~~~~
+      coaps+ws://example.org/sensors/temperature?u=Cel
+           \______  ______/\___________  ___________/
+                  \/                   \/
+                                     Uri-Path: "sensors"
+wss://example.org/.well-known/coap   Uri-Path: "temperature"
+                                     Uri-Query: "u=Cel"
+~~~~
+{: #coaps-ws-example title='The "coaps+ws" URI Scheme' artwork-align="center" }
+
+Encoding considerations:
+:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+
+Interoperability considerations:
+:	None.
+
+Security considerations:
+:	See Section 11.1 of {{RFC7252}}.
+
+## Decomposing URIs into Options
+
+The steps are the same as specified in Section 6.4 of {{RFC7252}} with the following changes:
+
+~~~~
+3.  If |url| does not have a <scheme> component whose value, when
+    converted to ASCII lowercase, is "coap" or "coaps", then fail
+    this algorithm.
+~~~~
+
+If \|url\| does not have a \<scheme> component whose value, when converted to ASCII lowercase,
+is "coap+tcp", "coaps+tcp", "coap+ws", or "coaps+ws" then fail this algorithm.
+
+~~~~
+7.  If |port| does not equal the request's destination UDP port,
+    include a Uri-Port Option and let that option's value be |port|.
+~~~~
+
+If \|port\| does not equal the request's destination TCP port, include a Uri-Port Option
+and let that option's value be \|port\|.
+
+## Composing URIs from Options
+
+The steps are the same as specified in Section 6.5 of {{RFC7252}} with the following changes:
+
+~~~~
+1.  If the request is secured using DTLS, let |url| be the string
+    "coaps://".  Otherwise, let |url| be the string "coap://".
+~~~~
+
+For CoAP over TCP, if the request is secured using TLS, let \|url\| be the string
+"coaps+tcp://". Otherwise, let \|url\| be the string "coap+tcp://". For CoAP over
+WebSockets, if the request is secured using TLS, let \|url\| be the string "coaps+ws://".
+Otherwise, let \|url\| be the string "coap+ws://".
+
+~~~~
+4.  If the request includes a Uri-Port Option, let |port| be that
+    option's value.  Otherwise, let |port| be the request's
+    destination UDP port.
+~~~~
+
+If the request includes a Uri-Port Option, let \|port\| be that option's value.
+Otherwise, let \|port\| be the request's destination TCP port.
+
 
 # Securing CoAP {#securing}
 
