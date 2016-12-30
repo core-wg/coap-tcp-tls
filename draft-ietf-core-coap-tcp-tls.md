@@ -641,6 +641,9 @@ transferred in a block-wise fashion as defined in {{-block}}.
 
 ## Message Transmission {#requests-responses}
 
+As with CoAP over TCP, both the client and the server MUST send a Capabilities
+and Settings message (CSM see {{csm}}) as its first message on the WebSocket connection.
+
 CoAP requests and responses are exchanged asynchronously over the
 WebSocket connection. A CoAP client can send multiple requests
 without waiting for a response and the CoAP server can return
