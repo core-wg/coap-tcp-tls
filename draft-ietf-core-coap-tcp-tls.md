@@ -301,22 +301,6 @@ are indicated by dashes.
 ~~~~
 {: #fig-flow-comparison title='Comparison between CoAP over unreliable and reliable transport' artwork-align="center"}
 
-
-## Opening Handshake {#tcp-handshake}
-
-Both the client and the server MUST send a Capabilities and Settings message (CSM see {{csm}})
-as its first message on the connection. This message establishes the initial settings and
-capabilities for the endpoint such as maximum message size or support for block-wise transfers.
-The absence of options in the CSM indicates that base values are assumed.
-
-To avoid unnecessary latency, a client MAY send additional messages without waiting to receive
-the server CSM; however, it is important to note that the server CSM might advertise capabilities
-that impact how a client is expected to communicate with the server. For example, the server CSM
-could advertise a Max-Message-Size option (see {{max-message-size}}) that is smaller than the base value (1152). 
-
-Clients and servers MUST treat a missing or invalid CSM as a connection error and abort
-the connection (see {{sec-abort}}). 
-
 ## Message Format {#tcp-message-format}
 
 The CoAP message format defined in {{RFC7252}}, as shown in 
@@ -463,6 +447,19 @@ The semantics of the other CoAP header fields are left unchanged.
 
 ## Message Transmission
 
+Once a connection is established, both the client and the server MUST send a Capabilities and Settings message (CSM see {{csm}})
+as its first message on the connection. This message establishes the initial settings and
+capabilities for the endpoint such as maximum message size or support for block-wise transfers.
+The absence of options in the CSM indicates that base values are assumed.
+
+To avoid unnecessary latency, a client MAY send additional messages without waiting to receive
+the server CSM; however, it is important to note that the server CSM might advertise capabilities
+that impact how a client is expected to communicate with the server. For example, the server CSM
+could advertise a Max-Message-Size option (see {{max-message-size}}) that is smaller than the base value (1152). 
+
+Clients and servers MUST treat a missing or invalid CSM as a connection error and abort
+the connection (see {{sec-abort}}). 
+
 CoAP requests and responses are exchanged asynchronously over the
 TCP/TLS connection. A CoAP client can send multiple requests
 without waiting for a response and the CoAP server can return
@@ -475,9 +472,24 @@ The connection is bi-directional, so requests can be sent both by
 the entity that established the connection and the remote host.
 
 Retransmission and deduplication of messages is provided by the
-TCP/TLS protocol. 
+TCP/TLS protocol.
+
+## Connection Health {#liveliness}
+
+Empty messages (Code 0.00) can always be sent and MUST be ignored by the
+recipient. This provides a basic keep-alive function that can refresh NAT
+bindings.
+
+If a client does not receive any response for some time after
+sending a CoAP request (or, similarly, when a client observes a
+resource and it does not receive any notification for some time),
+it can send a CoAP Ping Signaling message ({{sec-ping}}) to test
+the connection and verify that the server is responsive.
 
 # CoAP over WebSockets {#websockets-overview}
+
+CoAP over WebSockets is intentionally similar to CoAP over TCP; therefore,
+this section only specifies the differences between the transports.
 
 CoAP over WebSockets can be used in a number of configurations. The
 most basic configuration is a CoAP client retrieving or updating a
@@ -645,20 +657,12 @@ WebSocket protocol. CoAP over WebSockets therefore does not make a
 distinction between Confirmable or Non-Confirmable messages, and does
 not provide Acknowledgement or Reset messages.
 
-## Connection Health {#liveliness}
+## Connection Health {#ws-liveliness}
 
-When a client does not receive any response for some time after
-sending a CoAP request (or, similarly, when a client observes a
-resource and it does not receive any notification for some time),
-the connection between the WebSocket client and the WebSocket
-server may be lost or temporarily disrupted without the client
-being aware of it.
-
-To check the health of the WebSocket connection (and thereby of all
-active requests, if any), a client can send a CoAP Ping Signaling message
-({{sec-ping}}). WebSocket Ping and unsolicited Pong frames as
-specified in Section 5.5 of {{RFC6455}} SHOULD NOT be used to ensure that
-redundant maintenance traffic is not transmitted. 
+As with CoAP over TCP, the client can test the health of the CoAP over WebSocket
+connection by sending a CoAP Ping Signaling message ({{sec-ping}}). WebSocket Ping
+and unsolicited Pong frames (Section 5.5 of {{RFC6455}}) SHOULD NOT be used to ensure
+that redundant maintenance traffic is not transmitted. 
 
 # Signaling
 
@@ -773,9 +777,9 @@ indicates support for BERT (see {{bert}}).
 
 ## Ping and Pong Messages {#sec-ping}
 
-In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored
-by the recipient. This provides a basic keep-alive function
-that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.
+In CoAP over reliable transports, Empty messages (Code 0.00) can always be sent and MUST be ignored
+by the recipient. This provides a basic keep-alive function. In contrast, Ping and Pong messages are
+a bidirectional exchange.
 
 Upon receipt of a Ping message, a single Pong message is returned with the identical
 token. As with all Signaling messages, the recipient of a Ping or Pong message MUST
