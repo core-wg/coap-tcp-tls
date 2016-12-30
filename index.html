@@ -281,15 +281,14 @@ address {
 <link href="#rfc.section.1.1" rel="Chapter" title="1.1 Conventions and Terminology"/>
 <link href="#rfc.section.2" rel="Chapter" title="2 CoAP over TCP"/>
 <link href="#rfc.section.2.1" rel="Chapter" title="2.1 Messaging Model"/>
-<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Opening Handshake"/>
-<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Message Format"/>
-<link href="#rfc.section.2.4" rel="Chapter" title="2.4 Message Transmission"/>
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Message Format"/>
+<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Message Transmission"/>
+<link href="#rfc.section.2.4" rel="Chapter" title="2.4 Connection Health"/>
 <link href="#rfc.section.3" rel="Chapter" title="3 CoAP over WebSockets"/>
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 Opening Handshake"/>
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 Message Format"/>
 <link href="#rfc.section.3.3" rel="Chapter" title="3.3 Message Transmission"/>
 <link href="#rfc.section.3.4" rel="Chapter" title="3.4 Connection Health"/>
-<link href="#rfc.section.3.5" rel="Chapter" title="3.5 Closing the Connection"/>
 <link href="#rfc.section.4" rel="Chapter" title="4 Signaling"/>
 <link href="#rfc.section.4.1" rel="Chapter" title="4.1 Signaling Codes"/>
 <link href="#rfc.section.4.2" rel="Chapter" title="4.2 Signaling Option Numbers"/>
@@ -327,7 +326,8 @@ address {
 <link href="#rfc.appendix.A" rel="Chapter" title="A Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)"/>
 <link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 Notifications and Reordering"/>
 <link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 Transmission and Acknowledgements"/>
-<link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 Cancellation"/>
+<link href="#rfc.appendix.A.3" rel="Chapter" title="A.3 Freshness"/>
+<link href="#rfc.appendix.A.4" rel="Chapter" title="A.4 Cancellation"/>
 <link href="#rfc.appendix.B" rel="Chapter" title="B CoAP over WebSocket Examples"/>
 <link href="#rfc.appendix.C" rel="Chapter" title="C Change Log"/>
 <link href="#rfc.appendix.C.1" rel="Chapter" title="C.1 Since draft-core-coap-tcp-tls-02"/>
@@ -343,7 +343,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2016-12-29" />
+  <meta name="dct.issued" scheme="ISO8601" content="2016-12-30" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -371,7 +371,7 @@ address {
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-  <td class="left">Expires: July 2, 2017</td>
+  <td class="left">Expires: July 3, 2017</td>
   <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -404,7 +404,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">December 29, 2016</td>
+  <td class="right">December 30, 2016</td>
 </tr>
 
     	
@@ -425,7 +425,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on July 2, 2017.</p>
+<p>This Internet-Draft will expire on July 3, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -441,15 +441,14 @@ address {
 <ul><li>1.1.   <a href="#rfc.section.1.1">Conventions and Terminology</a></li>
 </ul><li>2.   <a href="#rfc.section.2">CoAP over TCP</a></li>
 <ul><li>2.1.   <a href="#rfc.section.2.1">Messaging Model</a></li>
-<li>2.2.   <a href="#rfc.section.2.2">Opening Handshake</a></li>
-<li>2.3.   <a href="#rfc.section.2.3">Message Format</a></li>
-<li>2.4.   <a href="#rfc.section.2.4">Message Transmission</a></li>
+<li>2.2.   <a href="#rfc.section.2.2">Message Format</a></li>
+<li>2.3.   <a href="#rfc.section.2.3">Message Transmission</a></li>
+<li>2.4.   <a href="#rfc.section.2.4">Connection Health</a></li>
 </ul><li>3.   <a href="#rfc.section.3">CoAP over WebSockets</a></li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">Opening Handshake</a></li>
 <li>3.2.   <a href="#rfc.section.3.2">Message Format</a></li>
 <li>3.3.   <a href="#rfc.section.3.3">Message Transmission</a></li>
 <li>3.4.   <a href="#rfc.section.3.4">Connection Health</a></li>
-<li>3.5.   <a href="#rfc.section.3.5">Closing the Connection</a></li>
 </ul><li>4.   <a href="#rfc.section.4">Signaling</a></li>
 <ul><li>4.1.   <a href="#rfc.section.4.1">Signaling Codes</a></li>
 <li>4.2.   <a href="#rfc.section.4.2">Signaling Option Numbers</a></li>
@@ -487,7 +486,8 @@ address {
 </ul><li>Appendix A.   <a href="#rfc.appendix.A">Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)</a></li>
 <ul><li>A.1.   <a href="#rfc.appendix.A.1">Notifications and Reordering</a></li>
 <li>A.2.   <a href="#rfc.appendix.A.2">Transmission and Acknowledgements</a></li>
-<li>A.3.   <a href="#rfc.appendix.A.3">Cancellation</a></li>
+<li>A.3.   <a href="#rfc.appendix.A.3">Freshness</a></li>
+<li>A.4.   <a href="#rfc.appendix.A.4">Cancellation</a></li>
 </ul><li>Appendix B.   <a href="#rfc.appendix.B">CoAP over WebSocket Examples</a></li>
 <li>Appendix C.   <a href="#rfc.appendix.C">Change Log</a></li>
 <ul><li>C.1.   <a href="#rfc.appendix.C.1">Since draft-core-coap-tcp-tls-02</a></li>
@@ -578,12 +578,8 @@ address {
                                          transport
 </pre>
 <p class="figure">Figure 2: Comparison between CoAP over unreliable and reliable transport</p>
-<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#tcp-handshake" id="tcp-handshake">Opening Handshake</a></h1>
-<p id="rfc.section.2.2.p.1">Both the client and the server MUST send a Capabilities and Settings message (CSM see <a href="#csm">Section 4.3</a>) as its first message on the connection. This message establishes the initial settings and capabilities for the endpoint such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
-<p id="rfc.section.2.2.p.2">To avoid unnecessary latency, a client MAY send additional messages without waiting to receive the server CSM; however, it is important to note that the server CSM might advertise capabilities that impact how a client is expected to communicate with the server. For example, the server CSM could advertise a Max-Message-Size option (see <a href="#max-message-size">Section 4.3.2</a>) that is smaller than the base value (1152).</p>
-<p id="rfc.section.2.2.p.3">Clients and servers MUST treat a missing or invalid CSM as a connection error and abort the connection (see <a href="#sec-abort">Section 4.6</a>).</p>
-<h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#tcp-message-format" id="tcp-message-format">Message Format</a></h1>
-<p id="rfc.section.2.3.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 3</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate and for providing length information.</p>
+<h1 id="rfc.section.2.2"><a href="#rfc.section.2.2">2.2.</a> <a href="#tcp-message-format" id="tcp-message-format">Message Format</a></h1>
+<p id="rfc.section.2.2.p.1">The CoAP message format defined in <a href="#RFC7252">[RFC7252]</a>, as shown in <a href="#CoAP-Header">Figure 3</a>, relies on the datagram transport (UDP, or DTLS over UDP) for keeping the individual messages separate and for providing length information.</p>
 <div id="rfc.figure.3"/>
 <div id="CoAP-Header"/>
 <pre>
@@ -600,7 +596,7 @@ address {
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
 <p class="figure">Figure 3: RFC 7252 defined CoAP Message Format</p>
-<p id="rfc.section.2.3.p.2">The CoAP over TCP message format is very similar to the format specified for CoAP over UDP. The differences are as follows:</p>
+<p id="rfc.section.2.2.p.2">The CoAP over TCP message format is very similar to the format specified for CoAP over UDP. The differences are as follows:</p>
 <p/>
 
 <ul>
@@ -628,8 +624,8 @@ address {
   <dt>Length (Len):</dt>
   <dd style="margin-left: 8">4-bit unsigned integer. A value between 0 and 12 directly indicates the length of the message in bytes starting with the first bit of the Options field. Three values are reserved for special constructs: <dl><dt>13:</dt><dd style="margin-left: 8">An 8-bit unsigned integer (Extended Length) follows the initial byte and indicates the length of options/payload minus 13.</dd><dt>14:</dt><dd style="margin-left: 8">A 16-bit unsigned integer (Extended Length) in network byte order follows the initial byte and indicates the length of options/payload minus 269.</dd><dt>15:</dt><dd style="margin-left: 8">A 32-bit unsigned integer (Extended Length) in network byte order follows the initial byte and indicates the length of options/payload minus 65805.</dd></dl><p> </p></dd>
 </dl>
-<p id="rfc.section.2.3.p.5">The encoding of the Length field is modeled on CoAP Options (see section 3.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
-<p id="rfc.section.2.3.p.6">The following figures show the message format for the 0-bit, 16-bit, and the 32-bit variable length cases.</p>
+<p id="rfc.section.2.2.p.5">The encoding of the Length field is modeled on CoAP Options (see section 3.1 of <a href="#RFC7252">[RFC7252]</a>).</p>
+<p id="rfc.section.2.2.p.6">The following figures show the message format for the 0-bit, 16-bit, and the 32-bit variable length cases.</p>
 <div id="rfc.figure.5"/>
 <div id="fig-frame1"/>
 <pre>
@@ -644,7 +640,7 @@ address {
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
 <p class="figure">Figure 5: CoAP message format without an Extended Length field</p>
-<p id="rfc.section.2.3.p.7">For example: A CoAP message just containing a 2.03 code with the token 7f and no options or payload would be encoded as shown in <a href="#fig-frame2">Figure 6</a>.</p>
+<p id="rfc.section.2.2.p.7">For example: A CoAP message just containing a 2.03 code with the token 7f and no options or payload would be encoded as shown in <a href="#fig-frame2">Figure 6</a>.</p>
 <div id="rfc.figure.6"/>
 <div id="fig-frame2"/>
 <pre>
@@ -692,13 +688,20 @@ address {
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
 <p class="figure">Figure 8: CoAP message format with 32-bit Extended Length field</p>
-<p id="rfc.section.2.3.p.8">The semantics of the other CoAP header fields are left unchanged.</p>
-<h1 id="rfc.section.2.4"><a href="#rfc.section.2.4">2.4.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a></h1>
-<p id="rfc.section.2.4.p.1">CoAP requests and responses are exchanged asynchronously over the TCP/TLS connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
-<p id="rfc.section.2.4.p.2">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
-<p id="rfc.section.2.4.p.3">Retransmission and deduplication of messages is provided by the TCP/TLS protocol.</p>
+<p id="rfc.section.2.2.p.8">The semantics of the other CoAP header fields are left unchanged.</p>
+<h1 id="rfc.section.2.3"><a href="#rfc.section.2.3">2.3.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a></h1>
+<p id="rfc.section.2.3.p.1">Once a connection is established, both the client and the server MUST send a Capabilities and Settings message (CSM see <a href="#csm">Section 4.3</a>) as its first message on the connection. This message establishes the initial settings and capabilities for the endpoint such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
+<p id="rfc.section.2.3.p.2">To avoid unnecessary latency, a client MAY send additional messages without waiting to receive the server CSM; however, it is important to note that the server CSM might advertise capabilities that impact how a client is expected to communicate with the server. For example, the server CSM could advertise a Max-Message-Size option (see <a href="#max-message-size">Section 4.3.2</a>) that is smaller than the base value (1152).</p>
+<p id="rfc.section.2.3.p.3">Clients and servers MUST treat a missing or invalid CSM as a connection error and abort the connection (see <a href="#sec-abort">Section 4.6</a>).</p>
+<p id="rfc.section.2.3.p.4">CoAP requests and responses are exchanged asynchronously over the TCP/TLS connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
+<p id="rfc.section.2.3.p.5">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
+<p id="rfc.section.2.3.p.6">Retransmission and deduplication of messages is provided by the TCP/TLS protocol.</p>
+<h1 id="rfc.section.2.4"><a href="#rfc.section.2.4">2.4.</a> <a href="#liveliness" id="liveliness">Connection Health</a></h1>
+<p id="rfc.section.2.4.p.1">Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient. This provides a basic keep-alive function that can refresh NAT bindings.</p>
+<p id="rfc.section.2.4.p.2">If a client does not receive any response for some time after sending a CoAP request (or, similarly, when a client observes a resource and it does not receive any notification for some time), it can send a CoAP Ping Signaling message (<a href="#sec-ping">Section 4.4</a>) to test the connection and verify that the server is responsive.</p>
 <h1 id="rfc.section.3"><a href="#rfc.section.3">3.</a> <a href="#websockets-overview" id="websockets-overview">CoAP over WebSockets</a></h1>
-<p id="rfc.section.3.p.1">CoAP over WebSockets can be used in a number of configurations. The most basic configuration is a CoAP client retrieving or updating a CoAP resource located at a CoAP server that exposes a WebSocket endpoint (<a href="#arch-1">Figure 9</a>). The CoAP client acts as the WebSocket client, establishes a WebSocket connection, and sends a CoAP request, to which the CoAP server returns a CoAP response. The WebSocket connection can be used for any number of requests.</p>
+<p id="rfc.section.3.p.1">CoAP over WebSockets is intentionally similar to CoAP over TCP; therefore, this section only specifies the differences between the transports.</p>
+<p id="rfc.section.3.p.2">CoAP over WebSockets can be used in a number of configurations. The most basic configuration is a CoAP client retrieving or updating a CoAP resource located on a CoAP server that exposes a WebSocket endpoint (<a href="#arch-1">Figure 9</a>). The CoAP client acts as the WebSocket client, establishes a WebSocket connection, and sends a CoAP request, to which the CoAP server returns a CoAP response. The WebSocket connection can be used for any number of requests.</p>
 <div id="rfc.figure.9"/>
 <div id="arch-1"/>
 <pre>
@@ -713,8 +716,8 @@ address {
           Client     Connection     Server
 </pre>
 <p class="figure">Figure 9: CoAP Client (WebSocket client) accesses CoAP Server (WebSocket server)</p>
-<p id="rfc.section.3.p.2">The challenge with this configuration is how to identify a resource in the namespace of the CoAP server. When the WebSocket protocol is used by a dedicated client directly (i.e., not from a web page through a web browser), the client can connect to any WebSocket endpoint. <a href="#coap-ws-scheme">Section 6.3</a> and <a href="#coaps-ws-scheme">Section 6.4</a> define new URI schemes that enable the client to identify both a WebSocket endpoint and the path and query of the CoAP resource within that endpoint. When the WebSocket protocol is used from a web page, the choices are more limited <a href="#RFC6454">[RFC6454]</a>, but the challenge persists.</p>
-<p id="rfc.section.3.p.3">Another possible configuration is to set up a CoAP forward proxy at the WebSocket endpoint. Depending on what transports are available to the proxy, it could forward the request to a CoAP server with a CoAP UDP endpoint (<a href="#arch-2">Figure 10</a>), an SMS endpoint (a.k.a.&#160;mobile phone), or even another WebSocket endpoint. The client specifies the resource to be updated or retrieved in the Proxy-Uri Option.</p>
+<p id="rfc.section.3.p.3">The challenge with this configuration is how to identify a resource in the namespace of the CoAP server. When the WebSocket protocol is used by a dedicated client directly (i.e., not from a web page through a web browser), the client can connect to any WebSocket endpoint. <a href="#coap-ws-scheme">Section 6.3</a> and <a href="#coaps-ws-scheme">Section 6.4</a> define new URI schemes that enable the client to identify both a WebSocket endpoint and the path and query of the CoAP resource within that endpoint. When the WebSocket protocol is used from a web page, the choices are more limited <a href="#RFC6454">[RFC6454]</a>, but the challenge persists.</p>
+<p id="rfc.section.3.p.4">Another possible configuration is to set up a CoAP forward proxy at the WebSocket endpoint. Depending on what transports are available to the proxy, it could forward the request to a CoAP server with a CoAP UDP endpoint (<a href="#arch-2">Figure 10</a>), an SMS endpoint (a.k.a.&#160;mobile phone), or even another WebSocket endpoint. The client specifies the resource to be updated or retrieved in the Proxy-Uri Option.</p>
 <div id="rfc.figure.10"/>
 <div id="arch-2"/>
 <pre>
@@ -729,7 +732,7 @@ address {
           Client        Server      Client          Server
 </pre>
 <p class="figure">Figure 10: CoAP Client (WebSocket client) accesses CoAP Server (UDP server) via a CoAP proxy (WebSocket server/UDP client)</p>
-<p id="rfc.section.3.p.4">A third possible configuration is a CoAP server running inside a web browser (<a href="#arch-3">Figure 11</a>). The web browser initially connects to a WebSocket endpoint and is then reachable through the WebSocket server. When no connection exists, the CoAP server is unreachable. Because the WebSocket server is the only way to reach the CoAP server, the CoAP proxy should be a Reverse Proxy.</p>
+<p id="rfc.section.3.p.5">A third possible configuration is a CoAP server running inside a web browser (<a href="#arch-3">Figure 11</a>). The web browser initially connects to a WebSocket endpoint and is then reachable through the WebSocket server. When no connection exists, the CoAP server is unreachable. Because the WebSocket server is the only way to reach the CoAP server, the CoAP proxy should be a Reverse Proxy.</p>
 <div id="rfc.figure.11"/>
 <div id="arch-3"/>
 <pre>
@@ -743,9 +746,8 @@ address {
            UDP            UDP      WebSocket &lt;=== WebSocket
          Client          Server      Server        Client
 </pre>
-<p class="figure">Figure 11: CoAP Client (UDP client) accesses sleepy CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)</p>
-<p id="rfc.section.3.p.5">Further configurations are possible, including those where a WebSocket connection is established through an HTTP proxy.</p>
-<p id="rfc.section.3.p.6">CoAP over WebSockets is intentionally very similar to CoAP over UDP. Therefore, instead of presenting CoAP over WebSockets as a new protocol, this document specifies it as a series of deltas from <a href="#RFC7252">[RFC7252]</a>.</p>
+<p class="figure">Figure 11: CoAP Client (UDP client) accesses CoAP Server (WebSocket client) via a CoAP proxy (UDP server/WebSocket server)</p>
+<p id="rfc.section.3.p.6">Further configurations are possible, including those where a WebSocket connection is established through an HTTP proxy.</p>
 <h1 id="rfc.section.3.1"><a href="#rfc.section.3.1">3.1.</a> <a href="#handshake" id="handshake">Opening Handshake</a></h1>
 <p id="rfc.section.3.1.p.1">Before CoAP requests and responses are exchanged, a WebSocket connection is established as defined in Section 4 of <a href="#RFC6455">[RFC6455]</a>.  <a href="#handshake-example">Figure 12</a> shows an example.</p>
 <p id="rfc.section.3.1.p.2">The WebSocket client MUST include the subprotocol name &#8220;coap&#8221; in the list of protocols, which indicates support for the protocol defined in this document. Any later, incompatible versions of CoAP or CoAP over WebSockets will use a different subprotocol name.</p>
@@ -770,7 +772,7 @@ Sec-WebSocket-Protocol: coap
 <p class="figure">Figure 12: Example of an Opening Handshake</p>
 <h1 id="rfc.section.3.2"><a href="#rfc.section.3.2">3.2.</a> <a href="#websocket-message-format" id="websocket-message-format">Message Format</a></h1>
 <p id="rfc.section.3.2.p.1">Once a WebSocket connection is established, CoAP requests and responses can be exchanged as WebSocket messages. Since CoAP uses a binary message format, the messages are transmitted in binary data frames as specified in Sections 5 and 6 of <a href="#RFC6455">[RFC6455]</a>.</p>
-<p id="rfc.section.3.2.p.2">The message format shown in <a href="#ws-message-format">Figure 13</a> is the same as the CoAP over TCP message format (see <a href="#tcp-message-format">Section 2.3</a>) with one restriction. The Length (Len) field MUST be set to zero because the WebSockets frame contains the length.</p>
+<p id="rfc.section.3.2.p.2">The message format shown in <a href="#ws-message-format">Figure 13</a> is the same as the CoAP over TCP message format (see <a href="#tcp-message-format">Section 2.2</a>) with one change. The Length (Len) field MUST be set to zero because the WebSockets frame contains the length.</p>
 <div id="rfc.figure.13"/>
 <div id="ws-message-format"/>
 <pre>
@@ -785,20 +787,15 @@ Sec-WebSocket-Protocol: coap
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 </pre>
 <p class="figure">Figure 13: CoAP Message Format over WebSockets</p>
-<p id="rfc.section.3.2.p.3">The CoAP over TCP message format eliminates the Version field defined in CoAP over UDP. If CoAP version negotiation is required in the future, CoAP over WebSockets can address the requirement by the definition of a new subprotocol identifier that is negotiated during the opening handshake.</p>
+<p id="rfc.section.3.2.p.3">As with CoAP over TCP, the message format for CoAP over Websockets eliminates the Version field defined in CoAP over UDP. If CoAP version negotiation is required in the future, CoAP over WebSockets can address the requirement by the definition of a new subprotocol identifier that is negotiated during the opening handshake.</p>
 <p id="rfc.section.3.2.p.4">Requests and response messages can be fragmented as specified in Section 5.4 of <a href="#RFC6455">[RFC6455]</a>, though typically they are sent unfragmented as they tend to be small and fully buffered before transmission. The WebSocket protocol does not provide means for multiplexing. If it is not desirable for a large message to monopolize the connection, requests and responses can be transferred in a block-wise fashion as defined in <a href="#RFC7959">[RFC7959]</a>.</p>
-<p id="rfc.section.3.2.p.5">Empty messages (Code 0.00) MUST be ignored by the recipient (see also <a href="#sec-ping">Section 4.4</a>).</p>
 <h1 id="rfc.section.3.3"><a href="#rfc.section.3.3">3.3.</a> <a href="#requests-responses" id="requests-responses">Message Transmission</a></h1>
-<p id="rfc.section.3.3.p.1">CoAP requests and responses are exchanged asynchronously over the WebSocket connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
-<p id="rfc.section.3.3.p.2">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
-<p id="rfc.section.3.3.p.3">Retransmission and deduplication of messages is provided by the WebSocket protocol. CoAP over WebSockets therefore does not make a distinction between Confirmable or Non-Confirmable messages, and does not provide Acknowledgement or Reset messages.</p>
-<h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#liveliness" id="liveliness">Connection Health</a></h1>
-<p id="rfc.section.3.4.p.1">When a client does not receive any response for some time after sending a CoAP request (or, similarly, when a client observes a resource and it does not receive any notification for some time), the connection between the WebSocket client and the WebSocket server may be lost or temporarily disrupted without the client being aware of it.</p>
-<p id="rfc.section.3.4.p.2">To check the health of the WebSocket connection (and thereby of all active requests, if any), a client can send a CoAP Ping Signaling message (<a href="#sec-ping">Section 4.4</a>). WebSocket Ping and unsolicited Pong frames as specified in Section 5.5 of <a href="#RFC6455">[RFC6455]</a> SHOULD NOT be used to ensure that redundant maintenance traffic is not transmitted.</p>
-<p id="rfc.section.3.4.p.3">There is no way to retransmit a request without creating a new one. Re-registering interest in a resource is permitted, but entirely unnecessary.</p>
-<h1 id="rfc.section.3.5"><a href="#rfc.section.3.5">3.5.</a> <a href="#close" id="close">Closing the Connection</a></h1>
-<p id="rfc.section.3.5.p.1">The WebSocket connection is closed as specified in Section 7 of <a href="#RFC6455">[RFC6455]</a>.</p>
-<p id="rfc.section.3.5.p.2">All requests for which the CoAP client has not received a response yet are cancelled when the connection is closed.</p>
+<p id="rfc.section.3.3.p.1">As with CoAP over TCP, both the client and the server MUST send a Capabilities and Settings message (CSM see <a href="#csm">Section 4.3</a>) as its first message on the WebSocket connection.</p>
+<p id="rfc.section.3.3.p.2">CoAP requests and responses are exchanged asynchronously over the WebSocket connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
+<p id="rfc.section.3.3.p.3">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
+<p id="rfc.section.3.3.p.4">As with CoAP over TCP, retransmission and deduplication of messages is provided by the WebSocket protocol. CoAP over WebSockets therefore does not make a distinction between Confirmable or Non-Confirmable messages, and does not provide Acknowledgement or Reset messages.</p>
+<h1 id="rfc.section.3.4"><a href="#rfc.section.3.4">3.4.</a> <a href="#ws-liveliness" id="ws-liveliness">Connection Health</a></h1>
+<p id="rfc.section.3.4.p.1">As with CoAP over TCP, the client can test the health of the CoAP over WebSocket connection by sending a CoAP Ping Signaling message (<a href="#sec-ping">Section 4.4</a>). WebSocket Ping and unsolicited Pong frames (Section 5.5 of <a href="#RFC6455">[RFC6455]</a>) SHOULD NOT be used to ensure that redundant maintenance traffic is not transmitted.</p>
 <h1 id="rfc.section.4"><a href="#rfc.section.4">4.</a> <a href="#signaling" id="signaling">Signaling</a></h1>
 <p id="rfc.section.4.p.1">Signaling messages are introduced to allow peers to:</p>
 <p/>
@@ -908,7 +905,7 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.4.3.3.p.1">A sender can use the elective Block-wise Transfer Option to indicate that it supports the block-wise transfer protocol <a href="#RFC7959">[RFC7959]</a>.</p>
 <p id="rfc.section.4.3.3.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not. An implementation that supports block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer Option also indicates support for BERT (see <a href="#bert">Section 5</a>).</p>
 <h1 id="rfc.section.4.4"><a href="#rfc.section.4.4">4.4.</a> <a href="#sec-ping" id="sec-ping">Ping and Pong Messages</a></h1>
-<p id="rfc.section.4.4.p.1">In CoAP over TCP, Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient. This provides a basic keep-alive function that can refresh NAT bindings. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
+<p id="rfc.section.4.4.p.1">In CoAP over reliable transports, Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient. This provides a basic keep-alive function. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
 <p id="rfc.section.4.4.p.2">Upon receipt of a Ping message, a single Pong message is returned with the identical token. As with all Signaling messages, the recipient of a Ping or Pong message MUST ignore elective options it does not understand.</p>
 <p id="rfc.section.4.4.p.3">Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).</p>
 <h1 id="rfc.section.4.4.1"><a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#custody-option" id="custody-option">Custody Option</a></h1>
@@ -1733,10 +1730,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <h1 id="rfc.appendix.A.2"><a href="#rfc.appendix.A.2">A.2.</a> <a href="#transmission-and-acknowledgements" id="transmission-and-acknowledgements">Transmission and Acknowledgements</a></h1>
 <p id="rfc.section.A.2.p.1">For CoAP over UDP, server notifications to the client can be confirmable or non-confirmable.  A confirmable message requires the client to either respond with an acknowledgement message or a reset message. An acknowledgement message indicates that the client is alive and wishes to receive further notifications. A reset message indicates that the client does not recognize the token which causes the server to remove the associated entry from the list of observers.</p>
 <p id="rfc.section.A.2.p.2">Since TCP eliminates the need for the message layer to support reliability, CoAP over reliable transports does not support confirmable or non-confirmable message types. All notifications are delivered reliably to the client with positive acknowledgement of receipt occurring at the TCP level. If the client does not recognize the token in a notification, it MAY immediately abort the connection (see <a href="#sec-abort">Section 4.6</a>).</p>
-<h1 id="rfc.appendix.A.3"><a href="#rfc.appendix.A.3">A.3.</a> <a href="#cancellation" id="cancellation">Cancellation</a></h1>
-<p id="rfc.section.A.3.p.1">For CoAP over UDP, a client that is no longer interested in receiving notifications can &#8220;forget&#8221; the observation and respond to the next notification from the server with a reset message to cancel the observation.</p>
-<p id="rfc.section.A.3.p.2">For CoAP over reliable transports, a client MUST explicitly deregister by issuing a GET request that has the Token field set to the token of the observation to be cancelled and includes an Observe Option with the value set to 1 (deregister).</p>
-<p id="rfc.section.A.3.p.3">If the client observes one or more resources over a reliable transport, then the CoAP server (or intermediary in the role of the CoAP server) MUST remove all entries associated with the client endpoint from the lists of observers when the connection is either closed or times out.</p>
+<h1 id="rfc.appendix.A.3"><a href="#rfc.appendix.A.3">A.3.</a> <a href="#freshness" id="freshness">Freshness</a></h1>
+<p id="rfc.section.A.3.p.1">For CoAP over UDP, if a client does not receive a notification for some time, it MAY send a new GET request with the same token as the original request to re-register its interest in a resource and verify that the server is still responsive. For CoAP over reliable transports, it is more efficient to check the health of the connection (and all its active observations) by sending a CoAP Ping Signaling message (<a href="#sec-ping">Section 4.4</a>) rather than individual requests to confirm active observations.</p>
+<h1 id="rfc.appendix.A.4"><a href="#rfc.appendix.A.4">A.4.</a> <a href="#cancellation" id="cancellation">Cancellation</a></h1>
+<p id="rfc.section.A.4.p.1">For CoAP over UDP, a client that is no longer interested in receiving notifications can &#8220;forget&#8221; the observation and respond to the next notification from the server with a reset message to cancel the observation.</p>
+<p id="rfc.section.A.4.p.2">For CoAP over reliable transports, a client MUST explicitly deregister by issuing a GET request that has the Token field set to the token of the observation to be cancelled and includes an Observe Option with the value set to 1 (deregister).</p>
+<p id="rfc.section.A.4.p.3">If the client observes one or more resources over a reliable transport, then the CoAP server (or intermediary in the role of the CoAP server) MUST remove all entries associated with the client endpoint from the lists of observers when the connection is either closed or times out.</p>
 <h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#examples" id="examples">CoAP over WebSocket Examples</a></h1>
 <p id="rfc.section.B.p.1">This section gives examples for the first two configurations discussed in <a href="#websockets-overview">Section 3</a>.</p>
 <p id="rfc.section.B.p.2">An example of the process followed by a CoAP client to retrieve the representation of a resource identified by a &#8220;coap+ws&#8221; URI might be as follows. <a href="#example-1">Figure 20</a> below illustrates the WebSocket and CoAP messages exchanged in detail.</p>
