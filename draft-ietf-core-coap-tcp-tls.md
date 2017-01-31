@@ -1354,6 +1354,17 @@ The IANA policy for future additions to this sub-registry is based on
 number ranges for the option numbers, analogous to the policy defined
 in Section 12.2 of {{-coap}}.
 
+The documentation for a Signaling Option Number should specify the semantics of
+an option with that number, including the following properties:
+
+* Whether the option is critical or elective, as determined by the Option Number.
+
+* Whether the option is repeatable.
+
+* The format and length of the option's value.
+
+* The base value for the option, if any.
+
 ## Service Name and Port Number Registration
 
 IANA is requested to assign the port number 5683 and the service name "coap+tcp",
