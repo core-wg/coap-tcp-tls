@@ -737,9 +737,10 @@ Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
 ### Server-Name Setting Option
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      1 | CSM        | Server-Name         | string     | 1-255       | (see below) |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 1|x| | CSM        | Server-Name        | string | 1-255  | (see below) |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 A client can use the critical Server-Name Option to indicate the default value
 for the Uri-Host Options in the messages that it sends to the server.
@@ -755,18 +756,20 @@ Host header field.
 The sender can use the elective Max-Message-Size Option to indicate the maximum message size
 in bytes that it can receive.
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      2 | CSM        | Max-Message-Size    | uint       | 0-4         | 1152        |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 2| | | CSM        | Max-Message-Size   | uint   | 0-4    | 1152        |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 As per Section 4.6 of {{-coap}}, the base value (and the value used when this option
 is not implemented) is 1152. 
 
 ### Block-wise Transfer Capability Option
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      4 | CSM        | Block-wise Transfer |  empty     | 0           | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 4| | | CSM        | Block-wise Transfer|  empty | 0      | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 A sender can use the elective Block-wise Transfer Option to indicate that it
 supports the block-wise transfer protocol {{-block}}.
@@ -792,9 +795,10 @@ Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (
 
 ### Custody Option
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      2 | Ping, Pong | Custody             | empty      | 0           | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 2| | | Ping, Pong | Custody            | empty  | 0      | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 When responding to a Ping message, the receiver can include an elective
 Custody Option in the Pong message. This option indicates that the application has
@@ -823,24 +827,29 @@ Release messages are indicated by the 7.04 code (Release).
 Release messages can indicate one or more reasons using elective options.
 The following options are defined:
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      2 | Release    | Bad-Server-Name     | empty      | 0           | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 2| | | Release    | Bad-Server-Name    | empty  | 0      | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Bad-Server-Name Option indicates that the default indicated
 by the CSM Server-Name Option is unlikely to be useful for this server.
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      4 | Release    | Alternate-Address   | string     | 1-255       | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 4| |x| Release    | Alternate-Address  | string | 1-255  | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Alternative-Address Option requests the peer to instead open a connection
 of the same scheme as the present connection to the alternative transport address given.
 Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}. 
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      6 | Release    | Hold-Off            | uint       | 0-3         | (none)      |
+The Alternative-Address Option is a repeatable option as defined in Section 5.4.5 of {{-coap}}.
+
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 6| | | Release    | Hold-Off           | uint   | 0-3    | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Hold-Off Option indicates that the server is requesting that the peer not
 reconnect to it for the number of seconds given in the value.
@@ -861,9 +870,10 @@ Abort messages are indicated by the 7.05 code (Abort).
 Abort messages can indicate one or more reasons using elective
 options. The following option is defined:
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      2 | Abort      | Bad-CSM-Option      | uint       | 0-2         | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 2| | | Abort      | Bad-CSM-Option     | uint   | 0-2    | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Bad-CSM-Option Option indicates that the sender is unable to process the
 CSM option identified by its option number, e.g. when it is critical
