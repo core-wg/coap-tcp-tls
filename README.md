@@ -4,6 +4,7 @@ This is the working area for the Working Group internet-draft, "A TCP and TLS Tr
 
 * [Editor's copy](https://core-wg.github.io/coap-tcp-tls/)  [![Build Status](https://travis-ci.org/core-wg/coap-tcp-tls.svg?branch=master)](https://travis-ci.org/core-wg/coap-tcp-tls)
 * [Working Group Draft] (https://tools.ietf.org/html/draft-ietf-core-coap-tcp-tls)
+* [Diff from most recent Internet-Draft](https://tools.ietf.org/rfcdiff?url1=draft-ietf-core-coap-tcp-tls&url2=https://raw.githubusercontent.com/core-wg/coap-tcp-tls/gh-pages/draft-ietf-core-coap-tcp-tls.txt)
 
 
 ## Building the Draft
