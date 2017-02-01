@@ -744,7 +744,7 @@ Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
 A client can use the critical Server-Name Option to indicate the default value
 for the Uri-Host Options in the messages that it sends to the server.
-It has the same restrictions as the Uri-Host Option (Section 5.10.1 of {{RFC7252}}).
+Its value MUST be a valid value for the Uri-Host Option (Section 5.10.1 of {{RFC7252}}).
 
 For TLS, the base value for the Server-Name Option is given by the SNI value.
 
