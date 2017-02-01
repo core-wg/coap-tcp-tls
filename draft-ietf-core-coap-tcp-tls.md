@@ -751,6 +751,9 @@ For TLS, the base value for the Server-Name Option is given by the SNI value.
 For Websockets, the base value for the Server-Name Option is given by the HTTP
 Host header field.
 
+The active value of the Server-Name Option is replaced each time the option is sent with
+a modified value. Its starting value is its base value (if available).
+
 ### Max-Message-Size Capability Option {#max-message-size}
 
 The sender can use the elective Max-Message-Size Option to indicate the maximum message size
@@ -763,6 +766,9 @@ in bytes that it can receive.
 
 As per Section 4.6 of {{-coap}}, the base value (and the value used when this option
 is not implemented) is 1152. 
+
+The active value of the Max-Message-Size Option is replaced each time the option
+is sent with a modified value. Its starting value is its base value.
 
 ### Block-wise Transfer Capability Option
 
