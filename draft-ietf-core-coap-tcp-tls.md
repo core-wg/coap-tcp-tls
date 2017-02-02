@@ -204,8 +204,8 @@ in some situations secured by TLS {{RFC5246}}.
 
 In addition, some corporate networks only allow Internet access via a HTTP proxy.
 In this case, the best transport for CoAP might be the [WebSocket Protocol](#RFC6455).
-The WebSocket protocol provides two-way communication between a client
-and a server after upgrading an [HTTP/1.1](#RFC7230) connection and may
+The WebSocket protocol provides two-way communication between a WebSocket client
+and a WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection and may
 be available in an environment that blocks CoAP over UDP. Another scenario
 for CoAP over WebSockets is a CoAP application running inside a web browser
 without access to connectivity other than HTTP and WebSockets.
@@ -220,8 +220,8 @@ such as between WebSockets and UDP.
 
 {{observing}} updates [Observing Resources in the Constrained Application Protocol](#RFC7641)
 for use with CoAP over reliable transports. {{RFC7641}} is an extension to the CoAP core
-protocol that enables CoAP clients to "observe" a resource on a CoAP server. (The client
-retrieves a representation of a resource and registers to be notified by the server when
+protocol that enables CoAP clients to "observe" a resource on a CoAP server. (The CoAP client
+retrieves a representation of a resource and registers to be notified by the CoAP server when
 the representation is updated.)
 
 ## Conventions and Terminology
@@ -236,15 +236,24 @@ concepts that are used in {{RFC6455}}, {{RFC7252}}, {{RFC7641}}, and {{-block}}.
 The term "reliable transport" is used only to refer to transport protocols such
 as TCP which provide reliable and ordered delivery of a byte-stream. 
 
+{: vspace='0'}
 BERT Option:
-:	A Block1 or Block2 option that includes an SZX value of 7.
-{: vspace='0'}
-BERT Block:
-:	The payload of a CoAP message that is affected by a BERT Option in
-	descriptive usage (Section 2.1 of {{-block}}).
-{: vspace='0'}
+:   A Block1 or Block2 option that includes an SZX value of 7.
 
-For simplicity, a Payload Marker (0xFF) is present in all examples for message formats:
+BERT Block:
+:   The payload of a CoAP message that is affected by a BERT Option in
+    descriptive usage (Section 2.1 of {{-block}}).
+
+Connection initiator:
+:   The peer that opens a reliable byte stream connection, i.e., the
+    TCP active opener, TLS client, or WebSocket client.
+
+Connection acceptor:
+:   The peer that accepts the reliable byte stream connection opened by
+    the other peer, i.e., the TCP passive opener, TLS server, or
+    WebSocket server.
+
+For simplicity, a Payload Marker (0xFF) is shown in all examples for message formats:
 
 ~~~~
     ...
@@ -282,7 +291,7 @@ CoAP over reliable transport. The removed Type and Message ID fields
 are indicated by dashes.
 
 ~~~~
- Client                Server   Client                Server
+CoAP Client       CoAP Server  CoAP Client       CoAP Server
     |                    |         |                    |
     |   CON [0xbc90]     |         | (-------) [------] |
     | GET /temperature   |         | GET /temperature   |
@@ -447,17 +456,24 @@ The semantics of the other CoAP header fields are left unchanged.
 
 ## Message Transmission
 
-Once a connection is established, both the client and the server MUST send a Capabilities and Settings message (CSM see {{csm}})
-as its first message on the connection. This message establishes the initial settings and
+Once a connection is established, both endpoints MUST send a Capabilities and Settings message (CSM see {{csm}})
+as their first message on the connection. This message establishes the initial settings and
 capabilities for the endpoint such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
 
-To avoid unnecessary latency, a client MAY send additional messages without waiting to receive
-the server CSM; however, it is important to note that the server CSM might advertise capabilities
-that impact how a client is expected to communicate with the server. For example, the server CSM
+To avoid a deadlock, the Connection Initiator MUST NOT wait for the
+Connection Acceptor to send its initial CSM message before sending its
+own initial CSM message.  Conversely, the Connection Acceptor MAY wait
+for the Connection Initiator to send its initial CSM message before
+sending its own initial CSM message.
+
+To avoid unnecessary latency, a Connection Initiator MAY send additional messages without waiting to receive
+the Connection Acceptor's CSM; however, it is important to note that
+the Connection Acceptor's CSM might advertise capabilities
+that impact how the initiator is expected to communicate with the acceptor. For example, the acceptor CSM
 could advertise a Max-Message-Size option (see {{max-message-size}}) that is smaller than the base value (1152). 
 
-Clients and servers MUST treat a missing or invalid CSM as a connection error and abort
+Endpoints MUST treat a missing or invalid CSM as a connection error and abort
 the connection (see {{sec-abort}}). 
 
 CoAP requests and responses are exchanged asynchronously over the
@@ -480,11 +496,11 @@ Empty messages (Code 0.00) can always be sent and MUST be ignored by the
 recipient. This provides a basic keep-alive function that can refresh NAT
 bindings.
 
-If a client does not receive any response for some time after
+If a CoAP client does not receive any response for some time after
 sending a CoAP request (or, similarly, when a client observes a
 resource and it does not receive any notification for some time),
 it can send a CoAP Ping Signaling message ({{sec-ping}}) to test
-the connection and verify that the server is responsive.
+the connection and verify that the CoAP server is responsive.
 
 # CoAP over WebSockets {#websockets-overview}
 
@@ -525,7 +541,7 @@ Another possible configuration is to set up a CoAP forward proxy
 at the WebSocket endpoint. Depending on what transports are available
 to the proxy, it could forward the request to a CoAP server with a
 CoAP UDP endpoint ({{arch-2}}), an SMS endpoint (a.k.a.&nbsp;mobile phone),
-or even another WebSocket endpoint. The client specifies the resource to be
+or even another WebSocket endpoint. The CoAP client specifies the resource to be
 updated or retrieved in the Proxy-Uri Option.
 
 
@@ -626,7 +642,7 @@ the length.
 ~~~~
 {: #ws-message-format title='CoAP Message Format over WebSockets' artwork-align="center"}
 
-As with CoAP over TCP, the message format for CoAP over Websockets
+As with CoAP over TCP, the message format for CoAP over WebSockets
 eliminates the Version field defined in CoAP over UDP. If CoAP version
 negotiation is required in the future, CoAP over WebSockets can address
 the requirement by the definition of a new subprotocol identifier that is
@@ -641,8 +657,8 @@ transferred in a block-wise fashion as defined in {{-block}}.
 
 ## Message Transmission {#requests-responses}
 
-As with CoAP over TCP, both the client and the server MUST send a Capabilities
-and Settings message (CSM see {{csm}}) as its first message on the WebSocket connection.
+As with CoAP over TCP, both endpoints MUST send a Capabilities
+and Settings message (CSM see {{csm}}) as their first message on the WebSocket connection.
 
 CoAP requests and responses are exchanged asynchronously over the
 WebSocket connection. A CoAP client can send multiple requests
@@ -662,7 +678,7 @@ not provide Acknowledgement or Reset messages.
 
 ## Connection Health {#ws-liveliness}
 
-As with CoAP over TCP, the client can test the health of the CoAP over WebSocket
+As with CoAP over TCP, a CoAP client can test the health of the CoAP over WebSocket
 connection by sending a CoAP Ping Signaling message ({{sec-ping}}). WebSocket Ping
 and unsolicited Pong frames (Section 5.5 of {{RFC6455}}) SHOULD NOT be used to ensure
 that redundant maintenance traffic is not transmitted. 
@@ -735,38 +751,49 @@ the option being set to its default value.
 
 Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
-### Server-Name Setting Option
+### Default-Uri-Host Setting Option
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      1 | CSM        | Server-Name         | string     | 1-255       | (see below) |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 1|x| | CSM        | Default-Uri-Host        | string | 1-255  | (see below) |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
-A client can use the critical Server-Name Option to indicate the default value
-for the Uri-Host Options in the messages that it sends to the server.
-It has the same restrictions as the Uri-Host Option (Section 5.10.1 of {{RFC7252}}).
+An endpoint can use the critical Default-Uri-Host Option to indicate the default value
+for the Uri-Host Options in the messages that it sends to the other endpoint.
+Its value MUST be a valid value for the Uri-Host Option (Section 5.10.1 of {{RFC7252}}).
 
-For TLS, the base value for the Server-Name Option is given by the SNI value.
+For TLS, the base value for the Default-Uri-Host Option in the direction
+from the Connection Initiator to the Connection Acceptor is given by the SNI value.
 
-For Websockets, the base value for the Server-Name Option is given by the HTTP
+For WebSockets, the base value for the Default-Uri-Host Option in the
+direction from the Connection Initiator to the Connection Acceptor is given by the HTTP
 Host header field.
+
+The active value of the Default-Uri-Host Option is replaced each time the option is sent with
+a modified value. Its starting value is its base value (if available).
 
 ### Max-Message-Size Capability Option {#max-message-size}
 
 The sender can use the elective Max-Message-Size Option to indicate the maximum message size
 in bytes that it can receive.
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      2 | CSM        | Max-Message-Size    | uint       | 0-4         | 1152        |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 2| | | CSM        | Max-Message-Size   | uint   | 0-4    | 1152        |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 As per Section 4.6 of {{-coap}}, the base value (and the value used when this option
 is not implemented) is 1152. 
 
+The active value of the Max-Message-Size Option is replaced each time the option
+is sent with a modified value. Its starting value is its base value.
+
 ### Block-wise Transfer Capability Option
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      4 | CSM        | Block-wise Transfer |  empty     | 0           | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 4| | | CSM        | Block-wise Transfer|  empty | 0      | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 A sender can use the elective Block-wise Transfer Option to indicate that it
 supports the block-wise transfer protocol {{-block}}.
@@ -792,9 +819,10 @@ Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (
 
 ### Custody Option
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      2 | Ping, Pong | Custody             | empty      | 0           | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 2| | | Ping, Pong | Custody            | empty  | 0      | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 When responding to a Ping message, the receiver can include an elective
 Custody Option in the Pong message. This option indicates that the application has
@@ -823,24 +851,29 @@ Release messages are indicated by the 7.04 code (Release).
 Release messages can indicate one or more reasons using elective options.
 The following options are defined:
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      2 | Release    | Bad-Server-Name     | empty      | 0           | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 2| | | Release    | Bad-Default-Uri-Host    | empty  | 0      | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
-The elective Bad-Server-Name Option indicates that the default indicated
-by the CSM Server-Name Option is unlikely to be useful for this server.
+The elective Bad-Default-Uri-Host Option indicates that the default indicated
+by the CSM Default-Uri-Host Option is unlikely to be useful for this server.
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      4 | Release    | Alternate-Address   | string     | 1-255       | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 4| |x| Release    | Alternate-Address  | string | 1-255  | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Alternative-Address Option requests the peer to instead open a connection
 of the same scheme as the present connection to the alternative transport address given.
 Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}. 
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      6 | Release    | Hold-Off            | uint       | 0-3         | (none)      |
+The Alternative-Address Option is a repeatable option as defined in Section 5.4.5 of {{-coap}}.
+
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 6| | | Release    | Hold-Off           | uint   | 0-3    | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Hold-Off Option indicates that the server is requesting that the peer not
 reconnect to it for the number of seconds given in the value.
@@ -861,9 +894,10 @@ Abort messages are indicated by the 7.05 code (Abort).
 Abort messages can indicate one or more reasons using elective
 options. The following option is defined:
 
-| Number | Applies to | Name                | Format     | Length      | Base Value  |
-|:-------+:-----------+:--------------------+-----------:+------------:+------------:+
-|      2 | Abort      | Bad-CSM-Option      | uint       | 0-2         | (none)      |
+|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+|--+-+-+------------+--------------------+--------+--------+-------------+
+| 2| | | Abort      | Bad-CSM-Option     | uint   | 0-2    | (none)      |
+{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Bad-CSM-Option Option indicates that the sender is unable to process the
 CSM option identified by its option number, e.g. when it is critical
@@ -979,7 +1013,7 @@ the block number increments to move the position inside the response
 body forward.
 
 ~~~~
-CLIENT                                       SERVER
+CoAP Client                             CoAP Server
   |                                            |
   | GET, /status                       ------> |
   |                                            |
@@ -1000,7 +1034,7 @@ CLIENT                                       SERVER
 {{fig-bert2}} demonstrates a PUT exchange with BERT blocks.
 
 ~~~~
-CLIENT                                        SERVER
+CoAP Client                             CoAP Server
   |                                             |
   | PUT, /options, 1:0/1/BERT(8192)     ------> |
   |                                             |
@@ -1055,13 +1089,13 @@ The syntax defined in Section 6.1 of {{RFC7252}} applies to this URI scheme with
 (If it is empty or not given, then the default port 5683 is assumed, as with UDP.)
 
 Encoding considerations:
-:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
 Interoperability considerations:
-:	None.
+:   None.
 
 Security considerations:
-:	See Section 11.1 of {{RFC7252}}.
+:   See Section 11.1 of {{RFC7252}}.
 
 ## coaps+tcp URI scheme {#coaps-tcp-scheme}
 
@@ -1081,36 +1115,36 @@ The syntax defined in Section 6.2 of {{RFC7252}} applies to this URI scheme, wit
   the default port 443 is assumed (this is different from the default
   port for "coaps", i.e., CoAP over DTLS over UDP).
 
-* If a TCP server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
-  {{-alpn}} or wishes to accommodate TCP clients that do not support ALPN, it MAY offer a
-  coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A TCP server
+* If a TLS server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
+  {{-alpn}} or wishes to accommodate TLS clients that do not support ALPN, it MAY offer a
+  coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A TLS server
   MAY offer coaps+tcp endpoints on ports other than TCP port 5684, which MUST be ALPN enabled.
 
-* For TCP ports other than port 5684, the TCP client MUST use the ALPN extension to advertise
+* For TCP ports other than port 5684, the TLS client MUST use the ALPN extension to advertise
   the "coap" protocol identifier (see {{alpnpid}}) in the list of protocols in its
   ClientHello. If the TCP server selects and returns the "coap" protocol identifier using the
-  ALPN extension in its ServerHello, then the connection succeeds. If the TCP server either does
-  not negotiate the ALPN extension or returns a no_application_protocol alert, the TCP client
+  ALPN extension in its ServerHello, then the connection succeeds. If the TLS server either does
+  not negotiate the ALPN extension or returns a no_application_protocol alert, the TLS client
   MUST close the connection.
 
-* For TCP port 5684, a TCP client MAY use the ALPN extension to advertise the "coap" protocol
-  identifier in the list of protocols in its ClientHello. If the TCP server selects and returns
+* For TCP port 5684, a TLS client MAY use the ALPN extension to advertise the "coap" protocol
+  identifier in the list of protocols in its ClientHello. If the TLS server selects and returns
   the "coap" protocol identifier using the ALPN extension in its ServerHello, then the connection
-  succeeds. If the TCP server returns a no_application_protocol alert, then the TCP client MUST close the
-  connection. If the TCP server does not negotiate the ALPN extension, then coaps+tcp is implicitly
+  succeeds. If the TLS server returns a no_application_protocol alert, then the TLS client MUST close the
+  connection. If the TLS server does not negotiate the ALPN extension, then coaps+tcp is implicitly
   selected.
 
-* For TCP port 5684, if the TCP client does not use the ALPN extension to negotiate the protocol,
+* For TCP port 5684, if the TLS client does not use the ALPN extension to negotiate the protocol,
   then coaps+tcp is implicitly selected.
 
 Encoding considerations:
-:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
 Interoperability considerations:
-:	None.
+:   None.
 
 Security considerations:
-:	See Section 11.1 of {{RFC7252}}.
+:   See Section 11.1 of {{RFC7252}}.
 
 ## coap+ws URI scheme {#coap-ws-scheme}
 
@@ -1141,13 +1175,13 @@ ws://example.org/.well-known/coap    Uri-Path: "temperature"
 {: #coap-ws-example title='The "coap+ws" URI Scheme' artwork-align="center" }
 
 Encoding considerations:
-:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
 Interoperability considerations:
-:	None.
+:   None.
 
 Security considerations:
-:	See Section 11.1 of {{RFC7252}}.
+:   See Section 11.1 of {{RFC7252}}.
 
 ## coaps+ws URI scheme {#coaps-ws-scheme}
 
@@ -1178,13 +1212,13 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 {: #coaps-ws-example title='The "coaps+ws" URI Scheme' artwork-align="center" }
 
 Encoding considerations:
-:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
 Interoperability considerations:
-:	None.
+:   None.
 
 Security considerations:
-:	See Section 11.1 of {{RFC7252}}.
+:   See Section 11.1 of {{RFC7252}}.
 
 ## Decomposing URIs into Options
 
@@ -1292,9 +1326,9 @@ also apply.
   followed blindly. In particular, a peer MUST NOT assume that a
   successful connection to the Alternative-Address inherits all the
   security properties of the current connection.
-* SNI vs. Server-Name: Any security negotiated in the TLS handshake is
+* SNI vs. Default-Uri-Host: Any security negotiated in the TLS handshake is
   for the SNI name exchanged in the TLS handshake and checked against
-  the certificate provided by the server. The Server-Name Option
+  the certificate provided by the server. The Default-Uri-Host Option
   cannot be used to extend these security properties to the additional
   server name.
 
@@ -1340,11 +1374,11 @@ Initial entries in this sub-registry are as follows:
 
 | Applies to | Number | Name                | Reference |
 |------------|--------|---------------------|-----------|
-| 7.01       |      1 | Server-Name         | [RFCthis] |
+| 7.01       |      1 | Default-Uri-Host         | [RFCthis] |
 | 7.01       |      2 | Max-Message-Size    | [RFCthis] |
 | 7.01       |      4 | Block-wise-Transfer | [RFCthis] |
 | 7.02, 7.03 |      2 | Custody             | [RFCthis] |
-| 7.04       |      2 | Bad-Server-Name     | [RFCthis] |
+| 7.04       |      2 | Bad-Default-Uri-Host     | [RFCthis] |
 | 7.04       |      4 | Alternative-Address | [RFCthis] |
 | 7.04       |      6 | Hold-Off            | [RFCthis] |
 | 7.05       |      2 | Bad-CSM-Option      | [RFCthis] |
@@ -1353,6 +1387,17 @@ Initial entries in this sub-registry are as follows:
 The IANA policy for future additions to this sub-registry is based on
 number ranges for the option numbers, analogous to the policy defined
 in Section 12.2 of {{-coap}}.
+
+The documentation for a Signaling Option Number should specify the semantics of
+an option with that number, including the following properties:
+
+* Whether the option is critical or elective, as determined by the Option Number.
+
+* Whether the option is repeatable.
+
+* The format and length of the option's value.
+
+* The base value for the option, if any.
 
 ## Service Name and Port Number Registration
 
@@ -1420,22 +1465,22 @@ IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap
 This registration request complies with {{-urireg}}.
 
 Scheme name:
-:	coap+tcp
+:   coap+tcp
 
 Status:
-:	Permanent
+:   Permanent
 
 Applications/protocols that use this scheme name:
-:	The scheme is used by CoAP endpoints to access CoAP resources using TCP.
+:   The scheme is used by CoAP endpoints to access CoAP resources using TCP.
 
 Contact:
-:	IETF chair \<chair@ietf.org>
+:   IETF chair \<chair@ietf.org>
 
 Change controller:
-:	IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 Reference:
-:	{{coap-tcp-scheme}} in [RFCthis]
+:   {{coap-tcp-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ###coaps+tcp
@@ -1443,22 +1488,22 @@ IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap
 This registration request complies with {{-urireg}}.
 
 Scheme name:
-:	coaps+tcp
+:   coaps+tcp
 
 Status:
-:	Permanent
+:   Permanent
 
 Applications/protocols that use this scheme name:
-:	The scheme is used by CoAP endpoints to access CoAP resources using TLS.
+:   The scheme is used by CoAP endpoints to access CoAP resources using TLS.
 
 Contact:
-:	IETF chair \<chair@ietf.org>
+:   IETF chair \<chair@ietf.org>
 
 Change controller:
-:	IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 Reference:
-:	{{coaps-tcp-scheme}} in [RFCthis]
+:   {{coaps-tcp-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ### coap+ws
@@ -1467,22 +1512,22 @@ IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap
 This registration request complies with {{-urireg}}.
 
 Scheme name:
-:	coap+ws
+:   coap+ws
 
 Status:
-:	Permanent
+:   Permanent
 
 Applications/protocols that use this scheme name:
-:	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.
+:   The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.
 
 Contact:
-:	IETF chair \<chair@ietf.org>
+:   IETF chair \<chair@ietf.org>
 
 Change controller:
-:	IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 Reference:
-:	{{coap-ws-scheme}} in [RFCthis]
+:   {{coap-ws-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ### coaps+ws
@@ -1490,23 +1535,23 @@ IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap
 This registration request complies with {{-urireg}}.
 
 Scheme name:
-:	coaps+ws
+:   coaps+ws
 
 Status:
-:	Permanent
+:   Permanent
 
 Applications/protocols that use this scheme name:
-:	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol
-	secured with TLS.
+:   The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol
+    secured with TLS.
 
 Contact:
-:	IETF chair \<chair@ietf.org>
+:   IETF chair \<chair@ietf.org>
 
 Change controller:
-:	IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 References:
-:	{{coaps-ws-scheme}} in [RFCthis]
+:   {{coaps-ws-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ## Well-Known URI Suffix Registration
@@ -1515,16 +1560,16 @@ IANA is requested to register the 'coap' well-known URI in the "Well-Known URIs"
 registration request complies with {{RFC5785}}:
 
 URI Suffix.
-:	coap
+:   coap
 
 Change controller.
-:	IETF
+:   IETF
 
 Specification document(s).
-:	[RFCthis]
+:   [RFCthis]
 
 Related information.
-:	None.
+:   None.
 {: vspace='0'}
 
 ## ALPN Protocol Identifier {#alpnpid}
@@ -1548,19 +1593,22 @@ Reference.
 IANA is requested to register the WebSocket CoAP subprotocol under the "WebSocket Subprotocol Name Registry":
 
 Subprotocol Identifier.
-:	coap
+:   coap
 
 Subprotocol Common Name.
-:	Constrained Application Protocol (CoAP)
+:   Constrained Application Protocol (CoAP)
 
 Subprotocol Definition.
-:	[RFCthis]
+:   [RFCthis]
 {: vspace='0'}
 
 
 --- back
 
 # Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP) {#observing}
+
+In this appendix, "client" and "server" refer to the CoAP client and
+CoAP server.
 
 ## Notifications and Reordering
 
@@ -1764,8 +1812,12 @@ Updated references
 
 Added Appendix: Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)
 
-Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow client to send
-messages before receiving server CSM
+Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow initiator to send
+messages before receiving acceptor CSM
+
+## Since draft-core-coap-tcp-tls-04
+
+Use initiator/acceptor terminology where appropriate
 
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
@@ -1779,22 +1831,32 @@ and Gengyu Wei for their feedback.
 # Contributors {#contributors}
 {: numbered="no"}
 
-	Valik Solorzano Barboza
-	Zebra Technologies
-	820 W. Jackson Blvd. Suite 700
-	Chicago 60607
-	United States of America
+    Matthias Kovatsch
+    Siemens AG
+    Otto-Hahn-Ring 6
+    Munich D-81739
 
-	Phone: +1-847-634-6700
-	Email: vsolorzanobarboza@zebra.com
+    Phone: +49-173-5288856
+    EMail: matthias.kovatsch@siemens.com
 
-	Teemu Savolainen
-	Nokia Technologies
-	Hatanpaan valtatie 30
-	Tampere FI-33100
-	Finland
 
-	Email: teemu.savolainen@nokia.com
+    Teemu Savolainen
+    Nokia Technologies
+    Hatanpaan valtatie 30
+    Tampere FI-33100
+    Finland
+
+    Email: teemu.savolainen@nokia.com
+
+
+    Valik Solorzano Barboza
+    Zebra Technologies
+    820 W. Jackson Blvd. Suite 700
+    Chicago 60607
+    United States of America
+
+    Phone: +1-847-634-6700
+    Email: vsolorzanobarboza@zebra.com
 
 <!--  LocalWords:  TCP CoAP UDP firewalling firewalled TLS IP SCTP
  -->
