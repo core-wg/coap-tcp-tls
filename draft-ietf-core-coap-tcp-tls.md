@@ -1806,14 +1806,14 @@ and Gengyu Wei for their feedback.
 # Contributors {#contributors}
 {: numbered="no"}
 
-	Valik Solorzano Barboza
-	Zebra Technologies
-	820 W. Jackson Blvd. Suite 700
-	Chicago 60607
-	United States of America
+    Matthias Kovatsch
+    Siemens AG
+    Otto-Hahn-Ring 6
+    Munich D-81739
 
-	Phone: +1-847-634-6700
-	Email: vsolorzanobarboza@zebra.com
+    Phone: +49-173-5288856
+    EMail: matthias.kovatsch@siemens.com
+
 
 	Teemu Savolainen
 	Nokia Technologies
@@ -1822,6 +1822,16 @@ and Gengyu Wei for their feedback.
 	Finland
 
 	Email: teemu.savolainen@nokia.com
+
+
+	Valik Solorzano Barboza
+	Zebra Technologies
+	820 W. Jackson Blvd. Suite 700
+	Chicago 60607
+	United States of America
+
+	Phone: +1-847-634-6700
+	Email: vsolorzanobarboza@zebra.com
 
 <!--  LocalWords:  TCP CoAP UDP firewalling firewalled TLS IP SCTP
  -->
