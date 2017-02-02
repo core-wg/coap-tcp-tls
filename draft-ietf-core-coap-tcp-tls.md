@@ -1103,26 +1103,26 @@ The syntax defined in Section 6.2 of {{RFC7252}} applies to this URI scheme, wit
   the default port 443 is assumed (this is different from the default
   port for "coaps", i.e., CoAP over DTLS over UDP).
 
-* If a TCP server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
-  {{-alpn}} or wishes to accommodate TCP clients that do not support ALPN, it MAY offer a
-  coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A TCP server
+* If a TLS server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
+  {{-alpn}} or wishes to accommodate TLS clients that do not support ALPN, it MAY offer a
+  coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A TLS server
   MAY offer coaps+tcp endpoints on ports other than TCP port 5684, which MUST be ALPN enabled.
 
-* For TCP ports other than port 5684, the TCP client MUST use the ALPN extension to advertise
+* For TCP ports other than port 5684, the TLS client MUST use the ALPN extension to advertise
   the "coap" protocol identifier (see {{alpnpid}}) in the list of protocols in its
   ClientHello. If the TCP server selects and returns the "coap" protocol identifier using the
-  ALPN extension in its ServerHello, then the connection succeeds. If the TCP server either does
-  not negotiate the ALPN extension or returns a no_application_protocol alert, the TCP client
+  ALPN extension in its ServerHello, then the connection succeeds. If the TLS server either does
+  not negotiate the ALPN extension or returns a no_application_protocol alert, the TLS client
   MUST close the connection.
 
-* For TCP port 5684, a TCP client MAY use the ALPN extension to advertise the "coap" protocol
-  identifier in the list of protocols in its ClientHello. If the TCP server selects and returns
+* For TCP port 5684, a TLS client MAY use the ALPN extension to advertise the "coap" protocol
+  identifier in the list of protocols in its ClientHello. If the TLS server selects and returns
   the "coap" protocol identifier using the ALPN extension in its ServerHello, then the connection
-  succeeds. If the TCP server returns a no_application_protocol alert, then the TCP client MUST close the
-  connection. If the TCP server does not negotiate the ALPN extension, then coaps+tcp is implicitly
+  succeeds. If the TLS server returns a no_application_protocol alert, then the TLS client MUST close the
+  connection. If the TLS server does not negotiate the ALPN extension, then coaps+tcp is implicitly
   selected.
 
-* For TCP port 5684, if the TCP client does not use the ALPN extension to negotiate the protocol,
+* For TCP port 5684, if the TLS client does not use the ALPN extension to negotiate the protocol,
   then coaps+tcp is implicitly selected.
 
 Encoding considerations:
