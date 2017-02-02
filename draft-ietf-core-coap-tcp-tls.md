@@ -204,8 +204,8 @@ in some situations secured by TLS {{RFC5246}}.
 
 In addition, some corporate networks only allow Internet access via a HTTP proxy.
 In this case, the best transport for CoAP might be the [WebSocket Protocol](#RFC6455).
-The WebSocket protocol provides two-way communication between a client
-and a server after upgrading an [HTTP/1.1](#RFC7230) connection and may
+The WebSocket protocol provides two-way communication between a WebSocket client
+and a WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection and may
 be available in an environment that blocks CoAP over UDP. Another scenario
 for CoAP over WebSockets is a CoAP application running inside a web browser
 without access to connectivity other than HTTP and WebSockets.
@@ -220,8 +220,8 @@ such as between WebSockets and UDP.
 
 {{observing}} updates [Observing Resources in the Constrained Application Protocol](#RFC7641)
 for use with CoAP over reliable transports. {{RFC7641}} is an extension to the CoAP core
-protocol that enables CoAP clients to "observe" a resource on a CoAP server. (The client
-retrieves a representation of a resource and registers to be notified by the server when
+protocol that enables CoAP clients to "observe" a resource on a CoAP server. (The CoAP client
+retrieves a representation of a resource and registers to be notified by the CoAP server when
 the representation is updated.)
 
 ## Conventions and Terminology
@@ -236,15 +236,24 @@ concepts that are used in {{RFC6455}}, {{RFC7252}}, {{RFC7641}}, and {{-block}}.
 The term "reliable transport" is used only to refer to transport protocols such
 as TCP which provide reliable and ordered delivery of a byte-stream. 
 
+{: vspace='0'}
 BERT Option:
 :   A Block1 or Block2 option that includes an SZX value of 7.
-{: vspace='0'}
+
 BERT Block:
 :   The payload of a CoAP message that is affected by a BERT Option in
     descriptive usage (Section 2.1 of {{-block}}).
-{: vspace='0'}
 
-For simplicity, a Payload Marker (0xFF) is present in all examples for message formats:
+Connection initiator:
+:   The peer that opens a reliable byte stream connection, i.e., the
+    TCP active opener, TLS client, or WebSocket client.
+
+Connection acceptor:
+:   The peer that accepts the reliable byte stream connection opened by
+    the other peer, i.e., the TCP passive opener, TLS server, or
+    WebSocket server.
+
+For simplicity, a Payload Marker (0xFF) is shown in all examples for message formats:
 
 ~~~~
     ...
@@ -282,7 +291,7 @@ CoAP over reliable transport. The removed Type and Message ID fields
 are indicated by dashes.
 
 ~~~~
- Client                Server   Client                Server
+CoAP Client       CoAP Server  CoAP Client       CoAP Server
     |                    |         |                    |
     |   CON [0xbc90]     |         | (-------) [------] |
     | GET /temperature   |         | GET /temperature   |
@@ -447,8 +456,8 @@ The semantics of the other CoAP header fields are left unchanged.
 
 ## Message Transmission
 
-Once a connection is established, both the client and the server MUST send a Capabilities and Settings message (CSM see {{csm}})
-as its first message on the connection. This message establishes the initial settings and
+Once a connection is established, both endpoints MUST send a Capabilities and Settings message (CSM see {{csm}})
+as their first message on the connection. This message establishes the initial settings and
 capabilities for the endpoint such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
 
@@ -458,12 +467,13 @@ own initial CSM message.  Conversely, the Connection Acceptor MAY wait
 for the Connection Initiator to send its initial CSM message before
 sending its own initial CSM message.
 
-To avoid unnecessary latency, a client MAY send additional messages without waiting to receive
-the server CSM; however, it is important to note that the server CSM might advertise capabilities
-that impact how a client is expected to communicate with the server. For example, the server CSM
+To avoid unnecessary latency, a Connection Initiator MAY send additional messages without waiting to receive
+the Connection Acceptor's CSM; however, it is important to note that
+the Connection Acceptor's CSM might advertise capabilities
+that impact how the initiator is expected to communicate with the acceptor. For example, the acceptor CSM
 could advertise a Max-Message-Size option (see {{max-message-size}}) that is smaller than the base value (1152). 
 
-Clients and servers MUST treat a missing or invalid CSM as a connection error and abort
+Endpoints MUST treat a missing or invalid CSM as a connection error and abort
 the connection (see {{sec-abort}}). 
 
 CoAP requests and responses are exchanged asynchronously over the
@@ -486,11 +496,11 @@ Empty messages (Code 0.00) can always be sent and MUST be ignored by the
 recipient. This provides a basic keep-alive function that can refresh NAT
 bindings.
 
-If a client does not receive any response for some time after
+If a CoAP client does not receive any response for some time after
 sending a CoAP request (or, similarly, when a client observes a
 resource and it does not receive any notification for some time),
 it can send a CoAP Ping Signaling message ({{sec-ping}}) to test
-the connection and verify that the server is responsive.
+the connection and verify that the CoAP server is responsive.
 
 # CoAP over WebSockets {#websockets-overview}
 
@@ -531,7 +541,7 @@ Another possible configuration is to set up a CoAP forward proxy
 at the WebSocket endpoint. Depending on what transports are available
 to the proxy, it could forward the request to a CoAP server with a
 CoAP UDP endpoint ({{arch-2}}), an SMS endpoint (a.k.a.&nbsp;mobile phone),
-or even another WebSocket endpoint. The client specifies the resource to be
+or even another WebSocket endpoint. The CoAP client specifies the resource to be
 updated or retrieved in the Proxy-Uri Option.
 
 
@@ -632,7 +642,7 @@ the length.
 ~~~~
 {: #ws-message-format title='CoAP Message Format over WebSockets' artwork-align="center"}
 
-As with CoAP over TCP, the message format for CoAP over Websockets
+As with CoAP over TCP, the message format for CoAP over WebSockets
 eliminates the Version field defined in CoAP over UDP. If CoAP version
 negotiation is required in the future, CoAP over WebSockets can address
 the requirement by the definition of a new subprotocol identifier that is
@@ -647,8 +657,8 @@ transferred in a block-wise fashion as defined in {{-block}}.
 
 ## Message Transmission {#requests-responses}
 
-As with CoAP over TCP, both the client and the server MUST send a Capabilities
-and Settings message (CSM see {{csm}}) as its first message on the WebSocket connection.
+As with CoAP over TCP, both endpoints MUST send a Capabilities
+and Settings message (CSM see {{csm}}) as their first message on the WebSocket connection.
 
 CoAP requests and responses are exchanged asynchronously over the
 WebSocket connection. A CoAP client can send multiple requests
@@ -668,7 +678,7 @@ not provide Acknowledgement or Reset messages.
 
 ## Connection Health {#ws-liveliness}
 
-As with CoAP over TCP, the client can test the health of the CoAP over WebSocket
+As with CoAP over TCP, a CoAP client can test the health of the CoAP over WebSocket
 connection by sending a CoAP Ping Signaling message ({{sec-ping}}). WebSocket Ping
 and unsolicited Pong frames (Section 5.5 of {{RFC6455}}) SHOULD NOT be used to ensure
 that redundant maintenance traffic is not transmitted. 
@@ -843,11 +853,11 @@ The following options are defined:
 
 |No|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
-| 2| | | Release    | Bad-Server-Name    | empty  | 0      | (none)      |
+| 2| | | Release    | Bad-Default-Uri-Host    | empty  | 0      | (none)      |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
-The elective Bad-Server-Name Option indicates that the default indicated
-by the CSM Server-Name Option is unlikely to be useful for this server.
+The elective Bad-Default-Uri-Host Option indicates that the default indicated
+by the CSM Default-Uri-Host Option is unlikely to be useful for this server.
 
 |No|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
@@ -1003,7 +1013,7 @@ the block number increments to move the position inside the response
 body forward.
 
 ~~~~
-CLIENT                                       SERVER
+CoAP Client                             CoAP Server
   |                                            |
   | GET, /status                       ------> |
   |                                            |
@@ -1024,7 +1034,7 @@ CLIENT                                       SERVER
 {{fig-bert2}} demonstrates a PUT exchange with BERT blocks.
 
 ~~~~
-CLIENT                                        SERVER
+CoAP Client                             CoAP Server
   |                                             |
   | PUT, /options, 1:0/1/BERT(8192)     ------> |
   |                                             |
@@ -1597,6 +1607,9 @@ Subprotocol Definition.
 
 # Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP) {#observing}
 
+In this appendix, "client" and "server" refer to the CoAP client and
+CoAP server.
+
 ## Notifications and Reordering
 
 When using the Observe Option with CoAP over UDP, notifications from the server set the option
@@ -1799,8 +1812,12 @@ Updated references
 
 Added Appendix: Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)
 
-Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow client to send
-messages before receiving server CSM
+Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow initiator to send
+messages before receiving acceptor CSM
+
+## Since draft-core-coap-tcp-tls-04
+
+Use initiator/acceptor terminology where appropriate
 
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
