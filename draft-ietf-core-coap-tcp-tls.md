@@ -452,6 +452,12 @@ as its first message on the connection. This message establishes the initial set
 capabilities for the endpoint such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
 
+To avoid a deadlock, the Connection Initiator MUST NOT wait for the
+Connection Acceptor to send its initial CSM message before sending its
+own initial CSM message.  Conversely, the Connection Acceptor MAY wait
+for the Connection Initiator to send its initial CSM message before
+sending its own initial CSM message.
+
 To avoid unnecessary latency, a client MAY send additional messages without waiting to receive
 the server CSM; however, it is important to note that the server CSM might advertise capabilities
 that impact how a client is expected to communicate with the server. For example, the server CSM
