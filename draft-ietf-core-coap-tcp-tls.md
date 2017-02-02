@@ -237,11 +237,11 @@ The term "reliable transport" is used only to refer to transport protocols such
 as TCP which provide reliable and ordered delivery of a byte-stream. 
 
 BERT Option:
-:	A Block1 or Block2 option that includes an SZX value of 7.
+:   A Block1 or Block2 option that includes an SZX value of 7.
 {: vspace='0'}
 BERT Block:
-:	The payload of a CoAP message that is affected by a BERT Option in
-	descriptive usage (Section 2.1 of {{-block}}).
+:   The payload of a CoAP message that is affected by a BERT Option in
+    descriptive usage (Section 2.1 of {{-block}}).
 {: vspace='0'}
 
 For simplicity, a Payload Marker (0xFF) is present in all examples for message formats:
@@ -1071,13 +1071,13 @@ The syntax defined in Section 6.1 of {{RFC7252}} applies to this URI scheme with
 (If it is empty or not given, then the default port 5683 is assumed, as with UDP.)
 
 Encoding considerations:
-:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
 Interoperability considerations:
-:	None.
+:   None.
 
 Security considerations:
-:	See Section 11.1 of {{RFC7252}}.
+:   See Section 11.1 of {{RFC7252}}.
 
 ## coaps+tcp URI scheme {#coaps-tcp-scheme}
 
@@ -1120,13 +1120,13 @@ The syntax defined in Section 6.2 of {{RFC7252}} applies to this URI scheme, wit
   then coaps+tcp is implicitly selected.
 
 Encoding considerations:
-:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
 Interoperability considerations:
-:	None.
+:   None.
 
 Security considerations:
-:	See Section 11.1 of {{RFC7252}}.
+:   See Section 11.1 of {{RFC7252}}.
 
 ## coap+ws URI scheme {#coap-ws-scheme}
 
@@ -1157,13 +1157,13 @@ ws://example.org/.well-known/coap    Uri-Path: "temperature"
 {: #coap-ws-example title='The "coap+ws" URI Scheme' artwork-align="center" }
 
 Encoding considerations:
-:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
 Interoperability considerations:
-:	None.
+:   None.
 
 Security considerations:
-:	See Section 11.1 of {{RFC7252}}.
+:   See Section 11.1 of {{RFC7252}}.
 
 ## coaps+ws URI scheme {#coaps-ws-scheme}
 
@@ -1194,13 +1194,13 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 {: #coaps-ws-example title='The "coaps+ws" URI Scheme' artwork-align="center" }
 
 Encoding considerations:
-:	The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986]. 
 
 Interoperability considerations:
-:	None.
+:   None.
 
 Security considerations:
-:	See Section 11.1 of {{RFC7252}}.
+:   See Section 11.1 of {{RFC7252}}.
 
 ## Decomposing URIs into Options
 
@@ -1447,22 +1447,22 @@ IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap
 This registration request complies with {{-urireg}}.
 
 Scheme name:
-:	coap+tcp
+:   coap+tcp
 
 Status:
-:	Permanent
+:   Permanent
 
 Applications/protocols that use this scheme name:
-:	The scheme is used by CoAP endpoints to access CoAP resources using TCP.
+:   The scheme is used by CoAP endpoints to access CoAP resources using TCP.
 
 Contact:
-:	IETF chair \<chair@ietf.org>
+:   IETF chair \<chair@ietf.org>
 
 Change controller:
-:	IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 Reference:
-:	{{coap-tcp-scheme}} in [RFCthis]
+:   {{coap-tcp-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ###coaps+tcp
@@ -1470,22 +1470,22 @@ IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap
 This registration request complies with {{-urireg}}.
 
 Scheme name:
-:	coaps+tcp
+:   coaps+tcp
 
 Status:
-:	Permanent
+:   Permanent
 
 Applications/protocols that use this scheme name:
-:	The scheme is used by CoAP endpoints to access CoAP resources using TLS.
+:   The scheme is used by CoAP endpoints to access CoAP resources using TLS.
 
 Contact:
-:	IETF chair \<chair@ietf.org>
+:   IETF chair \<chair@ietf.org>
 
 Change controller:
-:	IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 Reference:
-:	{{coaps-tcp-scheme}} in [RFCthis]
+:   {{coaps-tcp-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ### coap+ws
@@ -1494,22 +1494,22 @@ IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap
 This registration request complies with {{-urireg}}.
 
 Scheme name:
-:	coap+ws
+:   coap+ws
 
 Status:
-:	Permanent
+:   Permanent
 
 Applications/protocols that use this scheme name:
-:	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.
+:   The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.
 
 Contact:
-:	IETF chair \<chair@ietf.org>
+:   IETF chair \<chair@ietf.org>
 
 Change controller:
-:	IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 Reference:
-:	{{coap-ws-scheme}} in [RFCthis]
+:   {{coap-ws-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ### coaps+ws
@@ -1517,23 +1517,23 @@ IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap
 This registration request complies with {{-urireg}}.
 
 Scheme name:
-:	coaps+ws
+:   coaps+ws
 
 Status:
-:	Permanent
+:   Permanent
 
 Applications/protocols that use this scheme name:
-:	The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol
-	secured with TLS.
+:   The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol
+    secured with TLS.
 
 Contact:
-:	IETF chair \<chair@ietf.org>
+:   IETF chair \<chair@ietf.org>
 
 Change controller:
-:	IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 References:
-:	{{coaps-ws-scheme}} in [RFCthis]
+:   {{coaps-ws-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ## Well-Known URI Suffix Registration
@@ -1542,16 +1542,16 @@ IANA is requested to register the 'coap' well-known URI in the "Well-Known URIs"
 registration request complies with {{RFC5785}}:
 
 URI Suffix.
-:	coap
+:   coap
 
 Change controller.
-:	IETF
+:   IETF
 
 Specification document(s).
-:	[RFCthis]
+:   [RFCthis]
 
 Related information.
-:	None.
+:   None.
 {: vspace='0'}
 
 ## ALPN Protocol Identifier {#alpnpid}
@@ -1575,13 +1575,13 @@ Reference.
 IANA is requested to register the WebSocket CoAP subprotocol under the "WebSocket Subprotocol Name Registry":
 
 Subprotocol Identifier.
-:	coap
+:   coap
 
 Subprotocol Common Name.
-:	Constrained Application Protocol (CoAP)
+:   Constrained Application Protocol (CoAP)
 
 Subprotocol Definition.
-:	[RFCthis]
+:   [RFCthis]
 {: vspace='0'}
 
 
@@ -1815,23 +1815,23 @@ and Gengyu Wei for their feedback.
     EMail: matthias.kovatsch@siemens.com
 
 
-	Teemu Savolainen
-	Nokia Technologies
-	Hatanpaan valtatie 30
-	Tampere FI-33100
-	Finland
+    Teemu Savolainen
+    Nokia Technologies
+    Hatanpaan valtatie 30
+    Tampere FI-33100
+    Finland
 
-	Email: teemu.savolainen@nokia.com
+    Email: teemu.savolainen@nokia.com
 
 
-	Valik Solorzano Barboza
-	Zebra Technologies
-	820 W. Jackson Blvd. Suite 700
-	Chicago 60607
-	United States of America
+    Valik Solorzano Barboza
+    Zebra Technologies
+    820 W. Jackson Blvd. Suite 700
+    Chicago 60607
+    United States of America
 
-	Phone: +1-847-634-6700
-	Email: vsolorzanobarboza@zebra.com
+    Phone: +1-847-634-6700
+    Email: vsolorzanobarboza@zebra.com
 
 <!--  LocalWords:  TCP CoAP UDP firewalling firewalled TLS IP SCTP
  -->
