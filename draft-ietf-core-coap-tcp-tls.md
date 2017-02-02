@@ -741,23 +741,25 @@ the option being set to its default value.
 
 Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
-### Server-Name Setting Option
+### Default-Uri-Host Setting Option
 
 |No|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
-| 1|x| | CSM        | Server-Name        | string | 1-255  | (see below) |
+| 1|x| | CSM        | Default-Uri-Host        | string | 1-255  | (see below) |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
-A client can use the critical Server-Name Option to indicate the default value
-for the Uri-Host Options in the messages that it sends to the server.
+An endpoint can use the critical Default-Uri-Host Option to indicate the default value
+for the Uri-Host Options in the messages that it sends to the other endpoint.
 Its value MUST be a valid value for the Uri-Host Option (Section 5.10.1 of {{RFC7252}}).
 
-For TLS, the base value for the Server-Name Option is given by the SNI value.
+For TLS, the base value for the Default-Uri-Host Option in the direction
+from the Connection Initiator to the Connection Acceptor is given by the SNI value.
 
-For Websockets, the base value for the Server-Name Option is given by the HTTP
+For WebSockets, the base value for the Default-Uri-Host Option in the
+direction from the Connection Initiator to the Connection Acceptor is given by the HTTP
 Host header field.
 
-The active value of the Server-Name Option is replaced each time the option is sent with
+The active value of the Default-Uri-Host Option is replaced each time the option is sent with
 a modified value. Its starting value is its base value (if available).
 
 ### Max-Message-Size Capability Option {#max-message-size}
@@ -1314,9 +1316,9 @@ also apply.
   followed blindly. In particular, a peer MUST NOT assume that a
   successful connection to the Alternative-Address inherits all the
   security properties of the current connection.
-* SNI vs. Server-Name: Any security negotiated in the TLS handshake is
+* SNI vs. Default-Uri-Host: Any security negotiated in the TLS handshake is
   for the SNI name exchanged in the TLS handshake and checked against
-  the certificate provided by the server. The Server-Name Option
+  the certificate provided by the server. The Default-Uri-Host Option
   cannot be used to extend these security properties to the additional
   server name.
 
@@ -1362,11 +1364,11 @@ Initial entries in this sub-registry are as follows:
 
 | Applies to | Number | Name                | Reference |
 |------------|--------|---------------------|-----------|
-| 7.01       |      1 | Server-Name         | [RFCthis] |
+| 7.01       |      1 | Default-Uri-Host         | [RFCthis] |
 | 7.01       |      2 | Max-Message-Size    | [RFCthis] |
 | 7.01       |      4 | Block-wise-Transfer | [RFCthis] |
 | 7.02, 7.03 |      2 | Custody             | [RFCthis] |
-| 7.04       |      2 | Bad-Server-Name     | [RFCthis] |
+| 7.04       |      2 | Bad-Default-Uri-Host     | [RFCthis] |
 | 7.04       |      4 | Alternative-Address | [RFCthis] |
 | 7.04       |      6 | Hold-Off            | [RFCthis] |
 | 7.05       |      2 | Bad-CSM-Option      | [RFCthis] |
