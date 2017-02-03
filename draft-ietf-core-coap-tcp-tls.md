@@ -1275,10 +1275,10 @@ Security Challenges for the Internet of Things {{SecurityChallenges}} recommends
 > in all implementations, but configurable to use when not necessary (e.g., in closed environment).
 > ... even if those features stretch the capabilities of such devices.
 
-A security solution MUST be implemented to protect CoAP over TCP and MUST
+A security solution MUST be implemented to protect CoAP over reliable transports and MUST
 be enabled by default. This document defines the TLS binding, but alternative
 solutions at different layers in the protocol stack MAY be used to protect
-CoAP over TCP when appropriate. Note that there is ongoing work to support a
+CoAP over reliable transports when appropriate. Note that there is ongoing work to support a
 data object-based security model for CoAP that is independent of transport
 (see {{-oscoap}}).
 
@@ -1314,6 +1314,17 @@ or receive packets from the network with the CoAP nodes.
 "PreSharedKey", "RawPublicKey", or "Certificate" is mandatory-to-implement for the TLS
 binding depending on the credential type used with the device. These security modes are
 achieved using TLS and are indicated by the "coaps+tcp" scheme and TLS-secured CoAP default port.
+
+## TLS usage for CoAP over WebSockets
+
+A CoAP client requesting a resource identified by a "coaps+ws" URI negotiates a secure WebSocket
+connection to a WebSocket server endpoint with a "wss" URI. This is described in {{coaps-ws-scheme}}.
+
+The client MUST perform a TLS handshake after opening the connection to the server. The guidance in
+Section 4.1 of {{RFC6455}} applies. When a CoAP server exposes resources identified by a "coaps+ws" URI,
+the guidance in Section 4.4 of {{RFC7925}} applies towards mandatory-to-implement TLS functionality
+for certificates. For the server-side requirements in accepting incoming connections over a HTTPS
+(HTTP-over-TLS) port, the guidance in Section 4.2 of {{RFC6455}} applies.
 
 # Security Considerations {#security}
 
