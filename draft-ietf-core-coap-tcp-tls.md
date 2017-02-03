@@ -751,33 +751,12 @@ the option being set to its default value.
 
 Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
-### Default-Uri-Host Setting Option
-
-|No|C|R| Applies to | Name               | Format | Length | Base Value  |
-|--+-+-+------------+--------------------+--------+--------+-------------+
-| 1|x| | CSM        | Default-Uri-Host        | string | 1-255  | (see below) |
-{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
-
-An endpoint can use the critical Default-Uri-Host Option to indicate the default value
-for the Uri-Host Options in the messages that it sends to the other endpoint.
-Its value MUST be a valid value for the Uri-Host Option (Section 5.10.1 of {{RFC7252}}).
-
-For TLS, the base value for the Default-Uri-Host Option in the direction
-from the Connection Initiator to the Connection Acceptor is given by the SNI value.
-
-For WebSockets, the base value for the Default-Uri-Host Option in the
-direction from the Connection Initiator to the Connection Acceptor is given by the HTTP
-Host header field.
-
-The active value of the Default-Uri-Host Option is replaced each time the option is sent with
-a modified value. Its starting value is its base value (if available).
-
 ### Max-Message-Size Capability Option {#max-message-size}
 
 The sender can use the elective Max-Message-Size Option to indicate the maximum message size
 in bytes that it can receive.
 
-|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+| #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
 | 2| | | CSM        | Max-Message-Size   | uint   | 0-4    | 1152        |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
@@ -790,7 +769,7 @@ is sent with a modified value. Its starting value is its base value.
 
 ### Block-wise Transfer Capability Option
 
-|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+| #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
 | 4| | | CSM        | Block-wise Transfer|  empty | 0      | (none)      |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
@@ -820,7 +799,7 @@ Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (
 
 ### Custody Option
 
-|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+| #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
 | 2| | | Ping, Pong | Custody            | empty  | 0      | (none)      |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
@@ -852,17 +831,9 @@ Release messages are indicated by the 7.04 code (Release).
 Release messages can indicate one or more reasons using elective options.
 The following options are defined:
 
-|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+| #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
-| 2| | | Release    | Bad-Default-Uri-Host    | empty  | 0      | (none)      |
-{: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
-
-The elective Bad-Default-Uri-Host Option indicates that the default indicated
-by the CSM Default-Uri-Host Option is unlikely to be useful for this server.
-
-|No|C|R| Applies to | Name               | Format | Length | Base Value  |
-|--+-+-+------------+--------------------+--------+--------+-------------+
-| 4| |x| Release    | Alternate-Address  | string | 1-255  | (none)      |
+| 2| |x| Release    | Alternate-Address  | string | 1-255  | (none)      |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Alternative-Address Option requests the peer to instead open a connection
@@ -871,9 +842,9 @@ Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}.
 
 The Alternative-Address Option is a repeatable option as defined in Section 5.4.5 of {{-coap}}.
 
-|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+| #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
-| 6| | | Release    | Hold-Off           | uint   | 0-3    | (none)      |
+| 4| | | Release    | Hold-Off           | uint   | 0-3    | (none)      |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Hold-Off Option indicates that the server is requesting that the peer not
@@ -895,7 +866,7 @@ Abort messages are indicated by the 7.05 code (Abort).
 Abort messages can indicate one or more reasons using elective
 options. The following option is defined:
 
-|No|C|R| Applies to | Name               | Format | Length | Base Value  |
+| #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
 | 2| | | Abort      | Bad-CSM-Option     | uint   | 0-2    | (none)      |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
@@ -1327,11 +1298,6 @@ also apply.
   followed blindly. In particular, a peer MUST NOT assume that a
   successful connection to the Alternative-Address inherits all the
   security properties of the current connection.
-* SNI vs. Default-Uri-Host: Any security negotiated in the TLS handshake is
-  for the SNI name exchanged in the TLS handshake and checked against
-  the certificate provided by the server. The Default-Uri-Host Option
-  cannot be used to extend these security properties to the additional
-  server name.
 
 # IANA Considerations {#iana}
 
@@ -1375,13 +1341,11 @@ Initial entries in this sub-registry are as follows:
 
 | Applies to | Number | Name                | Reference |
 |------------|--------|---------------------|-----------|
-| 7.01       |      1 | Default-Uri-Host         | [RFCthis] |
 | 7.01       |      2 | Max-Message-Size    | [RFCthis] |
 | 7.01       |      4 | Block-wise-Transfer | [RFCthis] |
 | 7.02, 7.03 |      2 | Custody             | [RFCthis] |
-| 7.04       |      2 | Bad-Default-Uri-Host     | [RFCthis] |
-| 7.04       |      4 | Alternative-Address | [RFCthis] |
-| 7.04       |      6 | Hold-Off            | [RFCthis] |
+| 7.04       |      2 | Alternative-Address | [RFCthis] |
+| 7.04       |      4 | Hold-Off            | [RFCthis] |
 | 7.05       |      2 | Bad-CSM-Option      | [RFCthis] |
 {: #signal-option-codes title="CoAP Signal Option Codes" cols="l r l c"}
 
