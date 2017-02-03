@@ -811,9 +811,10 @@ In CoAP over reliable transports, Empty messages (Code 0.00) can always be sent 
 by the recipient. This provides a basic keep-alive function. In contrast, Ping and Pong messages are
 a bidirectional exchange.
 
-Upon receipt of a Ping message, a single Pong message is returned with the identical
-token. As with all Signaling messages, the recipient of a Ping or Pong message MUST
-ignore elective options it does not understand.
+Upon receipt of a Ping message, the receiver MUST return a Pong message with an identical token
+in response. Unless there is an option with delaying semantics such as the Custody Option, it
+SHOULD respond as soon as practical. As with all Signaling messages, the recipient of a Ping or
+Pong message MUST ignore elective options it does not understand.
 
 Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).
 
@@ -910,7 +911,7 @@ syntax error in the byte-stream received. No specific option has been
 defined for this, as the details of that syntax error are best left to
 a diagnostic payload.
 
-## Capabilities and Settings examples
+## Signaling examples
 
 An encoded example of a Ping message with a non-empty token is shown
 in {{fig-ping-example}}.
@@ -1815,7 +1816,7 @@ Added Appendix: Updates to RFC7641 Observing Resources in the Constrained Applic
 Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow initiator to send
 messages before receiving acceptor CSM
 
-## Since draft-core-coap-tcp-tls-04
+## Since draft-core-coap-tcp-tls-05
 
 Use initiator/acceptor terminology where appropriate
 
