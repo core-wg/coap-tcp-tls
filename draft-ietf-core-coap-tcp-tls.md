@@ -782,7 +782,9 @@ transfers are supported by the sender or not. An implementation that supports
 block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a
 Max-Message-Size Option is indicated with a value that is greater than 1152
 (in the same or a different CSM message), the Block-wise Transfer Option also
-indicates support for BERT (see {{bert}}).
+indicates support for BERT (see {{bert}}). Subsequently, if the Max-Message-Size
+Option is indicated with a value equal or less than 1152, BERT support is no longer
+indicated.
 
 ## Ping and Pong Messages {#sec-ping}
 
