@@ -81,6 +81,7 @@ normative:
   RFC5226: RFC5226
   RFC5246: tls
   RFC5785: RFC5785
+  RFC6066: RFC6066
   RFC6455: RFC6455
   RFC7252: coap
   RFC7301: alpn
@@ -1193,6 +1194,24 @@ Interoperability considerations:
 
 Security considerations:
 :   See Section 11.1 of {{RFC7252}}.
+
+## Uri-Host and Uri-Port Options
+
+CoAP over reliable transports maintains the property from Section 5.10.1 of {{RFC7252}}:
+
+> The default values for the Uri-Host and Uri-Port Options are
+> sufficient for requests to most servers.
+
+For CoAP over TCP, the default value of the Uri-Host Option is the IP literal representing
+the destination IP address of the request message. The default value of the Uri-Port Option is
+the destination TCP port.
+
+For CoAP over TLS, these default values are the same as CoAP over TCP unless Server Name Indication
+(SNI) {{RFC6066}} is negotiated. In this case, the default value of the Uri-Host Option in requests
+from the TLS client to the TLS server is the SNI host. 
+
+For CoAP over WebSockets, the default value of the Uri-Host Option in requests from the WebSocket
+client to the WebSocket server is indicated by the Host header field from the WebSocket handshake.
 
 ## Decomposing URIs into Options
 
