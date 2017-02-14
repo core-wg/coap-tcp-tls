@@ -1202,11 +1202,11 @@ CoAP over reliable transports maintains the property from Section 5.10.1 of {{RF
 > The default values for the Uri-Host and Uri-Port Options are
 > sufficient for requests to most servers.
 
-For CoAP over TCP, the default value of the Uri-Host Option is the IP literal representing
+Unless otherwise noted, the default value of the Uri-Host Option is the IP literal representing
 the destination IP address of the request message. The default value of the Uri-Port Option is
 the destination TCP port.
 
-For CoAP over TLS, these default values are the same as CoAP over TCP unless Server Name Indication
+For CoAP over TLS, these default values are the same unless Server Name Indication
 (SNI) {{RFC6066}} is negotiated. In this case, the default value of the Uri-Host Option in requests
 from the TLS client to the TLS server is the SNI host. 
 
