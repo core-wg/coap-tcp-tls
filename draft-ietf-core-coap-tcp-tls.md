@@ -93,13 +93,13 @@ informative:
   I-D.ietf-core-object-security: oscoap
   RFC7959: block
   LWM2M:
-    title: Lightweight Machine to Machine Technical Specification Candidate Version 1.0
-    target: http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf 
+    title: Lightweight Machine to Machine Technical Specification Version 1.0
+    target: http://www.openmobilealliance.org/release/LightweightM2M/V1_0-20170208-A/OMA-TS-LightweightM2M-V1_0-20170208-A.pdf
     author:
       org: Open Mobile Alliance
-    date:  April 2016
+    date:  February 2017
     format:
-      PDF: http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf
+      PDF: http://www.openmobilealliance.org/release/LightweightM2M/V1_0-20170208-A/OMA-TS-LightweightM2M-V1_0-20170208-A.pdf
   RFC0768: udp
   RFC5234: RFC5234
   RFC6454: RFC6454
@@ -245,11 +245,11 @@ BERT Block:
 :   The payload of a CoAP message that is affected by a BERT Option in
     descriptive usage (Section 2.1 of {{-block}}).
 
-Connection initiator:
+Connection Initiator:
 :   The peer that opens a reliable byte stream connection, i.e., the
     TCP active opener, TLS client, or WebSocket client.
 
-Connection acceptor:
+Connection Acceptor:
 :   The peer that accepts the reliable byte stream connection opened by
     the other peer, i.e., the TCP passive opener, TLS server, or
     WebSocket server.
@@ -836,7 +836,7 @@ The following options are defined:
 
 | #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
-| 2| |x| Release    | Alternate-Address  | string | 1-255  | (none)      |
+| 2| |x| Release    | Alternative-Address  | string | 1-255  | (none)      |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
 The elective Alternative-Address Option requests the peer to instead open a connection
@@ -1814,7 +1814,19 @@ messages before receiving acceptor CSM
 
 ## Since draft-core-coap-tcp-tls-05
 
-Use initiator/acceptor terminology where appropriate
+Addressed feedback from Working Group Last Call
+
+Added Securing CoAP section and informative reference to OSCOAP
+
+Removed the Server-Name and Bad-Server-Name Options
+
+Clarified the Capability and Settings Message (CSM) exchange
+
+Updated Pong response requirements
+
+Added Connection Initiator and Connection Acceptor terminology where appropriate
+
+Updated LWM2M 1.0 informative reference
 
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
