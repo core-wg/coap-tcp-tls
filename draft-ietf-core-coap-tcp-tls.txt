@@ -143,7 +143,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
      C.2.  Since draft-core-coap-tcp-tls-03  . . . . . . . . . . . .  44
      C.3.  Since draft-core-coap-tcp-tls-04  . . . . . . . . . . . .  44
      C.4.  Since draft-core-coap-tcp-tls-05  . . . . . . . . . . . .  44
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  44
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  45
    Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  45
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  45
 
@@ -285,11 +285,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
       The payload of a CoAP message that is affected by a BERT Option in
       descriptive usage (Section 2.1 of [RFC7959]).
 
-   Connection initiator:
+   Connection Initiator:
       The peer that opens a reliable byte stream connection, i.e., the
       TCP active opener, TLS client, or WebSocket client.
 
-   Connection acceptor:
+   Connection Acceptor:
       The peer that accepts the reliable byte stream connection opened
       by the other peer, i.e., the TCP passive opener, TLS server, or
       WebSocket server.
@@ -1070,7 +1070,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
    | # | C | R | Applies | Name             | Format | Length | Base   |
    |   |   |   | to      |                  |        |        | Value  |
    +---+---+---+---------+------------------+--------+--------+--------+
-   | 2 |   | x | Release | Alternate-       | string |  1-255 | (none) |
+   | 2 |   | x | Release | Alternative-     | string |  1-255 | (none) |
    |   |   |   |         | Address          |        |        |        |
    +---+---+---+---------+------------------+--------+--------+--------+
 
@@ -2131,10 +2131,10 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
 
 
    [LWM2M]    Open Mobile Alliance, "Lightweight Machine to Machine
-              Technical Specification Candidate Version 1.0", April
-              2016, <http://technical.openmobilealliance.org/Technical/R
-              elease_Program/docs/LightweightM2M/V1_0-20160407-C/
-              OMA-TS-LightweightM2M-V1_0-20160407-C.pdf>.
+              Technical Specification Version 1.0", February 2017,
+              <http://www.openmobilealliance.org/release/LightweightM2M/
+              V1_0-20170208-A/
+              OMA-TS-LightweightM2M-V1_0-20170208-A.pdf>.
 
    [RFC0768]  Postel, J., "User Datagram Protocol", STD 6, RFC 768,
               DOI 10.17487/RFC0768, August 1980,
@@ -2446,7 +2446,27 @@ C.3.  Since draft-core-coap-tcp-tls-04
 
 C.4.  Since draft-core-coap-tcp-tls-05
 
-   Use initiator/acceptor terminology where appropriate
+   Addressed feedback from Working Group Last Call
+
+   Added Securing CoAP section and informative reference to OSCOAP
+
+   Removed the Server-Name and Bad-Server-Name Options
+
+   Clarified the Capability and Settings Message (CSM) exchange
+
+   Updated Pong response requirements
+
+   Added Connection Initiator and Connection Acceptor terminology where
+   appropriate
+
+
+
+Bormann, et al.          Expires August 18, 2017               [Page 44]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
+
+
+   Updated LWM2M 1.0 informative reference
 
 Acknowledgements
 
@@ -2455,16 +2475,6 @@ Acknowledgements
    Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Goran Selander,
    Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for
    their feedback.
-
-
-
-
-
-
-Bormann, et al.          Expires August 18, 2017               [Page 44]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
-
 
 Contributors
 
@@ -2497,16 +2507,6 @@ Contributors
 
 Authors' Addresses
 
-   Carsten Bormann
-   Universitaet Bremen TZI
-   Postfach 330440
-   Bremen  D-28359
-   Germany
-
-   Phone: +49-421-218-63921
-   Email: cabo@tzi.org
-
-
 
 
 
@@ -2520,6 +2520,16 @@ Authors' Addresses
 Bormann, et al.          Expires August 18, 2017               [Page 45]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
+
+
+   Carsten Bormann
+   Universitaet Bremen TZI
+   Postfach 330440
+   Bremen  D-28359
+   Germany
+
+   Phone: +49-421-218-63921
+   Email: cabo@tzi.org
 
 
    Simon Lemay
@@ -2561,6 +2571,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
    Email: bilhanan.silverajan@tut.fi
 
 
+
+
+Bormann, et al.          Expires August 18, 2017               [Page 46]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
+
+
    Brian Raymor (editor)
    Microsoft
    One Microsoft Way
@@ -2573,4 +2590,43 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP    February 2017
 
 
 
-Bormann, et al.          Expires August 18, 2017               [Page 46]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann, et al.          Expires August 18, 2017               [Page 47]

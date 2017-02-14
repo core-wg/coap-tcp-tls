@@ -544,9 +544,9 @@ address {
   <dd style="margin-left: 8"><br/> A Block1 or Block2 option that includes an SZX value of 7.</dd>
   <dt>BERT Block:</dt>
   <dd style="margin-left: 8"><br/> The payload of a CoAP message that is affected by a BERT Option in descriptive usage (Section 2.1 of <a href="#RFC7959">[RFC7959]</a>).</dd>
-  <dt>Connection initiator:</dt>
+  <dt>Connection Initiator:</dt>
   <dd style="margin-left: 8"><br/> The peer that opens a reliable byte stream connection, i.e., the TCP active opener, TLS client, or WebSocket client.</dd>
-  <dt>Connection acceptor:</dt>
+  <dt>Connection Acceptor:</dt>
   <dd style="margin-left: 8"><br/> The peer that accepts the reliable byte stream connection opened by the other peer, i.e., the TCP passive opener, TLS server, or WebSocket server.</dd>
 </dl>
 <p id="rfc.section.1.1.p.5">For simplicity, a Payload Marker (0xFF) is shown in all examples for message formats:</p>
@@ -954,7 +954,7 @@ Sec-WebSocket-Protocol: coap
       <td class="left"/>
       <td class="left">x</td>
       <td class="left">Release</td>
-      <td class="left">Alternate-Address</td>
+      <td class="left">Alternative-Address</td>
       <td class="right">string</td>
       <td class="right">1-255</td>
       <td class="left">(none)</td>
@@ -1677,7 +1677,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
       <td class="reference">
         <b id="LWM2M">[LWM2M]</b>
       </td>
-      <td class="top"><a>Open Mobile Alliance</a>, "<a href="http://technical.openmobilealliance.org/Technical/Release_Program/docs/LightweightM2M/V1_0-20160407-C/OMA-TS-LightweightM2M-V1_0-20160407-C.pdf">Lightweight Machine to Machine Technical Specification Candidate Version 1.0</a>", April 2016.</td>
+      <td class="top"><a>Open Mobile Alliance</a>, "<a href="http://www.openmobilealliance.org/release/LightweightM2M/V1_0-20170208-A/OMA-TS-LightweightM2M-V1_0-20170208-A.pdf">Lightweight Machine to Machine Technical Specification Version 1.0</a>", February 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1857,7 +1857,13 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <p id="rfc.section.C.3.p.2">Added Appendix: Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP)</p>
 <p id="rfc.section.C.3.p.3">Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow initiator to send messages before receiving acceptor CSM</p>
 <h1 id="rfc.appendix.C.4"><a href="#rfc.appendix.C.4">C.4.</a> <a href="#since-draft-core-coap-tcp-tls-05" id="since-draft-core-coap-tcp-tls-05">Since draft-core-coap-tcp-tls-05</a></h1>
-<p id="rfc.section.C.4.p.1">Use initiator/acceptor terminology where appropriate</p>
+<p id="rfc.section.C.4.p.1">Addressed feedback from Working Group Last Call</p>
+<p id="rfc.section.C.4.p.2">Added Securing CoAP section and informative reference to OSCOAP</p>
+<p id="rfc.section.C.4.p.3">Removed the Server-Name and Bad-Server-Name Options</p>
+<p id="rfc.section.C.4.p.4">Clarified the Capability and Settings Message (CSM) exchange</p>
+<p id="rfc.section.C.4.p.5">Updated Pong response requirements</p>
+<p id="rfc.section.C.4.p.6">Added Connection Initiator and Connection Acceptor terminology where appropriate</p>
+<p id="rfc.section.C.4.p.7">Updated LWM2M 1.0 informative reference</p>
 <h1 id="rfc.acknowledgements">
   <a href="#rfc.acknowledgements">Acknowledgements</a>
 </h1>
