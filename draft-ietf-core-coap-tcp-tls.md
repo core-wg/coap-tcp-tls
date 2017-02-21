@@ -204,7 +204,7 @@ needs to support different transport protocols, namely TCP {{RFC0793}},
 in some situations secured by TLS {{RFC5246}}.
 
 In addition, some corporate networks only allow Internet access via a HTTP proxy.
-In this case, the best transport for CoAP might be the [WebSocket Protocol](#RFC6455).
+In this case, the best transport for CoAP might be the [WebSocket protocol](#RFC6455).
 The WebSocket protocol provides two-way communication between a WebSocket client
 and a WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection and may
 be available in an environment that blocks CoAP over UDP. Another scenario
@@ -212,20 +212,20 @@ for CoAP over WebSockets is a CoAP application running inside a web browser
 without access to connectivity other than HTTP and WebSockets.
 
 This document specifies how to access resources using CoAP requests
-and responses over the TCP/TLS and WebSocket protocols. This allows
+and responses over the TCP, TLS and WebSocket protocols. This allows
 connectivity-limited applications to obtain end-to-end CoAP
 connectivity either by communicating CoAP directly with a CoAP server
-accessible over a TCP/TLS or WebSocket connection or via a CoAP intermediary
+accessible over a TCP, TLS or WebSocket connection or via a CoAP intermediary
 that proxies CoAP requests and responses between different transports,
 such as between WebSockets and UDP.
 
-{{observing}} updates [Observing Resources in the Constrained Application Protocol](#RFC7641)
-for use with CoAP over reliable transports. {{RFC7641}} is an extension to the CoAP core
+{{observing}} updates the ["Observing Resources in the Constrained Application Protocol"](#RFC7641) specification 
+for use with CoAP over reliable transports. {{RFC7641}} is an extension to the CoAP 
 protocol that enables CoAP clients to "observe" a resource on a CoAP server. (The CoAP client
 retrieves a representation of a resource and registers to be notified by the CoAP server when
 the representation is updated.)
 
-## Conventions and Terminology
+# Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -234,8 +234,8 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 This document assumes that readers are familiar with the terms and
 concepts that are used in {{RFC6455}}, {{RFC7252}}, {{RFC7641}}, and {{-block}}.
 
-The term "reliable transport" is used only to refer to transport protocols such
-as TCP which provide reliable and ordered delivery of a byte-stream. 
+The term "reliable transport" is used only to refer to transport protocols, such
+as TCP, which provide reliable and ordered delivery of a byte-stream. 
 
 {: vspace='0'}
 BERT Option:
@@ -243,7 +243,7 @@ BERT Option:
 
 BERT Block:
 :   The payload of a CoAP message that is affected by a BERT Option in
-    descriptive usage (Section 2.1 of {{-block}}).
+    descriptive usage (see Section 2.1 of {{-block}}).
 
 Connection Initiator:
 :   The peer that opens a reliable byte stream connection, i.e., the
@@ -264,13 +264,13 @@ For simplicity, a Payload Marker (0xFF) is shown in all examples for message for
 ~~~~
 
 The Payload Marker indicates the start of the optional payload and is absent for zero-length
-payloads (see section 3 of {{RFC7252}}).
+payloads (see Section 3 of {{RFC7252}}).
 
 # CoAP over TCP
 
 The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.
 The primary differences are in the message layer. The message layer of CoAP over UDP
-supports optional reliability by defining four Types of messages: Confirmable,
+supports optional reliability by defining four types of messages: Confirmable,
 Non-confirmable, Acknowledgement, and Reset. In addition, messages include a
 Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate
 messages. 
@@ -388,7 +388,7 @@ Length (Len):
       initial byte and indicates the length of options/payload minus
       65805.
 
-The encoding of the Length field is modeled on CoAP Options (see section 3.1 of {{RFC7252}}). 
+The encoding of the Length field is modeled after the Option Length field of the CoAP Options (see Section 3.1 of {{RFC7252}}). 
 
 The following figures show the message format for the 0-bit, 16-bit, and 
 the 32-bit variable length cases.
@@ -444,7 +444,7 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |Len=15 |  TKL  | Extended Length (32 bits)                              
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|               |    Code       |  Token (if any, TKL bytes) ...
+                |    Code       |  Token (if any, TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -459,7 +459,7 @@ The semantics of the other CoAP header fields are left unchanged.
 
 Once a connection is established, both endpoints MUST send a Capabilities and Settings message (CSM see {{csm}})
 as their first message on the connection. This message establishes the initial settings and
-capabilities for the endpoint such as maximum message size or support for block-wise transfers.
+capabilities for the endpoint, such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
 
 To avoid a deadlock, the Connection Initiator MUST NOT wait for the
@@ -489,7 +489,7 @@ The connection is bi-directional, so requests can be sent both by
 the entity that established the connection and the remote host.
 
 Retransmission and deduplication of messages is provided by the
-TCP/TLS protocol.
+TCP protocol.
 
 ## Connection Health {#liveliness}
 
@@ -500,7 +500,7 @@ bindings.
 If a CoAP client does not receive any response for some time after
 sending a CoAP request (or, similarly, when a client observes a
 resource and it does not receive any notification for some time),
-it can send a CoAP Ping Signaling message ({{sec-ping}}) to test
+it can send a CoAP Ping Signaling message (see {{sec-ping}}) to test
 the connection and verify that the CoAP server is responsive.
 
 # CoAP over WebSockets {#websockets-overview}
@@ -511,7 +511,7 @@ this section only specifies the differences between the transports.
 CoAP over WebSockets can be used in a number of configurations. The
 most basic configuration is a CoAP client retrieving or updating a
 CoAP resource located on a CoAP server that exposes a WebSocket endpoint
-({{arch-1}}). The CoAP client acts as the WebSocket client, establishes
+(see {{arch-1}}). The CoAP client acts as the WebSocket client, establishes
 a WebSocket connection, and sends a CoAP request, to which the CoAP server
 returns a CoAP response. The WebSocket connection can be used for any number
 of requests.
@@ -535,8 +535,7 @@ a dedicated client directly (i.e., not from a web page through a web browser),
 the client can connect to any WebSocket endpoint. {{coap-ws-scheme}} and
 {{coaps-ws-scheme}} define new URI schemes that enable the client to identify
 both a WebSocket endpoint and the path and query of the CoAP resource within that
-endpoint. When the WebSocket protocol is used from a web page, the choices are more
-limited {{RFC6454}}, but the challenge persists.
+endpoint. 
 
 Another possible configuration is to set up a CoAP forward proxy
 at the WebSocket endpoint. Depending on what transports are available
@@ -563,7 +562,7 @@ A third possible configuration is a CoAP server running inside a web browser
 ({{arch-3}}). The web browser initially connects to a WebSocket endpoint and
 is then reachable through the WebSocket server. When no connection exists, the
 CoAP server is unreachable. Because the WebSocket server is the only way to
-reach the CoAP server, the CoAP proxy should be a Reverse Proxy.
+reach the CoAP server, the CoAP proxy should be a reverse-proxy.
 
 
 ~~~~
@@ -688,7 +687,7 @@ that redundant maintenance traffic is not transmitted.
 
 Signaling messages are introduced to allow peers to:
 
-* Related characteristics such as maximum message size for the connection
+* Learn related characteristics,such as maximum message size for the connection
 * Shut down the connection in an orderly fashion
 * Provide diagnostic information when terminating a connection in response to a serious error condition
 
@@ -696,8 +695,7 @@ Signaling is a third basic kind of message in CoAP, after requests and responses
 Signaling messages share a common structure with the existing CoAP messages.
 There is a code, a token, options, and an optional payload. 
 
-(See Section 3 of {{-coap}} for the overall structure, as adapted to the
-specific transport.)
+(See Section 3 of {{-coap}} for the overall structure of the message format, option format, and option value format.)
 
 ## Signaling Codes
 
@@ -731,7 +729,7 @@ Capabilities and Settings messages (CSM) are used for two purposes:
 
 * Each capability option advertises one capability of the sender to the recipient. 
 
-* Setting options indicate a setting that will be applied by the sender.
+* Each setting option indicates a setting that will be applied by the sender.
 
 One CSM MUST be sent by both endpoints at the start of the connection. Further
 CSM MAY be sent at any other time by either endpoint over the lifetime of
@@ -746,7 +744,7 @@ Base values are listed below for CSM Options. These are the values for the
 capability and setting before any Capabilities and Settings messages send a
 modified value.
 
-These are not default values for the option as defined in Section 5.4.4 in {{RFC7252}}.
+These are not default values for the option, as defined in Section 5.4.4 in {{RFC7252}}.
 A default value would mean that an empty Capabilities and Settings message would result in
 the option being set to its default value. 
 
@@ -784,7 +782,7 @@ block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a
 Max-Message-Size Option is indicated with a value that is greater than 1152
 (in the same or a different CSM message), the Block-wise Transfer Option also
 indicates support for BERT (see {{bert}}). Subsequently, if the Max-Message-Size
-Option is indicated with a value equal or less than 1152, BERT support is no longer
+Option is indicated with a value equal to or less than 1152, BERT support is no longer
 indicated.
 
 ## Ping and Pong Messages {#sec-ping}
@@ -1132,7 +1130,7 @@ coap-ws-URI =
 ~~~~
 {: artwork-align="center"}
 
-The port component is OPTIONAL. The default is port 80.
+The port subcomponent is OPTIONAL. The default is port 80.
 
 The WebSocket endpoint is identified by a "ws" URI that is composed of the authority
 part of the "coap+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
@@ -1169,7 +1167,7 @@ coaps-ws-URI =
 ~~~~
 {: artwork-align="center"}
 
-The port component is OPTIONAL. The default is port 443.
+The port subcomponent is OPTIONAL. The default is port 443.
 
 The WebSocket endpoint is identified by a "wss" URI that is composed of the authority
 part of the "coaps+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
@@ -1178,8 +1176,8 @@ endpoint which can be operated on by the methods defined by CoAP.
 
 ~~~~
       coaps+ws://example.org/sensors/temperature?u=Cel
-           \______  ______/\___________  ___________/
-                  \/                   \/
+            \______  ______/\___________  ___________/
+                   \/                   \/
                                      Uri-Path: "sensors"
 wss://example.org/.well-known/coap   Uri-Path: "temperature"
                                      Uri-Query: "u=Cel"
@@ -1326,10 +1324,10 @@ also apply.
 
 ## Signaling Messages
 
-* The guidance given by an Alternative-Address Option cannot be
-  followed blindly. In particular, a peer MUST NOT assume that a
-  successful connection to the Alternative-Address inherits all the
-  security properties of the current connection.
+The guidance given by an Alternative-Address Option cannot be
+followed blindly. In particular, a peer MUST NOT assume that a
+successful connection to the Alternative-Address inherits all the
+security properties of the current connection.
 
 # IANA Considerations {#iana}
 
@@ -1602,7 +1600,7 @@ Subprotocol Definition.
 
 --- back
 
-# Updates to RFC7641 Observing Resources in the Constrained Application Protocol (CoAP) {#observing}
+# Updates to RFC 7641 Observing Resources in the Constrained Application Protocol (CoAP) {#observing}
 
 In this appendix, "client" and "server" refer to the CoAP client and
 CoAP server.
@@ -1735,7 +1733,7 @@ CoAP messages exchanged in detail.
 
 {{example-2}} shows how a CoAP client uses a CoAP
 forward proxy with a WebSocket endpoint to retrieve the representation
-of the resource "coap://[2001:DB8::1]/". The use of the forward
+of the resource "coap://[2001:db8::1]/". The use of the forward
 proxy and the address of the WebSocket endpoint are determined by the
 client from local configuration rules. The request URI is specified
 in the Proxy-Uri Option. Since the request URI uses the "coap" URI
@@ -1755,7 +1753,7 @@ the WebSocket connection to the client.
      |          |          |    +------------------------------------+
      |          |          |    | GET                                |
      |          |          |    | Token: 0x7d                        |
-     |          |          |    | Proxy-Uri: "coap://[2001:DB8::1]/" |
+     |          |          |    | Proxy-Uri: "coap://[2001:db8::1]/" |
      |          |          |    +------------------------------------+
      |          |          |
      |          +--------->|  CoAP message (Ver=1, T=Con, MID=0x8f54)
@@ -1785,13 +1783,13 @@ the WebSocket connection to the client.
 
 The RFC Editor is requested to remove this section at publication.
 
-## Since draft-core-coap-tcp-tls-02
+## Since draft-ietf-core-coap-tcp-tls-02
 
 Merged draft-savolainen-core-coap-websockets-07
 Merged draft-bormann-core-block-bert-01
 Merged draft-bormann-core-coap-sig-02
 
-## Since draft-core-coap-tcp-tls-03
+## Since draft-ietf-core-coap-tcp-tls-03
 
 Editorial updates
 
@@ -1803,7 +1801,7 @@ Added guidance on CoAP Signaling Ping-Pong versus WebSocket Ping-Pong
 
 Updated references and requirements for TLS security considerations
 
-## Since draft-core-coap-tcp-tls-04
+## Since draft-ietf-core-coap-tcp-tls-04
 
 Updated references
 
@@ -1812,7 +1810,7 @@ Added Appendix: Updates to RFC7641 Observing Resources in the Constrained Applic
 Updated Capability and Settings Message (CSM) exchange in the Opening Handshake to allow initiator to send
 messages before receiving acceptor CSM
 
-## Since draft-core-coap-tcp-tls-05
+## Since draft-ietf-core-coap-tcp-tls-05
 
 Addressed feedback from Working Group Last Call
 
@@ -1827,6 +1825,10 @@ Updated Pong response requirements
 Added Connection Initiator and Connection Acceptor terminology where appropriate
 
 Updated LWM2M 1.0 informative reference
+
+## Since draft-ietf-core-coap-tcp-tls-06
+
+Editorial review comments by Esko Dijk incorporated
 
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
