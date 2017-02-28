@@ -102,7 +102,6 @@ informative:
       PDF: http://www.openmobilealliance.org/release/LightweightM2M/V1_0-20170208-A/OMA-TS-LightweightM2M-V1_0-20170208-A.pdf
   RFC0768: udp
   RFC5234: RFC5234
-  RFC6454: RFC6454
   RFC6335: portreg
   RFC6347: dtls
   RFC7230: RFC7230
