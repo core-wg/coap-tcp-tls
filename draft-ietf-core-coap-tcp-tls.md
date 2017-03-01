@@ -1827,13 +1827,13 @@ Updated LWM2M 1.0 informative reference
 
 ## Since draft-ietf-core-coap-tcp-tls-06
 
-Editorial review comments by Esko Dijk incorporated
+Addressed feedback from second Working Group Last Call
 
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
 
 We would like to thank Stephen Berard, Geoffrey Cristallo, 
-Olivier Delaby, Christian Groves, Nadir Javed,
+Olivier Delaby, Esko Dijk, Christian Groves, Nadir Javed,
 Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
 Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard, 
 and Gengyu Wei for their feedback.
