@@ -879,10 +879,15 @@ and the option number is unknown by the sender, or when there is
 parameter problem with the value of an elective option. More detailed
 information SHOULD be included as a diagnostic payload.
 
-One reason for an sender to generate an Abort message is a general
-syntax error in the byte-stream received. No specific option has been
-defined for this, as the details of that syntax error are best left to
-a diagnostic payload.
+For CoAP over UDP, messages which contain syntax violations MUST be
+processed as message format errors. As described in Sections 4.2 and 4.3
+of {{RFC7252}}, such messages are rejected by sending a matching Reset
+message and otherwise ignoring the message. 
+
+For CoAP over reliable transports, the recipient rejects such messages by
+sending an Abort message and otherwise ignoring the message. No specific option
+has been defined for the Abort message in this case, as the details are
+best left to a diagnostic payload.
 
 ## Signaling examples
 
