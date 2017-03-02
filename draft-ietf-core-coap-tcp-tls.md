@@ -813,8 +813,8 @@ Message with a Custody Option should be able to free buffers based on this indic
 
 A sender can also include an elective Custody Option in a Ping message to explicitly
 request the inclusion of an elective Custody Option in the corresponding Pong message.
-The receiver SHOULD delay its Pong message until it finishes processing all the request/response
-messages received prior to the Ping message on the current connection.
+In that case, the receiver SHOULD delay its Pong message until it finishes processing
+all the request/response messages received prior to the Ping message on the current connection.
 
 ## Release Messages
 
@@ -948,7 +948,7 @@ allowed to respond with a different SZX value, e.g. to send a non-BERT
 block instead.
 
 In descriptive usage, a BERT Option is interpreted in the same way as
-the equivalent Option with SZX == 6, except that the payload is
+the equivalent Option with SZX == 6, except that the payload is also
 allowed to contain a multiple of 1024 bytes (non-final BERT block) or
 more than 1024 bytes (final BERT block).
 
@@ -972,7 +972,7 @@ is labeled as "BERT" or as "BERT(nnn)" to indicate a payload of size nnn.
 
 In all these examples, a Block Option is decomposed to indicate the
 kind of Block Option (1 or 2) followed by a colon, the block number (NUM),
-more bit (M), and block size exponent (2**(SZX+4)) separated by slashes.
+more bit (M), and block size (2**(SZX+4)) separated by slashes.
 E.g., a Block2 Option value of 33 would be shown as 2:2/0/32), or a Block1
 Option value of 59 would be shown as 1:3/1/128.
 
@@ -1036,7 +1036,8 @@ means of locating the resource:
 
 Resources made available via these schemes have no shared identity even if their
 resource identifiers indicate the same authority (the same host listening to the same
-TCP port). They are distinct namespaces and are considered to be distinct origin servers.
+TCP port). They are hosted in distinct namespaces because each URI scheme implies a
+distinct origin server.
 
 The syntax for the URI schemes in this section are specified using
 Augmented Backus-Naur Form (ABNF) [RFC5234]. The definitions of "host",
@@ -1212,7 +1213,9 @@ client to the WebSocket server is indicated by the Host header field from the We
 
 ## Decomposing URIs into Options
 
-The steps are the same as specified in Section 6.4 of {{RFC7252}} with the following changes:
+The steps are the same as specified in Section 6.4 of {{RFC7252}} with minor changes.
+
+This step from {{RFC7252}}:
 
 ~~~~
 3.  If |url| does not have a <scheme> component whose value, when
@@ -1220,30 +1223,50 @@ The steps are the same as specified in Section 6.4 of {{RFC7252}} with the follo
     this algorithm.
 ~~~~
 
-If \|url\| does not have a \<scheme> component whose value, when converted to ASCII lowercase,
-is "coap+tcp", "coaps+tcp", "coap+ws", or "coaps+ws" then fail this algorithm.
+is updated to:
+
+~~~~
+3.  If |url| does not have a <scheme> component whose value, when
+    converted to ASCII lowercase, is "coap+tcp", "coaps+tcp",
+    "coap+ws", or "coaps+ws", then fail this algorithm.
+~~~~
+
+This step from {{RFC7252}}:
 
 ~~~~
 7.  If |port| does not equal the request's destination UDP port,
     include a Uri-Port Option and let that option's value be |port|.
 ~~~~
 
-If \|port\| does not equal the request's destination TCP port, include a Uri-Port Option
-and let that option's value be \|port\|.
+is updated to:
+
+~~~~
+7.  If |port| does not equal the request's destination TCP port,
+    include a Uri-Port Option and let that option's value be |port|.
+~~~~
 
 ## Composing URIs from Options
 
-The steps are the same as specified in Section 6.5 of {{RFC7252}} with the following changes:
+The steps are the same as specified in Section 6.5 of {{RFC7252}} with minor changes.
+
+This step from {{RFC7252}}:
 
 ~~~~
 1.  If the request is secured using DTLS, let |url| be the string
-    "coaps://".  Otherwise, let |url| be the string "coap://".
+    "coaps://". Otherwise, let |url| be the string "coap://".
 ~~~~
 
-For CoAP over TCP, if the request is secured using TLS, let \|url\| be the string
-"coaps+tcp://". Otherwise, let \|url\| be the string "coap+tcp://". For CoAP over
-WebSockets, if the request is secured using TLS, let \|url\| be the string "coaps+ws://".
-Otherwise, let \|url\| be the string "coap+ws://".
+is updated to:
+
+~~~~
+1.  For CoAP over TCP, if the request is secured using TLS, let |url|
+    be the string "coaps+tcp://". Otherwise, let |url| be the string
+    "coap+tcp://". For CoAP over WebSockets, if the request is
+    secured using TLS, let |url| be the string "coaps+ws://".
+    Otherwise, let |url| be the string "coap+ws://".
+~~~~
+
+This step from {{RFC7252}}:
 
 ~~~~
 4.  If the request includes a Uri-Port Option, let |port| be that
@@ -1251,9 +1274,13 @@ Otherwise, let \|url\| be the string "coap+ws://".
     destination UDP port.
 ~~~~
 
-If the request includes a Uri-Port Option, let \|port\| be that option's value.
-Otherwise, let \|port\| be the request's destination TCP port.
+is updated to:
 
+~~~~
+4.  If the request includes a Uri-Port Option, let |port| be that
+    option's value.  Otherwise, let |port| be the request's
+    destination TCP port.
+~~~~
 
 # Securing CoAP {#securing}
 
