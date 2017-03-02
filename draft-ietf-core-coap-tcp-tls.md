@@ -841,6 +841,8 @@ of the same scheme as the present connection to the alternative transport addres
 Its value is in the form "authority" as defined in Section 3.2 of {{RFC3986}}. 
 
 The Alternative-Address Option is a repeatable option as defined in Section 5.4.5 of {{-coap}}.
+When multiple occurrences of the option are included, the peer can choose any of the alternative
+transport addresses.
 
 | #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
