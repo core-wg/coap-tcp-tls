@@ -347,7 +347,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-2-21" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-02" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -375,7 +375,7 @@ address {
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-  <td class="left">Expires: August 25, 2017</td>
+  <td class="left">Expires: September 3, 2017</td>
   <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -408,7 +408,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">February 21, 2017</td>
+  <td class="right">March 02, 2017</td>
 </tr>
 
     	
@@ -429,7 +429,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on August 25, 2017.</p>
+<p>This Internet-Draft will expire on September 3, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -931,7 +931,7 @@ Sec-WebSocket-Protocol: coap
   </tbody>
 </table>
 <p id="rfc.section.5.4.1.p.1">When responding to a Ping message, the receiver can include an elective Custody Option in the Pong message. This option indicates that the application has processed all the request/response messages received prior to the Ping message on the current connection. (Note that there is no definition of specific application semantics for &#8220;processed&#8221;, but there is an expectation that the receiver of a Pong Message with a Custody Option should be able to free buffers based on this indication.)</p>
-<p id="rfc.section.5.4.1.p.2">A sender can also include an elective Custody Option in a Ping message to explicitly request the inclusion of an elective Custody Option in the corresponding Pong message.  The receiver SHOULD delay its Pong message until it finishes processing all the request/response messages received prior to the Ping message on the current connection.</p>
+<p id="rfc.section.5.4.1.p.2">A sender can also include an elective Custody Option in a Ping message to explicitly request the inclusion of an elective Custody Option in the corresponding Pong message.  In that case, the receiver SHOULD delay its Pong message until it finishes processing all the request/response messages received prior to the Ping message on the current connection.</p>
 <h1 id="rfc.section.5.5"><a href="#rfc.section.5.5">5.5.</a> <a href="#release-messages" id="release-messages">Release Messages</a></h1>
 <p id="rfc.section.5.5.p.1">A Release message indicates that the sender does not want to continue maintaining the connection and opts for an orderly shutdown. The details are in the options. A diagnostic payload (see Section 5.5.2 of <a href="#RFC7252">[RFC7252]</a>) MAY be included.  A peer will normally respond to a Release message by closing the TCP/TLS connection.  Messages may be in flight when the sender decides to send a Release message.  The general expectation is that these will still be processed.</p>
 <p id="rfc.section.5.5.p.2">Release messages are indicated by the 7.04 code (Release).</p>
@@ -1070,11 +1070,11 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.6.p.3">The &#8216;Block-wise Extension for Reliable Transport (BERT)&#8217; extends the Block protocol to enable the use of larger messages over a reliable transport.</p>
 <p id="rfc.section.6.p.4">The use of this new extension is signaled by sending Block1 or Block2 Options with SZX == 7 (a &#8220;BERT option&#8221;). SZX == 7 is a reserved value in <a href="#RFC7959">[RFC7959]</a>.</p>
 <p id="rfc.section.6.p.5">In control usage, a BERT option is interpreted in the same way as the equivalent Option with SZX == 6, except that it also indicates the capability to process BERT blocks. As with the basic Block protocol, the recipient of a CoAP request with a BERT option in control usage is allowed to respond with a different SZX value, e.g. to send a non-BERT block instead.</p>
-<p id="rfc.section.6.p.6">In descriptive usage, a BERT Option is interpreted in the same way as the equivalent Option with SZX == 6, except that the payload is allowed to contain a multiple of 1024 bytes (non-final BERT block) or more than 1024 bytes (final BERT block).</p>
+<p id="rfc.section.6.p.6">In descriptive usage, a BERT Option is interpreted in the same way as the equivalent Option with SZX == 6, except that the payload is also allowed to contain a multiple of 1024 bytes (non-final BERT block) or more than 1024 bytes (final BERT block).</p>
 <p id="rfc.section.6.p.7">The recipient of a non-final BERT block (M=1) conceptually partitions the payload into a sequence of 1024-byte blocks and acts exactly as if it had received this sequence in conjunction with block numbers starting at, and sequentially increasing from, the block number given in the Block Option. In other words, the entire BERT block is positioned at the byte position that results from multiplying the block number with 1024. The position of further blocks to be transferred is indicated by incrementing the block number by the number of elements in this sequence (i.e., the size of the payload divided by 1024 bytes).</p>
 <p id="rfc.section.6.p.8">As with SZX == 6, the recipient of a final BERT block (M=0) simply appends the payload at the byte position that is indicated by the block number multiplied with 1024.</p>
 <p id="rfc.section.6.p.9">The following examples illustrate BERT options. A value of SZX == 7 is labeled as &#8220;BERT&#8221; or as &#8220;BERT(nnn)&#8221; to indicate a payload of size nnn.</p>
-<p id="rfc.section.6.p.10">In all these examples, a Block Option is decomposed to indicate the kind of Block Option (1 or 2) followed by a colon, the block number (NUM), more bit (M), and block size exponent (2**(SZX+4)) separated by slashes.  E.g., a Block2 Option value of 33 would be shown as 2:2/0/32), or a Block1 Option value of 59 would be shown as 1:3/1/128.</p>
+<p id="rfc.section.6.p.10">In all these examples, a Block Option is decomposed to indicate the kind of Block Option (1 or 2) followed by a colon, the block number (NUM), more bit (M), and block size (2**(SZX+4)) separated by slashes.  E.g., a Block2 Option value of 33 would be shown as 2:2/0/32), or a Block1 Option value of 59 would be shown as 1:3/1/128.</p>
 <h1 id="rfc.section.6.1"><a href="#rfc.section.6.1">6.1.</a> <a href="#example-get-with-bert-blocks" id="example-get-with-bert-blocks">Example: GET with BERT Blocks</a></h1>
 <p><a href="#fig-bert1">Figure 16</a> shows a GET request with a response that is split into three BERT blocks. The first response contains 3072 bytes of payload; the second, 5120; and the third, 4711. Note how the block number increments to move the position inside the response body forward.</p>
 <div id="rfc.figure.16"/>
@@ -1126,7 +1126,7 @@ CoAP Client                             CoAP Server
   <li>the &#8220;coap+ws&#8221; URI scheme for CoAP over WebSockets</li>
   <li>the &#8220;coaps+ws&#8221; URI scheme for CoAP over WebSockets secured by TLS</li>
 </ul>
-<p id="rfc.section.7.p.3">Resources made available via these schemes have no shared identity even if their resource identifiers indicate the same authority (the same host listening to the same TCP port). They are distinct namespaces and are considered to be distinct origin servers.</p>
+<p id="rfc.section.7.p.3">Resources made available via these schemes have no shared identity even if their resource identifiers indicate the same authority (the same host listening to the same TCP port). They are hosted in distinct namespaces because each URI scheme implies a distinct origin server.</p>
 <p id="rfc.section.7.p.4">The syntax for the URI schemes in this section are specified using Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>. The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221;, and &#8220;query&#8221; are adopted from <a href="#RFC3986">[RFC3986]</a>.</p>
 <p id="rfc.section.7.p.5">Section 8 (Multicast CoAP) in <a href="#RFC7252">[RFC7252]</a> is not applicable to these schemes.</p>
 <h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#coap-tcp-scheme" id="coap-tcp-scheme">coap+tcp URI scheme</a></h1>
@@ -1246,31 +1246,56 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <p id="rfc.section.7.5.p.4">For CoAP over TLS, these default values are the same unless Server Name Indication (SNI) <a href="#RFC6066">[RFC6066]</a> is negotiated. In this case, the default value of the Uri-Host Option in requests from the TLS client to the TLS server is the SNI host.</p>
 <p id="rfc.section.7.5.p.5">For CoAP over WebSockets, the default value of the Uri-Host Option in requests from the WebSocket client to the WebSocket server is indicated by the Host header field from the WebSocket handshake.</p>
 <h1 id="rfc.section.7.6"><a href="#rfc.section.7.6">7.6.</a> <a href="#decomposing-uris-into-options" id="decomposing-uris-into-options">Decomposing URIs into Options</a></h1>
-<p id="rfc.section.7.6.p.1">The steps are the same as specified in Section 6.4 of <a href="#RFC7252">[RFC7252]</a> with the following changes:</p>
+<p id="rfc.section.7.6.p.1">The steps are the same as specified in Section 6.4 of <a href="#RFC7252">[RFC7252]</a> with minor changes.</p>
+<p id="rfc.section.7.6.p.2">This step from <a href="#RFC7252">[RFC7252]</a>:</p>
 <pre>
 3.  If |url| does not have a &lt;scheme&gt; component whose value, when
     converted to ASCII lowercase, is "coap" or "coaps", then fail
     this algorithm.
 </pre>
-<p id="rfc.section.7.6.p.2">If |url| does not have a &lt;scheme&gt; component whose value, when converted to ASCII lowercase, is &#8220;coap+tcp&#8221;, &#8220;coaps+tcp&#8221;, &#8220;coap+ws&#8221;, or &#8220;coaps+ws&#8221; then fail this algorithm.</p>
+<p id="rfc.section.7.6.p.3">is updated to:</p>
+<pre>
+3.  If |url| does not have a &lt;scheme&gt; component whose value, when
+    converted to ASCII lowercase, is "coap+tcp", "coaps+tcp",
+    "coap+ws", or "coaps+ws", then fail this algorithm.
+</pre>
+<p id="rfc.section.7.6.p.4">This step from <a href="#RFC7252">[RFC7252]</a>:</p>
 <pre>
 7.  If |port| does not equal the request's destination UDP port,
     include a Uri-Port Option and let that option's value be |port|.
 </pre>
-<p id="rfc.section.7.6.p.3">If |port| does not equal the request&#8217;s destination TCP port, include a Uri-Port Option and let that option&#8217;s value be |port|.</p>
+<p id="rfc.section.7.6.p.5">is updated to:</p>
+<pre>
+7.  If |port| does not equal the request's destination TCP port,
+    include a Uri-Port Option and let that option's value be |port|.
+</pre>
 <h1 id="rfc.section.7.7"><a href="#rfc.section.7.7">7.7.</a> <a href="#composing-uris-from-options" id="composing-uris-from-options">Composing URIs from Options</a></h1>
-<p id="rfc.section.7.7.p.1">The steps are the same as specified in Section 6.5 of <a href="#RFC7252">[RFC7252]</a> with the following changes:</p>
+<p id="rfc.section.7.7.p.1">The steps are the same as specified in Section 6.5 of <a href="#RFC7252">[RFC7252]</a> with minor changes.</p>
+<p id="rfc.section.7.7.p.2">This step from <a href="#RFC7252">[RFC7252]</a>:</p>
 <pre>
 1.  If the request is secured using DTLS, let |url| be the string
-    "coaps://".  Otherwise, let |url| be the string "coap://".
+    "coaps://". Otherwise, let |url| be the string "coap://".
 </pre>
-<p id="rfc.section.7.7.p.2">For CoAP over TCP, if the request is secured using TLS, let |url| be the string &#8220;coaps+tcp://&#8221;. Otherwise, let |url| be the string &#8220;coap+tcp://&#8221;. For CoAP over WebSockets, if the request is secured using TLS, let |url| be the string &#8220;coaps+ws://&#8221;.  Otherwise, let |url| be the string &#8220;coap+ws://&#8221;.</p>
+<p id="rfc.section.7.7.p.3">is updated to:</p>
+<pre>
+1.  For CoAP over TCP, if the request is secured using TLS, let |url|
+    be the string "coaps+tcp://". Otherwise, let |url| be the string
+    "coap+tcp://". For CoAP over WebSockets, if the request is
+    secured using TLS, let |url| be the string "coaps+ws://".
+    Otherwise, let |url| be the string "coap+ws://".
+</pre>
+<p id="rfc.section.7.7.p.4">This step from <a href="#RFC7252">[RFC7252]</a>:</p>
 <pre>
 4.  If the request includes a Uri-Port Option, let |port| be that
     option's value.  Otherwise, let |port| be the request's
     destination UDP port.
 </pre>
-<p id="rfc.section.7.7.p.3">If the request includes a Uri-Port Option, let |port| be that option&#8217;s value.  Otherwise, let |port| be the request&#8217;s destination TCP port.</p>
+<p id="rfc.section.7.7.p.5">is updated to:</p>
+<pre>
+4.  If the request includes a Uri-Port Option, let |port| be that
+    option's value.  Otherwise, let |port| be the request's
+    destination TCP port.
+</pre>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#securing" id="securing">Securing CoAP</a></h1>
 <p id="rfc.section.8.p.1">Security Challenges for the Internet of Things <a href="#SecurityChallenges">[SecurityChallenges]</a> recommends:</p>
 <p/>
@@ -1703,12 +1728,6 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
     </tr>
     <tr>
       <td class="reference">
-        <b id="RFC6454">[RFC6454]</b>
-      </td>
-      <td class="top"><a>Barth, A.</a>, "<a href="http://tools.ietf.org/html/rfc6454">The Web Origin Concept</a>", RFC 6454, DOI 10.17487/RFC6454, December 2011.</td>
-    </tr>
-    <tr>
-      <td class="reference">
         <b id="RFC7230">[RFC7230]</b>
       </td>
       <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
@@ -1863,11 +1882,11 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <p id="rfc.section.C.4.p.6">Added Connection Initiator and Connection Acceptor terminology where appropriate</p>
 <p id="rfc.section.C.4.p.7">Updated LWM2M 1.0 informative reference</p>
 <h1 id="rfc.appendix.C.5"><a href="#rfc.appendix.C.5">C.5.</a> <a href="#since-draft-ietf-core-coap-tcp-tls-06" id="since-draft-ietf-core-coap-tcp-tls-06">Since draft-ietf-core-coap-tcp-tls-06</a></h1>
-<p id="rfc.section.C.5.p.1">Editorial review comments by Esko Dijk incorporated</p>
+<p id="rfc.section.C.5.p.1">Addressed feedback from second Working Group Last Call</p>
 <h1 id="rfc.acknowledgements">
   <a href="#rfc.acknowledgements">Acknowledgements</a>
 </h1>
-<p id="rfc.section.D.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Christian Groves, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.</p>
+<p id="rfc.section.D.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Esko Dijk, Christian Groves, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.</p>
 <h1 id="rfc.contributors">
   <a href="#rfc.contributors">Contributors</a>
 </h1>
