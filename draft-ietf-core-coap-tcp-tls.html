@@ -347,7 +347,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-02" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-03" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -375,7 +375,7 @@ address {
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 3, 2017</td>
+  <td class="left">Expires: September 4, 2017</td>
   <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -408,7 +408,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">March 02, 2017</td>
+  <td class="right">March 03, 2017</td>
 </tr>
 
     	
@@ -429,7 +429,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 3, 2017.</p>
+<p>This Internet-Draft will expire on September 4, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1025,7 +1025,8 @@ Sec-WebSocket-Protocol: coap
   </tbody>
 </table>
 <p id="rfc.section.5.6.p.4">The elective Bad-CSM-Option Option indicates that the sender is unable to process the CSM option identified by its option number, e.g. when it is critical and the option number is unknown by the sender, or when there is parameter problem with the value of an elective option. More detailed information SHOULD be included as a diagnostic payload.</p>
-<p id="rfc.section.5.6.p.5">One reason for an sender to generate an Abort message is a general syntax error in the byte-stream received. No specific option has been defined for this, as the details of that syntax error are best left to a diagnostic payload.</p>
+<p id="rfc.section.5.6.p.5">For CoAP over UDP, messages which contain syntax violations MUST be processed as message format errors. As described in Sections 4.2 and 4.3 of <a href="#RFC7252">[RFC7252]</a>, such messages are rejected by sending a matching Reset message and otherwise ignoring the message.</p>
+<p id="rfc.section.5.6.p.6">For CoAP over reliable transports, the recipient rejects such messages by sending an Abort message and otherwise ignoring the message. No specific option has been defined for the Abort message in this case, as the details are best left to a diagnostic payload.</p>
 <h1 id="rfc.section.5.7"><a href="#rfc.section.5.7">5.7.</a> <a href="#signaling-examples" id="signaling-examples">Signaling examples</a></h1>
 <p id="rfc.section.5.7.p.1">An encoded example of a Ping message with a non-empty token is shown in <a href="#fig-ping-example">Figure 14</a>.</p>
 <div id="rfc.figure.14"/>
