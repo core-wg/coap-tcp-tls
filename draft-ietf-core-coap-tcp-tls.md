@@ -485,7 +485,11 @@ differentiated by their Token, which is scoped locally to the
 connection.
 
 The connection is bi-directional, so requests can be sent both by
-the entity that established the connection and the remote host.
+the entity that established the connection (Connection Initiator) and
+the remote host (Connection Acceptor).
+If one side does not implement a CoAP server, an appropriate error
+response such as 4.04 (Not Found) or 5.01 (Not Implemented) MUST be
+returned for all CoAP requests from the other side.
 
 Retransmission and deduplication of messages is provided by the
 TCP protocol.
