@@ -686,7 +686,7 @@ that redundant maintenance traffic is not transmitted.
 
 Signaling messages are introduced to allow peers to:
 
-* Learn related characteristics,such as maximum message size for the connection
+* Learn related characteristics, such as maximum message size for the connection
 * Shut down the connection in an orderly fashion
 * Provide diagnostic information when terminating a connection in response to a serious error condition
 
@@ -879,7 +879,7 @@ and the option number is unknown by the sender, or when there is
 parameter problem with the value of an elective option. More detailed
 information SHOULD be included as a diagnostic payload.
 
-For CoAP over UDP, messages which contain syntax violations MUST be
+For CoAP over UDP, messages which contain syntax violations are
 processed as message format errors. As described in Sections 4.2 and 4.3
 of {{RFC7252}}, such messages are rejected by sending a matching Reset
 message and otherwise ignoring the message. 
