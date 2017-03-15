@@ -88,10 +88,10 @@ normative:
   RFC7595: urireg
   RFC7641: RFC7641
   RFC7925: RFC7925
+  RFC7959: block
 informative:
   I-D.ietf-core-cocoa: cocoa
   I-D.ietf-core-object-security: oscoap
-  RFC7959: block
   LWM2M:
     title: Lightweight Machine to Machine Technical Specification Version 1.0
     target: http://www.openmobilealliance.org/release/LightweightM2M/V1_0-20170208-A/OMA-TS-LightweightM2M-V1_0-20170208-A.pdf
@@ -487,9 +487,11 @@ connection.
 The connection is bi-directional, so requests can be sent both by
 the entity that established the connection (Connection Initiator) and
 the remote host (Connection Acceptor).
-If one side does not implement a CoAP server, an appropriate error
-response such as 4.04 (Not Found) or 5.01 (Not Implemented) MUST be
-returned for all CoAP requests from the other side.
+If one side does not implement a CoAP server, an error response MUST be
+returned for all CoAP requests from the other side. The simplest approach
+is to always return 5.01 (Not Implemented). A more elaborate mock server
+could also return 4.xx responses such as 4.04 (Not Found) or 4.02 (Bad Option)
+where appropriate.
 
 Retransmission and deduplication of messages is provided by the
 TCP protocol.
