@@ -88,10 +88,10 @@ normative:
   RFC7595: urireg
   RFC7641: RFC7641
   RFC7925: RFC7925
+  RFC7959: block
 informative:
   I-D.ietf-core-cocoa: cocoa
   I-D.ietf-core-object-security: oscoap
-  RFC7959: block
   LWM2M:
     title: Lightweight Machine to Machine Technical Specification Version 1.0
     target: http://www.openmobilealliance.org/release/LightweightM2M/V1_0-20170208-A/OMA-TS-LightweightM2M-V1_0-20170208-A.pdf
