@@ -1054,7 +1054,7 @@ distinct origin server.
 
 The syntax for the URI schemes in this section are specified using
 Augmented Backus-Naur Form (ABNF) [RFC5234]. The definitions of "host",
-"port", "path-abempty", and "query" are adopted from [RFC3986]. 
+"port", "path-abempty", "query", and "fragment" are adopted from [RFC3986]. 
 
 Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes. 
 
@@ -1064,10 +1064,10 @@ The "coap+tcp" URI scheme identifies CoAP resources that are intended to be acce
 using CoAP over TCP.
 
 ~~~~
-coap+tcp-URI =
-   "coap+tcp:" "//" host [ ":" port ] path-abempty [ "?" query ]
+  coap+tcp-URI = "coap+tcp:" "//" host [ ":" port ]
+    path-abempty [ "?" query ]  [ "#" fragment ]
 ~~~~
-{: artwork-align="center"}
+{: artwork-align="left"}
 
 The syntax defined in Section 6.1 of {{RFC7252}} applies to this URI scheme with the following changes:
 
@@ -1089,10 +1089,10 @@ The "coaps+tcp" URI scheme identifies CoAP resources that are intended to be acc
 using CoAP over TCP secured with TLS.
 
 ~~~~
-coaps+tcp-URI =
-   "coaps+tcp:" "//" host [ ":" port ] path-abempty [ "?" query ]
+  coaps+tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
 ~~~~
-{: artwork-align="center"}
+{: artwork-align="left"}
 
 The syntax defined in Section 6.2 of {{RFC7252}} applies to this URI scheme, with the following changes:
 
@@ -1138,10 +1138,10 @@ The "coap+ws" URI scheme identifies CoAP resources that are intended to be acces
 using CoAP over WebSockets.
 
 ~~~~
-coap-ws-URI =
-   "coap+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+  coap-ws-URI = "coap+ws:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
 ~~~~
-{: artwork-align="center"}
+{: artwork-align="left"}
 
 The port subcomponent is OPTIONAL. The default is port 80.
 
@@ -1175,10 +1175,10 @@ The "coaps+ws" URI scheme identifies CoAP resources that are intended to be acce
 using CoAP over WebSockets secured by TLS.
 
 ~~~~
-coaps-ws-URI =
-   "coaps+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+  coaps-ws-URI = "coaps+ws:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
 ~~~~
-{: artwork-align="center"}
+{: artwork-align="left"}
 
 The port subcomponent is OPTIONAL. The default is port 443.
 
