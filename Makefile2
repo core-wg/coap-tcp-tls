@@ -18,3 +18,5 @@ html:   $(HTML)
 	xml2rfc  $< $@
 
 
+bap: draft-ietf-core-coap-tcp-tls.xml
+	xpath draft-ietf-core-coap-tcp-tls.xml "//artwork[@type='abnf']/text()" | bap
