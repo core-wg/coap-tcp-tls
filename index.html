@@ -1133,7 +1133,7 @@ CoAP Client                             CoAP Server
 <h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#coap-tcp-scheme" id="coap-tcp-scheme">coap+tcp URI scheme</a></h1>
 <p id="rfc.section.7.1.p.1">The &#8220;coap+tcp&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over TCP.</p>
 <pre>
-  coap+tcp-URI = "coap+tcp:" "//" host [ ":" port ]
+  coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ]
     path-abempty [ "?" query ]  [ "#" fragment ]
 </pre>
 <p id="rfc.section.7.1.p.2">The syntax defined in Section 6.1 of <a href="#RFC7252">[RFC7252]</a> applies to this URI scheme with the following changes:</p>
@@ -1155,7 +1155,7 @@ CoAP Client                             CoAP Server
 <h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#coaps-tcp-scheme" id="coaps-tcp-scheme">coaps+tcp URI scheme</a></h1>
 <p id="rfc.section.7.2.p.1">The &#8220;coaps+tcp&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over TCP secured with TLS.</p>
 <pre>
-  coaps+tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
+  coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
     path-abempty [ "?" query ] [ "#" fragment ]
 </pre>
 <p id="rfc.section.7.2.p.2">The syntax defined in Section 6.2 of <a href="#RFC7252">[RFC7252]</a> applies to this URI scheme, with the following changes:</p>

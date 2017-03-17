@@ -1367,7 +1367,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       March 2017
    The "coap+tcp" URI scheme identifies CoAP resources that are intended
    to be accessible using CoAP over TCP.
 
-     coap+tcp-URI = "coap+tcp:" "//" host [ ":" port ]
+     coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ]
        path-abempty [ "?" query ]  [ "#" fragment ]
 
    The syntax defined in Section 6.1 of [RFC7252] applies to this URI
@@ -1389,7 +1389,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       March 2017
    The "coaps+tcp" URI scheme identifies CoAP resources that are
    intended to be accessible using CoAP over TCP secured with TLS.
 
-     coaps+tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
+     coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
        path-abempty [ "?" query ] [ "#" fragment ]
 
    The syntax defined in Section 6.2 of [RFC7252] applies to this URI
