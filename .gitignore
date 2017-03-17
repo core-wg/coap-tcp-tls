@@ -10,3 +10,10 @@ venv/
 issues.json
 lib
 draft-ietf-core-coap-tcp-tls.md
+full.abnf
+coap-tcp.abnf
+.targets.mk
+draft-ietf-core-coap-tcp-tls.xml
+rfc2629-other.ent
+rfc2629-xhtml.ent
+rfc2629.dtd
