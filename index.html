@@ -347,7 +347,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-3-16" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-3-17" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -375,7 +375,7 @@ address {
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-  <td class="left">Expires: September 17, 2017</td>
+  <td class="left">Expires: September 18, 2017</td>
   <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -408,7 +408,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">March 16, 2017</td>
+  <td class="right">March 17, 2017</td>
 </tr>
 
     	
@@ -429,7 +429,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on September 17, 2017.</p>
+<p>This Internet-Draft will expire on September 18, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -1128,13 +1128,13 @@ CoAP Client                             CoAP Server
   <li>the &#8220;coaps+ws&#8221; URI scheme for CoAP over WebSockets secured by TLS</li>
 </ul>
 <p id="rfc.section.7.p.3">Resources made available via these schemes have no shared identity even if their resource identifiers indicate the same authority (the same host listening to the same TCP port). They are hosted in distinct namespaces because each URI scheme implies a distinct origin server.</p>
-<p id="rfc.section.7.p.4">The syntax for the URI schemes in this section are specified using Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>. The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221;, and &#8220;query&#8221; are adopted from <a href="#RFC3986">[RFC3986]</a>.</p>
+<p id="rfc.section.7.p.4">The syntax for the URI schemes in this section are specified using Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>. The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221;, &#8220;query&#8221;, and &#8220;fragment&#8221; are adopted from <a href="#RFC3986">[RFC3986]</a>.</p>
 <p id="rfc.section.7.p.5">Section 8 (Multicast CoAP) in <a href="#RFC7252">[RFC7252]</a> is not applicable to these schemes.</p>
 <h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#coap-tcp-scheme" id="coap-tcp-scheme">coap+tcp URI scheme</a></h1>
 <p id="rfc.section.7.1.p.1">The &#8220;coap+tcp&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over TCP.</p>
 <pre>
-coap-tcp-URI =
-   "coap+tcp:" "//" host [ ":" port ] path-abempty [ "?" query ]
+  coap+tcp-URI = "coap+tcp:" "//" host [ ":" port ]
+    path-abempty [ "?" query ]  [ "#" fragment ]
 </pre>
 <p id="rfc.section.7.1.p.2">The syntax defined in Section 6.1 of <a href="#RFC7252">[RFC7252]</a> applies to this URI scheme with the following changes:</p>
 <p/>
@@ -1155,8 +1155,8 @@ coap-tcp-URI =
 <h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#coaps-tcp-scheme" id="coaps-tcp-scheme">coaps+tcp URI scheme</a></h1>
 <p id="rfc.section.7.2.p.1">The &#8220;coaps+tcp&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over TCP secured with TLS.</p>
 <pre>
-coaps-tcp-URI =
-   "coaps+tcp:" "//" host [ ":" port ] path-abempty [ "?" query ]
+  coaps+tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
 </pre>
 <p id="rfc.section.7.2.p.2">The syntax defined in Section 6.2 of <a href="#RFC7252">[RFC7252]</a> applies to this URI scheme, with the following changes:</p>
 <p/>
@@ -1181,8 +1181,8 @@ coaps-tcp-URI =
 <h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#coap-ws-scheme" id="coap-ws-scheme">coap+ws URI scheme</a></h1>
 <p id="rfc.section.7.3.p.1">The &#8220;coap+ws&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over WebSockets.</p>
 <pre>
-coap-ws-URI =
-   "coap+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+  coap-ws-URI = "coap+ws:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
 </pre>
 <p id="rfc.section.7.3.p.2">The port subcomponent is OPTIONAL. The default is port 80.</p>
 <p id="rfc.section.7.3.p.3">The WebSocket endpoint is identified by a &#8220;ws&#8221; URI that is composed of the authority part of the &#8220;coap+ws&#8221; URI and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a>.  The path and query parts of a &#8220;coap+ws&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by CoAP:</p>
@@ -1210,8 +1210,8 @@ ws://example.org/.well-known/coap    Uri-Path: "temperature"
 <h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#coaps-ws-scheme" id="coaps-ws-scheme">coaps+ws URI scheme</a></h1>
 <p id="rfc.section.7.4.p.1">The &#8220;coaps+ws&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over WebSockets secured by TLS.</p>
 <pre>
-coaps-ws-URI =
-   "coaps+ws:" "//" host [ ":" port ] path-abempty [ "?" query ]
+  coaps-ws-URI = "coaps+ws:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
 </pre>
 <p id="rfc.section.7.4.p.2">The port subcomponent is OPTIONAL. The default is port 443.</p>
 <p id="rfc.section.7.4.p.3">The WebSocket endpoint is identified by a &#8220;wss&#8221; URI that is composed of the authority part of the &#8220;coaps+ws&#8221; URI and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a>.  The path and query parts of a &#8220;coaps+ws&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by CoAP.</p>
