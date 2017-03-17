@@ -1063,7 +1063,7 @@ Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes.
 The "coap+tcp" URI scheme identifies CoAP resources that are intended to be accessible
 using CoAP over TCP.
 
-~~~~
+~~~~ abnf
   coap+tcp-URI = "coap+tcp:" "//" host [ ":" port ]
     path-abempty [ "?" query ]  [ "#" fragment ]
 ~~~~
@@ -1088,7 +1088,7 @@ Security considerations:
 The "coaps+tcp" URI scheme identifies CoAP resources that are intended to be accessible
 using CoAP over TCP secured with TLS.
 
-~~~~
+~~~~ abnf
   coaps+tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
     path-abempty [ "?" query ] [ "#" fragment ]
 ~~~~
@@ -1137,7 +1137,7 @@ Security considerations:
 The "coap+ws" URI scheme identifies CoAP resources that are intended to be accessible
 using CoAP over WebSockets.
 
-~~~~
+~~~~ abnf
   coap-ws-URI = "coap+ws:" "//" host [ ":" port ]
     path-abempty [ "?" query ] [ "#" fragment ]
 ~~~~
@@ -1174,7 +1174,7 @@ Security considerations:
 The "coaps+ws" URI scheme identifies CoAP resources that are intended to be accessible
 using CoAP over WebSockets secured by TLS.
 
-~~~~
+~~~~ abnf
   coaps-ws-URI = "coaps+ws:" "//" host [ ":" port ]
     path-abempty [ "?" query ] [ "#" fragment ]
 ~~~~
