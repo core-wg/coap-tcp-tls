@@ -18,3 +18,19 @@ html:   $(HTML)
 	xml2rfc  $< $@
 
 
+coap-tcp.abnf: draft-ietf-core-coap-tcp-tls.xml
+	xpath draft-ietf-core-coap-tcp-tls.xml "//artwork[@type='abnf']/text()" > $@.new
+	mv $@.new $@
+
+bap: full.abnf
+	bap full.abnf
+
+full.abnf: coap-tcp.abnf rfc3986.abnf
+	cat coap-tcp.abnf rfc3986.abnf >$@.new
+	mv $@.new $@
+
+abnfgen: full.abnf
+	abnfgen -s coap-tcp-URI $<; echo ""
+	abnfgen -s coaps-tcp-URI $<; echo ""
+	abnfgen -s coap-ws-URI $<; echo ""
+	abnfgen -s coaps-ws-URI $<; echo ""

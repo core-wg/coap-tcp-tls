@@ -1064,7 +1064,7 @@ The "coap+tcp" URI scheme identifies CoAP resources that are intended to be acce
 using CoAP over TCP.
 
 ~~~~ abnf
-  coap+tcp-URI = "coap+tcp:" "//" host [ ":" port ]
+  coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ]
     path-abempty [ "?" query ]  [ "#" fragment ]
 ~~~~
 {: artwork-align="left"}
@@ -1089,7 +1089,7 @@ The "coaps+tcp" URI scheme identifies CoAP resources that are intended to be acc
 using CoAP over TCP secured with TLS.
 
 ~~~~ abnf
-  coaps+tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
+  coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
     path-abempty [ "?" query ] [ "#" fragment ]
 ~~~~
 {: artwork-align="left"}
