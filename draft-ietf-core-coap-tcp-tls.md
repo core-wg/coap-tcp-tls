@@ -3,7 +3,7 @@ stand_alone: true
 ipr: trust200902
 docname: draft-ietf-core-coap-tcp-tls-latest
 cat: std
-updates: 7641
+updates: 6455, 7641
 coding: utf-8
 pi:
   strict: 'yes'
@@ -138,7 +138,8 @@ reliable delivery, simple congestion control, and flow control.
 Some environments benefit from the availability of CoAP carried over reliable
 transports such as TCP or TLS. This document outlines the changes required to use
 CoAP over TCP, TLS, and WebSockets transports. It also formally updates {{RFC7641}}
-for use with these transports.
+for use with these transports, and RFC 6455 to extend well-known
+sockets (RFC 5785) to the ws and wss URI schemes.
 
 --- middle
 
@@ -1147,6 +1148,9 @@ The port subcomponent is OPTIONAL. The default is port 80.
 
 The WebSocket endpoint is identified by a "ws" URI that is composed of the authority
 part of the "coap+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
+The present specification formally updates {{RFC6455}}, extending the
+well-known URI mechanism defined in {{RFC7585}} to also cover the "ws"
+URI scheme defined in that document.
 The path and query parts of a "coap+ws" URI identify a resource within the specified
 endpoint which can be operated on by the methods defined by CoAP:
 
@@ -1184,6 +1188,9 @@ The port subcomponent is OPTIONAL. The default is port 443.
 
 The WebSocket endpoint is identified by a "wss" URI that is composed of the authority
 part of the "coaps+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
+The present specification formally updates {{RFC6455}}, extending the
+well-known URI mechanism defined in {{RFC7585}} to also cover the "wss"
+URI scheme defined in that document.
 The path and query parts of a "coaps+ws" URI identify a resource within the specified
 endpoint which can be operated on by the methods defined by CoAP.
 
