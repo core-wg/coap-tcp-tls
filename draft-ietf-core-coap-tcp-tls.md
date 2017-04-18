@@ -1149,7 +1149,7 @@ The port subcomponent is OPTIONAL. The default is port 80.
 The WebSocket endpoint is identified by a "ws" URI that is composed of the authority
 part of the "coap+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
 The present specification formally updates {{RFC6455}}, extending the
-well-known URI mechanism defined in {{RFC7585}} to also cover the "ws"
+well-known URI mechanism defined in {{RFC5785}} to also cover the "ws"
 URI scheme defined in that document.
 The path and query parts of a "coap+ws" URI identify a resource within the specified
 endpoint which can be operated on by the methods defined by CoAP:
@@ -1189,7 +1189,7 @@ The port subcomponent is OPTIONAL. The default is port 443.
 The WebSocket endpoint is identified by a "wss" URI that is composed of the authority
 part of the "coaps+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
 The present specification formally updates {{RFC6455}}, extending the
-well-known URI mechanism defined in {{RFC7585}} to also cover the "wss"
+well-known URI mechanism defined in {{RFC5785}} to also cover the "wss"
 URI scheme defined in that document.
 The path and query parts of a "coaps+ws" URI identify a resource within the specified
 endpoint which can be operated on by the methods defined by CoAP.
