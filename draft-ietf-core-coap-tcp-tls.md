@@ -210,6 +210,12 @@ be available in an environment that blocks CoAP over UDP. Another scenario
 for CoAP over WebSockets is a CoAP application running inside a web browser
 without access to connectivity other than HTTP and WebSockets.
 
+Other IETF protocols such as XMPP {{?RFC7622}} have been used to
+connect IoT devices over TCP and TLS.
+Of particular interest in the future may also be HTTP/2 {{?RFC7540}},
+another Web Transfer protocol with a different feature set and a
+different level of complexity.
+
 This document specifies how to access resources using CoAP requests
 and responses over the TCP, TLS and WebSocket protocols. This allows
 connectivity-limited applications to obtain end-to-end CoAP
