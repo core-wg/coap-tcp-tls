@@ -138,8 +138,8 @@ reliable delivery, simple congestion control, and flow control.
 Some environments benefit from the availability of CoAP carried over reliable
 transports such as TCP or TLS. This document outlines the changes required to use
 CoAP over TCP, TLS, and WebSockets transports. It also formally updates {{RFC7641}}
-for use with these transports, and RFC 6455 to extend well-known
-sockets (RFC 5785) to the ws and wss URI schemes.
+for use with these transports, and RFC 6455 to extend the well-known
+URI mechanism (RFC 5785) to the ws and wss URI schemes.
 
 --- middle
 
