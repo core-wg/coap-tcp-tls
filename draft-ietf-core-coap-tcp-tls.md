@@ -1059,6 +1059,12 @@ Augmented Backus-Naur Form (ABNF) [RFC5234]. The definitions of "host",
 
 Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes. 
 
+As with the "coap" and "coaps" schemes defined in {{RFC7252}}, all URI
+schemes defined in this section also support the path prefix
+"/.well-known/" defined by {{RFC5785}} for "well-known locations" in
+the namespace of a host.  This enables discovery as per Section 7 of
+{{RFC7252}}.
+
 ## coap+tcp URI scheme {#coap-tcp-scheme}
 
 The "coap+tcp" URI scheme identifies CoAP resources that are intended to be accessible
