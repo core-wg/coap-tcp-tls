@@ -422,7 +422,7 @@ address {
   <a href="#rfc.abstract">Abstract</a>
 </h1>
 <p>The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control.</p>
-<p>Some environments benefit from the availability of CoAP carried over reliable transports such as TCP or TLS. This document outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports. It also formally updates <a href="#RFC7641">[RFC7641]</a> for use with these transports, and RFC 6455 to extend the well-known URI mechanism (RFC 5785) to the ws and wss URI schemes.</p>
+<p>Some environments benefit from the availability of CoAP carried over reliable transports such as TCP or TLS. This document outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641 for use with these transports, and RFC 6455 to extend the well-known URI mechanism (RFC 5785) to the ws and wss URI schemes.</p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
@@ -509,7 +509,7 @@ address {
   </ul>
 
   <h1 id="rfc.section.1"><a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a></h1>
-<p id="rfc.section.1.p.1">The <a href="#RFC7252">Constrained Application Protocol (CoAP)</a> <cite title="NONE">[RFC7252]</cite> was designed for Internet of Things (IoT) deployments, assuming that UDP <a href="#RFC0768">[RFC0768]</a> or DTLS <a href="#RFC6347">[RFC6347]</a> over UDP can be used unimpeded. UDP is a good choice for transferring small amounts of data across networks that follow the IP architecture.</p>
+<p id="rfc.section.1.p.1">The <a href="#RFC7252">Constrained Application Protocol (CoAP)</a> <cite title="NONE">[RFC7252]</cite> was designed for Internet of Things (IoT) deployments, assuming that UDP <a href="#RFC0768">[RFC0768]</a> or Datagram Transport Layer Security (DTLS) <a href="#RFC6347">[RFC6347]</a> over UDP can be used unimpeded. UDP is a good choice for transferring small amounts of data across networks that follow the IP architecture.</p>
 <p id="rfc.section.1.p.2">Some CoAP deployments need to integrate well with existing enterprise infrastructures, where UDP-based protocols may not be well-received or may even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP brittle, resulting in lost or malformed packets.</p>
 <p id="rfc.section.1.p.3">Emerging standards such as Lightweight Machine to Machine <a href="#LWM2M">[LWM2M]</a> currently use CoAP over UDP as a transport and require support for CoAP over TCP to address the issues above and to protect investments in existing CoAP implementations and deployments. Although HTTP/2 could also potentially address these requirements, there would be additional costs and delays introduced by such a transition.  Currently, there are also fewer HTTP/2 implementations available for constrained devices in comparison to CoAP.</p>
 <p id="rfc.section.1.p.4">To address these requirements, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. <a href="#layering">Figure 1</a> illustrates the layering:</p>
@@ -542,6 +542,8 @@ address {
 <p/>
 
 <dl>
+  <dt>Block-wise Extension for Reliable Transport (BERT):</dt>
+  <dd style="margin-left: 8"><br/> BERT extends <a href="#RFC7959">[RFC7959]</a> to enable the use of larger messages over a reliable transport.</dd>
   <dt>BERT Option:</dt>
   <dd style="margin-left: 8"><br/> A Block1 or Block2 option that includes an SZX value of 7.</dd>
   <dt>BERT Block:</dt>
