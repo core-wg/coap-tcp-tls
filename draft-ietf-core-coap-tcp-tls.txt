@@ -100,11 +100,11 @@ Table of Contents
      6.2.  Example: PUT with BERT Blocks . . . . . . . . . . . . . .  24
    7.  CoAP over Reliable Transport URIs . . . . . . . . . . . . . .  24
      7.1.  coap+tcp URI scheme . . . . . . . . . . . . . . . . . . .  25
-     7.2.  coaps+tcp URI scheme  . . . . . . . . . . . . . . . . . .  25
-     7.3.  coap+ws URI scheme  . . . . . . . . . . . . . . . . . . .  26
+     7.2.  coaps+tcp URI scheme  . . . . . . . . . . . . . . . . . .  26
+     7.3.  coap+ws URI scheme  . . . . . . . . . . . . . . . . . . .  27
      7.4.  coaps+ws URI scheme . . . . . . . . . . . . . . . . . . .  27
      7.5.  Uri-Host and Uri-Port Options . . . . . . . . . . . . . .  28
-     7.6.  Decomposing URIs into Options . . . . . . . . . . . . . .  28
+     7.6.  Decomposing URIs into Options . . . . . . . . . . . . . .  29
      7.7.  Composing URIs from Options . . . . . . . . . . . . . . .  29
 
 
@@ -120,7 +120,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  31
      9.1.  Signaling Messages  . . . . . . . . . . . . . . . . . . .  31
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  31
-     10.1.  Signaling Codes  . . . . . . . . . . . . . . . . . . . .  31
+     10.1.  Signaling Codes  . . . . . . . . . . . . . . . . . . . .  32
      10.2.  CoAP Signaling Option Numbers Registry . . . . . . . . .  32
      10.3.  Service Name and Port Number Registration  . . . . . . .  33
      10.4.  Secure Service Name and Port Number Registration . . . .  34
@@ -1362,6 +1362,12 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    Section 8 (Multicast CoAP) in [RFC7252] is not applicable to these
    schemes.
 
+   As with the "coap" and "coaps" schemes defined in [RFC7252], all URI
+   schemes defined in this section also support the path prefix "/.well-
+   known/" defined by [RFC5785] for "well-known locations" in the
+   namespace of a host.  This enables discovery as per Section 7 of
+   [RFC7252].
+
 7.1.  coap+tcp URI scheme
 
    The "coap+tcp" URI scheme identifies CoAP resources that are intended
@@ -1384,6 +1390,18 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
    Security considerations:  See Section 11.1 of [RFC7252].
 
+
+
+
+
+
+
+
+Bormann, et al.         Expires October 22, 2017               [Page 25]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
+
+
 7.2.  coaps+tcp URI scheme
 
    The "coaps+tcp" URI scheme identifies CoAP resources that are
@@ -1394,13 +1412,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
    The syntax defined in Section 6.2 of [RFC7252] applies to this URI
    scheme, with the following changes:
-
-
-
-Bormann, et al.         Expires October 22, 2017               [Page 25]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
-
 
    o  The port subcomponent indicates the TCP port at which the TLS
       server for the CoAP server is located.  If it is empty or not
@@ -1439,6 +1450,14 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    Encoding considerations:  The scheme encoding conforms to the
       encoding rules established for URIs in [RFC3986].
 
+
+
+
+Bormann, et al.         Expires October 22, 2017               [Page 26]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
+
+
    Interoperability considerations:  None.
 
    Security considerations:  See Section 11.1 of [RFC7252].
@@ -1450,13 +1469,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
      coap-ws-URI = "coap+ws:" "//" host [ ":" port ]
        path-abempty [ "?" query ] [ "#" fragment ]
-
-
-
-Bormann, et al.         Expires October 22, 2017               [Page 26]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
-
 
    The port subcomponent is OPTIONAL.  The default is port 80.
 
@@ -1495,6 +1507,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
    The port subcomponent is OPTIONAL.  The default is port 443.
 
+
+
+Bormann, et al.         Expires October 22, 2017               [Page 27]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
+
+
    The WebSocket endpoint is identified by a "wss" URI that is composed
    of the authority part of the "coaps+ws" URI and the well-known path
    "/.well-known/coap" [RFC5785].  The present specification formally
@@ -1503,16 +1522,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    document.  The path and query parts of a "coaps+ws" URI identify a
    resource within the specified endpoint which can be operated on by
    the methods defined by CoAP.
-
-
-
-
-
-
-Bormann, et al.         Expires October 22, 2017               [Page 27]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
-
 
              coaps+ws://example.org/sensors/temperature?u=Cel
                    \______  ______/\___________  ___________/
@@ -1552,6 +1561,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    requests from the WebSocket client to the WebSocket server is
    indicated by the Host header field from the WebSocket handshake.
 
+
+
+
+
+Bormann, et al.         Expires October 22, 2017               [Page 28]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
+
+
 7.6.  Decomposing URIs into Options
 
    The steps are the same as specified in Section 6.4 of [RFC7252] with
@@ -1562,13 +1580,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    3.  If |url| does not have a <scheme> component whose value, when
        converted to ASCII lowercase, is "coap" or "coaps", then fail
        this algorithm.
-
-
-
-Bormann, et al.         Expires October 22, 2017               [Page 28]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
-
 
    is updated to:
 
@@ -1606,6 +1617,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
    This step from [RFC7252]:
 
+
+
+
+
+Bormann, et al.         Expires October 22, 2017               [Page 29]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
+
+
    4.  If the request includes a Uri-Port Option, let |port| be that
        option's value.  Otherwise, let |port| be the request's
        destination UDP port.
@@ -1615,16 +1635,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    4.  If the request includes a Uri-Port Option, let |port| be that
        option's value.  Otherwise, let |port| be the request's
        destination TCP port.
-
-
-
-
-
-
-Bormann, et al.         Expires October 22, 2017               [Page 29]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
-
 
 8.  Securing CoAP
 
@@ -1663,6 +1673,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    RawPublicKey:  TLS is enabled.  The guidance in Section 4.3 of
       [RFC7925] applies.
 
+
+
+
+
+Bormann, et al.         Expires October 22, 2017               [Page 30]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
+
+
    Certificate:  TLS is enabled.  The guidance in Section 4.4 of
       [RFC7925] applies.
 
@@ -1674,14 +1693,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
    "PreSharedKey", "RawPublicKey", or "Certificate" is mandatory-to-
    implement for the TLS binding depending on the credential type used
-
-
-
-Bormann, et al.         Expires October 22, 2017               [Page 30]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
-
-
    with the device.  These security modes are achieved using TLS and are
    indicated by the "coaps+tcp" scheme and TLS-secured CoAP default
    port.
@@ -1715,17 +1726,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
 10.  IANA Considerations
 
-10.1.  Signaling Codes
-
-   IANA is requested to create a third sub-registry for values of the
-   Code field in the CoAP header (Section 12.1 of [RFC7252]).  The name
-   of this sub-registry is "CoAP Signaling Codes".
-
-   Each entry in the sub-registry must include the Signaling Code in the
-   range 7.00-7.31, its name, and a reference to its documentation.
-
-   Initial entries in this sub-registry are as follows:
-
 
 
 
@@ -1737,6 +1737,17 @@ Bormann, et al.         Expires October 22, 2017               [Page 31]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
+
+10.1.  Signaling Codes
+
+   IANA is requested to create a third sub-registry for values of the
+   Code field in the CoAP header (Section 12.1 of [RFC7252]).  The name
+   of this sub-registry is "CoAP Signaling Codes".
+
+   Each entry in the sub-registry must include the Signaling Code in the
+   range 7.00-7.31, its name, and a reference to its documentation.
+
+   Initial entries in this sub-registry are as follows:
 
                       +------+---------+-----------+
                       | Code | Name    | Reference |
@@ -1771,17 +1782,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    documentation.
 
    Initial entries in this sub-registry are as follows:
-
-
-
-
-
-
-
-
-
-
-
 
 
 

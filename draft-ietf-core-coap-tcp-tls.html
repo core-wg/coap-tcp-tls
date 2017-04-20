@@ -1130,6 +1130,7 @@ CoAP Client                             CoAP Server
 <p id="rfc.section.7.p.3">Resources made available via these schemes have no shared identity even if their resource identifiers indicate the same authority (the same host listening to the same TCP port). They are hosted in distinct namespaces because each URI scheme implies a distinct origin server.</p>
 <p id="rfc.section.7.p.4">The syntax for the URI schemes in this section are specified using Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>. The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221;, &#8220;query&#8221;, and &#8220;fragment&#8221; are adopted from <a href="#RFC3986">[RFC3986]</a>.</p>
 <p id="rfc.section.7.p.5">Section 8 (Multicast CoAP) in <a href="#RFC7252">[RFC7252]</a> is not applicable to these schemes.</p>
+<p id="rfc.section.7.p.6">As with the &#8220;coap&#8221; and &#8220;coaps&#8221; schemes defined in <a href="#RFC7252">[RFC7252]</a>, all URI schemes defined in this section also support the path prefix &#8220;/.well-known/&#8221; defined by <a href="#RFC5785">[RFC5785]</a> for &#8220;well-known locations&#8221; in the namespace of a host.  This enables discovery as per Section 7 of <a href="#RFC7252">[RFC7252]</a>.</p>
 <h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#coap-tcp-scheme" id="coap-tcp-scheme">coap+tcp URI scheme</a></h1>
 <p id="rfc.section.7.1.p.1">The &#8220;coap+tcp&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over TCP.</p>
 <pre>
