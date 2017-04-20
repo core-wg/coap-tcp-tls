@@ -1323,7 +1323,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <dt>Certificate:</dt>
   <dd style="margin-left: 8">TLS is enabled. The guidance in Section 4.4 of <a href="#RFC7925">[RFC7925]</a> applies.</dd>
 </dl>
-<p id="rfc.section.8.1.p.4">The &#8220;NoSec&#8221; mode is mandatory-to-implement. The system simply sends the packets over normal TCP which is indicated by the &#8220;coap+tcp&#8221; scheme and the TCP CoAP default port.  The system is secured only by keeping attackers from being able to send or receive packets from the network with the CoAP nodes.</p>
+<p id="rfc.section.8.1.p.4">The &#8220;NoSec&#8221; mode is optional-to-implement. The system simply sends the packets over normal TCP which is indicated by the &#8220;coap+tcp&#8221; scheme and the TCP CoAP default port.  The system is secured only by keeping attackers from being able to send or receive packets from the network with the CoAP nodes.</p>
 <p id="rfc.section.8.1.p.5">&#8220;PreSharedKey&#8221;, &#8220;RawPublicKey&#8221;, or &#8220;Certificate&#8221; is mandatory-to-implement for the TLS binding depending on the credential type used with the device. These security modes are achieved using TLS and are indicated by the &#8220;coaps+tcp&#8221; scheme and TLS-secured CoAP default port.</p>
 <h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#tls-usage-for-coap-over-websockets" id="tls-usage-for-coap-over-websockets">TLS usage for CoAP over WebSockets</a></h1>
 <p id="rfc.section.8.2.p.1">A CoAP client requesting a resource identified by a &#8220;coaps+ws&#8221; URI negotiates a secure WebSocket connection to a WebSocket server endpoint with a &#8220;wss&#8221; URI. This is described in <a href="#coaps-ws-scheme">Section 7.4</a>.</p>
