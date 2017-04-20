@@ -137,7 +137,7 @@ reliable delivery, simple congestion control, and flow control.
 
 Some environments benefit from the availability of CoAP carried over reliable
 transports such as TCP or TLS. This document outlines the changes required to use
-CoAP over TCP, TLS, and WebSockets transports. It also formally updates {{RFC7641}}
+CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641
 for use with these transports, and RFC 6455 to extend the well-known
 URI mechanism (RFC 5785) to the ws and wss URI schemes.
 
@@ -147,9 +147,9 @@ URI mechanism (RFC 5785) to the ws and wss URI schemes.
 
 The [Constrained Application Protocol (CoAP)](#RFC7252) was designed
 for Internet of Things (IoT) deployments, assuming that UDP {{RFC0768}} 
-or DTLS {{RFC6347}} over UDP can be used unimpeded. UDP is a good choice
-for transferring small amounts of data across networks that follow the IP
-architecture.
+or Datagram Transport Layer Security (DTLS) {{RFC6347}} over UDP can be
+used unimpeded. UDP is a good choice for transferring small amounts of
+data across networks that follow the IP architecture.
 
 Some CoAP deployments need to integrate well with existing enterprise
 infrastructures, where UDP-based protocols may not be well-received or may
@@ -238,6 +238,10 @@ The term "reliable transport" is used only to refer to transport protocols, such
 as TCP, which provide reliable and ordered delivery of a byte-stream. 
 
 {: vspace='0'}
+Block-wise Extension for Reliable Transport (BERT):
+:   BERT extends {{-block}} to enable the use of larger messages over a reliable
+    transport.
+
 BERT Option:
 :   A Block1 or Block2 option that includes an SZX value of 7.
 
