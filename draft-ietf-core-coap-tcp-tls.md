@@ -203,13 +203,12 @@ To allow IoT devices to better communicate in these demanding environments, CoAP
 needs to support different transport protocols, namely TCP {{RFC0793}},
 in some situations secured by TLS {{RFC5246}}.
 
-In addition, some corporate networks only allow Internet access via a HTTP proxy.
-In this case, the best transport for CoAP might be the [WebSocket protocol](#RFC6455).
-The WebSocket protocol provides two-way communication between a WebSocket client
-and a WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection and may
-be available in an environment that blocks CoAP over UDP. Another scenario
-for CoAP over WebSockets is a CoAP application running inside a web browser
-without access to connectivity other than HTTP and WebSockets.
+CoAP applications running inside a web browser without access to
+connectivity other than HTTP and the [WebSocket protocol](#RFC6455)
+may cross-proxy their CoAP requests via HTTP to a HTTP-to-CoAP
+cross-proxy or transport them via the the WebSocket protocol, which
+provides two-way communication between a WebSocket client and a
+WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection.
 
 This document specifies how to access resources using CoAP requests
 and responses over the TCP, TLS and WebSocket protocols. This allows
