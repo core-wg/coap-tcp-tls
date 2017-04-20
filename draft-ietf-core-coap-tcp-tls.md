@@ -1351,7 +1351,7 @@ Certificate:
 
 : TLS is enabled. The guidance in Section 4.4 of {{RFC7925}} applies.
 
-The "NoSec" mode is mandatory-to-implement. The system simply sends the packets over normal
+The "NoSec" mode is optional-to-implement. The system simply sends the packets over normal
 TCP which is indicated by the "coap+tcp" scheme and the TCP CoAP default port.
 The system is secured only by keeping attackers from being able to send
 or receive packets from the network with the CoAP nodes.
