@@ -1899,6 +1899,27 @@ Updated LWM2M 1.0 informative reference
 
 Addressed feedback from second Working Group Last Call
 
+## Since draft-ietf-core-coap-tcp-tls-07
+
+Addressed feedback from IETF Last Call
+
+Addressed feedback from ARTART review
+
+Addressed feedback from GENART review
+
+Addressed feedback from TSVART review
+
+Added fragment identifiers to URI schemes
+
+Added "Updates RFC7959" for BERT
+
+Added "Updates RFC6455" to extend well-known URI mechanism to ws and wss
+
+Clarified well-known URI mechanism use for all URI schemes
+
+Changed NoSec to optional-to-implement
+
+
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
 
