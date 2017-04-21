@@ -84,7 +84,7 @@ Table of Contents
      3.2.  Message Format  . . . . . . . . . . . . . . . . . . . . .   7
      3.3.  Message Transmission  . . . . . . . . . . . . . . . . . .  10
      3.4.  Connection Health . . . . . . . . . . . . . . . . . . . .  11
-   4.  CoAP over WebSockets  . . . . . . . . . . . . . . . . . . . .  11
+   4.  CoAP over WebSockets  . . . . . . . . . . . . . . . . . . . .  12
      4.1.  Opening Handshake . . . . . . . . . . . . . . . . . . . .  13
      4.2.  Message Format  . . . . . . . . . . . . . . . . . . . . .  14
      4.3.  Message Transmission  . . . . . . . . . . . . . . . . . .  15
@@ -601,6 +601,23 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    can send a CoAP Ping Signaling message (see Section 5.4) to test the
    connection and verify that the CoAP server is responsive.
 
+   When the underlying TCP connection is closed or reset, the signaling
+   state and any observation state (see Appendix A.4) associated with
+   the reliable connection are removed.  In flight messages may or may
+   not be lost.
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2017               [Page 11]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
+
+
 4.  CoAP over WebSockets
 
    CoAP over WebSockets is intentionally similar to CoAP over TCP;
@@ -610,14 +627,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    CoAP over WebSockets can be used in a number of configurations.  The
    most basic configuration is a CoAP client retrieving or updating a
    CoAP resource located on a CoAP server that exposes a WebSocket
-
-
-
-Bormann, et al.         Expires October 23, 2017               [Page 11]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
-
-
    endpoint (see Figure 9).  The CoAP client acts as the WebSocket
    client, establishes a WebSocket connection, and sends a CoAP request,
    to which the CoAP server returns a CoAP response.  The WebSocket
@@ -651,6 +660,20 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    or even another WebSocket endpoint.  The CoAP client specifies the
    resource to be updated or retrieved in the Proxy-Uri Option.
 
+
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires October 23, 2017               [Page 12]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
+
+
      ___________                ___________                ___________
     |           |              |           |              |           |
     |          _|___        ___|_         _|___        ___|_          |
@@ -666,14 +689,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
    A third possible configuration is a CoAP server running inside a web
    browser (Figure 11).  The web browser initially connects to a
-
-
-
-Bormann, et al.         Expires October 23, 2017               [Page 12]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
-
-
    WebSocket endpoint and is then reachable through the WebSocket
    server.  When no connection exists, the CoAP server is unreachable.
    Because the WebSocket server is the only way to reach the CoAP
@@ -706,21 +721,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    in this document.  Any later, incompatible versions of CoAP or CoAP
    over WebSockets will use a different subprotocol name.
 
-   The WebSocket client includes the hostname of the WebSocket server in
-   the Host header field of its handshake as per [RFC6455].  The Host
-   header field also indicates the default value of the Uri-Host Option
-   in requests from the WebSocket client to the WebSocket server.
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -729,6 +729,11 @@ Bormann, et al.         Expires October 23, 2017               [Page 13]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
+
+   The WebSocket client includes the hostname of the WebSocket server in
+   the Host header field of its handshake as per [RFC6455].  The Host
+   header field also indicates the default value of the Uri-Host Option
+   in requests from the WebSocket client to the WebSocket server.
 
             GET /.well-known/coap HTTP/1.1
             Host: example.org
@@ -773,11 +778,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    As with CoAP over TCP, the message format for CoAP over WebSockets
    eliminates the Version field defined in CoAP over UDP.  If CoAP
    version negotiation is required in the future, CoAP over WebSockets
-   can address the requirement by the definition of a new subprotocol
-   identifier that is negotiated during the opening handshake.
-
-   Requests and response messages can be fragmented as specified in
-   Section 5.4 of [RFC6455], though typically they are sent unfragmented
 
 
 
@@ -786,6 +786,11 @@ Bormann, et al.         Expires October 23, 2017               [Page 14]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
 
+   can address the requirement by the definition of a new subprotocol
+   identifier that is negotiated during the opening handshake.
+
+   Requests and response messages can be fragmented as specified in
+   Section 5.4 of [RFC6455], though typically they are sent unfragmented
    as they tend to be small and fully buffered before transmission.  The
    WebSocket protocol does not provide means for multiplexing.  If it is
    not desirable for a large message to monopolize the connection,
@@ -830,17 +835,17 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    o  Learn related characteristics, such as maximum message size for
       the connection
 
-   o  Shut down the connection in an orderly fashion
-
-   o  Provide diagnostic information when terminating a connection in
-      response to a serious error condition
-
 
 
 Bormann, et al.         Expires October 23, 2017               [Page 15]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
+
+   o  Shut down the connection in an orderly fashion
+
+   o  Provide diagnostic information when terminating a connection in
+      response to a serious error condition
 
    Signaling is a third basic kind of message in CoAP, after requests
    and responses.  Signaling messages share a common structure with the
@@ -885,11 +890,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    o  Each capability option advertises one capability of the sender to
       the recipient.
 
-   o  Each setting option indicates a setting that will be applied by
-      the sender.
-
-
-
 
 
 
@@ -897,6 +897,9 @@ Bormann, et al.         Expires October 23, 2017               [Page 16]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
 
+
+   o  Each setting option indicates a setting that will be applied by
+      the sender.
 
    One CSM MUST be sent by both endpoints at the start of the
    connection.  Further CSM MAY be sent at any other time by either
@@ -941,9 +944,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP       April 2017
    The active value of the Max-Message-Size Option is replaced each time
    the option is sent with a modified value.  Its starting value is its
    base value.
-
-
-
 
 
 
