@@ -138,9 +138,9 @@ reliable delivery, simple congestion control, and flow control.
 Some environments benefit from the availability of CoAP carried over reliable
 transports such as TCP or TLS. This document outlines the changes required to use
 CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641
-for use with these transports, RFC 6455 to extend the well-known
-URI mechanism (RFC 5785) to the ws and wss URI schemes, and RFC 7959 to
-to enable the use of larger messages over a reliable transport.
+for use with these transports, RFC 7959 to enable the use of larger messages over
+a reliable transport, and RFC 6455 to extend the well-known URI mechanism (RFC 5785)
+to the ws and wss URI schemes.
 
 --- middle
 
@@ -1655,8 +1655,8 @@ Subprotocol Definition.
 
 ## CoAP Option Numbers Registry
 
-IANA is requested to add [RFCthis] to the references for the following entries in the "CoAP Option Numbers"
-registry defined by {{RFC7252}} and updated by {{RFC7959}}:
+IANA is requested to add [RFCthis] to the references for the following entries registered
+by {{RFC7959}} in the "CoAP Option Numbers" sub-registry defined by {{RFC7252}}:
 
 | Number | Name   | Reference           |
 |--------|--------|---------------------|
