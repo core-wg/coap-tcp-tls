@@ -322,6 +322,7 @@ address {
 <link href="#rfc.section.10.6" rel="Chapter" title="10.6 Well-Known URI Suffix Registration"/>
 <link href="#rfc.section.10.7" rel="Chapter" title="10.7 ALPN Protocol Identifier"/>
 <link href="#rfc.section.10.8" rel="Chapter" title="10.8 WebSocket Subprotocol Registration"/>
+<link href="#rfc.section.10.9" rel="Chapter" title="10.9 CoAP Option Numbers Registry"/>
 <link href="#rfc.references" rel="Chapter" title="11 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="11.1 Normative References"/>
 <link href="#rfc.references.2" rel="Chapter" title="11.2 Informative References"/>
@@ -347,7 +348,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-20" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-4-21" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -367,7 +368,7 @@ address {
   <td class="right">Universitaet Bremen TZI</td>
 </tr>
 <tr>
-  <td class="left">Updates: 6455, 7641 (if approved)</td>
+  <td class="left">Updates: 6455, 7641, 7959 (if approved)</td>
   <td class="right">S. Lemay</td>
 </tr>
 <tr>
@@ -375,7 +376,7 @@ address {
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 22, 2017</td>
+  <td class="left">Expires: October 23, 2017</td>
   <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -408,7 +409,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 20, 2017</td>
+  <td class="right">April 21, 2017</td>
 </tr>
 
     	
@@ -422,14 +423,14 @@ address {
   <a href="#rfc.abstract">Abstract</a>
 </h1>
 <p>The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control.</p>
-<p>Some environments benefit from the availability of CoAP carried over reliable transports such as TCP or TLS. This document outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641 for use with these transports, and RFC 6455 to extend the well-known URI mechanism (RFC 5785) to the ws and wss URI schemes.</p>
+<p>Some environments benefit from the availability of CoAP carried over reliable transports such as TCP or TLS. This document outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641 for use with these transports, RFC 7959 to enable the use of larger messages over a reliable transport, and RFC 6455 to extend the well-known URI mechanism (RFC 5785) to the ws and wss URI schemes.</p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 22, 2017.</p>
+<p>This Internet-Draft will expire on October 23, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -486,6 +487,7 @@ address {
 <li>10.6.   <a href="#rfc.section.10.6">Well-Known URI Suffix Registration</a></li>
 <li>10.7.   <a href="#rfc.section.10.7">ALPN Protocol Identifier</a></li>
 <li>10.8.   <a href="#rfc.section.10.8">WebSocket Subprotocol Registration</a></li>
+<li>10.9.   <a href="#rfc.section.10.9">CoAP Option Numbers Registry</a></li>
 </ul><li>11.   <a href="#rfc.references">References</a></li>
 <ul><li>11.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>11.2.   <a href="#rfc.references.2">Informative References</a></li>
@@ -1595,6 +1597,32 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <dt>Subprotocol Definition.</dt>
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
+<h1 id="rfc.section.10.9"><a href="#rfc.section.10.9">10.9.</a> <a href="#coap-option-numbers-registry" id="coap-option-numbers-registry">CoAP Option Numbers Registry</a></h1>
+<p id="rfc.section.10.9.p.1">IANA is requested to add [RFCthis] to the references for the following entries registered by <a href="#RFC7959">[RFC7959]</a> in the &#8220;CoAP Option Numbers&#8221; sub-registry defined by <a href="#RFC7252">[RFC7252]</a>:</p>
+<div id="rfc.table.3"/>
+<div id="option-numbers"/>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+  <caption>CoAP Option Numbers</caption>
+  <thead>
+    <tr>
+      <th class="left">Number</th>
+      <th class="left">Name</th>
+      <th class="left">Reference</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="left">23</td>
+      <td class="left">Block2</td>
+      <td class="left">RFC 7959, [RFCthis]</td>
+    </tr>
+    <tr>
+      <td class="left">27</td>
+      <td class="left">Block1</td>
+      <td class="left">RFC 7959, [RFCthis]</td>
+    </tr>
+  </tbody>
+</table>
 <h1 id="rfc.references"><a href="#rfc.references">11.</a> References</h1>
 <h1 id="rfc.references.1"><a href="#rfc.references.1">11.1.</a> Normative References</h1>
 <table>
