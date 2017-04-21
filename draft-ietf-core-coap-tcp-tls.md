@@ -513,6 +513,10 @@ resource and it does not receive any notification for some time),
 it can send a CoAP Ping Signaling message (see {{sec-ping}}) to test
 the connection and verify that the CoAP server is responsive.
 
+When the underlying TCP connection is closed or reset, the signaling state
+and any observation state (see {{observe-cancel}}) associated with the reliable
+connection are removed. In flight messages may or may not be lost.
+
 # CoAP over WebSockets {#websockets-overview}
 
 CoAP over WebSockets is intentionally similar to CoAP over TCP; therefore,
@@ -1703,7 +1707,7 @@ the health of the connection (and all its active observations) by sending a CoAP
 Ping Signaling message ({{sec-ping}}) rather than individual requests to confirm
 active observations.
 
-## Cancellation
+## Cancellation {#observe-cancel}
 
 For CoAP over UDP, a client that is no longer interested in receiving notifications can "forget"
 the observation and respond to the next notification from the server with a reset message to cancel
