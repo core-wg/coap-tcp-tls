@@ -3,7 +3,7 @@ stand_alone: true
 ipr: trust200902
 docname: draft-ietf-core-coap-tcp-tls-latest
 cat: std
-updates: 6455, 7641, 7959
+updates: 7641, 7959
 coding: utf-8
 pi:
   strict: 'yes'
@@ -19,7 +19,7 @@ title: CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets
 abbrev: TCP/TLS/WebSockets Transports for CoAP
 area: Applications Area (app)
 wg: CORE
-#date: 2016-04-21
+#date: 2017-05-15
 author:
 - ins: C. Bormann
   name: Carsten Bormann
@@ -89,6 +89,7 @@ normative:
   RFC7641: RFC7641
   RFC7925: RFC7925
   RFC7959: block
+  I-D.bormann-hybi-ws-wk: ws-wk
 informative:
   I-D.ietf-core-cocoa: cocoa
   I-D.ietf-core-object-security: oscoap
@@ -138,9 +139,8 @@ reliable delivery, simple congestion control, and flow control.
 Some environments benefit from the availability of CoAP carried over reliable
 transports such as TCP or TLS. This document outlines the changes required to use
 CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641
-for use with these transports, RFC 7959 to enable the use of larger messages over
-a reliable transport, and RFC 6455 to extend the well-known URI mechanism (RFC 5785)
-to the ws and wss URI schemes.
+for use with these transports, and RFC 7959 to enable the use of larger messages over
+a reliable transport.
 
 --- middle
 
@@ -1161,10 +1161,8 @@ using CoAP over WebSockets.
 The port subcomponent is OPTIONAL. The default is port 80.
 
 The WebSocket endpoint is identified by a "ws" URI that is composed of the authority
-part of the "coap+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
-The present specification formally updates {{RFC6455}}, extending the
-well-known URI mechanism defined in {{RFC5785}} to also cover the "ws"
-URI scheme defined in that document.
+part of the "coap+ws" URI and the well-known path "/.well-known/coap"
+{{RFC5785}} {{-ws-wk}}.
 The path and query parts of a "coap+ws" URI identify a resource within the specified
 endpoint which can be operated on by the methods defined by CoAP:
 
@@ -1201,10 +1199,8 @@ using CoAP over WebSockets secured by TLS.
 The port subcomponent is OPTIONAL. The default is port 443.
 
 The WebSocket endpoint is identified by a "wss" URI that is composed of the authority
-part of the "coaps+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
-The present specification formally updates {{RFC6455}}, extending the
-well-known URI mechanism defined in {{RFC5785}} to also cover the "wss"
-URI scheme defined in that document.
+part of the "coaps+ws" URI and the well-known path "/.well-known/coap"
+{{RFC5785}} {{-ws-wk}}.
 The path and query parts of a "coaps+ws" URI identify a resource within the specified
 endpoint which can be operated on by the methods defined by CoAP.
 
@@ -1919,15 +1915,24 @@ Clarified well-known URI mechanism use for all URI schemes
 
 Changed NoSec to optional-to-implement
 
+## Since draft-ietf-core-coap-tcp-tls-08
+
+Reverted "Updates RFC6455" to extend well-known URI mechanism to ws
+and wss; point to {{-ws-wk}} instead
+
 
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
 
-We would like to thank Stephen Berard, Geoffrey Cristallo, 
+We would like to thank Stephen Berard, Geoffrey Cristallo,
 Olivier Delaby, Esko Dijk, Christian Groves, Nadir Javed,
 Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
-Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard, 
+Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard,
 and Gengyu Wei for their feedback.
+Last-call reviews from Mark Nottingham and Yoshifumi Nishida as well
+as several IESG reviewers provided extensive comments; from the IESG,
+we would like to specifically call out Adam Roach, Ben Campbell, Eric
+Rescorla, Mirja Kühlewind, and the responsible AD Alexey Melnikov.
 
 # Contributors {#contributors}
 {: numbered="no"}
