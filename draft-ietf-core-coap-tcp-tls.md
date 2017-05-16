@@ -79,12 +79,13 @@ normative:
   RFC2119: bcp14
   RFC3986: RFC3986
   RFC5226: RFC5226
-  RFC5246: tls
+  RFC5246: tls12
   RFC5785: RFC5785
   RFC6066: RFC6066
   RFC6455: RFC6455
   RFC7252: coap
   RFC7301: alpn
+  RFC7525: tlsbcp
   RFC7595: urireg
   RFC7641: RFC7641
   RFC7925: RFC7925
@@ -1303,7 +1304,13 @@ data object-based security model for CoAP that is independent of transport
 
 ## TLS binding for CoAP over TCP
 
-The TLS usage guidance in {{RFC7925}} applies.
+The TLS usage guidance in {{RFC7925}} applies, including the guidance
+about cipher suites in that document that are derived from the
+mandatory to implement (MTI) cipher suites defined in {{-coap}}.
+(Note that this selection caters for the device-to-cloud use case of
+CoAP over TLS more than for any use within a back-end environment,
+where the standard TLS 1.2 cipher suites or the more recent ones
+defined in {{-tlsbcp}} are more appropriate.)
 
 During the provisioning phase, a CoAP device is provided with the security information
 that it needs, including keying materials, access control lists, and authorization servers.
@@ -1344,6 +1351,13 @@ Section 4.1 of {{RFC6455}} applies. When a CoAP server exposes resources identif
 the guidance in Section 4.4 of {{RFC7925}} applies towards mandatory-to-implement TLS functionality
 for certificates. For the server-side requirements in accepting incoming connections over a HTTPS
 (HTTP-over-TLS) port, the guidance in Section 4.2 of {{RFC6455}} applies.
+
+Note that this formally inherits the mandatory to implement cipher
+suites defined in {{-tls12}}.  However, modern usually browsers
+implement more recent cipher suites that then are automatically picked
+up via the JavaScript WebSocket API.  WebSocket Servers that provide
+Secure CoAP over WebSockets for the browser use case will need to
+follow the browser preferences and MUST follow {{-tlsbcp}}.
 
 # Security Considerations {#security}
 
@@ -1717,7 +1731,7 @@ the WebSocket connection to the client.
      |          |          |    +------------------------------------+
      |          |          |
 ~~~~
-{: #example-2 title='A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSockets-enabled CoAP proxy'}
+{: #example-2 title='A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSocket-enabled CoAP proxy'}
 
 # Change Log
 
