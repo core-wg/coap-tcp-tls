@@ -350,7 +350,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-5-15" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-16" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -378,7 +378,7 @@ address {
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-  <td class="left">Expires: November 16, 2017</td>
+  <td class="left">Expires: November 17, 2017</td>
   <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -411,7 +411,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">May 15, 2017</td>
+  <td class="right">May 16, 2017</td>
 </tr>
 
     	
@@ -432,7 +432,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on November 16, 2017.</p>
+<p>This Internet-Draft will expire on November 17, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -518,9 +518,9 @@ address {
 <p id="rfc.section.1.p.1">The <a href="#RFC7252">Constrained Application Protocol (CoAP)</a> <cite title="NONE">[RFC7252]</cite> was designed for Internet of Things (IoT) deployments, assuming that UDP <a href="#RFC0768">[RFC0768]</a> or Datagram Transport Layer Security (DTLS) <a href="#RFC6347">[RFC6347]</a> over UDP can be used unimpeded. UDP is a good choice for transferring small amounts of data across networks that follow the IP architecture.</p>
 <p id="rfc.section.1.p.2">Some CoAP deployments need to integrate well with existing enterprise infrastructures, where UDP-based protocols may not be well-received or may even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP brittle, resulting in lost or malformed packets.</p>
 <p id="rfc.section.1.p.3">Emerging standards such as Lightweight Machine to Machine <a href="#LWM2M">[LWM2M]</a> currently use CoAP over UDP as a transport and require support for CoAP over TCP to address the issues above and to protect investments in existing CoAP implementations and deployments. Although HTTP/2 could also potentially address these requirements, there would be additional costs and delays introduced by such a transition.  Currently, there are also fewer HTTP/2 implementations available for constrained devices in comparison to CoAP.</p>
-<p id="rfc.section.1.p.4">To address these requirements, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. <a href="#layering">Figure 1</a> illustrates the layering:</p>
+<p id="rfc.section.1.p.4">To address these requirements, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets.  For these cases, the reliability offered by the transport protocol subsumes the reliability functions of the message layer used for CoAP over UDP.  (Note that both for a reliable transport and the CoAP over UDP message layer, the reliability offered is per transport hop: where proxies &#8212; see Sections 5.7 and 10 of <a href="#RFC7252">[RFC7252]</a> &#8212; are involved, that layer&#8217;s reliability function does not extend end-to-end.) <a href="#fig-layering">Figure 1</a> illustrates the layering:</p>
 <div id="rfc.figure.1"/>
-<div id="layering"/>
+<div id="fig-layering"/>
 <pre>
         +--------------------------------+
         |          Application           |

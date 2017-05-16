@@ -6,7 +6,7 @@ CORE                                                          C. Bormann
 Internet-Draft                                   Universitaet Bremen TZI
 Updates: 7252, 7641, 7959 (if approved)                         S. Lemay
 Intended status: Standards Track                      Zebra Technologies
-Expires: November 16, 2017                                 H. Tschofenig
+Expires: November 17, 2017                                 H. Tschofenig
                                                                 ARM Ltd.
                                                                K. Hartke
                                                  Universitaet Bremen TZI
@@ -14,7 +14,7 @@ Expires: November 16, 2017                                 H. Tschofenig
                                         Tampere University of Technology
                                                           B. Raymor, Ed.
                                                                Microsoft
-                                                            May 15, 2017
+                                                            May 16, 2017
 
 
  CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets
@@ -49,11 +49,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 16, 2017.
+   This Internet-Draft will expire on November 17, 2017.
 
 
 
-Bormann, et al.         Expires November 16, 2017               [Page 1]
+Bormann, et al.         Expires November 17, 2017               [Page 1]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -78,7 +78,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Conventions and Terminology . . . . . . . . . . . . . . . . .   5
    3.  CoAP over TCP . . . . . . . . . . . . . . . . . . . . . . . .   6
-     3.1.  Messaging Model . . . . . . . . . . . . . . . . . . . . .   6
+     3.1.  Messaging Model . . . . . . . . . . . . . . . . . . . . .   7
      3.2.  Message Format  . . . . . . . . . . . . . . . . . . . . .   7
      3.3.  Message Transmission  . . . . . . . . . . . . . . . . . .  11
      3.4.  Connection Health . . . . . . . . . . . . . . . . . . . .  12
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Bormann, et al.         Expires November 16, 2017               [Page 2]
+Bormann, et al.         Expires November 17, 2017               [Page 2]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -165,7 +165,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017               [Page 3]
+Bormann, et al.         Expires November 17, 2017               [Page 3]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -183,7 +183,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    constrained devices in comparison to CoAP.
 
    To address these requirements, this document defines how to transport
-   CoAP over TCP, CoAP over TLS, and CoAP over WebSockets.  Figure 1
+   CoAP over TCP, CoAP over TLS, and CoAP over WebSockets.  For these
+   cases, the reliability offered by the transport protocol subsumes the
+   reliability functions of the message layer used for CoAP over UDP.
+   (Note that both for a reliable transport and the CoAP over UDP
+   message layer, the reliability offered is per transport hop: where
+   proxies -- see Sections 5.7 and 10 of [RFC7252] -- are involved, that
+   layer's reliability function does not extend end-to-end.)  Figure 1
    illustrates the layering:
 
         +--------------------------------+
@@ -212,20 +218,20 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    exchange larger payloads, such as firmware images, without
    application layer segmentation and to utilize the more sophisticated
    congestion control capabilities provided by many TCP implementations.
+
+
+
+Bormann, et al.         Expires November 17, 2017               [Page 4]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
+
+
    Note that there is ongoing work to add more elaborate congestion
    control to CoAP (see [I-D.ietf-core-cocoa]).
 
    CoAP may be integrated into a Web environment where the front-end
    uses CoAP over UDP from IoT devices to a cloud infrastructure and
    then CoAP over TCP between the back-end services.  A TCP-to-UDP
-
-
-
-Bormann, et al.         Expires November 16, 2017               [Page 4]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
-
-
    gateway can be used at the cloud boundary to communicate with the
    UDP-based IoT device.
 
@@ -267,6 +273,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    "OPTIONAL" in this document are to be interpreted as described in
    [RFC2119].
 
+
+
+
+
+Bormann, et al.         Expires November 17, 2017               [Page 5]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
+
+
    This document assumes that readers are familiar with the terms and
    concepts that are used in [RFC6455], [RFC7252], [RFC7641], and
    [RFC7959].
@@ -274,13 +289,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    The term "reliable transport" is used only to refer to transport
    protocols, such as TCP, which provide reliable and ordered delivery
    of a byte-stream.
-
-
-
-Bormann, et al.         Expires November 16, 2017               [Page 5]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
-
 
    Block-wise Extension for Reliable Transport (BERT):
       BERT extends [RFC7959] to enable the use of larger messages over a
@@ -323,6 +331,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    ID to relate Acknowledgments to Confirmable messages and to detect
    duplicate messages.
 
+
+
+Bormann, et al.         Expires November 17, 2017               [Page 6]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
+
+
 3.1.  Messaging Model
 
    Conceptually, CoAP over TCP replaces most of the message layer of
@@ -330,13 +345,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    provided by TCP/TLS, conveying the length information for each
    message that on datagram transports is provided by the UDP/DTLS
    datagram layer.
-
-
-
-Bormann, et al.         Expires November 16, 2017               [Page 6]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
-
 
    TCP ensures reliable message transmission, so the message layer of
    CoAP over TCP is not required to support acknowledgements or to
@@ -381,15 +389,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-
-
-
-
-
-
-
-
-Bormann, et al.         Expires November 16, 2017               [Page 7]
+Bormann, et al.         Expires November 17, 2017               [Page 7]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -445,7 +445,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017               [Page 8]
+Bormann, et al.         Expires November 17, 2017               [Page 8]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -501,7 +501,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017               [Page 9]
+Bormann, et al.         Expires November 17, 2017               [Page 9]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -557,7 +557,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 10]
+Bormann, et al.         Expires November 17, 2017              [Page 10]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -613,7 +613,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 11]
+Bormann, et al.         Expires November 17, 2017              [Page 11]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -669,7 +669,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 12]
+Bormann, et al.         Expires November 17, 2017              [Page 12]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -725,7 +725,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 13]
+Bormann, et al.         Expires November 17, 2017              [Page 13]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -781,7 +781,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 14]
+Bormann, et al.         Expires November 17, 2017              [Page 14]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -837,7 +837,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 15]
+Bormann, et al.         Expires November 17, 2017              [Page 15]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -893,7 +893,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 16]
+Bormann, et al.         Expires November 17, 2017              [Page 16]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -949,7 +949,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 17]
+Bormann, et al.         Expires November 17, 2017              [Page 17]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1005,7 +1005,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 18]
+Bormann, et al.         Expires November 17, 2017              [Page 18]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1061,7 +1061,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 19]
+Bormann, et al.         Expires November 17, 2017              [Page 19]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1117,7 +1117,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 20]
+Bormann, et al.         Expires November 17, 2017              [Page 20]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 21]
+Bormann, et al.         Expires November 17, 2017              [Page 21]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1229,7 +1229,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 22]
+Bormann, et al.         Expires November 17, 2017              [Page 22]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1285,7 +1285,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 23]
+Bormann, et al.         Expires November 17, 2017              [Page 23]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1341,7 +1341,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 24]
+Bormann, et al.         Expires November 17, 2017              [Page 24]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1397,7 +1397,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 25]
+Bormann, et al.         Expires November 17, 2017              [Page 25]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1453,7 +1453,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 26]
+Bormann, et al.         Expires November 17, 2017              [Page 26]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1509,7 +1509,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 27]
+Bormann, et al.         Expires November 17, 2017              [Page 27]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1565,7 +1565,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 28]
+Bormann, et al.         Expires November 17, 2017              [Page 28]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1621,7 +1621,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 29]
+Bormann, et al.         Expires November 17, 2017              [Page 29]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1677,7 +1677,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 30]
+Bormann, et al.         Expires November 17, 2017              [Page 30]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1733,7 +1733,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 31]
+Bormann, et al.         Expires November 17, 2017              [Page 31]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1789,7 +1789,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 32]
+Bormann, et al.         Expires November 17, 2017              [Page 32]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1845,7 +1845,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 33]
+Bormann, et al.         Expires November 17, 2017              [Page 33]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1901,7 +1901,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 34]
+Bormann, et al.         Expires November 17, 2017              [Page 34]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -1957,7 +1957,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 35]
+Bormann, et al.         Expires November 17, 2017              [Page 35]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2013,7 +2013,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 36]
+Bormann, et al.         Expires November 17, 2017              [Page 36]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2069,7 +2069,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 37]
+Bormann, et al.         Expires November 17, 2017              [Page 37]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2125,7 +2125,7 @@ A.2.  Transmission and Acknowledgements
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 38]
+Bormann, et al.         Expires November 17, 2017              [Page 38]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2181,7 +2181,7 @@ Appendix B.  CoAP over WebSocket Examples
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 39]
+Bormann, et al.         Expires November 17, 2017              [Page 39]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2237,7 +2237,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 40]
+Bormann, et al.         Expires November 17, 2017              [Page 40]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2293,7 +2293,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 41]
+Bormann, et al.         Expires November 17, 2017              [Page 41]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2349,7 +2349,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 42]
+Bormann, et al.         Expires November 17, 2017              [Page 42]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2405,7 +2405,7 @@ C.4.  Since draft-ietf-core-coap-tcp-tls-05
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 43]
+Bormann, et al.         Expires November 17, 2017              [Page 43]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2461,7 +2461,7 @@ Acknowledgements
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 44]
+Bormann, et al.         Expires November 17, 2017              [Page 44]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2517,7 +2517,7 @@ Authors' Addresses
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 45]
+Bormann, et al.         Expires November 17, 2017              [Page 45]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
@@ -2573,4 +2573,4 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
 
-Bormann, et al.         Expires November 16, 2017              [Page 46]
+Bormann, et al.         Expires November 17, 2017              [Page 46]
