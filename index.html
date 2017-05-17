@@ -1130,7 +1130,7 @@ CoAP Client                             CoAP Server
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#URI" id="URI">CoAP over Reliable Transport URIs</a></h1>
 <p id="rfc.section.7.p.1">CoAP over UDP <a href="#RFC7252">[RFC7252]</a> defines the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes. This document corrects an erratum in Sections 6.1 and 6.2 of <a href="#RFC7252">[RFC7252]</a> and defines how to use the schemes with the new transports.  Section 8 (Multicast CoAP) in <a href="#RFC7252">[RFC7252]</a> is not applicable to these new transports.</p>
 <p id="rfc.section.7.p.2">The syntax for the URI schemes in this section are specified using Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>. The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221;, &#8220;query&#8221;, and &#8220;fragment&#8221; are adopted from <a href="#RFC3986">[RFC3986]</a>.</p>
-<p id="rfc.section.7.p.3">The ABNF syntax defined in Sections 6.1 and 6.2 for &#8220;coap&#8221; and &#8220;coaps&#8221; schemes lacks the fragment part.  This specification therefore updates the two rules in those sections as follows:</p>
+<p id="rfc.section.7.p.3">The ABNF syntax defined in Sections 6.1 and 6.2 of <a href="#RFC7252">[RFC7252]</a> for &#8220;coap&#8221; and &#8220;coaps&#8221; schemes lacks the fragment identifer.  This specification updates the two rules in those sections as follows:</p>
 <pre>
 coap-URI = "coap:" "//" host [ ":" port ]
   path-abempty [ "?" query ]  [ "#" fragment ]
@@ -1206,8 +1206,9 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 </pre>
 <p id="rfc.section.7.6.p.3">is updated to:</p>
 <pre>
-7.  If |port| does not equal the request's destination UDP port or TCP port,
-    include a Uri-Port Option and let that option's value be |port|.
+7.  If |port| does not equal the request's destination UDP port or
+    TCP port, include a Uri-Port Option and let that option's value
+    be |port|.
 </pre>
 <h1 id="rfc.section.7.7"><a href="#rfc.section.7.7">7.7.</a> <a href="#composing-uris-from-options" id="composing-uris-from-options">Composing URIs from Options</a></h1>
 <p id="rfc.section.7.7.p.1">The steps are the same as specified in Section 6.5 of <a href="#RFC7252">[RFC7252]</a> with minor changes.</p>
@@ -1218,8 +1219,9 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 </pre>
 <p id="rfc.section.7.7.p.3">is updated to:</p>
 <pre>
-1.  If the request is secured using DTLS or TLS, let |url| be the string
-    "coaps://". Otherwise, let |url| be the string "coap://".
+1.  If the request is secured using DTLS or TLS, let |url| be
+    the string "coaps://". Otherwise, let |url| be the string
+    "coap://".
 </pre>
 <p id="rfc.section.7.7.p.4">This step from <a href="#RFC7252">[RFC7252]</a>:</p>
 <pre>
@@ -1566,12 +1568,6 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
         <b id="RFC7525">[RFC7525]</b>
       </td>
       <td class="top"><a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="http://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
-    </tr>
-    <tr>
-      <td class="reference">
-        <b id="RFC7595">[RFC7595]</b>
-      </td>
-      <td class="top"><a>Thaler, D.</a>, <a>Hansen, T.</a> and <a>T. Hardie</a>, "<a href="http://tools.ietf.org/html/rfc7595">Guidelines and Registration Procedures for URI Schemes</a>", BCP 35, RFC 7595, DOI 10.17487/RFC7595, June 2015.</td>
     </tr>
     <tr>
       <td class="reference">

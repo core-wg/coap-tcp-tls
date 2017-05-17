@@ -131,7 +131,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
      10.8.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  35
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  36
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  36
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  38
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  37
    Appendix A.  Updates to RFC 7641 Observing Resources in the
                 Constrained Application Protocol (CoAP)  . . . . . .  39
      A.1.  Notifications and Reordering  . . . . . . . . . . . . . .  39
@@ -1351,9 +1351,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    "host", "port", "path-abempty", "query", and "fragment" are adopted
    from [RFC3986].
 
-   The ABNF syntax defined in Sections 6.1 and 6.2 for "coap" and
-   "coaps" schemes lacks the fragment part.  This specification
-   therefore updates the two rules in those sections as follows:
+   The ABNF syntax defined in Sections 6.1 and 6.2 of [RFC7252] for
+   "coap" and "coaps" schemes lacks the fragment identifer.  This
+   specification updates the two rules in those sections as follows:
 
    coap-URI = "coap:" "//" host [ ":" port ]
      path-abempty [ "?" query ]  [ "#" fragment ]
@@ -1530,8 +1530,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
    is updated to:
 
-7.  If |port| does not equal the request's destination UDP port or TCP port,
-    include a Uri-Port Option and let that option's value be |port|.
+   7.  If |port| does not equal the request's destination UDP port or
+       TCP port, include a Uri-Port Option and let that option's value
+       be |port|.
 
 7.7.  Composing URIs from Options
 
@@ -1545,8 +1546,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
    is updated to:
 
-1.  If the request is secured using DTLS or TLS, let |url| be the string
-    "coaps://". Otherwise, let |url| be the string "coap://".
+   1.  If the request is secured using DTLS or TLS, let |url| be
+       the string "coaps://". Otherwise, let |url| be the string
+       "coap://".
 
    This step from [RFC7252]:
 
@@ -1559,8 +1561,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    4.  If the request includes a Uri-Port Option, let |port| be that
        option's value.  Otherwise, let |port| be the request's
        destination UDP port or TCP port.
-
-
 
 
 
@@ -2043,11 +2043,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
               (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
               2015, <http://www.rfc-editor.org/info/rfc7525>.
 
-   [RFC7595]  Thaler, D., Ed., Hansen, T., and T. Hardie, "Guidelines
-              and Registration Procedures for URI Schemes", BCP 35,
-              RFC 7595, DOI 10.17487/RFC7595, June 2015,
-              <http://www.rfc-editor.org/info/rfc7595>.
-
    [RFC7641]  Hartke, K., "Observing Resources in the Constrained
               Application Protocol (CoAP)", RFC 7641,
               DOI 10.17487/RFC7641, September 2015,
@@ -2064,7 +2059,12 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
               DOI 10.17487/RFC7959, August 2016,
               <http://www.rfc-editor.org/info/rfc7959>.
 
+11.2.  Informative References
 
+   [HomeGateway]
+              Eggert, L., "An experimental study of home gateway
+              characteristics", Proceedings of the 10th annual
+              conference on Internet measurement , 2010.
 
 
 
@@ -2073,13 +2073,6 @@ Bormann, et al.         Expires November 18, 2017              [Page 37]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
-
-11.2.  Informative References
-
-   [HomeGateway]
-              Eggert, L., "An experimental study of home gateway
-              characteristics", Proceedings of the 10th annual
-              conference on Internet measurement , 2010.
 
    [I-D.ietf-core-cocoa]
               Bormann, C., Betzler, A., Gomez, C., and I. Demirkol,
@@ -2122,6 +2115,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
               January 2012, <http://www.rfc-editor.org/info/rfc6347>.
 
+   [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
+              Dual-Stack Hosts", RFC 6555, DOI 10.17487/RFC6555, April
+              2012, <http://www.rfc-editor.org/info/rfc6555>.
+
+
+
+
 
 
 
@@ -2129,10 +2129,6 @@ Bormann, et al.         Expires November 18, 2017              [Page 38]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
-
-   [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
-              Dual-Stack Hosts", RFC 6555, DOI 10.17487/RFC6555, April
-              2012, <http://www.rfc-editor.org/info/rfc6555>.
 
    [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Message Syntax and Routing",
@@ -2178,6 +2174,10 @@ A.2.  Transmission and Acknowledgements
    confirmable or non-confirmable message types.  All notifications are
    delivered reliably to the client with positive acknowledgement of
    receipt occurring at the TCP level.  If the client does not recognize
+   the token in a notification, it MAY immediately abort the connection
+   (see Section 5.6).
+
+
 
 
 
@@ -2185,9 +2185,6 @@ Bormann, et al.         Expires November 18, 2017              [Page 39]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
-
-   the token in a notification, it MAY immediately abort the connection
-   (see Section 5.6).
 
 A.3.  Freshness
 
@@ -2232,6 +2229,9 @@ Appendix B.  CoAP over WebSocket Examples
        temperature?u=Cel>, for example, from a resource representation
        that it retrieved previously.
 
+   2.  It establishes a WebSocket connection to the endpoint URI
+       composed of the authority "example.org" and the well-known path
+       "/.well-known/coap", <ws://example.org/.well-known/coap>.
 
 
 
@@ -2242,10 +2242,6 @@ Bormann, et al.         Expires November 18, 2017              [Page 40]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
-   2.  It establishes a WebSocket connection to the endpoint URI
-       composed of the authority "example.org" and the well-known path
-       "/.well-known/coap", <ws://example.org/.well-known/coap>.
-
    3.  It sends a single-frame, masked, binary message containing a CoAP
        request.  The request indicates the target resource with the Uri-
        Path ("sensors", "temperature") and Uri-Query ("u=Cel") options.
@@ -2254,6 +2250,10 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
    5.  The CoAP client uses the connection for further requests, or the
        connection is closed.
+
+
+
+
 
 
 
