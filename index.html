@@ -301,13 +301,14 @@ address {
 <link href="#rfc.section.6.1" rel="Chapter" title="6.1 Example: GET with BERT Blocks"/>
 <link href="#rfc.section.6.2" rel="Chapter" title="6.2 Example: PUT with BERT Blocks"/>
 <link href="#rfc.section.7" rel="Chapter" title="7 CoAP over Reliable Transport URIs"/>
-<link href="#rfc.section.7.1" rel="Chapter" title="7.1 coap+tcp URI scheme"/>
-<link href="#rfc.section.7.2" rel="Chapter" title="7.2 coaps+tcp URI scheme"/>
-<link href="#rfc.section.7.3" rel="Chapter" title="7.3 coap+ws URI scheme"/>
-<link href="#rfc.section.7.4" rel="Chapter" title="7.4 coaps+ws URI scheme"/>
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Use of the &#x201C;coap&#x201D; URI scheme with TCP"/>
+<link href="#rfc.section.7.2" rel="Chapter" title="7.2 Use of the &#x201C;coaps&#x201D; URI scheme with TLS over TCP"/>
+<link href="#rfc.section.7.3" rel="Chapter" title="7.3 Use of the &#x201C;coap&#x201D; URI scheme with WebSockets"/>
+<link href="#rfc.section.7.4" rel="Chapter" title="7.4 Use of the &#x201C;coaps&#x201D; URI scheme with WebSockets"/>
 <link href="#rfc.section.7.5" rel="Chapter" title="7.5 Uri-Host and Uri-Port Options"/>
 <link href="#rfc.section.7.6" rel="Chapter" title="7.6 Decomposing URIs into Options"/>
 <link href="#rfc.section.7.7" rel="Chapter" title="7.7 Composing URIs from Options"/>
+<link href="#rfc.section.7.8" rel="Chapter" title="7.8 Trying out multiple transports at once"/>
 <link href="#rfc.section.8" rel="Chapter" title="8 Securing CoAP"/>
 <link href="#rfc.section.8.1" rel="Chapter" title="8.1 TLS binding for CoAP over TCP"/>
 <link href="#rfc.section.8.2" rel="Chapter" title="8.2 TLS usage for CoAP over WebSockets"/>
@@ -318,11 +319,10 @@ address {
 <link href="#rfc.section.10.2" rel="Chapter" title="10.2 CoAP Signaling Option Numbers Registry"/>
 <link href="#rfc.section.10.3" rel="Chapter" title="10.3 Service Name and Port Number Registration"/>
 <link href="#rfc.section.10.4" rel="Chapter" title="10.4 Secure Service Name and Port Number Registration"/>
-<link href="#rfc.section.10.5" rel="Chapter" title="10.5 URI Scheme Registration"/>
-<link href="#rfc.section.10.6" rel="Chapter" title="10.6 Well-Known URI Suffix Registration"/>
-<link href="#rfc.section.10.7" rel="Chapter" title="10.7 ALPN Protocol Identifier"/>
-<link href="#rfc.section.10.8" rel="Chapter" title="10.8 WebSocket Subprotocol Registration"/>
-<link href="#rfc.section.10.9" rel="Chapter" title="10.9 CoAP Option Numbers Registry"/>
+<link href="#rfc.section.10.5" rel="Chapter" title="10.5 Well-Known URI Suffix Registration"/>
+<link href="#rfc.section.10.6" rel="Chapter" title="10.6 ALPN Protocol Identifier"/>
+<link href="#rfc.section.10.7" rel="Chapter" title="10.7 WebSocket Subprotocol Registration"/>
+<link href="#rfc.section.10.8" rel="Chapter" title="10.8 CoAP Option Numbers Registry"/>
 <link href="#rfc.references" rel="Chapter" title="11 References"/>
 <link href="#rfc.references.1" rel="Chapter" title="11.1 Normative References"/>
 <link href="#rfc.references.2" rel="Chapter" title="11.2 Informative References"/>
@@ -339,6 +339,7 @@ address {
 <link href="#rfc.appendix.C.4" rel="Chapter" title="C.4 Since draft-ietf-core-coap-tcp-tls-05"/>
 <link href="#rfc.appendix.C.5" rel="Chapter" title="C.5 Since draft-ietf-core-coap-tcp-tls-06"/>
 <link href="#rfc.appendix.C.6" rel="Chapter" title="C.6 Since draft-ietf-core-coap-tcp-tls-07"/>
+<link href="#rfc.appendix.C.7" rel="Chapter" title="C.7 Since draft-ietf-core-coap-tcp-tls-08"/>
 <link href="#rfc.acknowledgements" rel="Chapter"/>
 <link href="#rfc.contributors" rel="Chapter"/>
 <link href="#rfc.authors" rel="Chapter"/>
@@ -349,7 +350,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-4-21" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-5-17" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -369,7 +370,7 @@ address {
   <td class="right">Universitaet Bremen TZI</td>
 </tr>
 <tr>
-  <td class="left">Updates: 6455, 7641, 7959 (if approved)</td>
+  <td class="left">Updates: 7252, 7641, 7959 (if approved)</td>
   <td class="right">S. Lemay</td>
 </tr>
 <tr>
@@ -377,7 +378,7 @@ address {
   <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-  <td class="left">Expires: October 23, 2017</td>
+  <td class="left">Expires: November 18, 2017</td>
   <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -410,7 +411,7 @@ address {
 </tr>
 <tr>
   <td class="left"></td>
-  <td class="right">April 21, 2017</td>
+  <td class="right">May 17, 2017</td>
 </tr>
 
     	
@@ -424,14 +425,14 @@ address {
   <a href="#rfc.abstract">Abstract</a>
 </h1>
 <p>The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control.</p>
-<p>Some environments benefit from the availability of CoAP carried over reliable transports such as TCP or TLS. This document outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641 for use with these transports, RFC 7959 to enable the use of larger messages over a reliable transport, and RFC 6455 to extend the well-known URI mechanism (RFC 5785) to the ws and wss URI schemes.</p>
+<p>Some environments benefit from the availability of CoAP carried over reliable transports such as TCP or TLS. This document outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7252 fixing an erratum in the URI syntax, RFC 7641 for use with the new transports, and RFC 7959 to enable the use of larger messages over a reliable transport.</p>
 <h1 id="rfc.status">
   <a href="#rfc.status">Status of This Memo</a>
 </h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on October 23, 2017.</p>
+<p>This Internet-Draft will expire on November 18, 2017.</p>
 <h1 id="rfc.copyrightnotice">
   <a href="#rfc.copyrightnotice">Copyright Notice</a>
 </h1>
@@ -467,13 +468,14 @@ address {
 <ul><li>6.1.   <a href="#rfc.section.6.1">Example: GET with BERT Blocks</a></li>
 <li>6.2.   <a href="#rfc.section.6.2">Example: PUT with BERT Blocks</a></li>
 </ul><li>7.   <a href="#rfc.section.7">CoAP over Reliable Transport URIs</a></li>
-<ul><li>7.1.   <a href="#rfc.section.7.1">coap+tcp URI scheme</a></li>
-<li>7.2.   <a href="#rfc.section.7.2">coaps+tcp URI scheme</a></li>
-<li>7.3.   <a href="#rfc.section.7.3">coap+ws URI scheme</a></li>
-<li>7.4.   <a href="#rfc.section.7.4">coaps+ws URI scheme</a></li>
+<ul><li>7.1.   <a href="#rfc.section.7.1">Use of the &#8220;coap&#8221; URI scheme with TCP</a></li>
+<li>7.2.   <a href="#rfc.section.7.2">Use of the &#8220;coaps&#8221; URI scheme with TLS over TCP</a></li>
+<li>7.3.   <a href="#rfc.section.7.3">Use of the &#8220;coap&#8221; URI scheme with WebSockets</a></li>
+<li>7.4.   <a href="#rfc.section.7.4">Use of the &#8220;coaps&#8221; URI scheme with WebSockets</a></li>
 <li>7.5.   <a href="#rfc.section.7.5">Uri-Host and Uri-Port Options</a></li>
 <li>7.6.   <a href="#rfc.section.7.6">Decomposing URIs into Options</a></li>
 <li>7.7.   <a href="#rfc.section.7.7">Composing URIs from Options</a></li>
+<li>7.8.   <a href="#rfc.section.7.8">Trying out multiple transports at once</a></li>
 </ul><li>8.   <a href="#rfc.section.8">Securing CoAP</a></li>
 <ul><li>8.1.   <a href="#rfc.section.8.1">TLS binding for CoAP over TCP</a></li>
 <li>8.2.   <a href="#rfc.section.8.2">TLS usage for CoAP over WebSockets</a></li>
@@ -484,11 +486,10 @@ address {
 <li>10.2.   <a href="#rfc.section.10.2">CoAP Signaling Option Numbers Registry</a></li>
 <li>10.3.   <a href="#rfc.section.10.3">Service Name and Port Number Registration</a></li>
 <li>10.4.   <a href="#rfc.section.10.4">Secure Service Name and Port Number Registration</a></li>
-<li>10.5.   <a href="#rfc.section.10.5">URI Scheme Registration</a></li>
-<li>10.6.   <a href="#rfc.section.10.6">Well-Known URI Suffix Registration</a></li>
-<li>10.7.   <a href="#rfc.section.10.7">ALPN Protocol Identifier</a></li>
-<li>10.8.   <a href="#rfc.section.10.8">WebSocket Subprotocol Registration</a></li>
-<li>10.9.   <a href="#rfc.section.10.9">CoAP Option Numbers Registry</a></li>
+<li>10.5.   <a href="#rfc.section.10.5">Well-Known URI Suffix Registration</a></li>
+<li>10.6.   <a href="#rfc.section.10.6">ALPN Protocol Identifier</a></li>
+<li>10.7.   <a href="#rfc.section.10.7">WebSocket Subprotocol Registration</a></li>
+<li>10.8.   <a href="#rfc.section.10.8">CoAP Option Numbers Registry</a></li>
 </ul><li>11.   <a href="#rfc.references">References</a></li>
 <ul><li>11.1.   <a href="#rfc.references.1">Normative References</a></li>
 <li>11.2.   <a href="#rfc.references.2">Informative References</a></li>
@@ -505,6 +506,7 @@ address {
 <li>C.4.   <a href="#rfc.appendix.C.4">Since draft-ietf-core-coap-tcp-tls-05</a></li>
 <li>C.5.   <a href="#rfc.appendix.C.5">Since draft-ietf-core-coap-tcp-tls-06</a></li>
 <li>C.6.   <a href="#rfc.appendix.C.6">Since draft-ietf-core-coap-tcp-tls-07</a></li>
+<li>C.7.   <a href="#rfc.appendix.C.7">Since draft-ietf-core-coap-tcp-tls-08</a></li>
 </ul><li><a href="#rfc.acknowledgements">Acknowledgements</a></li>
 <li><a href="#rfc.contributors">Contributors</a></li>
 <li><a href="#rfc.authors">Authors' Addresses</a></li>
@@ -516,9 +518,9 @@ address {
 <p id="rfc.section.1.p.1">The <a href="#RFC7252">Constrained Application Protocol (CoAP)</a> <cite title="NONE">[RFC7252]</cite> was designed for Internet of Things (IoT) deployments, assuming that UDP <a href="#RFC0768">[RFC0768]</a> or Datagram Transport Layer Security (DTLS) <a href="#RFC6347">[RFC6347]</a> over UDP can be used unimpeded. UDP is a good choice for transferring small amounts of data across networks that follow the IP architecture.</p>
 <p id="rfc.section.1.p.2">Some CoAP deployments need to integrate well with existing enterprise infrastructures, where UDP-based protocols may not be well-received or may even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP brittle, resulting in lost or malformed packets.</p>
 <p id="rfc.section.1.p.3">Emerging standards such as Lightweight Machine to Machine <a href="#LWM2M">[LWM2M]</a> currently use CoAP over UDP as a transport and require support for CoAP over TCP to address the issues above and to protect investments in existing CoAP implementations and deployments. Although HTTP/2 could also potentially address these requirements, there would be additional costs and delays introduced by such a transition.  Currently, there are also fewer HTTP/2 implementations available for constrained devices in comparison to CoAP.</p>
-<p id="rfc.section.1.p.4">To address these requirements, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. <a href="#layering">Figure 1</a> illustrates the layering:</p>
+<p id="rfc.section.1.p.4">To address these requirements, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets.  For these cases, the reliability offered by the transport protocol subsumes the reliability functions of the message layer used for CoAP over UDP.  (Note that both for a reliable transport and the CoAP over UDP message layer, the reliability offered is per transport hop: where proxies &#8212; see Sections 5.7 and 10 of <a href="#RFC7252">[RFC7252]</a> &#8212; are involved, that layer&#8217;s reliability function does not extend end-to-end.) <a href="#fig-layering">Figure 1</a> illustrates the layering:</p>
 <div id="rfc.figure.1"/>
-<div id="layering"/>
+<div id="fig-layering"/>
 <pre>
         +--------------------------------+
         |          Application           |
@@ -539,6 +541,7 @@ address {
 <p id="rfc.section.1.p.9">CoAP applications running inside a web browser without access to connectivity other than HTTP and the <a href="#RFC6455">WebSocket protocol</a> <cite title="NONE">[RFC6455]</cite> may cross-proxy their CoAP requests via HTTP to a HTTP-to-CoAP cross-proxy or transport them via the the WebSocket protocol, which provides two-way communication between a WebSocket client and a WebSocket server after upgrading an <a href="#RFC7230">HTTP/1.1</a> <cite title="NONE">[RFC7230]</cite> connection.</p>
 <p id="rfc.section.1.p.10">This document specifies how to access resources using CoAP requests and responses over the TCP, TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP, TLS or WebSocket connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
 <p><a href="#observing">Appendix A</a> updates the <a href="#RFC7641">&#8220;Observing Resources in the Constrained Application Protocol&#8221;</a> <cite title="NONE">[RFC7641]</cite> specification for use with CoAP over reliable transports. <a href="#RFC7641">[RFC7641]</a> is an extension to the CoAP protocol that enables CoAP clients to &#8220;observe&#8221; a resource on a CoAP server. (The CoAP client retrieves a representation of a resource and registers to be notified by the CoAP server when the representation is updated.)</p>
+<p><a href="#URI">Section 7</a> fixes an erratum on the URI scheme syntax in <a href="#RFC7252">[RFC7252]</a>.  <a href="#bert">Section 6</a> defines semantics for a value 7 for the field &#8220;SZX&#8221; in a Block1 or Block2 option, updating <a href="#RFC7959">[RFC7959]</a>.</p>
 <h1 id="rfc.section.2"><a href="#rfc.section.2">2.</a> <a href="#conventions-and-terminology" id="conventions-and-terminology">Conventions and Terminology</a></h1>
 <p id="rfc.section.2.p.1">The key words &#8220;MUST&#8221;, &#8220;MUST NOT&#8221;, &#8220;REQUIRED&#8221;, &#8220;SHALL&#8221;, &#8220;SHALL NOT&#8221;, &#8220;SHOULD&#8221;, &#8220;SHOULD NOT&#8221;, &#8220;RECOMMENDED&#8221;, &#8220;NOT RECOMMENDED&#8221;, &#8220;MAY&#8221;, and &#8220;OPTIONAL&#8221; in this document are to be interpreted as described in <a href="#RFC2119">[RFC2119]</a>.</p>
 <p id="rfc.section.2.p.2">This document assumes that readers are familiar with the terms and concepts that are used in <a href="#RFC6455">[RFC6455]</a>, <a href="#RFC7252">[RFC7252]</a>, <a href="#RFC7641">[RFC7641]</a>, and <a href="#RFC7959">[RFC7959]</a>.</p>
@@ -732,7 +735,7 @@ CoAP Client       CoAP Server  CoAP Client       CoAP Server
           Client     Connection     Server
 </pre>
 <p class="figure">Figure 9: CoAP Client (WebSocket client) accesses CoAP Server (WebSocket server)</p>
-<p id="rfc.section.4.p.3">The challenge with this configuration is how to identify a resource in the namespace of the CoAP server. When the WebSocket protocol is used by a dedicated client directly (i.e., not from a web page through a web browser), the client can connect to any WebSocket endpoint. <a href="#coap-ws-scheme">Section 7.3</a> and <a href="#coaps-ws-scheme">Section 7.4</a> define new URI schemes that enable the client to identify both a WebSocket endpoint and the path and query of the CoAP resource within that endpoint.</p>
+<p id="rfc.section.4.p.3">The challenge with this configuration is how to identify a resource in the namespace of the CoAP server. When the WebSocket protocol is used by a dedicated client directly (i.e., not from a web page through a web browser), the client can connect to any WebSocket endpoint. <a href="#coap-ws-scheme">Section 7.3</a> and <a href="#coaps-ws-scheme">Section 7.4</a> define how the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes can be used to enable the client to identify both a WebSocket endpoint and the path and query of the CoAP resource within that endpoint.</p>
 <p id="rfc.section.4.p.4">Another possible configuration is to set up a CoAP forward proxy at the WebSocket endpoint. Depending on what transports are available to the proxy, it could forward the request to a CoAP server with a CoAP UDP endpoint (<a href="#arch-2">Figure 10</a>), an SMS endpoint (a.k.a.&#160;mobile phone), or even another WebSocket endpoint. The CoAP client specifies the resource to be updated or retrieved in the Proxy-Uri Option.</p>
 <div id="rfc.figure.10"/>
 <div id="arch-2"/>
@@ -1125,127 +1128,67 @@ CoAP Client                             CoAP Server
 </pre>
 <p class="figure">Figure 17: PUT with BERT blocks</p>
 <h1 id="rfc.section.7"><a href="#rfc.section.7">7.</a> <a href="#URI" id="URI">CoAP over Reliable Transport URIs</a></h1>
-<p id="rfc.section.7.p.1">CoAP over UDP <a href="#RFC7252">[RFC7252]</a> defines the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes. This document introduces four additional URI schemes for identifying CoAP resources and providing a means of locating the resource:</p>
-<p/>
-
-<ul>
-  <li>the &#8220;coap+tcp&#8221; URI scheme for CoAP over TCP</li>
-  <li>the &#8220;coaps+tcp&#8221; URI scheme for CoAP over TCP secured by TLS</li>
-  <li>the &#8220;coap+ws&#8221; URI scheme for CoAP over WebSockets</li>
-  <li>the &#8220;coaps+ws&#8221; URI scheme for CoAP over WebSockets secured by TLS</li>
-</ul>
-<p id="rfc.section.7.p.3">Resources made available via these schemes have no shared identity even if their resource identifiers indicate the same authority (the same host listening to the same TCP port). They are hosted in distinct namespaces because each URI scheme implies a distinct origin server.</p>
-<p id="rfc.section.7.p.4">The syntax for the URI schemes in this section are specified using Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>. The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221;, &#8220;query&#8221;, and &#8220;fragment&#8221; are adopted from <a href="#RFC3986">[RFC3986]</a>.</p>
-<p id="rfc.section.7.p.5">Section 8 (Multicast CoAP) in <a href="#RFC7252">[RFC7252]</a> is not applicable to these schemes.</p>
-<p id="rfc.section.7.p.6">As with the &#8220;coap&#8221; and &#8220;coaps&#8221; schemes defined in <a href="#RFC7252">[RFC7252]</a>, all URI schemes defined in this section also support the path prefix &#8220;/.well-known/&#8221; defined by <a href="#RFC5785">[RFC5785]</a> for &#8220;well-known locations&#8221; in the namespace of a host.  This enables discovery as per Section 7 of <a href="#RFC7252">[RFC7252]</a>.</p>
-<h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#coap-tcp-scheme" id="coap-tcp-scheme">coap+tcp URI scheme</a></h1>
-<p id="rfc.section.7.1.p.1">The &#8220;coap+tcp&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over TCP.</p>
+<p id="rfc.section.7.p.1">CoAP over UDP <a href="#RFC7252">[RFC7252]</a> defines the &#8220;coap&#8221; and &#8220;coaps&#8221; URI schemes. This document corrects an erratum in Sections 6.1 and 6.2 of <a href="#RFC7252">[RFC7252]</a> and defines how to use the schemes with the new transports.  Section 8 (Multicast CoAP) in <a href="#RFC7252">[RFC7252]</a> is not applicable to these new transports.</p>
+<p id="rfc.section.7.p.2">The syntax for the URI schemes in this section are specified using Augmented Backus-Naur Form (ABNF) <a href="#RFC5234">[RFC5234]</a>. The definitions of &#8220;host&#8221;, &#8220;port&#8221;, &#8220;path-abempty&#8221;, &#8220;query&#8221;, and &#8220;fragment&#8221; are adopted from <a href="#RFC3986">[RFC3986]</a>.</p>
+<p id="rfc.section.7.p.3">The ABNF syntax defined in Sections 6.1 and 6.2 for &#8220;coap&#8221; and &#8220;coaps&#8221; schemes lacks the fragment part.  This specification therefore updates the two rules in those sections as follows:</p>
 <pre>
-  coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ]
-    path-abempty [ "?" query ]  [ "#" fragment ]
+coap-URI = "coap:" "//" host [ ":" port ]
+  path-abempty [ "?" query ]  [ "#" fragment ]
+coaps-URI = "coaps:" "//" host [ ":" port ]
+  path-abempty [ "?" query ] [ "#" fragment ]
 </pre>
-<p id="rfc.section.7.1.p.2">The syntax defined in Section 6.1 of <a href="#RFC7252">[RFC7252]</a> applies to this URI scheme with the following changes:</p>
+<h1 id="rfc.section.7.1"><a href="#rfc.section.7.1">7.1.</a> <a href="#use-of-the-coap-uri-scheme-with-tcp" id="use-of-the-coap-uri-scheme-with-tcp">Use of the &#8220;coap&#8221; URI scheme with TCP</a></h1>
+<p id="rfc.section.7.1.p.1">The &#8220;coap&#8221; URI scheme defined in Section 6.1 of <a href="#RFC7252">[RFC7252]</a> can also be used to identify CoAP resources that are intended to be accessible using CoAP over TCP.</p>
+<p id="rfc.section.7.1.p.2">The syntax defined in Section 6.1 of <a href="#RFC7252">[RFC7252]</a> applies to this transport, with the following change:</p>
 <p/>
 
 <ul>
   <li>The port subcomponent indicates the TCP port at which the CoAP server is located.  (If it is empty or not given, then the default port 5683 is assumed, as with UDP.)</li>
 </ul>
-<p/>
-
-<dl>
-  <dt>Encoding considerations:</dt>
-  <dd style="margin-left: 8">The scheme encoding conforms to the encoding rules established for URIs in <a href="#RFC3986">[RFC3986]</a>.</dd>
-  <dt>Interoperability considerations:</dt>
-  <dd style="margin-left: 8">None.</dd>
-  <dt>Security considerations:</dt>
-  <dd style="margin-left: 8">See Section 11.1 of <a href="#RFC7252">[RFC7252]</a>.</dd>
-</dl>
-<h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#coaps-tcp-scheme" id="coaps-tcp-scheme">coaps+tcp URI scheme</a></h1>
-<p id="rfc.section.7.2.p.1">The &#8220;coaps+tcp&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over TCP secured with TLS.</p>
-<pre>
-  coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
-    path-abempty [ "?" query ] [ "#" fragment ]
-</pre>
-<p id="rfc.section.7.2.p.2">The syntax defined in Section 6.2 of <a href="#RFC7252">[RFC7252]</a> applies to this URI scheme, with the following changes:</p>
+<h1 id="rfc.section.7.2"><a href="#rfc.section.7.2">7.2.</a> <a href="#use-of-the-coaps-uri-scheme-with-tls-over-tcp" id="use-of-the-coaps-uri-scheme-with-tls-over-tcp">Use of the &#8220;coaps&#8221; URI scheme with TLS over TCP</a></h1>
+<p id="rfc.section.7.2.p.1">The &#8220;coaps&#8221; URI scheme defined in Section 6.2 of <a href="#RFC7252">[RFC7252]</a> can also be used to identify CoAP resources that are intended to be accessible using CoAP over TCP secured with TLS.</p>
+<p id="rfc.section.7.2.p.2">The syntax defined in Section 6.2 of <a href="#RFC7252">[RFC7252]</a> applies to this transport, with the following changes:</p>
 <p/>
 
 <ul>
-  <li>The port subcomponent indicates the TCP port at which the TLS server for the CoAP server is located. If it is empty or not given, then the default port 443 is assumed (this is different from the default port for &#8220;coaps&#8221;, i.e., CoAP over DTLS over UDP).</li>
-  <li>If a TLS server does not support the Application-Layer Protocol Negotiation Extension (ALPN) <a href="#RFC7301">[RFC7301]</a> or wishes to accommodate TLS clients that do not support ALPN, it MAY offer a coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A TLS server MAY offer coaps+tcp endpoints on ports other than TCP port 5684, which MUST be ALPN enabled.</li>
-  <li>For TCP ports other than port 5684, the TLS client MUST use the ALPN extension to advertise the &#8220;coap&#8221; protocol identifier (see <a href="#alpnpid">Section 10.7</a>) in the list of protocols in its ClientHello. If the TCP server selects and returns the &#8220;coap&#8221; protocol identifier using the ALPN extension in its ServerHello, then the connection succeeds. If the TLS server either does not negotiate the ALPN extension or returns a no_application_protocol alert, the TLS client MUST close the connection.</li>
-  <li>For TCP port 5684, a TLS client MAY use the ALPN extension to advertise the &#8220;coap&#8221; protocol identifier in the list of protocols in its ClientHello. If the TLS server selects and returns the &#8220;coap&#8221; protocol identifier using the ALPN extension in its ServerHello, then the connection succeeds. If the TLS server returns a no_application_protocol alert, then the TLS client MUST close the connection. If the TLS server does not negotiate the ALPN extension, then coaps+tcp is implicitly selected.</li>
-  <li>For TCP port 5684, if the TLS client does not use the ALPN extension to negotiate the protocol, then coaps+tcp is implicitly selected.</li>
+  <li>The port subcomponent indicates the TCP port at which the TLS server for the CoAP Connection Acceptor is located. If it is empty or not given, then the default port 5684 is assumed.</li>
+  <li>If a TLS server does not support the Application-Layer Protocol Negotiation Extension (ALPN) <a href="#RFC7301">[RFC7301]</a> or wishes to accommodate TLS clients that do not support ALPN, it MAY offer a coaps endpoint on the default TCP port 5684. This endpoint MAY also be ALPN enabled. A TLS server MAY offer coaps endpoints on TCP ports other than 5684; these then MUST be ALPN enabled.</li>
+  <li>For TCP ports other than port 5684, the TLS client MUST use the ALPN extension to advertise the &#8220;coap&#8221; protocol identifier (see <a href="#alpnpid">Section 10.6</a>) in the list of protocols in its ClientHello. If the TCP server selects and returns the &#8220;coap&#8221; protocol identifier using the ALPN extension in its ServerHello, then the connection succeeds. If the TLS server either does not negotiate the ALPN extension or returns a no_application_protocol alert, the TLS client MUST close the connection.</li>
+  <li>For TCP port 5684, a TLS client MAY use the ALPN extension to advertise the &#8220;coap&#8221; protocol identifier in the list of protocols in its ClientHello. If the TLS server selects and returns the &#8220;coap&#8221; protocol identifier using the ALPN extension in its ServerHello, then the connection succeeds. If the TLS server returns a no_application_protocol alert, then the TLS client MUST close the connection. If the TLS server does not negotiate the ALPN extension, then coaps over TCP is implicitly selected.</li>
+  <li>For TCP port 5684, if the TLS client does not use the ALPN extension to negotiate the protocol, then coaps over TCP is implicitly selected.</li>
 </ul>
-<p/>
-
-<dl>
-  <dt>Encoding considerations:</dt>
-  <dd style="margin-left: 8">The scheme encoding conforms to the encoding rules established for URIs in <a href="#RFC3986">[RFC3986]</a>.</dd>
-  <dt>Interoperability considerations:</dt>
-  <dd style="margin-left: 8">None.</dd>
-  <dt>Security considerations:</dt>
-  <dd style="margin-left: 8">See Section 11.1 of <a href="#RFC7252">[RFC7252]</a>.</dd>
-</dl>
-<h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#coap-ws-scheme" id="coap-ws-scheme">coap+ws URI scheme</a></h1>
-<p id="rfc.section.7.3.p.1">The &#8220;coap+ws&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over WebSockets.</p>
-<pre>
-  coap-ws-URI = "coap+ws:" "//" host [ ":" port ]
-    path-abempty [ "?" query ] [ "#" fragment ]
-</pre>
-<p id="rfc.section.7.3.p.2">The port subcomponent is OPTIONAL. The default is port 80.</p>
-<p id="rfc.section.7.3.p.3">The WebSocket endpoint is identified by a &#8220;ws&#8221; URI that is composed of the authority part of the &#8220;coap+ws&#8221; URI and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a>.  The present specification formally updates <a href="#RFC6455">[RFC6455]</a>, extending the well-known URI mechanism defined in <a href="#RFC5785">[RFC5785]</a> to also cover the &#8220;ws&#8221; URI scheme defined in that document.  The path and query parts of a &#8220;coap+ws&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by CoAP:</p>
+<h1 id="rfc.section.7.3"><a href="#rfc.section.7.3">7.3.</a> <a href="#coap-ws-scheme" id="coap-ws-scheme">Use of the &#8220;coap&#8221; URI scheme with WebSockets</a></h1>
+<p id="rfc.section.7.3.p.1">The &#8220;coap&#8221; URI scheme defined in Section 6.1 of <a href="#RFC7252">[RFC7252]</a> can also be used to identify CoAP resources that are intended to be accessible using CoAP over WebSockets.</p>
+<p id="rfc.section.7.3.p.2">The WebSocket endpoint is identified by a &#8220;ws&#8221; URI that is composed of the authority part of the &#8220;coap&#8221; URI and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a> <a href="#I-D.bormann-hybi-ws-wk">[I-D.bormann-hybi-ws-wk]</a>.  The path and query parts of the &#8220;coap&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by CoAP:</p>
 <div id="rfc.figure.18"/>
 <div id="coap-ws-example"/>
 <pre>
-      coap+ws://example.org/sensors/temperature?u=Cel
-           \______  ______/\___________  ___________/
-                  \/                   \/
+      coap://example.org/sensors/temperature?u=Cel
+        \______  ______/\___________  ___________/
+               \/                   \/
                                      Uri-Path: "sensors"
 ws://example.org/.well-known/coap    Uri-Path: "temperature"
                                      Uri-Query: "u=Cel"
 </pre>
-<p class="figure">Figure 18: The "coap+ws" URI Scheme</p>
-<p/>
-
-<dl>
-  <dt>Encoding considerations:</dt>
-  <dd style="margin-left: 8">The scheme encoding conforms to the encoding rules established for URIs in <a href="#RFC3986">[RFC3986]</a>.</dd>
-  <dt>Interoperability considerations:</dt>
-  <dd style="margin-left: 8">None.</dd>
-  <dt>Security considerations:</dt>
-  <dd style="margin-left: 8">See Section 11.1 of <a href="#RFC7252">[RFC7252]</a>.</dd>
-</dl>
-<h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#coaps-ws-scheme" id="coaps-ws-scheme">coaps+ws URI scheme</a></h1>
-<p id="rfc.section.7.4.p.1">The &#8220;coaps+ws&#8221; URI scheme identifies CoAP resources that are intended to be accessible using CoAP over WebSockets secured by TLS.</p>
-<pre>
-  coaps-ws-URI = "coaps+ws:" "//" host [ ":" port ]
-    path-abempty [ "?" query ] [ "#" fragment ]
-</pre>
-<p id="rfc.section.7.4.p.2">The port subcomponent is OPTIONAL. The default is port 443.</p>
-<p id="rfc.section.7.4.p.3">The WebSocket endpoint is identified by a &#8220;wss&#8221; URI that is composed of the authority part of the &#8220;coaps+ws&#8221; URI and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a>.  The present specification formally updates <a href="#RFC6455">[RFC6455]</a>, extending the well-known URI mechanism defined in <a href="#RFC5785">[RFC5785]</a> to also cover the &#8220;wss&#8221; URI scheme defined in that document.  The path and query parts of a &#8220;coaps+ws&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by CoAP.</p>
+<p class="figure">Figure 18: Building ws URIs and Uri options from coap URIs</p>
+<p id="rfc.section.7.3.p.3">Note that the default port for &#8220;coap&#8221; is 5683, while the default port for &#8220;ws&#8221; is 80.  Therefore, if the port given for &#8220;coap&#8221; is 80, the default port for &#8220;ws&#8221; can be used.  If the port is not given for &#8220;coap&#8221;, then an explicit port number of 5683 needs to be given for &#8220;ws&#8221;.</p>
+<h1 id="rfc.section.7.4"><a href="#rfc.section.7.4">7.4.</a> <a href="#coaps-ws-scheme" id="coaps-ws-scheme">Use of the &#8220;coaps&#8221; URI scheme with WebSockets</a></h1>
+<p id="rfc.section.7.4.p.1">The &#8220;coaps&#8221; URI scheme defined in Section 6.2 of <a href="#RFC7252">[RFC7252]</a> can also be used to identify CoAP resources that are intended to be accessible using CoAP over WebSockets secured by TLS.</p>
+<p id="rfc.section.7.4.p.2">The WebSocket endpoint is identified by a &#8220;wss&#8221; URI that is composed of the authority part of the &#8220;coaps&#8221; URI and the well-known path &#8220;/.well-known/coap&#8221; <a href="#RFC5785">[RFC5785]</a> <a href="#I-D.bormann-hybi-ws-wk">[I-D.bormann-hybi-ws-wk]</a>.  The path and query parts of the &#8220;coaps&#8221; URI identify a resource within the specified endpoint which can be operated on by the methods defined by CoAP.</p>
 <div id="rfc.figure.19"/>
 <div id="coaps-ws-example"/>
 <pre>
-      coaps+ws://example.org/sensors/temperature?u=Cel
-            \______  ______/\___________  ___________/
-                   \/                   \/
+      coaps://example.org/sensors/temperature?u=Cel
+         \______  ______/\___________  ___________/
+                \/                   \/
                                      Uri-Path: "sensors"
 wss://example.org/.well-known/coap   Uri-Path: "temperature"
                                      Uri-Query: "u=Cel"
 </pre>
-<p class="figure">Figure 19: The "coaps+ws" URI Scheme</p>
-<p/>
-
-<dl>
-  <dt>Encoding considerations:</dt>
-  <dd style="margin-left: 8">The scheme encoding conforms to the encoding rules established for URIs in <a href="#RFC3986">[RFC3986]</a>.</dd>
-  <dt>Interoperability considerations:</dt>
-  <dd style="margin-left: 8">None.</dd>
-  <dt>Security considerations:</dt>
-  <dd style="margin-left: 8">See Section 11.1 of <a href="#RFC7252">[RFC7252]</a>.</dd>
-</dl>
+<p class="figure">Figure 19: Building wss URIs and Uri options from coaps URIs</p>
+<p id="rfc.section.7.4.p.3">Note that the default port for &#8220;coaps&#8221; is 5684, while the default port for &#8220;wss&#8221; is 443.  If the port given for &#8220;coap&#8221; is 443, the default port for &#8220;wss&#8221; can be used.  If the port is not given for &#8220;coaps&#8221;, then an explicit port number of 5684 needs to be given for &#8220;wss&#8221;.</p>
 <h1 id="rfc.section.7.5"><a href="#rfc.section.7.5">7.5.</a> <a href="#uri-host-and-uri-port-options" id="uri-host-and-uri-port-options">Uri-Host and Uri-Port Options</a></h1>
-<p id="rfc.section.7.5.p.1">CoAP over reliable transports maintains the property from Section 5.10.1 of <a href="#RFC7252">[RFC7252]</a>:</p>
+<p id="rfc.section.7.5.p.1">Except for the transports over WebSockets, CoAP over reliable transports maintains the property from Section 5.10.1 of <a href="#RFC7252">[RFC7252]</a>:</p>
 <p/>
 
 <ul class="empty">
@@ -1258,24 +1201,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <p id="rfc.section.7.6.p.1">The steps are the same as specified in Section 6.4 of <a href="#RFC7252">[RFC7252]</a> with minor changes.</p>
 <p id="rfc.section.7.6.p.2">This step from <a href="#RFC7252">[RFC7252]</a>:</p>
 <pre>
-3.  If |url| does not have a &lt;scheme&gt; component whose value, when
-    converted to ASCII lowercase, is "coap" or "coaps", then fail
-    this algorithm.
-</pre>
-<p id="rfc.section.7.6.p.3">is updated to:</p>
-<pre>
-3.  If |url| does not have a &lt;scheme&gt; component whose value, when
-    converted to ASCII lowercase, is "coap+tcp", "coaps+tcp",
-    "coap+ws", or "coaps+ws", then fail this algorithm.
-</pre>
-<p id="rfc.section.7.6.p.4">This step from <a href="#RFC7252">[RFC7252]</a>:</p>
-<pre>
 7.  If |port| does not equal the request's destination UDP port,
     include a Uri-Port Option and let that option's value be |port|.
 </pre>
-<p id="rfc.section.7.6.p.5">is updated to:</p>
+<p id="rfc.section.7.6.p.3">is updated to:</p>
 <pre>
-7.  If |port| does not equal the request's destination TCP port,
+7.  If |port| does not equal the request's destination UDP port or TCP port,
     include a Uri-Port Option and let that option's value be |port|.
 </pre>
 <h1 id="rfc.section.7.7"><a href="#rfc.section.7.7">7.7.</a> <a href="#composing-uris-from-options" id="composing-uris-from-options">Composing URIs from Options</a></h1>
@@ -1287,11 +1218,8 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 </pre>
 <p id="rfc.section.7.7.p.3">is updated to:</p>
 <pre>
-1.  For CoAP over TCP, if the request is secured using TLS, let |url|
-    be the string "coaps+tcp://". Otherwise, let |url| be the string
-    "coap+tcp://". For CoAP over WebSockets, if the request is
-    secured using TLS, let |url| be the string "coaps+ws://".
-    Otherwise, let |url| be the string "coap+ws://".
+1.  If the request is secured using DTLS or TLS, let |url| be the string
+    "coaps://". Otherwise, let |url| be the string "coap://".
 </pre>
 <p id="rfc.section.7.7.p.4">This step from <a href="#RFC7252">[RFC7252]</a>:</p>
 <pre>
@@ -1303,8 +1231,18 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <pre>
 4.  If the request includes a Uri-Port Option, let |port| be that
     option's value.  Otherwise, let |port| be the request's
-    destination TCP port.
+    destination UDP port or TCP port.
 </pre>
+<h1 id="rfc.section.7.8"><a href="#rfc.section.7.8">7.8.</a> <a href="#trying-out-multiple-transports-at-once" id="trying-out-multiple-transports-at-once">Trying out multiple transports at once</a></h1>
+<p id="rfc.section.7.8.p.1">As in the &#8220;Happy Eyeballs&#8221; approach to using IPv6 and IPv4 <a href="#RFC6555">[RFC6555]</a>, an application may want to try out multiple transports for a given URI at the same time, e.g., DTLS over UDP and TLS over TCP.  However, two important caveats need to be considered:</p>
+<p/>
+
+<ul>
+  <li>Initiating multiple instances of the same exchange with the intention of using only one of the successful results is only safe for idempotent exchanges (see Section 5.1 of <a href="#RFC7252">[RFC7252]</a>).</li>
+  <li>An important setback in using the UDP or DTLS over UDP transport through NATs and other middleboxes can be the quick loss of NAT bindings during idling periods <a href="#HomeGateway">[HomeGateway]</a>.  This will not be evident right on the initial exchange.</li>
+</ul>
+<p id="rfc.section.7.8.p.3">After the initial exchange, or whenever important information is learned about which selection to prefer, an endpoint may want to cache this information; however, the information may become stale after the endpoint moves or the network changes.  A cache timeout (possibly enhanced by movement detection) is advisable.</p>
+<p id="rfc.section.7.8.p.4">Alternatively, or additionally, the choice of transport may be aided by configuration and resource directory information; the self-description of a node may also include target attributes for links given to resources there.  Details of such attributes are out of scope for the present document; see for instance <a href="#I-D.ietf-core-resource-directory">[I-D.ietf-core-resource-directory]</a>.</p>
 <h1 id="rfc.section.8"><a href="#rfc.section.8">8.</a> <a href="#securing" id="securing">Securing CoAP</a></h1>
 <p id="rfc.section.8.p.1">Security Challenges for the Internet of Things <a href="#SecurityChallenges">[SecurityChallenges]</a> recommends:</p>
 <p/>
@@ -1314,7 +1252,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 </ul>
 <p id="rfc.section.8.p.3">A security solution MUST be implemented to protect CoAP over reliable transports and MUST be enabled by default. This document defines the TLS binding, but alternative solutions at different layers in the protocol stack MAY be used to protect CoAP over reliable transports when appropriate. Note that there is ongoing work to support a data object-based security model for CoAP that is independent of transport (see <a href="#I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</a>).</p>
 <h1 id="rfc.section.8.1"><a href="#rfc.section.8.1">8.1.</a> <a href="#tls-binding-for-coap-over-tcp" id="tls-binding-for-coap-over-tcp">TLS binding for CoAP over TCP</a></h1>
-<p id="rfc.section.8.1.p.1">The TLS usage guidance in <a href="#RFC7925">[RFC7925]</a> applies.</p>
+<p id="rfc.section.8.1.p.1">The TLS usage guidance in <a href="#RFC7925">[RFC7925]</a> applies, including the guidance about cipher suites in that document that are derived from the mandatory to implement (MTI) cipher suites defined in <a href="#RFC7252">[RFC7252]</a>.  (Note that this selection caters for the device-to-cloud use case of CoAP over TLS more than for any use within a back-end environment, where the standard TLS 1.2 cipher suites or the more recent ones defined in <a href="#RFC7525">[RFC7525]</a> are more appropriate.)</p>
 <p id="rfc.section.8.1.p.2">During the provisioning phase, a CoAP device is provided with the security information that it needs, including keying materials, access control lists, and authorization servers.  At the end of the provisioning phase, the device will be in one of four security modes:</p>
 <p/>
 
@@ -1328,11 +1266,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <dt>Certificate:</dt>
   <dd style="margin-left: 8">TLS is enabled. The guidance in Section 4.4 of <a href="#RFC7925">[RFC7925]</a> applies.</dd>
 </dl>
-<p id="rfc.section.8.1.p.4">The &#8220;NoSec&#8221; mode is optional-to-implement. The system simply sends the packets over normal TCP which is indicated by the &#8220;coap+tcp&#8221; scheme and the TCP CoAP default port.  The system is secured only by keeping attackers from being able to send or receive packets from the network with the CoAP nodes.</p>
-<p id="rfc.section.8.1.p.5">&#8220;PreSharedKey&#8221;, &#8220;RawPublicKey&#8221;, or &#8220;Certificate&#8221; is mandatory-to-implement for the TLS binding depending on the credential type used with the device. These security modes are achieved using TLS and are indicated by the &#8220;coaps+tcp&#8221; scheme and TLS-secured CoAP default port.</p>
+<p id="rfc.section.8.1.p.4">The &#8220;NoSec&#8221; mode is optional-to-implement. The system simply sends the packets over normal TCP which is indicated by the &#8220;coap&#8221; scheme and the TCP CoAP default port.  The system is secured only by keeping attackers from being able to send or receive packets from the network with the CoAP nodes.</p>
+<p id="rfc.section.8.1.p.5">&#8220;PreSharedKey&#8221;, &#8220;RawPublicKey&#8221;, or &#8220;Certificate&#8221; is mandatory-to-implement for the TLS binding depending on the credential type used with the device. These security modes are achieved using TLS and are indicated by the &#8220;coaps&#8221; scheme and TLS-secured CoAP default port.</p>
 <h1 id="rfc.section.8.2"><a href="#rfc.section.8.2">8.2.</a> <a href="#tls-usage-for-coap-over-websockets" id="tls-usage-for-coap-over-websockets">TLS usage for CoAP over WebSockets</a></h1>
-<p id="rfc.section.8.2.p.1">A CoAP client requesting a resource identified by a &#8220;coaps+ws&#8221; URI negotiates a secure WebSocket connection to a WebSocket server endpoint with a &#8220;wss&#8221; URI. This is described in <a href="#coaps-ws-scheme">Section 7.4</a>.</p>
-<p id="rfc.section.8.2.p.2">The client MUST perform a TLS handshake after opening the connection to the server. The guidance in Section 4.1 of <a href="#RFC6455">[RFC6455]</a> applies. When a CoAP server exposes resources identified by a &#8220;coaps+ws&#8221; URI, the guidance in Section 4.4 of <a href="#RFC7925">[RFC7925]</a> applies towards mandatory-to-implement TLS functionality for certificates. For the server-side requirements in accepting incoming connections over a HTTPS (HTTP-over-TLS) port, the guidance in Section 4.2 of <a href="#RFC6455">[RFC6455]</a> applies.</p>
+<p id="rfc.section.8.2.p.1">A CoAP client requesting a resource identified by a &#8220;coaps&#8221; URI negotiates a secure WebSocket connection to a WebSocket server endpoint with a &#8220;wss&#8221; URI. This is described in <a href="#coaps-ws-scheme">Section 7.4</a>.</p>
+<p id="rfc.section.8.2.p.2">The client MUST perform a TLS handshake after opening the connection to the server. The guidance in Section 4.1 of <a href="#RFC6455">[RFC6455]</a> applies. When a CoAP server exposes resources identified by a &#8220;coaps&#8221; URI, the guidance in Section 4.4 of <a href="#RFC7925">[RFC7925]</a> applies towards mandatory-to-implement TLS functionality for certificates. For the server-side requirements in accepting incoming connections over a HTTPS (HTTP-over-TLS) port, the guidance in Section 4.2 of <a href="#RFC6455">[RFC6455]</a> applies.</p>
+<p id="rfc.section.8.2.p.3">Note that this formally inherits the mandatory to implement cipher suites defined in <a href="#RFC5246">[RFC5246]</a>.  However, modern usually browsers implement more recent cipher suites that then are automatically picked up via the JavaScript WebSocket API.  WebSocket Servers that provide Secure CoAP over WebSockets for the browser use case will need to follow the browser preferences and MUST follow <a href="#RFC7525">[RFC7525]</a>.</p>
 <h1 id="rfc.section.9"><a href="#rfc.section.9">9.</a> <a href="#security" id="security">Security Considerations</a></h1>
 <p id="rfc.section.9.p.1">The security considerations of <a href="#RFC7252">[RFC7252]</a> apply. For CoAP over WebSockets and CoAP over TLS-secured WebSockets, the security considerations of <a href="#RFC6455">[RFC6455]</a> also apply.</p>
 <h1 id="rfc.section.9.1"><a href="#rfc.section.9.1">9.1.</a> <a href="#signaling-messages" id="signaling-messages">Signaling Messages</a></h1>
@@ -1449,12 +1388,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <li>The base value for the option, if any.</li>
 </ul>
 <h1 id="rfc.section.10.3"><a href="#rfc.section.10.3">10.3.</a> <a href="#service-name-and-port-number-registration" id="service-name-and-port-number-registration">Service Name and Port Number Registration</a></h1>
-<p id="rfc.section.10.3.p.1">IANA is requested to assign the port number 5683 and the service name &#8220;coap+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>.</p>
+<p id="rfc.section.10.3.p.1">IANA is requested to assign the port number 5683 and the service name &#8220;coap&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>.</p>
 <p/>
 
 <dl>
   <dt>Service Name.</dt>
-  <dd style="margin-left: 8"><br/> coap+tcp</dd>
+  <dd style="margin-left: 8"><br/> coap</dd>
   <dt>Transport Protocol.</dt>
   <dd style="margin-left: 8"><br/> tcp</dd>
   <dt>Assignee.</dt>
@@ -1469,12 +1408,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <dd style="margin-left: 8"><br/> 5683</dd>
 </dl>
 <h1 id="rfc.section.10.4"><a href="#rfc.section.10.4">10.4.</a> <a href="#secure-service-name-and-port-number-registration" id="secure-service-name-and-port-number-registration">Secure Service Name and Port Number Registration</a></h1>
-<p id="rfc.section.10.4.p.1">IANA is requested to assign the port number 5684 and the service name &#8220;coaps+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>. The port number is requested to address the exceptional case of TLS implementations that do not support the &#8220;Application-Layer Protocol Negotiation Extension&#8221; <a href="#RFC7301">[RFC7301]</a>.</p>
+<p id="rfc.section.10.4.p.1">IANA is requested to assign the port number 5684 and the service name &#8220;coaps+tcp&#8221;, in accordance with <a href="#RFC6335">[RFC6335]</a>. The port number is requested also to address the exceptional case of TLS implementations that do not support the &#8220;Application-Layer Protocol Negotiation Extension&#8221; <a href="#RFC7301">[RFC7301]</a>.</p>
 <p/>
 
 <dl>
   <dt>Service Name.</dt>
-  <dd style="margin-left: 8"><br/> coaps+tcp</dd>
+  <dd style="margin-left: 8"><br/> coaps</dd>
   <dt>Transport Protocol.</dt>
   <dd style="margin-left: 8"><br/> tcp</dd>
   <dt>Assignee.</dt>
@@ -1488,82 +1427,8 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <dt>Port Number.</dt>
   <dd style="margin-left: 8"><br/> 5684</dd>
 </dl>
-<h1 id="rfc.section.10.5"><a href="#rfc.section.10.5">10.5.</a> <a href="#uri-scheme-registration" id="uri-scheme-registration">URI Scheme Registration</a></h1>
-<p id="rfc.section.10.5.p.1">URI schemes are registered within the &#8220;Uniform Resource Identifier (URI) Schemes&#8221; registry maintained at <a href="http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml">http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml</a>.</p>
-<h1 id="rfc.section.10.5.1"><a href="#rfc.section.10.5.1">10.5.1.</a> <a href="#coaptcp" id="coaptcp">coap+tcp</a></h1>
-<p id="rfc.section.10.5.1.p.1">IANA is requested to register the Uniform Resource Identifier (URI) scheme &#8220;coap+tcp&#8221;.  This registration request complies with <a href="#RFC7595">[RFC7595]</a>.</p>
-<p/>
-
-<dl>
-  <dt>Scheme name:</dt>
-  <dd style="margin-left: 8"><br/> coap+tcp</dd>
-  <dt>Status:</dt>
-  <dd style="margin-left: 8"><br/> Permanent</dd>
-  <dt>Applications/protocols that use this scheme name:</dt>
-  <dd style="margin-left: 8"><br/> The scheme is used by CoAP endpoints to access CoAP resources using TCP.</dd>
-  <dt>Contact:</dt>
-  <dd style="margin-left: 8"><br/> IETF chair &lt;chair@ietf.org&gt;</dd>
-  <dt>Change controller:</dt>
-  <dd style="margin-left: 8"><br/> IESG &lt;iesg@ietf.org&gt;</dd>
-  <dt>Reference:</dt>
-  <dd style="margin-left: 8"><br/> <a href="#coap-tcp-scheme">Section 7.1</a> in [RFCthis]</dd>
-</dl>
-<h1 id="rfc.section.10.5.2"><a href="#rfc.section.10.5.2">10.5.2.</a> <a href="#coapstcp" id="coapstcp">coaps+tcp</a></h1>
-<p id="rfc.section.10.5.2.p.1">IANA is requested to register the Uniform Resource Identifier (URI) scheme &#8220;coaps+tcp&#8221;.  This registration request complies with <a href="#RFC7595">[RFC7595]</a>.</p>
-<p/>
-
-<dl>
-  <dt>Scheme name:</dt>
-  <dd style="margin-left: 8"><br/> coaps+tcp</dd>
-  <dt>Status:</dt>
-  <dd style="margin-left: 8"><br/> Permanent</dd>
-  <dt>Applications/protocols that use this scheme name:</dt>
-  <dd style="margin-left: 8"><br/> The scheme is used by CoAP endpoints to access CoAP resources using TLS.</dd>
-  <dt>Contact:</dt>
-  <dd style="margin-left: 8"><br/> IETF chair &lt;chair@ietf.org&gt;</dd>
-  <dt>Change controller:</dt>
-  <dd style="margin-left: 8"><br/> IESG &lt;iesg@ietf.org&gt;</dd>
-  <dt>Reference:</dt>
-  <dd style="margin-left: 8"><br/> <a href="#coaps-tcp-scheme">Section 7.2</a> in [RFCthis]</dd>
-</dl>
-<h1 id="rfc.section.10.5.3"><a href="#rfc.section.10.5.3">10.5.3.</a> <a href="#coapws" id="coapws">coap+ws</a></h1>
-<p id="rfc.section.10.5.3.p.1">IANA is requested to register the Uniform Resource Identifier (URI) scheme &#8220;coap+ws&#8221;.  This registration request complies with <a href="#RFC7595">[RFC7595]</a>.</p>
-<p/>
-
-<dl>
-  <dt>Scheme name:</dt>
-  <dd style="margin-left: 8"><br/> coap+ws</dd>
-  <dt>Status:</dt>
-  <dd style="margin-left: 8"><br/> Permanent</dd>
-  <dt>Applications/protocols that use this scheme name:</dt>
-  <dd style="margin-left: 8"><br/> The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.</dd>
-  <dt>Contact:</dt>
-  <dd style="margin-left: 8"><br/> IETF chair &lt;chair@ietf.org&gt;</dd>
-  <dt>Change controller:</dt>
-  <dd style="margin-left: 8"><br/> IESG &lt;iesg@ietf.org&gt;</dd>
-  <dt>Reference:</dt>
-  <dd style="margin-left: 8"><br/> <a href="#coap-ws-scheme">Section 7.3</a> in [RFCthis]</dd>
-</dl>
-<h1 id="rfc.section.10.5.4"><a href="#rfc.section.10.5.4">10.5.4.</a> <a href="#coapsws" id="coapsws">coaps+ws</a></h1>
-<p id="rfc.section.10.5.4.p.1">IANA is requested to register the Uniform Resource Identifier (URI) scheme &#8220;coaps+ws&#8221;.  This registration request complies with <a href="#RFC7595">[RFC7595]</a>.</p>
-<p/>
-
-<dl>
-  <dt>Scheme name:</dt>
-  <dd style="margin-left: 8"><br/> coaps+ws</dd>
-  <dt>Status:</dt>
-  <dd style="margin-left: 8"><br/> Permanent</dd>
-  <dt>Applications/protocols that use this scheme name:</dt>
-  <dd style="margin-left: 8"><br/> The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol secured with TLS.</dd>
-  <dt>Contact:</dt>
-  <dd style="margin-left: 8"><br/> IETF chair &lt;chair@ietf.org&gt;</dd>
-  <dt>Change controller:</dt>
-  <dd style="margin-left: 8"><br/> IESG &lt;iesg@ietf.org&gt;</dd>
-  <dt>References:</dt>
-  <dd style="margin-left: 8"><br/> <a href="#coaps-ws-scheme">Section 7.4</a> in [RFCthis]</dd>
-</dl>
-<h1 id="rfc.section.10.6"><a href="#rfc.section.10.6">10.6.</a> <a href="#well-known-uri-suffix-registration" id="well-known-uri-suffix-registration">Well-Known URI Suffix Registration</a></h1>
-<p id="rfc.section.10.6.p.1">IANA is requested to register the &#8216;coap&#8217; well-known URI in the &#8220;Well-Known URIs&#8221; registry. This registration request complies with <a href="#RFC5785">[RFC5785]</a>:</p>
+<h1 id="rfc.section.10.5"><a href="#rfc.section.10.5">10.5.</a> <a href="#well-known-uri-suffix-registration" id="well-known-uri-suffix-registration">Well-Known URI Suffix Registration</a></h1>
+<p id="rfc.section.10.5.p.1">IANA is requested to register the &#8216;coap&#8217; well-known URI in the &#8220;Well-Known URIs&#8221; registry. This registration request complies with <a href="#RFC5785">[RFC5785]</a>:</p>
 <p/>
 
 <dl>
@@ -1576,8 +1441,8 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <dt>Related information.</dt>
   <dd style="margin-left: 8"><br/> None.</dd>
 </dl>
-<h1 id="rfc.section.10.7"><a href="#rfc.section.10.7">10.7.</a> <a href="#alpnpid" id="alpnpid">ALPN Protocol Identifier</a></h1>
-<p id="rfc.section.10.7.p.1">IANA is requested to assign the following value in the registry &#8220;Application Layer Protocol Negotiation (ALPN) Protocol IDs&#8221; created by <a href="#RFC7301">[RFC7301]</a>. The &#8220;coap&#8221; string identifies CoAP when used over TLS.</p>
+<h1 id="rfc.section.10.6"><a href="#rfc.section.10.6">10.6.</a> <a href="#alpnpid" id="alpnpid">ALPN Protocol Identifier</a></h1>
+<p id="rfc.section.10.6.p.1">IANA is requested to assign the following value in the registry &#8220;Application Layer Protocol Negotiation (ALPN) Protocol IDs&#8221; created by <a href="#RFC7301">[RFC7301]</a>. The &#8220;coap&#8221; string identifies CoAP when used over TLS.</p>
 <p/>
 
 <dl>
@@ -1588,8 +1453,8 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <dt>Reference.</dt>
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
-<h1 id="rfc.section.10.8"><a href="#rfc.section.10.8">10.8.</a> <a href="#websocket-subprotocol-registration" id="websocket-subprotocol-registration">WebSocket Subprotocol Registration</a></h1>
-<p id="rfc.section.10.8.p.1">IANA is requested to register the WebSocket CoAP subprotocol under the &#8220;WebSocket Subprotocol Name Registry&#8221;:</p>
+<h1 id="rfc.section.10.7"><a href="#rfc.section.10.7">10.7.</a> <a href="#websocket-subprotocol-registration" id="websocket-subprotocol-registration">WebSocket Subprotocol Registration</a></h1>
+<p id="rfc.section.10.7.p.1">IANA is requested to register the WebSocket CoAP subprotocol under the &#8220;WebSocket Subprotocol Name Registry&#8221;:</p>
 <p/>
 
 <dl>
@@ -1600,8 +1465,8 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
   <dt>Subprotocol Definition.</dt>
   <dd style="margin-left: 8"><br/> [RFCthis]</dd>
 </dl>
-<h1 id="rfc.section.10.9"><a href="#rfc.section.10.9">10.9.</a> <a href="#coap-option-numbers-registry" id="coap-option-numbers-registry">CoAP Option Numbers Registry</a></h1>
-<p id="rfc.section.10.9.p.1">IANA is requested to add [RFCthis] to the references for the following entries registered by <a href="#RFC7959">[RFC7959]</a> in the &#8220;CoAP Option Numbers&#8221; sub-registry defined by <a href="#RFC7252">[RFC7252]</a>:</p>
+<h1 id="rfc.section.10.8"><a href="#rfc.section.10.8">10.8.</a> <a href="#coap-option-numbers-registry" id="coap-option-numbers-registry">CoAP Option Numbers Registry</a></h1>
+<p id="rfc.section.10.8.p.1">IANA is requested to add [RFCthis] to the references for the following entries registered by <a href="#RFC7959">[RFC7959]</a> in the &#8220;CoAP Option Numbers&#8221; sub-registry defined by <a href="#RFC7252">[RFC7252]</a>:</p>
 <div id="rfc.table.3"/>
 <div id="option-numbers"/>
 <table cellpadding="3" cellspacing="0" class="tt full center">
@@ -1630,6 +1495,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <h1 id="rfc.references.1"><a href="#rfc.references.1">11.1.</a> Normative References</h1>
 <table>
   <tbody>
+    <tr>
+      <td class="reference">
+        <b id="I-D.bormann-hybi-ws-wk">[I-D.bormann-hybi-ws-wk]</b>
+      </td>
+      <td class="top"><a>Bormann, C.</a>, "<a href="http://tools.ietf.org/html/draft-bormann-hybi-ws-wk-00">Well-known URIs for the WebSocket Protocol</a>", Internet-Draft draft-bormann-hybi-ws-wk-00, May 2017.</td>
+    </tr>
     <tr>
       <td class="reference">
         <b id="RFC0793">[RFC0793]</b>
@@ -1692,6 +1563,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC7525">[RFC7525]</b>
+      </td>
+      <td class="top"><a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="http://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC7595">[RFC7595]</b>
       </td>
       <td class="top"><a>Thaler, D.</a>, <a>Hansen, T.</a> and <a>T. Hardie</a>, "<a href="http://tools.ietf.org/html/rfc7595">Guidelines and Registration Procedures for URI Schemes</a>", BCP 35, RFC 7595, DOI 10.17487/RFC7595, June 2015.</td>
@@ -1735,7 +1612,13 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
       <td class="reference">
         <b id="I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</b>
       </td>
-      <td class="top"><a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-object-security-02">Object Security of CoAP (OSCOAP)</a>", Internet-Draft draft-ietf-core-object-security-02, March 2017.</td>
+      <td class="top"><a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-object-security-03">Object Security of CoAP (OSCOAP)</a>", Internet-Draft draft-ietf-core-object-security-03, May 2017.</td>
+    </tr>
+    <tr>
+      <td class="reference">
+        <b id="I-D.ietf-core-resource-directory">[I-D.ietf-core-resource-directory]</b>
+      </td>
+      <td class="top"><a>Shelby, Z.</a>, <a>Koster, M.</a>, <a>Bormann, C.</a> and <a>P. Stok</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-resource-directory-10">CoRE Resource Directory</a>", Internet-Draft draft-ietf-core-resource-directory-10, March 2017.</td>
     </tr>
     <tr>
       <td class="reference">
@@ -1769,6 +1652,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
     </tr>
     <tr>
       <td class="reference">
+        <b id="RFC6555">[RFC6555]</b>
+      </td>
+      <td class="top"><a>Wing, D.</a> and <a>A. Yourtchenko</a>, "<a href="http://tools.ietf.org/html/rfc6555">Happy Eyeballs: Success with Dual-Stack Hosts</a>", RFC 6555, DOI 10.17487/RFC6555, April 2012.</td>
+    </tr>
+    <tr>
+      <td class="reference">
         <b id="RFC7230">[RFC7230]</b>
       </td>
       <td class="top"><a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
@@ -1796,11 +1685,11 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <p id="rfc.section.A.4.p.3">If the client observes one or more resources over a reliable transport, then the CoAP server (or intermediary in the role of the CoAP server) MUST remove all entries associated with the client endpoint from the lists of observers when the connection is either closed or times out.</p>
 <h1 id="rfc.appendix.B"><a href="#rfc.appendix.B">Appendix B.</a> <a href="#examples" id="examples">CoAP over WebSocket Examples</a></h1>
 <p id="rfc.section.B.p.1">This section gives examples for the first two configurations discussed in <a href="#websockets-overview">Section 4</a>.</p>
-<p id="rfc.section.B.p.2">An example of the process followed by a CoAP client to retrieve the representation of a resource identified by a &#8220;coap+ws&#8221; URI might be as follows. <a href="#example-1">Figure 20</a> below illustrates the WebSocket and CoAP messages exchanged in detail.</p>
+<p id="rfc.section.B.p.2">An example of the process followed by a CoAP client to retrieve the representation of a resource identified by a &#8220;coap&#8221; URI might be as follows. <a href="#example-1">Figure 20</a> below illustrates the WebSocket and CoAP messages exchanged in detail.</p>
 <p/>
 
 <ol>
-  <li>The CoAP client obtains the URI &lt;coap+ws://example.org/sensors/temperature?u=Cel&gt;, for example, from a resource representation that it retrieved previously.</li>
+  <li>The CoAP client obtains the URI &lt;coap://example.org/sensors/temperature?u=Cel&gt;, for example, from a resource representation that it retrieved previously.</li>
   <li>It establishes a WebSocket connection to the endpoint URI composed of the authority &#8220;example.org&#8221; and the well-known path &#8220;/.well-known/coap&#8221;, &lt;ws://example.org/.well-known/coap&gt;.</li>
   <li>It sends a single-frame, masked, binary message containing a CoAP request. The request indicates the target resource with the Uri-Path (&#8220;sensors&#8221;, &#8220;temperature&#8221;) and Uri-Query (&#8220;u=Cel&#8221;) options.</li>
   <li>It waits for the server to return a response.</li>
@@ -1854,7 +1743,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
      |&lt;---------+  Close frame (opcode=%x8, FIN=1, MASK=0)
      |          |
 </pre>
-<p class="figure">Figure 20: A CoAP client retrieves the representation of a resource identified by a "coap+ws" URI</p>
+<p class="figure">Figure 20: A CoAP client retrieves the representation of a      resource identified by a "coap" URI over the WebSocket protocol</p>
 <p><a href="#example-2">Figure 21</a> shows how a CoAP client uses a CoAP forward proxy with a WebSocket endpoint to retrieve the representation of the resource &#8220;coap://[2001:db8::1]/&#8221;. The use of the forward proxy and the address of the WebSocket endpoint are determined by the client from local configuration rules. The request URI is specified in the Proxy-Uri Option. Since the request URI uses the &#8220;coap&#8221; URI scheme, the proxy fulfills the request by issuing a Confirmable GET request over UDP to the CoAP server and returning the response over the WebSocket connection to the client.</p>
 <div id="rfc.figure.21"/>
 <div id="example-2"/>
@@ -1893,7 +1782,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
      |          |          |    +------------------------------------+
      |          |          |
 </pre>
-<p class="figure">Figure 21: A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSockets-enabled CoAP proxy</p>
+<p class="figure">Figure 21: A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSocket-enabled CoAP proxy</p>
 <h1 id="rfc.appendix.C"><a href="#rfc.appendix.C">Appendix C.</a> <a href="#change-log" id="change-log">Change Log</a></h1>
 <p id="rfc.section.C.p.1">The RFC Editor is requested to remove this section at publication.</p>
 <h1 id="rfc.appendix.C.1"><a href="#rfc.appendix.C.1">C.1.</a> <a href="#since-draft-ietf-core-coap-tcp-tls-02" id="since-draft-ietf-core-coap-tcp-tls-02">Since draft-ietf-core-coap-tcp-tls-02</a></h1>
@@ -1928,10 +1817,14 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <p id="rfc.section.C.6.p.7">Added &#8220;Updates RFC6455&#8221; to extend well-known URI mechanism to ws and wss</p>
 <p id="rfc.section.C.6.p.8">Clarified well-known URI mechanism use for all URI schemes</p>
 <p id="rfc.section.C.6.p.9">Changed NoSec to optional-to-implement</p>
+<h1 id="rfc.appendix.C.7"><a href="#rfc.appendix.C.7">C.7.</a> <a href="#since-draft-ietf-core-coap-tcp-tls-08" id="since-draft-ietf-core-coap-tcp-tls-08">Since draft-ietf-core-coap-tcp-tls-08</a></h1>
+<p id="rfc.section.C.7.p.1">Reverted &#8220;Updates RFC6455&#8221; to extend well-known URI mechanism to ws and wss; point to <a href="#I-D.bormann-hybi-ws-wk">[I-D.bormann-hybi-ws-wk]</a> instead</p>
+<p id="rfc.section.C.7.p.2">Don&#8217;t use port 443 as the default port for coaps+tcp</p>
+<p id="rfc.section.C.7.p.3">Remove coap+tt and coaps+tt URI schemes (where tt is tcp or ws); map everything to coap/coaps</p>
 <h1 id="rfc.acknowledgements">
   <a href="#rfc.acknowledgements">Acknowledgements</a>
 </h1>
-<p id="rfc.section.D.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Esko Dijk, Christian Groves, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.</p>
+<p id="rfc.section.D.p.1">We would like to thank Stephen Berard, Geoffrey Cristallo, Olivier Delaby, Esko Dijk, Christian Groves, Nadir Javed, Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro, Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard, and Gengyu Wei for their feedback.  Last-call reviews from Mark Nottingham and Yoshifumi Nishida as well as several IESG reviewers provided extensive comments; from the IESG, we would like to specifically call out Adam Roach, Ben Campbell, Eric Rescorla, Mirja K&#252;hlewind, and the responsible AD Alexey Melnikov.</p>
 <h1 id="rfc.contributors">
   <a href="#rfc.contributors">Contributors</a>
 </h1>
