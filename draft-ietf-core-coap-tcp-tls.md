@@ -86,7 +86,6 @@ normative:
   RFC7252: coap
   RFC7301: alpn
   RFC7525: tlsbcp
-  RFC7595: urireg
   RFC7641: RFC7641
   RFC7925: RFC7925
   RFC7959: block
@@ -1072,8 +1071,8 @@ The syntax for the URI schemes in this section are specified using
 Augmented Backus-Naur Form (ABNF) [RFC5234]. The definitions of "host",
 "port", "path-abempty", "query", and "fragment" are adopted from [RFC3986].
 
-The ABNF syntax defined in Sections 6.1 and 6.2 for "coap" and "coaps"
-schemes lacks the fragment part.  This specification therefore updates
+The ABNF syntax defined in Sections 6.1 and 6.2 of {{RFC7252}} for "coap" and "coaps"
+schemes lacks the fragment identifer.  This specification updates
 the two rules in those sections as follows:
 
 ~~~~ abnf
@@ -1219,8 +1218,9 @@ This step from {{RFC7252}}:
 is updated to:
 
 ~~~~
-7.  If |port| does not equal the request's destination UDP port or TCP port,
-    include a Uri-Port Option and let that option's value be |port|.
+7.  If |port| does not equal the request's destination UDP port or
+    TCP port, include a Uri-Port Option and let that option's value
+    be |port|.
 ~~~~
 
 ## Composing URIs from Options
@@ -1237,8 +1237,9 @@ This step from {{RFC7252}}:
 is updated to:
 
 ~~~~
-1.  If the request is secured using DTLS or TLS, let |url| be the string
-    "coaps://". Otherwise, let |url| be the string "coap://".
+1.  If the request is secured using DTLS or TLS, let |url| be
+    the string "coaps://". Otherwise, let |url| be the string
+    "coap://".
 ~~~~
 
 This step from {{RFC7252}}:
