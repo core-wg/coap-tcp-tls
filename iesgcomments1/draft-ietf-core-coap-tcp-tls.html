@@ -1036,7 +1036,7 @@ Sec-WebSocket-Protocol: coap
 </table>
 <p id="rfc.section.5.6.p.4">The elective Bad-CSM-Option Option indicates that the sender is unable to process the CSM option identified by its option number, e.g. when it is critical and the option number is unknown by the sender, or when there is parameter problem with the value of an elective option. More detailed information SHOULD be included as a diagnostic payload.</p>
 <p id="rfc.section.5.6.p.5">For CoAP over UDP, messages which contain syntax violations are processed as message format errors. As described in Sections 4.2 and 4.3 of <a href="#RFC7252">[RFC7252]</a>, such messages are rejected by sending a matching Reset message and otherwise ignoring the message.</p>
-<p id="rfc.section.5.6.p.6">For CoAP over reliable transports, the recipient rejects such messages by sending an Abort message and otherwise ignoring the message. No specific option has been defined for the Abort message in this case, as the details are best left to a diagnostic payload.</p>
+<p id="rfc.section.5.6.p.6">For CoAP over reliable transports, the recipient rejects such messages by sending an Abort message and otherwise ignoring (not processing) the message. No specific option has been defined for the Abort message in this case, as the details are best left to a diagnostic payload.</p>
 <h1 id="rfc.section.5.7"><a href="#rfc.section.5.7">5.7.</a> <a href="#signaling-examples" id="signaling-examples">Signaling examples</a></h1>
 <p id="rfc.section.5.7.p.1">An encoded example of a Ping message with a non-empty token is shown in <a href="#fig-ping-example">Figure 14</a>.</p>
 <div id="rfc.figure.14"/>

@@ -1154,15 +1154,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    Reset message and otherwise ignoring the message.
 
    For CoAP over reliable transports, the recipient rejects such
-   messages by sending an Abort message and otherwise ignoring the
-   message.  No specific option has been defined for the Abort message
-   in this case, as the details are best left to a diagnostic payload.
+   messages by sending an Abort message and otherwise ignoring (not
+   processing) the message.  No specific option has been defined for the
+   Abort message in this case, as the details are best left to a
+   diagnostic payload.
 
 5.7.  Signaling examples
 
    An encoded example of a Ping message with a non-empty token is shown
    in Figure 14.
-
 
 
 
