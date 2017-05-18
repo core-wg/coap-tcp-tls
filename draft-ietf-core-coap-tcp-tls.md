@@ -377,7 +377,7 @@ specified for CoAP over UDP. The differences are as follows:
 {: #fig-frame title='CoAP frame for reliable transports'}
 
 Length (Len):
-: 4-bit unsigned integer. A value between 0 and 12 directly indicates the
+: 4-bit unsigned integer. A value between 0 and 12 inclusive indicates the
   length of the message in bytes starting with the first bit of the Options
   field. Three values are reserved for special constructs:
 
@@ -723,8 +723,8 @@ capability and setting before any Capabilities and Settings messages send a
 modified value.
 
 These are not default values for the option, as defined in Section 5.4.4 in {{RFC7252}}.
-A default value would mean that an empty Capabilities and Settings message would result in
-the option being set to its default value. 
+Default values apply on a per-message basis and thus reset when the value is not present in 
+a given Capabilities and Settings message.
 
 Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
