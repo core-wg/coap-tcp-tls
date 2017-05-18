@@ -96,9 +96,9 @@ Table of Contents
      5.6.  Abort Messages  . . . . . . . . . . . . . . . . . . . . .  20
      5.7.  Signaling examples  . . . . . . . . . . . . . . . . . . .  21
    6.  Block-wise Transfer and Reliable Transports . . . . . . . . .  22
-     6.1.  Example: GET with BERT Blocks . . . . . . . . . . . . . .  23
+     6.1.  Example: GET with BERT Blocks . . . . . . . . . . . . . .  24
      6.2.  Example: PUT with BERT Blocks . . . . . . . . . . . . . .  24
-   7.  CoAP over Reliable Transport URIs . . . . . . . . . . . . . .  24
+   7.  CoAP over Reliable Transport URIs . . . . . . . . . . . . . .  25
      7.1.  Use of the "coap" URI scheme with TCP . . . . . . . . . .  25
      7.2.  Use of the "coaps" URI scheme with TLS over TCP . . . . .  25
      7.3.  Use of the "coap" URI scheme with WebSockets  . . . . . .  26
@@ -117,7 +117,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
      7.8.  Trying out multiple transports at once  . . . . . . . . .  29
    8.  Securing CoAP . . . . . . . . . . . . . . . . . . . . . . . .  29
      8.1.  TLS binding for CoAP over TCP . . . . . . . . . . . . . .  30
-     8.2.  TLS usage for CoAP over WebSockets  . . . . . . . . . . .  30
+     8.2.  TLS usage for CoAP over WebSockets  . . . . . . . . . . .  31
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  31
      9.1.  Signaling Messages  . . . . . . . . . . . . . . . . . . .  31
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  31
@@ -1247,8 +1247,10 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
    In descriptive usage, a BERT Option is interpreted in the same way as
    the equivalent Option with SZX == 6, except that the payload is also
-   allowed to contain a multiple of 1024 bytes (non-final BERT block) or
-   more than 1024 bytes (final BERT block).
+   allowed to contain multiple blocks.  For non-final BERT blocks, the
+   payload is always a multiple of 1024 bytes.  For final BERT blocks,
+   the payload is a multiple (possibly 0) of 1024 bytes plus a partial
+   block of less than 1024 bytes.
 
    The recipient of a non-final BERT block (M=1) conceptually partitions
    the payload into a sequence of 1024-byte blocks and acts exactly as
@@ -1276,11 +1278,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    2:2/0/32), or a Block1 Option value of 59 would be shown as
    1:3/1/128.
 
-6.1.  Example: GET with BERT Blocks
 
-   Figure 16 shows a GET request with a response that is split into
-   three BERT blocks.  The first response contains 3072 bytes of
-   payload; the second, 5120; and the third, 4711.  Note how the block
+
+
 
 
 
@@ -1290,6 +1290,11 @@ Bormann, et al.         Expires November 19, 2017              [Page 23]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
 
+6.1.  Example: GET with BERT Blocks
+
+   Figure 16 shows a GET request with a response that is split into
+   three BERT blocks.  The first response contains 3072 bytes of
+   payload; the second, 5120; and the third, 4711.  Note how the block
    number increments to move the position inside the response body
    forward.
 
@@ -1330,13 +1335,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
                       Figure 17: PUT with BERT blocks
 
-7.  CoAP over Reliable Transport URIs
 
-   CoAP over UDP [RFC7252] defines the "coap" and "coaps" URI schemes.
-   This document corrects an erratum in Sections 6.1 and 6.2 of
-   [RFC7252] and defines how to use the schemes with the new transports.
-   Section 8 (Multicast CoAP) in [RFC7252] is not applicable to these
-   new transports.
+
 
 
 
@@ -1345,6 +1345,14 @@ Bormann, et al.         Expires November 19, 2017              [Page 24]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
+
+7.  CoAP over Reliable Transport URIs
+
+   CoAP over UDP [RFC7252] defines the "coap" and "coaps" URI schemes.
+   This document corrects an erratum in Sections 6.1 and 6.2 of
+   [RFC7252] and defines how to use the schemes with the new transports.
+   Section 8 (Multicast CoAP) in [RFC7252] is not applicable to these
+   new transports.
 
    The syntax for the URI schemes in this section are specified using
    Augmented Backus-Naur Form (ABNF) [RFC5234].  The definitions of
@@ -1386,14 +1394,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
       server for the CoAP Connection Acceptor is located.  If it is
       empty or not given, then the default port 5684 is assumed.
 
-   o  If a TLS server does not support the Application-Layer Protocol
-      Negotiation Extension (ALPN) [RFC7301] or wishes to accommodate
-      TLS clients that do not support ALPN, it MAY offer a coaps
-      endpoint on the default TCP port 5684.  This endpoint MAY also be
-      ALPN enabled.  A TLS server MAY offer coaps endpoints on TCP ports
-      other than 5684; these then MUST be ALPN enabled.
-
-
 
 
 
@@ -1401,6 +1401,13 @@ Bormann, et al.         Expires November 19, 2017              [Page 25]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
+
+   o  If a TLS server does not support the Application-Layer Protocol
+      Negotiation Extension (ALPN) [RFC7301] or wishes to accommodate
+      TLS clients that do not support ALPN, it MAY offer a coaps
+      endpoint on the default TCP port 5684.  This endpoint MAY also be
+      ALPN enabled.  A TLS server MAY offer coaps endpoints on TCP ports
+      other than 5684; these then MUST be ALPN enabled.
 
    o  For TCP ports other than port 5684, the TLS client MUST use the
       ALPN extension to advertise the "coap" protocol identifier (see
@@ -1437,6 +1444,20 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    specified endpoint which can be operated on by the methods defined by
    CoAP:
 
+
+
+
+
+
+
+
+
+
+Bormann, et al.         Expires November 19, 2017              [Page 26]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
+
+
              coap://example.org/sensors/temperature?u=Cel
                \______  ______/\___________  ___________/
                       \/                   \/
@@ -1449,15 +1470,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    Note that the default port for "coap" is 5683, while the default port
    for "ws" is 80.  Therefore, if the port given for "coap" is 80, the
    default port for "ws" can be used.  If the port is not given for
-
-
-
-
-Bormann, et al.         Expires November 19, 2017              [Page 26]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
-
-
    "coap", then an explicit port number of 5683 needs to be given for
    "ws".
 
@@ -1494,6 +1506,14 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    Except for the transports over WebSockets, CoAP over reliable
    transports maintains the property from Section 5.10.1 of [RFC7252]:
 
+
+
+
+Bormann, et al.         Expires November 19, 2017              [Page 27]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
+
+
       The default values for the Uri-Host and Uri-Port Options are
       sufficient for requests to most servers.
 
@@ -1506,13 +1526,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    Name Indication (SNI) [RFC6066] is negotiated.  In this case, the
    default value of the Uri-Host Option in requests from the TLS client
    to the TLS server is the SNI host.
-
-
-
-Bormann, et al.         Expires November 19, 2017              [Page 27]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
-
 
    For CoAP over WebSockets, the default value of the Uri-Host Option in
    requests from the WebSocket client to the WebSocket server is
@@ -1550,6 +1563,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
        the string "coaps://". Otherwise, let |url| be the string
        "coap://".
 
+
+
+Bormann, et al.         Expires November 19, 2017              [Page 28]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
+
+
    This step from [RFC7252]:
 
    4.  If the request includes a Uri-Port Option, let |port| be that
@@ -1561,14 +1581,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    4.  If the request includes a Uri-Port Option, let |port| be that
        option's value.  Otherwise, let |port| be the request's
        destination UDP port or TCP port.
-
-
-
-
-Bormann, et al.         Expires November 19, 2017              [Page 28]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
-
 
 7.8.  Trying out multiple transports at once
 
@@ -1606,6 +1618,14 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
       ... it is essential that IoT protocol suites specify a mandatory
       to implement but optional to use security solution.  This will
+
+
+
+Bormann, et al.         Expires November 19, 2017              [Page 29]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
+
+
       ensure security is available in all implementations, but
       configurable to use when not necessary (e.g., in closed
       environment).  ... even if those features stretch the capabilities
@@ -1618,13 +1638,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    when appropriate.  Note that there is ongoing work to support a data
    object-based security model for CoAP that is independent of transport
    (see [I-D.ietf-core-object-security]).
-
-
-
-Bormann, et al.         Expires November 19, 2017              [Page 29]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
-
 
 8.1.  TLS binding for CoAP over TCP
 
@@ -1660,6 +1673,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
    "PreSharedKey", "RawPublicKey", or "Certificate" is mandatory-to-
    implement for the TLS binding depending on the credential type used
+
+
+
+
+Bormann, et al.         Expires November 19, 2017              [Page 30]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
+
+
    with the device.  These security modes are achieved using TLS and are
    indicated by the "coaps" scheme and TLS-secured CoAP default port.
 
@@ -1674,14 +1696,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    When a CoAP server exposes resources identified by a "coaps" URI, the
    guidance in Section 4.4 of [RFC7925] applies towards mandatory-to-
    implement TLS functionality for certificates.  For the server-side
-
-
-
-Bormann, et al.         Expires November 19, 2017              [Page 30]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
-
-
    requirements in accepting incoming connections over a HTTPS (HTTP-
    over-TLS) port, the guidance in Section 4.2 of [RFC6455] applies.
 
@@ -1716,20 +1730,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    Each entry in the sub-registry must include the Signaling Code in the
    range 7.00-7.31, its name, and a reference to its documentation.
 
-   Initial entries in this sub-registry are as follows:
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1737,6 +1737,8 @@ Bormann, et al.         Expires November 19, 2017              [Page 31]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
 
+
+   Initial entries in this sub-registry are as follows:
 
                       +------+---------+-----------+
                       | Code | Name    | Reference |
@@ -1771,8 +1773,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    documentation.
 
    Initial entries in this sub-registry are as follows:
-
-
 
 
 
