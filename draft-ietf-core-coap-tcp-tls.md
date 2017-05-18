@@ -914,10 +914,10 @@ processed as message format errors. As described in Sections 4.2 and 4.3
 of {{RFC7252}}, such messages are rejected by sending a matching Reset
 message and otherwise ignoring the message. 
 
-For CoAP over reliable transports, the recipient rejects such messages by
-sending an Abort message and otherwise ignoring the message. No specific option
-has been defined for the Abort message in this case, as the details are
-best left to a diagnostic payload.
+For CoAP over reliable transports, the recipient rejects such messages
+by sending an Abort message and otherwise ignoring (not processing)
+the message. No specific option has been defined for the Abort message
+in this case, as the details are best left to a diagnostic payload.
 
 ## Signaling examples
 
@@ -1452,7 +1452,7 @@ Transport Protocol.
 :   tcp
 
 Assignee.
-:   IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 Contact.
 :   IETF Chair \<chair@ietf.org>
