@@ -931,11 +931,11 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    bidirectional exchange.
 
    Upon receipt of a Ping message, the receiver MUST return a Pong
-   message with an identical token in response.  Unless there is an
-   option with delaying semantics such as the Custody Option, it SHOULD
-   respond as soon as practical.  As with all Signaling messages, the
-   recipient of a Ping or Pong message MUST ignore elective options it
-   does not understand.
+   message with an identical token in response.  Unless the Ping carries
+   an option with delaying semantics such as the Custody Option, it
+   SHOULD respond as soon as practical.  As with all Signaling messages,
+   the recipient of a Ping or Pong message MUST ignore elective options
+   it does not understand.
 
    Ping and Pong messages are indicated by the 7.02 code (Ping) and the
    7.03 code (Pong).
