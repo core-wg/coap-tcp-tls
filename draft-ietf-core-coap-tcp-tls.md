@@ -178,16 +178,16 @@ reliability function does not extend end-to-end.)
 {{fig-layering}} illustrates the layering:
 
 ~~~~
-        +--------------------------------+
-        |          Application           |
-        +--------------------------------+
-        +--------------------------------+
-        |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
-        |--------------------------------|
-        |        Message Framing         |  This Document
-        +--------------------------------+
-        |      Reliable Transport        |
-        +--------------------------------+
+  +--------------------------------+
+  |          Application           |
+  +--------------------------------+
+  +--------------------------------+
+  |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
+  |--------------------------------|
+  |        Message Framing         |  This Document
+  +--------------------------------+
+  |      Reliable Transport        |
+  +--------------------------------+
 ~~~~
 {: #fig-layering title='Layering of CoAP over Reliable Transports' artwork-align="center"}
 
@@ -271,18 +271,6 @@ Connection Acceptor:
 :   The peer that accepts the reliable byte stream connection opened by
     the other peer, i.e., the TCP passive opener, TLS server, or
     WebSocket server.
-
-For simplicity, a Payload Marker (0xFF) is shown in all examples for message formats:
-
-~~~~
-    ...
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |1 1 1 1 1 1 1 1|    Payload (if any) ...
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~
-
-The Payload Marker indicates the start of the optional payload and is absent for zero-length
-payloads (see Section 3 of {{RFC7252}}).
 
 # CoAP over TCP
 
@@ -371,21 +359,22 @@ specified for CoAP over UDP. The differences are as follows:
   length field with variable size. {{fig-frame}} shows the adjusted CoAP 
   message format with a modified structure for the fixed header (first 4
   bytes of the CoAP over UDP header), which includes the length information of
-  variable size, shown here as an 8-bit length.
+  variable size.
 
 ~~~~
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=13 |  TKL  |Extended Length|      Code     | TKL bytes ...
+|  Len  |  TKL  | Extended Length (if any, as chosen by Len) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      Code     | Token (if any, TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |  Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame title='CoAP frame with 8-bit Extended Length field'}
+{: #fig-frame title='CoAP frame for reliable transports'}
 
 Length (Len):
 : 4-bit unsigned integer. A value between 0 and 12 directly indicates the
@@ -406,26 +395,18 @@ Length (Len):
       initial byte and indicates the length of options/payload minus
       65805.
 
-The encoding of the Length field is modeled after the Option Length field of the CoAP Options (see Section 3.1 of {{RFC7252}}). 
+The encoding of the Length field is modeled after the Option Length
+field of the CoAP Options (see Section 3.1 of {{RFC7252}}).
 
-The following figures show the message format for the 0-bit, 16-bit, and 
-the 32-bit variable length cases.
-
-~~~~
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Len  |  TKL  |      Code     | Token (if any, TKL bytes) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Options (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|1 1 1 1 1 1 1 1|    Payload (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~
-{: #fig-frame1 title='CoAP message format without an Extended Length field'}
+For simplicity, a Payload Marker (0xFF) is shown in {{fig-frame}}; the
+Payload Marker indicates the start of the optional payload and is
+absent for zero-length payloads (see Section 3 of {{RFC7252}}).
+(If present, the Payload Marker is included in the message length,
+which counts from the start of the Options field to the end of the
+Payload field.)
 
 For example: A CoAP message just containing a 2.03 code with the
-token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
+token 7f and no options or payload is encoded as shown in {{fig-frame2}}.
 
 ~~~~
  0                   1                   2
@@ -441,37 +422,8 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 ~~~~
 {: #fig-frame2 title='CoAP message with no options or payload'}
 
-~~~~
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=14 |  TKL  | Extended Length (16 bits)     |   Code        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Token (if any, TKL bytes) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Options (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|1 1 1 1 1 1 1 1|    Payload (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~
-{: #fig-frame3 title='CoAP message format with 16-bit Extended Length field'}
-
-~~~~
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=15 |  TKL  | Extended Length (32 bits)                              
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                |    Code       |  Token (if any, TKL bytes) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Options (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|1 1 1 1 1 1 1 1|    Payload (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~
-{: #fig-frame4 title='CoAP message format with 32-bit Extended Length field'}
-
 The semantics of the other CoAP header fields are left unchanged.
+
 
 ## Message Transmission
 
@@ -617,9 +569,7 @@ connection is established as defined in Section 4 of {{RFC6455}}.
 
 The WebSocket client MUST include the subprotocol name "coap" in
 the list of protocols, which indicates support for the protocol
-defined in this document. Any later, incompatible versions of
-CoAP or CoAP over WebSockets will use a different subprotocol
-name.
+defined in this document.
 
 The WebSocket client includes the hostname of the WebSocket server
 in the Host header field of its handshake as per {{RFC6455}}. The Host
@@ -851,9 +801,12 @@ A Release message indicates that the sender does not want to continue
 maintaining the connection and opts for an orderly shutdown. The details
 are in the options. A diagnostic payload (see Section
 5.5.2 of {{-coap}}) MAY be included.  A peer will normally
-respond to a Release message by closing the TCP/TLS connection. 
-Messages may be in flight when the sender decides to send a Release message.
-The general expectation is that these will still be processed.
+respond to a Release message by closing the TCP/TLS connection.
+Messages may be in flight or responses outstanding when the sender decides to send a Release message.
+The peer responding to the Release message SHOULD delay the closing of
+the connection until it has responded to all requests received by it
+before the Release message.  It also MAY wait for the responses to
+its own requests.
 
 Release messages are indicated by the 7.04 code (Release).
 
@@ -889,7 +842,7 @@ release. The sender shuts down the connection immediately after
 the abort (and may or may not wait for a Release or Abort message or
 connection shutdown in the inverse direction). A diagnostic payload
 (see Section 5.5.2 of {{-coap}}) SHOULD be included in the Abort message.
-Messages may be in flight when the sender decides to send an Abort message.
+Messages may be in flight or responses outstanding when the sender decides to send an Abort message.
 The general expectation is that these will NOT be processed.
 
 Abort messages are indicated by the 7.05 code (Abort).
@@ -913,10 +866,10 @@ processed as message format errors. As described in Sections 4.2 and 4.3
 of {{RFC7252}}, such messages are rejected by sending a matching Reset
 message and otherwise ignoring the message. 
 
-For CoAP over reliable transports, the recipient rejects such messages by
-sending an Abort message and otherwise ignoring the message. No specific option
-has been defined for the Abort message in this case, as the details are
-best left to a diagnostic payload.
+For CoAP over reliable transports, the recipient rejects such messages
+by sending an Abort message and otherwise ignoring (not processing)
+the message. No specific option has been defined for the Abort message
+in this case, as the details are best left to a diagnostic payload.
 
 ## Signaling examples
 
@@ -1389,11 +1342,11 @@ Initial entries in this sub-registry are as follows:
 
 | Code | Name    | Reference |
 |------|---------|-----------|
-| 7.01 | CSM     | [RFCthis] |
-| 7.02 | Ping    | [RFCthis] |
-| 7.03 | Pong    | [RFCthis] |
-| 7.04 | Release | [RFCthis] |
-| 7.05 | Abort   | [RFCthis] |
+| 7.01 | CSM     | \[RFCthis] |
+| 7.02 | Ping    | \[RFCthis] |
+| 7.03 | Pong    | \[RFCthis] |
+| 7.04 | Release | \[RFCthis] |
+| 7.05 | Abort   | \[RFCthis] |
 {: #signal-codes title="CoAP Signal Codes" }
 
 All other Signaling Codes are Unassigned.
@@ -1416,12 +1369,12 @@ Initial entries in this sub-registry are as follows:
 
 | Applies to | Number | Name                | Reference |
 |------------|--------|---------------------|-----------|
-| 7.01       |      2 | Max-Message-Size    | [RFCthis] |
-| 7.01       |      4 | Block-wise-Transfer | [RFCthis] |
-| 7.02, 7.03 |      2 | Custody             | [RFCthis] |
-| 7.04       |      2 | Alternative-Address | [RFCthis] |
-| 7.04       |      4 | Hold-Off            | [RFCthis] |
-| 7.05       |      2 | Bad-CSM-Option      | [RFCthis] |
+| 7.01       |      2 | Max-Message-Size    | \[RFCthis] |
+| 7.01       |      4 | Block-wise-Transfer | \[RFCthis] |
+| 7.02, 7.03 |      2 | Custody             | \[RFCthis] |
+| 7.04       |      2 | Alternative-Address | \[RFCthis] |
+| 7.04       |      4 | Hold-Off            | \[RFCthis] |
+| 7.05       |      2 | Bad-CSM-Option      | \[RFCthis] |
 {: #signal-option-codes title="CoAP Signal Option Codes" cols="l r l c"}
 
 The IANA policy for future additions to this sub-registry is based on
@@ -1451,7 +1404,7 @@ Transport Protocol.
 :   tcp
 
 Assignee.
-:   IESG \<iesg@ietf.org>
+:   IESG \<iesg@ietf.org>
 
 Contact.
 :   IETF Chair \<chair@ietf.org>
@@ -1460,7 +1413,7 @@ Description.
 :   Constrained Application Protocol (CoAP)
 
 Reference.
-:   [RFCthis]
+:   \[RFCthis]
 
 Port Number.
 :   5683
@@ -1489,7 +1442,7 @@ Description.
 :   Constrained Application Protocol (CoAP)
 
 Reference.
-:  {{-alpn}}, [RFCthis]
+:  {{-alpn}}, \[RFCthis]
 
 Port Number.
 :   5684
@@ -1507,7 +1460,7 @@ Change controller.
 :   IETF
 
 Specification document(s).
-:   [RFCthis]
+:   \[RFCthis]
 
 Related information.
 :   None.
@@ -1526,7 +1479,7 @@ Identification Sequence.
 :   0x63 0x6f 0x61 0x70 ("coap")
 
 Reference.
-:   [RFCthis]
+:   \[RFCthis]
 {: vspace='0'}
 
 ## WebSocket Subprotocol Registration
@@ -1540,18 +1493,18 @@ Subprotocol Common Name.
 :   Constrained Application Protocol (CoAP)
 
 Subprotocol Definition.
-:   [RFCthis]
+:   \[RFCthis]
 {: vspace='0'}
 
 ## CoAP Option Numbers Registry
 
-IANA is requested to add [RFCthis] to the references for the following entries registered
+IANA is requested to add \[RFCthis] to the references for the following entries registered
 by {{RFC7959}} in the "CoAP Option Numbers" sub-registry defined by {{RFC7252}}:
 
 | Number | Name   | Reference           |
 |--------|--------|---------------------|
-| 23     | Block2 | RFC 7959, [RFCthis] |
-| 27     | Block1 | RFC 7959, [RFCthis] |
+| 23     | Block2 | RFC 7959, \[RFCthis] |
+| 27     | Block1 | RFC 7959, \[RFCthis] |
 {: #option-numbers title="CoAP Option Numbers" }
 --- back
 
@@ -1689,7 +1642,7 @@ CoAP messages exchanged in detail.
 
 {{example-2}} shows how a CoAP client uses a CoAP
 forward proxy with a WebSocket endpoint to retrieve the representation
-of the resource "coap://[2001:db8::1]/". The use of the forward
+of the resource `coap://[2001:db8::1]/`. The use of the forward
 proxy and the address of the WebSocket endpoint are determined by the
 client from local configuration rules. The request URI is specified
 in the Proxy-Uri Option. Since the request URI uses the "coap" URI
