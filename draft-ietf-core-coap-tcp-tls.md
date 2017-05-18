@@ -178,16 +178,16 @@ reliability function does not extend end-to-end.)
 {{fig-layering}} illustrates the layering:
 
 ~~~~
-        +--------------------------------+
-        |          Application           |
-        +--------------------------------+
-        +--------------------------------+
-        |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
-        |--------------------------------|
-        |        Message Framing         |  This Document
-        +--------------------------------+
-        |      Reliable Transport        |
-        +--------------------------------+
+  +--------------------------------+
+  |          Application           |
+  +--------------------------------+
+  +--------------------------------+
+  |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
+  |--------------------------------|
+  |        Message Framing         |  This Document
+  +--------------------------------+
+  |      Reliable Transport        |
+  +--------------------------------+
 ~~~~
 {: #fig-layering title='Layering of CoAP over Reliable Transports' artwork-align="center"}
 
@@ -1390,11 +1390,11 @@ Initial entries in this sub-registry are as follows:
 
 | Code | Name    | Reference |
 |------|---------|-----------|
-| 7.01 | CSM     | [RFCthis] |
-| 7.02 | Ping    | [RFCthis] |
-| 7.03 | Pong    | [RFCthis] |
-| 7.04 | Release | [RFCthis] |
-| 7.05 | Abort   | [RFCthis] |
+| 7.01 | CSM     | \[RFCthis] |
+| 7.02 | Ping    | \[RFCthis] |
+| 7.03 | Pong    | \[RFCthis] |
+| 7.04 | Release | \[RFCthis] |
+| 7.05 | Abort   | \[RFCthis] |
 {: #signal-codes title="CoAP Signal Codes" }
 
 All other Signaling Codes are Unassigned.
@@ -1417,12 +1417,12 @@ Initial entries in this sub-registry are as follows:
 
 | Applies to | Number | Name                | Reference |
 |------------|--------|---------------------|-----------|
-| 7.01       |      2 | Max-Message-Size    | [RFCthis] |
-| 7.01       |      4 | Block-wise-Transfer | [RFCthis] |
-| 7.02, 7.03 |      2 | Custody             | [RFCthis] |
-| 7.04       |      2 | Alternative-Address | [RFCthis] |
-| 7.04       |      4 | Hold-Off            | [RFCthis] |
-| 7.05       |      2 | Bad-CSM-Option      | [RFCthis] |
+| 7.01       |      2 | Max-Message-Size    | \[RFCthis] |
+| 7.01       |      4 | Block-wise-Transfer | \[RFCthis] |
+| 7.02, 7.03 |      2 | Custody             | \[RFCthis] |
+| 7.04       |      2 | Alternative-Address | \[RFCthis] |
+| 7.04       |      4 | Hold-Off            | \[RFCthis] |
+| 7.05       |      2 | Bad-CSM-Option      | \[RFCthis] |
 {: #signal-option-codes title="CoAP Signal Option Codes" cols="l r l c"}
 
 The IANA policy for future additions to this sub-registry is based on
@@ -1461,7 +1461,7 @@ Description.
 :   Constrained Application Protocol (CoAP)
 
 Reference.
-:   [RFCthis]
+:   \[RFCthis]
 
 Port Number.
 :   5683
@@ -1490,7 +1490,7 @@ Description.
 :   Constrained Application Protocol (CoAP)
 
 Reference.
-:  {{-alpn}}, [RFCthis]
+:  {{-alpn}}, \[RFCthis]
 
 Port Number.
 :   5684
@@ -1508,7 +1508,7 @@ Change controller.
 :   IETF
 
 Specification document(s).
-:   [RFCthis]
+:   \[RFCthis]
 
 Related information.
 :   None.
@@ -1527,7 +1527,7 @@ Identification Sequence.
 :   0x63 0x6f 0x61 0x70 ("coap")
 
 Reference.
-:   [RFCthis]
+:   \[RFCthis]
 {: vspace='0'}
 
 ## WebSocket Subprotocol Registration
@@ -1541,18 +1541,18 @@ Subprotocol Common Name.
 :   Constrained Application Protocol (CoAP)
 
 Subprotocol Definition.
-:   [RFCthis]
+:   \[RFCthis]
 {: vspace='0'}
 
 ## CoAP Option Numbers Registry
 
-IANA is requested to add [RFCthis] to the references for the following entries registered
+IANA is requested to add \[RFCthis] to the references for the following entries registered
 by {{RFC7959}} in the "CoAP Option Numbers" sub-registry defined by {{RFC7252}}:
 
 | Number | Name   | Reference           |
 |--------|--------|---------------------|
-| 23     | Block2 | RFC 7959, [RFCthis] |
-| 27     | Block1 | RFC 7959, [RFCthis] |
+| 23     | Block2 | RFC 7959, \[RFCthis] |
+| 27     | Block1 | RFC 7959, \[RFCthis] |
 {: #option-numbers title="CoAP Option Numbers" }
 --- back
 
@@ -1690,7 +1690,7 @@ CoAP messages exchanged in detail.
 
 {{example-2}} shows how a CoAP client uses a CoAP
 forward proxy with a WebSocket endpoint to retrieve the representation
-of the resource "coap://[2001:db8::1]/". The use of the forward
+of the resource `coap://[2001:db8::1]/`. The use of the forward
 proxy and the address of the WebSocket endpoint are determined by the
 client from local configuration rules. The request URI is specified
 in the Proxy-Uri Option. Since the request URI uses the "coap" URI
