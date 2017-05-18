@@ -272,18 +272,6 @@ Connection Acceptor:
     the other peer, i.e., the TCP passive opener, TLS server, or
     WebSocket server.
 
-For simplicity, a Payload Marker (0xFF) is shown in all examples for message formats:
-
-~~~~
-    ...
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |1 1 1 1 1 1 1 1|    Payload (if any) ...
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~
-
-The Payload Marker indicates the start of the optional payload and is absent for zero-length
-payloads (see Section 3 of {{RFC7252}}).
-
 # CoAP over TCP
 
 The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.
@@ -371,21 +359,22 @@ specified for CoAP over UDP. The differences are as follows:
   length field with variable size. {{fig-frame}} shows the adjusted CoAP 
   message format with a modified structure for the fixed header (first 4
   bytes of the CoAP over UDP header), which includes the length information of
-  variable size, shown here as an 8-bit length.
+  variable size.
 
 ~~~~
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=13 |  TKL  |Extended Length|      Code     | TKL bytes ...
+|  Len  |  TKL  | Extended Length (if any, as chosen by Len) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      Code     | Token (if any, TKL bytes) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |  Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame title='CoAP frame with 8-bit Extended Length field'}
+{: #fig-frame title='CoAP frame for reliable transports'}
 
 Length (Len):
 : 4-bit unsigned integer. A value between 0 and 12 directly indicates the
@@ -406,26 +395,18 @@ Length (Len):
       initial byte and indicates the length of options/payload minus
       65805.
 
-The encoding of the Length field is modeled after the Option Length field of the CoAP Options (see Section 3.1 of {{RFC7252}}). 
+The encoding of the Length field is modeled after the Option Length
+field of the CoAP Options (see Section 3.1 of {{RFC7252}}).
 
-The following figures show the message format for the 0-bit, 16-bit, and 
-the 32-bit variable length cases.
-
-~~~~
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Len  |  TKL  |      Code     | Token (if any, TKL bytes) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Options (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|1 1 1 1 1 1 1 1|    Payload (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~
-{: #fig-frame1 title='CoAP message format without an Extended Length field'}
+For simplicity, a Payload Marker (0xFF) is shown in {{fig-frame}}; the
+Payload Marker indicates the start of the optional payload and is
+absent for zero-length payloads (see Section 3 of {{RFC7252}}).
+(If present, the Payload Marker is included in the message length,
+which counts from the start of the Options field to the end of the
+Payload field.)
 
 For example: A CoAP message just containing a 2.03 code with the
-token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
+token 7f and no options or payload is encoded as shown in {{fig-frame2}}.
 
 ~~~~
  0                   1                   2
@@ -441,37 +422,8 @@ token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 ~~~~
 {: #fig-frame2 title='CoAP message with no options or payload'}
 
-~~~~
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=14 |  TKL  | Extended Length (16 bits)     |   Code        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Token (if any, TKL bytes) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Options (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|1 1 1 1 1 1 1 1|    Payload (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~
-{: #fig-frame3 title='CoAP message format with 16-bit Extended Length field'}
-
-~~~~
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Len=15 |  TKL  | Extended Length (32 bits)                              
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-                |    Code       |  Token (if any, TKL bytes) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|   Options (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|1 1 1 1 1 1 1 1|    Payload (if any) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~~
-{: #fig-frame4 title='CoAP message format with 32-bit Extended Length field'}
-
 The semantics of the other CoAP header fields are left unchanged.
+
 
 ## Message Transmission
 
