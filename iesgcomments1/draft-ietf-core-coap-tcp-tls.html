@@ -769,7 +769,7 @@ CoAP Client       CoAP Server  CoAP Client       CoAP Server
 <p id="rfc.section.4.p.6">Further configurations are possible, including those where a WebSocket connection is established through an HTTP proxy.</p>
 <h1 id="rfc.section.4.1"><a href="#rfc.section.4.1">4.1.</a> <a href="#handshake" id="handshake">Opening Handshake</a></h1>
 <p id="rfc.section.4.1.p.1">Before CoAP requests and responses are exchanged, a WebSocket connection is established as defined in Section 4 of <a href="#RFC6455">[RFC6455]</a>.  <a href="#handshake-example">Figure 12</a> shows an example.</p>
-<p id="rfc.section.4.1.p.2">The WebSocket client MUST include the subprotocol name &#8220;coap&#8221; in the list of protocols, which indicates support for the protocol defined in this document. Any later, incompatible versions of CoAP or CoAP over WebSockets will use a different subprotocol name.</p>
+<p id="rfc.section.4.1.p.2">The WebSocket client MUST include the subprotocol name &#8220;coap&#8221; in the list of protocols, which indicates support for the protocol defined in this document.</p>
 <p id="rfc.section.4.1.p.3">The WebSocket client includes the hostname of the WebSocket server in the Host header field of its handshake as per <a href="#RFC6455">[RFC6455]</a>. The Host header field also indicates the default value of the Uri-Host Option in requests from the WebSocket client to the WebSocket server.</p>
 <div id="rfc.figure.12"/>
 <div id="handshake-example"/>
