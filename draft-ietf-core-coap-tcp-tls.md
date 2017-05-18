@@ -770,7 +770,7 @@ by the recipient. This provides a basic keep-alive function. In contrast, Ping a
 a bidirectional exchange.
 
 Upon receipt of a Ping message, the receiver MUST return a Pong message with an identical token
-in response. Unless there is an option with delaying semantics such as the Custody Option, it
+in response. Unless the PING carries an option with delaying semantics such as the Custody Option, it
 SHOULD respond as soon as practical. As with all Signaling messages, the recipient of a Ping or
 Pong message MUST ignore elective options it does not understand.
 
