@@ -985,8 +985,9 @@ block instead.
 
 In descriptive usage, a BERT Option is interpreted in the same way as
 the equivalent Option with SZX == 6, except that the payload is also
-allowed to contain a multiple of 1024 bytes (non-final BERT block) or
-more than 1024 bytes (final BERT block).
+allowed to contain multiple blocks. For non-final BERT blocks, the payload
+is always a multiple of 1024 bytes. For final BERT blocks, the payload is
+a multiple (possibly 0) of 1024 bytes plus a partial block of less than 1024 bytes.
 
 The recipient of a non-final BERT block (M=1) conceptually partitions
 the payload into a sequence of 1024-byte blocks and acts exactly as
