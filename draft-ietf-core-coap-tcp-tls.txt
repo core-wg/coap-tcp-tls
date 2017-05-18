@@ -433,7 +433,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
                Figure 4: CoAP frame for reliable transports
 
    Length (Len):  4-bit unsigned integer.  A value between 0 and 12
-      directly indicates the length of the message in bytes starting
+      inclusive indicates the length of the message in bytes starting
       with the first bit of the Options field.  Three values are
       reserved for special constructs:
 
@@ -858,9 +858,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    messages send a modified value.
 
    These are not default values for the option, as defined in
-   Section 5.4.4 in [RFC7252].  A default value would mean that an empty
-   Capabilities and Settings message would result in the option being
-   set to its default value.
+   Section 5.4.4 in [RFC7252].  Default values apply on a per-message
+   basis and thus reset when the value is not present in a given
+   Capabilities and Settings message.
 
    Capabilities and Settings messages are indicated by the 7.01 code
    (CSM).
