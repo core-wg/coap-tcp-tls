@@ -192,16 +192,16 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP         May 2017
    layer's reliability function does not extend end-to-end.)  Figure 1
    illustrates the layering:
 
-        +--------------------------------+
-        |          Application           |
-        +--------------------------------+
-        +--------------------------------+
-        |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
-        |--------------------------------|
-        |        Message Framing         |  This Document
-        +--------------------------------+
-        |      Reliable Transport        |
-        +--------------------------------+
+     +--------------------------------+
+     |          Application           |
+     +--------------------------------+
+     +--------------------------------+
+     |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
+     |--------------------------------|
+     |        Message Framing         |  This Document
+     +--------------------------------+
+     |      Reliable Transport        |
+     +--------------------------------+
 
             Figure 1: Layering of CoAP over Reliable Transports
 

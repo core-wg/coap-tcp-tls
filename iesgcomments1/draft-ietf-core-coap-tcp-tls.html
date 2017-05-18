@@ -522,16 +522,16 @@ address {
 <div id="rfc.figure.1"/>
 <div id="fig-layering"/>
 <pre>
-        +--------------------------------+
-        |          Application           |
-        +--------------------------------+
-        +--------------------------------+
-        |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
-        |--------------------------------|
-        |        Message Framing         |  This Document
-        +--------------------------------+
-        |      Reliable Transport        |
-        +--------------------------------+
+  +--------------------------------+
+  |          Application           |
+  +--------------------------------+
+  +--------------------------------+
+  |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
+  |--------------------------------|
+  |        Message Framing         |  This Document
+  +--------------------------------+
+  |      Reliable Transport        |
+  +--------------------------------+
 </pre>
 <p class="figure">Figure 1: Layering of CoAP over Reliable Transports</p>
 <p id="rfc.section.1.p.5">Where NATs are present, CoAP over TCP can help with their traversal.  NATs often calculate expiration timers based on the transport layer protocol being used by application protocols. Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption that a transport layer protocol, such as TCP, offers additional information about the session life cycle. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter <a href="#HomeGateway">[HomeGateway]</a>.</p>
@@ -1740,7 +1740,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
      |          |
 </pre>
 <p class="figure">Figure 20: A CoAP client retrieves the representation of a      resource identified by a "coap" URI over the WebSocket protocol</p>
-<p><a href="#example-2">Figure 21</a> shows how a CoAP client uses a CoAP forward proxy with a WebSocket endpoint to retrieve the representation of the resource &#8220;coap://[2001:db8::1]/&#8221;. The use of the forward proxy and the address of the WebSocket endpoint are determined by the client from local configuration rules. The request URI is specified in the Proxy-Uri Option. Since the request URI uses the &#8220;coap&#8221; URI scheme, the proxy fulfills the request by issuing a Confirmable GET request over UDP to the CoAP server and returning the response over the WebSocket connection to the client.</p>
+<p><a href="#example-2">Figure 21</a> shows how a CoAP client uses a CoAP forward proxy with a WebSocket endpoint to retrieve the representation of the resource <samp>coap://[2001:db8::1]/</samp>. The use of the forward proxy and the address of the WebSocket endpoint are determined by the client from local configuration rules. The request URI is specified in the Proxy-Uri Option. Since the request URI uses the &#8220;coap&#8221; URI scheme, the proxy fulfills the request by issuing a Confirmable GET request over UDP to the CoAP server and returning the response over the WebSocket connection to the client.</p>
 <div id="rfc.figure.21"/>
 <div id="example-2"/>
 <pre>
