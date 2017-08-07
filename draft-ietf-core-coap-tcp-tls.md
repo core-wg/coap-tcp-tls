@@ -3,7 +3,7 @@ stand_alone: true
 ipr: trust200902
 docname: draft-ietf-core-coap-tcp-tls-latest
 cat: std
-updates: 7252, 7641, 7959
+updates: 6455, 7641, 7959
 coding: utf-8
 pi:
   strict: 'yes'
@@ -19,7 +19,7 @@ title: CoAP (Constrained Application Protocol) over TCP, TLS, and WebSockets
 abbrev: TCP/TLS/WebSockets Transports for CoAP
 area: Applications Area (app)
 wg: CORE
-#date: 2017-05-15
+#date: 2016-04-21
 author:
 - ins: C. Bormann
   name: Carsten Bormann
@@ -79,21 +79,19 @@ normative:
   RFC2119: bcp14
   RFC3986: RFC3986
   RFC5226: RFC5226
-  RFC5246: tls12
+  RFC5246: tls
   RFC5785: RFC5785
   RFC6066: RFC6066
   RFC6455: RFC6455
   RFC7252: coap
   RFC7301: alpn
-  RFC7525: tlsbcp
+  RFC7595: urireg
   RFC7641: RFC7641
   RFC7925: RFC7925
   RFC7959: block
-  I-D.bormann-hybi-ws-wk: ws-wk
 informative:
   I-D.ietf-core-cocoa: cocoa
   I-D.ietf-core-object-security: oscoap
-  I-D.ietf-core-resource-directory: rd
   LWM2M:
     title: Lightweight Machine to Machine Technical Specification Version 1.0
     target: http://www.openmobilealliance.org/release/LightweightM2M/V1_0-20170208-A/OMA-TS-LightweightM2M-V1_0-20170208-A.pdf
@@ -106,7 +104,6 @@ informative:
   RFC5234: RFC5234
   RFC6335: portreg
   RFC6347: dtls
-  RFC6555: happy-eyeballs
   RFC7230: RFC7230
   HomeGateway:
     title: An experimental study of home gateway characteristics
@@ -140,10 +137,10 @@ reliable delivery, simple congestion control, and flow control.
 
 Some environments benefit from the availability of CoAP carried over reliable
 transports such as TCP or TLS. This document outlines the changes required to use
-CoAP over TCP, TLS, and WebSockets transports. It also formally
-updates RFC 7252 fixing an erratum in the URI syntax, RFC 7641
-for use with the new transports, and RFC 7959 to enable the use of larger messages over
-a reliable transport.
+CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641
+for use with these transports, RFC 7959 to enable the use of larger messages over
+a reliable transport, and RFC 6455 to extend the well-known URI mechanism (RFC 5785)
+to the ws and wss URI schemes.
 
 --- middle
 
@@ -167,29 +164,22 @@ address these requirements, there would be additional costs and delays introduce
 Currently, there are also fewer HTTP/2 implementations available for constrained devices in
 comparison to CoAP.
 
-To address these requirements, this document defines how to transport
-CoAP over TCP, CoAP over TLS, and CoAP over WebSockets.  For these cases, the
-reliability offered by the transport protocol subsumes the reliability
-functions of the message layer used for CoAP over UDP.
-(Note that both for a reliable transport and the CoAP over UDP message
-layer, the reliability offered is per transport hop: where proxies ---
-see Sections 5.7 and 10 of {{-coap}} --- are involved, that layer's
-reliability function does not extend end-to-end.)
-{{fig-layering}} illustrates the layering:
+To address these requirements, this document defines how to transport CoAP over TCP,
+CoAP over TLS, and CoAP over WebSockets. {{layering}} illustrates the layering:
 
 ~~~~
-  +--------------------------------+
-  |          Application           |
-  +--------------------------------+
-  +--------------------------------+
-  |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
-  |--------------------------------|
-  |        Message Framing         |  This Document
-  +--------------------------------+
-  |      Reliable Transport        |
-  +--------------------------------+
+        +--------------------------------+
+        |          Application           |
+        +--------------------------------+
+        +--------------------------------+
+        |  Requests/Responses/Signaling  |  CoAP (RFC 7252) / This Document
+        |--------------------------------|
+        |        Message Framing         |  This Document
+        +--------------------------------+
+        |      Reliable Transport        |
+        +--------------------------------+
 ~~~~
-{: #fig-layering title='Layering of CoAP over Reliable Transports' artwork-align="center"}
+{: #layering title='Layering of CoAP over Reliable Transports' artwork-align="center"}
 
 Where NATs are present, CoAP over TCP can help with their traversal.
 NATs often calculate expiration timers based on the transport layer protocol
@@ -235,10 +225,6 @@ protocol that enables CoAP clients to "observe" a resource on a CoAP server. (Th
 retrieves a representation of a resource and registers to be notified by the CoAP server when
 the representation is updated.)
 
-{{URI}} fixes an erratum on the URI scheme syntax in {{-coap}}.
-{{bert}} defines semantics for a value 7 for the field "SZX" in a
-Block1 or Block2 option, updating {{-block}}.
-
 # Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -271,6 +257,18 @@ Connection Acceptor:
 :   The peer that accepts the reliable byte stream connection opened by
     the other peer, i.e., the TCP passive opener, TLS server, or
     WebSocket server.
+
+For simplicity, a Payload Marker (0xFF) is shown in all examples for message formats:
+
+~~~~
+    ...
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |1 1 1 1 1 1 1 1|    Payload (if any) ...
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+
+The Payload Marker indicates the start of the optional payload and is absent for zero-length
+payloads (see Section 3 of {{RFC7252}}).
 
 # CoAP over TCP
 
@@ -359,25 +357,24 @@ specified for CoAP over UDP. The differences are as follows:
   length field with variable size. {{fig-frame}} shows the adjusted CoAP 
   message format with a modified structure for the fixed header (first 4
   bytes of the CoAP over UDP header), which includes the length information of
-  variable size.
+  variable size, shown here as an 8-bit length.
 
 ~~~~
+
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Len  |  TKL  | Extended Length (if any, as chosen by Len) ...
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      Code     | Token (if any, TKL bytes) ...
+|Len=13 |  TKL  |Extended Length|      Code     | TKL bytes ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |  Options (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |1 1 1 1 1 1 1 1|    Payload (if any) ...
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~~~~
-{: #fig-frame title='CoAP frame for reliable transports'}
+{: #fig-frame title='CoAP frame with 8-bit Extended Length field'}
 
 Length (Len):
-: 4-bit unsigned integer. A value between 0 and 12 inclusive indicates the
+: 4-bit unsigned integer. A value between 0 and 12 directly indicates the
   length of the message in bytes starting with the first bit of the Options
   field. Three values are reserved for special constructs:
 
@@ -395,18 +392,26 @@ Length (Len):
       initial byte and indicates the length of options/payload minus
       65805.
 
-The encoding of the Length field is modeled after the Option Length
-field of the CoAP Options (see Section 3.1 of {{RFC7252}}).
+The encoding of the Length field is modeled after the Option Length field of the CoAP Options (see Section 3.1 of {{RFC7252}}).
 
-For simplicity, a Payload Marker (0xFF) is shown in {{fig-frame}}; the
-Payload Marker indicates the start of the optional payload and is
-absent for zero-length payloads (see Section 3 of {{RFC7252}}).
-(If present, the Payload Marker is included in the message length,
-which counts from the start of the Options field to the end of the
-Payload field.)
+The following figures show the message format for the 0-bit, 16-bit, and
+the 32-bit variable length cases.
+
+~~~~
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Len  |  TKL  |      Code     | Token (if any, TKL bytes) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Options (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|1 1 1 1 1 1 1 1|    Payload (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+{: #fig-frame1 title='CoAP message format without an Extended Length field'}
 
 For example: A CoAP message just containing a 2.03 code with the
-token 7f and no options or payload is encoded as shown in {{fig-frame2}}.
+token 7f and no options or payload would be encoded as shown in {{fig-frame2}}.
 
 ~~~~
  0                   1                   2
@@ -422,8 +427,37 @@ token 7f and no options or payload is encoded as shown in {{fig-frame2}}.
 ~~~~
 {: #fig-frame2 title='CoAP message with no options or payload'}
 
-The semantics of the other CoAP header fields are left unchanged.
+~~~~
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Len=14 |  TKL  | Extended Length (16 bits)     |   Code        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Token (if any, TKL bytes) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Options (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|1 1 1 1 1 1 1 1|    Payload (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+{: #fig-frame3 title='CoAP message format with 16-bit Extended Length field'}
 
+~~~~
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Len=15 |  TKL  | Extended Length (32 bits)
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                |    Code       |  Token (if any, TKL bytes) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Options (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|1 1 1 1 1 1 1 1|    Payload (if any) ...
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~~~~
+{: #fig-frame4 title='CoAP message format with 32-bit Extended Length field'}
+
+The semantics of the other CoAP header fields are left unchanged.
 
 ## Message Transmission
 
@@ -513,9 +547,9 @@ The challenge with this configuration is how to identify a resource in the
 namespace of the CoAP server. When the WebSocket protocol is used by
 a dedicated client directly (i.e., not from a web page through a web browser),
 the client can connect to any WebSocket endpoint. {{coap-ws-scheme}} and
-{{coaps-ws-scheme}} define how the "coap" and "coaps" URI schemes can
-be used to enable the client to identify both a WebSocket endpoint and
-the path and query of the CoAP resource within that endpoint.
+{{coaps-ws-scheme}} define new URI schemes that enable the client to identify
+both a WebSocket endpoint and the path and query of the CoAP resource within that
+endpoint.
 
 Another possible configuration is to set up a CoAP forward proxy
 at the WebSocket endpoint. Depending on what transports are available
@@ -569,7 +603,9 @@ connection is established as defined in Section 4 of {{RFC6455}}.
 
 The WebSocket client MUST include the subprotocol name "coap" in
 the list of protocols, which indicates support for the protocol
-defined in this document.
+defined in this document. Any later, incompatible versions of
+CoAP or CoAP over WebSockets will use a different subprotocol
+name.
 
 The WebSocket client includes the hostname of the WebSocket server
 in the Host header field of its handshake as per {{RFC6455}}. The Host
@@ -723,8 +759,8 @@ capability and setting before any Capabilities and Settings messages send a
 modified value.
 
 These are not default values for the option, as defined in Section 5.4.4 in {{RFC7252}}.
-Default values apply on a per-message basis and thus reset when the value is not present in 
-a given Capabilities and Settings message.
+A default value would mean that an empty Capabilities and Settings message would result in
+the option being set to its default value.
 
 Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
@@ -770,7 +806,7 @@ by the recipient. This provides a basic keep-alive function. In contrast, Ping a
 a bidirectional exchange.
 
 Upon receipt of a Ping message, the receiver MUST return a Pong message with an identical token
-in response. Unless the Ping carries an option with delaying semantics such as the Custody Option, it
+in response. Unless there is an option with delaying semantics such as the Custody Option, it
 SHOULD respond as soon as practical. As with all Signaling messages, the recipient of a Ping or
 Pong message MUST ignore elective options it does not understand.
 
@@ -802,11 +838,8 @@ maintaining the connection and opts for an orderly shutdown. The details
 are in the options. A diagnostic payload (see Section
 5.5.2 of {{-coap}}) MAY be included.  A peer will normally
 respond to a Release message by closing the TCP/TLS connection.
-Messages may be in flight or responses outstanding when the sender decides to send a Release message.
-The peer responding to the Release message SHOULD delay the closing of
-the connection until it has responded to all requests received by it
-before the Release message.  It also MAY wait for the responses to
-its own requests.
+Messages may be in flight when the sender decides to send a Release message.
+The general expectation is that these will still be processed.
 
 Release messages are indicated by the 7.04 code (Release).
 
@@ -842,7 +875,7 @@ release. The sender shuts down the connection immediately after
 the abort (and may or may not wait for a Release or Abort message or
 connection shutdown in the inverse direction). A diagnostic payload
 (see Section 5.5.2 of {{-coap}}) SHOULD be included in the Abort message.
-Messages may be in flight or responses outstanding when the sender decides to send an Abort message.
+Messages may be in flight when the sender decides to send an Abort message.
 The general expectation is that these will NOT be processed.
 
 Abort messages are indicated by the 7.05 code (Abort).
@@ -866,10 +899,10 @@ processed as message format errors. As described in Sections 4.2 and 4.3
 of {{RFC7252}}, such messages are rejected by sending a matching Reset
 message and otherwise ignoring the message. 
 
-For CoAP over reliable transports, the recipient rejects such messages
-by sending an Abort message and otherwise ignoring (not processing)
-the message. No specific option has been defined for the Abort message
-in this case, as the details are best left to a diagnostic payload.
+For CoAP over reliable transports, the recipient rejects such messages by
+sending an Abort message and otherwise ignoring the message. No specific option
+has been defined for the Abort message in this case, as the details are
+best left to a diagnostic payload.
 
 ## Signaling examples
 
@@ -938,9 +971,8 @@ block instead.
 
 In descriptive usage, a BERT Option is interpreted in the same way as
 the equivalent Option with SZX == 6, except that the payload is also
-allowed to contain multiple blocks. For non-final BERT blocks, the payload
-is always a multiple of 1024 bytes. For final BERT blocks, the payload is
-a multiple (possibly 0) of 1024 bytes plus a partial block of less than 1024 bytes.
+allowed to contain a multiple of 1024 bytes (non-final BERT block) or
+more than 1024 bytes (final BERT block).
 
 The recipient of a non-final BERT block (M=1) conceptually partitions
 the payload into a sequence of 1024-byte blocks and acts exactly as
@@ -1016,56 +1048,78 @@ CoAP Client                             CoAP Server
 # CoAP over Reliable Transport URIs {#URI}
 
 CoAP over UDP {{RFC7252}} defines the "coap" and "coaps" URI schemes. This document
-corrects an erratum in Sections 6.1 and 6.2 of {{RFC7252}} and defines
-how to use the schemes with the new transports.
-Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these
-new transports.
+introduces four additional URI schemes for identifying CoAP resources and providing a
+means of locating the resource:
+
+* the "coap+tcp" URI scheme for CoAP over TCP
+* the "coaps+tcp" URI scheme for CoAP over TCP secured by TLS
+* the "coap+ws" URI scheme for CoAP over WebSockets
+* the "coaps+ws" URI scheme for CoAP over WebSockets secured by TLS
+
+Resources made available via these schemes have no shared identity even if their
+resource identifiers indicate the same authority (the same host listening to the same
+TCP port). They are hosted in distinct namespaces because each URI scheme implies a
+distinct origin server.
 
 The syntax for the URI schemes in this section are specified using
 Augmented Backus-Naur Form (ABNF) [RFC5234]. The definitions of "host",
 "port", "path-abempty", "query", and "fragment" are adopted from [RFC3986].
 
-The ABNF syntax defined in Sections 6.1 and 6.2 of {{RFC7252}} for "coap" and "coaps"
-schemes lacks the fragment identifer.  This specification updates
-the two rules in those sections as follows:
+Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes.
+
+As with the "coap" and "coaps" schemes defined in {{RFC7252}}, all URI
+schemes defined in this section also support the path prefix
+"/.well-known/" defined by {{RFC5785}} for "well-known locations" in
+the namespace of a host.  This enables discovery as per Section 7 of
+{{RFC7252}}.
+
+## coap+tcp URI scheme {#coap-tcp-scheme}
+
+The "coap+tcp" URI scheme identifies CoAP resources that are intended to be accessible
+using CoAP over TCP.
 
 ~~~~ abnf
-coap-URI = "coap:" "//" host [ ":" port ]
-  path-abempty [ "?" query ]  [ "#" fragment ]
-coaps-URI = "coaps:" "//" host [ ":" port ]
-  path-abempty [ "?" query ] [ "#" fragment ]
+  coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ]
+    path-abempty [ "?" query ]  [ "#" fragment ]
 ~~~~
 {: artwork-align="left"}
 
-## Use of the "coap" URI scheme with TCP
-
-The "coap" URI scheme defined in Section 6.1 of {{-coap}} can also be
-used to identify CoAP resources that are intended to be accessible
-using CoAP over TCP.
-
-The syntax defined in Section 6.1 of {{RFC7252}} applies to this transport, with the following change:
+The syntax defined in Section 6.1 of {{RFC7252}} applies to this URI scheme with the following changes:
 
 * The port subcomponent indicates the TCP port at which the CoAP server is located.
 (If it is empty or not given, then the default port 5683 is assumed, as with UDP.)
 
-## Use of the "coaps" URI scheme with TLS over TCP
+Encoding considerations:
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986].
 
-The "coaps" URI scheme defined in Section 6.2 of {{-coap}} can also be
-used to identify CoAP resources that are intended to be accessible
+Interoperability considerations:
+:   None.
+
+Security considerations:
+:   See Section 11.1 of {{RFC7252}}.
+
+## coaps+tcp URI scheme {#coaps-tcp-scheme}
+
+The "coaps+tcp" URI scheme identifies CoAP resources that are intended to be accessible
 using CoAP over TCP secured with TLS.
 
-The syntax defined in Section 6.2 of {{RFC7252}} applies to this transport, with the following changes:
+~~~~ abnf
+  coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
+~~~~
+{: artwork-align="left"}
+
+The syntax defined in Section 6.2 of {{RFC7252}} applies to this URI scheme, with the following changes:
 
 * The port subcomponent indicates the TCP port at which the TLS server
-  for the CoAP Connection Acceptor is located. If it is empty or not given, then
-  the default port 5684 is assumed.
+  for the CoAP server is located. If it is empty or not given, then
+  the default port 443 is assumed (this is different from the default
+  port for "coaps", i.e., CoAP over DTLS over UDP).
 
-* If a TLS server does not support the Application-Layer Protocol
-  Negotiation Extension (ALPN) {{-alpn}} or wishes to accommodate TLS
-  clients that do not support ALPN, it MAY offer a coaps endpoint
-  on the default TCP port 5684. This endpoint MAY also be ALPN
-  enabled. A TLS server MAY offer coaps endpoints on TCP ports other
-  than 5684; these then MUST be ALPN enabled.
+* If a TLS server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
+  {{-alpn}} or wishes to accommodate TLS clients that do not support ALPN, it MAY offer a
+  coaps+tcp endpoint on TCP port 5684. This endpoint MAY also be ALPN enabled. A TLS server
+  MAY offer coaps+tcp endpoints on ports other than TCP port 5684, which MUST be ALPN enabled.
 
 * For TCP ports other than port 5684, the TLS client MUST use the ALPN extension to advertise
   the "coap" protocol identifier (see {{alpnpid}}) in the list of protocols in its
@@ -1078,71 +1132,104 @@ The syntax defined in Section 6.2 of {{RFC7252}} applies to this transport, with
   identifier in the list of protocols in its ClientHello. If the TLS server selects and returns
   the "coap" protocol identifier using the ALPN extension in its ServerHello, then the connection
   succeeds. If the TLS server returns a no_application_protocol alert, then the TLS client MUST close the
-  connection. If the TLS server does not negotiate the ALPN extension,
-  then coaps over TCP is implicitly
+  connection. If the TLS server does not negotiate the ALPN extension, then coaps+tcp is implicitly
   selected.
 
 * For TCP port 5684, if the TLS client does not use the ALPN extension to negotiate the protocol,
-  then coaps over TCP is implicitly selected.
+  then coaps+tcp is implicitly selected.
 
-## Use of the "coap" URI scheme with WebSockets {#coap-ws-scheme}
+Encoding considerations:
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986].
 
-The "coap" URI scheme defined in Section 6.1 of {{-coap}} can also be
-used to identify CoAP resources that are intended to be accessible
+Interoperability considerations:
+:   None.
+
+Security considerations:
+:   See Section 11.1 of {{RFC7252}}.
+
+## coap+ws URI scheme {#coap-ws-scheme}
+
+The "coap+ws" URI scheme identifies CoAP resources that are intended to be accessible
 using CoAP over WebSockets.
 
+~~~~ abnf
+  coap-ws-URI = "coap+ws:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
+~~~~
+{: artwork-align="left"}
+
+The port subcomponent is OPTIONAL. The default is port 80.
+
 The WebSocket endpoint is identified by a "ws" URI that is composed of the authority
-part of the "coap" URI and the well-known path "/.well-known/coap"
-{{RFC5785}} {{-ws-wk}}.
-The path and query parts of the "coap" URI identify a resource within the specified
+part of the "coap+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
+The present specification formally updates {{RFC6455}}, extending the
+well-known URI mechanism defined in {{RFC5785}} to also cover the "ws"
+URI scheme defined in that document.
+The path and query parts of a "coap+ws" URI identify a resource within the specified
 endpoint which can be operated on by the methods defined by CoAP:
 
 ~~~~
-      coap://example.org/sensors/temperature?u=Cel
-        \______  ______/\___________  ___________/
-               \/                   \/
+      coap+ws://example.org/sensors/temperature?u=Cel
+           \______  ______/\___________  ___________/
+                  \/                   \/
                                      Uri-Path: "sensors"
 ws://example.org/.well-known/coap    Uri-Path: "temperature"
                                      Uri-Query: "u=Cel"
 ~~~~
-{: #coap-ws-example title='Building ws URIs and Uri options from coap URIs' artwork-align="center" }
+{: #coap-ws-example title='The "coap+ws" URI Scheme' artwork-align="center" }
 
-Note that the default port for "coap" is 5683, while the default port
-for "ws" is 80.  Therefore, if the port given for "coap" is 80, the
-default port for "ws" can be used.  If the port is not given for "coap",
-then an explicit port number of 5683 needs to be given for "ws".
+Encoding considerations:
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986].
 
-## Use of the "coaps" URI scheme with WebSockets {#coaps-ws-scheme}
+Interoperability considerations:
+:   None.
 
-The "coaps" URI scheme defined in Section 6.2 of {{-coap}} can also be
-used to identify CoAP resources that are intended to be accessible
+Security considerations:
+:   See Section 11.1 of {{RFC7252}}.
+
+## coaps+ws URI scheme {#coaps-ws-scheme}
+
+The "coaps+ws" URI scheme identifies CoAP resources that are intended to be accessible
 using CoAP over WebSockets secured by TLS.
 
+~~~~ abnf
+  coaps-ws-URI = "coaps+ws:" "//" host [ ":" port ]
+    path-abempty [ "?" query ] [ "#" fragment ]
+~~~~
+{: artwork-align="left"}
+
+The port subcomponent is OPTIONAL. The default is port 443.
+
 The WebSocket endpoint is identified by a "wss" URI that is composed of the authority
-part of the "coaps" URI and the well-known path "/.well-known/coap"
-{{RFC5785}} {{-ws-wk}}.
-The path and query parts of the "coaps" URI identify a resource within the specified
+part of the "coaps+ws" URI and the well-known path "/.well-known/coap" {{RFC5785}}.
+The present specification formally updates {{RFC6455}}, extending the
+well-known URI mechanism defined in {{RFC5785}} to also cover the "wss"
+URI scheme defined in that document.
+The path and query parts of a "coaps+ws" URI identify a resource within the specified
 endpoint which can be operated on by the methods defined by CoAP.
 
 ~~~~
-      coaps://example.org/sensors/temperature?u=Cel
-         \______  ______/\___________  ___________/
-                \/                   \/
+      coaps+ws://example.org/sensors/temperature?u=Cel
+            \______  ______/\___________  ___________/
+                   \/                   \/
                                      Uri-Path: "sensors"
 wss://example.org/.well-known/coap   Uri-Path: "temperature"
                                      Uri-Query: "u=Cel"
 ~~~~
-{: #coaps-ws-example title='Building wss URIs and Uri options from coaps URIs' artwork-align="center" }
+{: #coaps-ws-example title='The "coaps+ws" URI Scheme' artwork-align="center" }
 
-Note that the default port for "coaps" is 5684, while the default port
-for "wss" is 443.  If the port given for "coap" is 443, the default
-port for "wss" can be used.  If the port is not given for "coaps", then an
-explicit port number of 5684 needs to be given for "wss".
+Encoding considerations:
+:   The scheme encoding conforms to the encoding rules established for URIs in [RFC3986].
+
+Interoperability considerations:
+:   None.
+
+Security considerations:
+:   See Section 11.1 of {{RFC7252}}.
 
 ## Uri-Host and Uri-Port Options
 
-Except for the transports over WebSockets, CoAP over reliable
-transports maintains the property from Section 5.10.1 of {{RFC7252}}:
+CoAP over reliable transports maintains the property from Section 5.10.1 of {{RFC7252}}:
 
 > The default values for the Uri-Host and Uri-Port Options are
 > sufficient for requests to most servers.
@@ -1165,6 +1252,22 @@ The steps are the same as specified in Section 6.4 of {{RFC7252}} with minor cha
 This step from {{RFC7252}}:
 
 ~~~~
+3.  If |url| does not have a <scheme> component whose value, when
+    converted to ASCII lowercase, is "coap" or "coaps", then fail
+    this algorithm.
+~~~~
+
+is updated to:
+
+~~~~
+3.  If |url| does not have a <scheme> component whose value, when
+    converted to ASCII lowercase, is "coap+tcp", "coaps+tcp",
+    "coap+ws", or "coaps+ws", then fail this algorithm.
+~~~~
+
+This step from {{RFC7252}}:
+
+~~~~
 7.  If |port| does not equal the request's destination UDP port,
     include a Uri-Port Option and let that option's value be |port|.
 ~~~~
@@ -1172,9 +1275,8 @@ This step from {{RFC7252}}:
 is updated to:
 
 ~~~~
-7.  If |port| does not equal the request's destination UDP port or
-    TCP port, include a Uri-Port Option and let that option's value
-    be |port|.
+7.  If |port| does not equal the request's destination TCP port,
+    include a Uri-Port Option and let that option's value be |port|.
 ~~~~
 
 ## Composing URIs from Options
@@ -1191,9 +1293,11 @@ This step from {{RFC7252}}:
 is updated to:
 
 ~~~~
-1.  If the request is secured using DTLS or TLS, let |url| be
-    the string "coaps://". Otherwise, let |url| be the string
-    "coap://".
+1.  For CoAP over TCP, if the request is secured using TLS, let |url|
+    be the string "coaps+tcp://". Otherwise, let |url| be the string
+    "coap+tcp://". For CoAP over WebSockets, if the request is
+    secured using TLS, let |url| be the string "coaps+ws://".
+    Otherwise, let |url| be the string "coap+ws://".
 ~~~~
 
 This step from {{RFC7252}}:
@@ -1209,37 +1313,8 @@ is updated to:
 ~~~~
 4.  If the request includes a Uri-Port Option, let |port| be that
     option's value.  Otherwise, let |port| be the request's
-    destination UDP port or TCP port.
+    destination TCP port.
 ~~~~
-
-## Trying out multiple transports at once
-
-As in the "Happy Eyeballs" approach to using IPv6 and IPv4
-{{-happy-eyeballs}}, an application may want to try out multiple
-transports for a given URI at the same time, e.g., DTLS over UDP and
-TLS over TCP.  However, two important caveats need to be considered:
-
-* Initiating multiple instances of the same exchange with the
-  intention of using only one of the successful results is only safe
-  for idempotent exchanges (see Section 5.1 of {{-coap}}).
-
-* An important setback in using the UDP or DTLS over UDP transport
-  through NATs and other middleboxes can be the quick loss of NAT
-  bindings during idling periods {{HomeGateway}}.  This will not be
-  evident right on the initial exchange.
-
-After the initial exchange, or whenever important information is
-learned about which selection to prefer, an endpoint may want to cache
-this information; however, the information may become stale after the
-endpoint moves or the network changes.  A cache timeout (possibly
-enhanced by movement detection) is advisable.
-
-Alternatively, or additionally, the choice of transport may be aided
-by configuration and resource directory information; the
-self-description of a node may also include target attributes for
-links given to resources there.  Details of such attributes are out of
-scope for the present document; see for instance {{-rd}}.
-
 
 # Securing CoAP {#securing}
 
@@ -1259,13 +1334,7 @@ data object-based security model for CoAP that is independent of transport
 
 ## TLS binding for CoAP over TCP
 
-The TLS usage guidance in {{RFC7925}} applies, including the guidance
-about cipher suites in that document that are derived from the
-mandatory to implement (MTI) cipher suites defined in {{-coap}}.
-(Note that this selection caters for the device-to-cloud use case of
-CoAP over TLS more than for any use within a back-end environment,
-where the standard TLS 1.2 cipher suites or the more recent ones
-defined in {{-tlsbcp}} are more appropriate.)
+The TLS usage guidance in {{RFC7925}} applies.
 
 During the provisioning phase, a CoAP device is provided with the security information
 that it needs, including keying materials, access control lists, and authorization servers.
@@ -1288,31 +1357,24 @@ Certificate:
 : TLS is enabled. The guidance in Section 4.4 of {{RFC7925}} applies.
 
 The "NoSec" mode is optional-to-implement. The system simply sends the packets over normal
-TCP which is indicated by the "coap" scheme and the TCP CoAP default port.
+TCP which is indicated by the "coap+tcp" scheme and the TCP CoAP default port.
 The system is secured only by keeping attackers from being able to send
 or receive packets from the network with the CoAP nodes.
 
 "PreSharedKey", "RawPublicKey", or "Certificate" is mandatory-to-implement for the TLS
 binding depending on the credential type used with the device. These security modes are
-achieved using TLS and are indicated by the "coaps" scheme and TLS-secured CoAP default port.
+achieved using TLS and are indicated by the "coaps+tcp" scheme and TLS-secured CoAP default port.
 
 ## TLS usage for CoAP over WebSockets
 
-A CoAP client requesting a resource identified by a "coaps" URI negotiates a secure WebSocket
+A CoAP client requesting a resource identified by a "coaps+ws" URI negotiates a secure WebSocket
 connection to a WebSocket server endpoint with a "wss" URI. This is described in {{coaps-ws-scheme}}.
 
 The client MUST perform a TLS handshake after opening the connection to the server. The guidance in
-Section 4.1 of {{RFC6455}} applies. When a CoAP server exposes resources identified by a "coaps" URI,
+Section 4.1 of {{RFC6455}} applies. When a CoAP server exposes resources identified by a "coaps+ws" URI,
 the guidance in Section 4.4 of {{RFC7925}} applies towards mandatory-to-implement TLS functionality
 for certificates. For the server-side requirements in accepting incoming connections over a HTTPS
 (HTTP-over-TLS) port, the guidance in Section 4.2 of {{RFC6455}} applies.
-
-Note that this formally inherits the mandatory to implement cipher
-suites defined in {{-tls12}}.  However, modern usually browsers
-implement more recent cipher suites that then are automatically picked
-up via the JavaScript WebSocket API.  WebSocket Servers that provide
-Secure CoAP over WebSockets for the browser use case will need to
-follow the browser preferences and MUST follow {{-tlsbcp}}.
 
 # Security Considerations {#security}
 
@@ -1342,11 +1404,11 @@ Initial entries in this sub-registry are as follows:
 
 | Code | Name    | Reference |
 |------|---------|-----------|
-| 7.01 | CSM     | \[RFCthis] |
-| 7.02 | Ping    | \[RFCthis] |
-| 7.03 | Pong    | \[RFCthis] |
-| 7.04 | Release | \[RFCthis] |
-| 7.05 | Abort   | \[RFCthis] |
+| 7.01 | CSM     | [RFCthis] |
+| 7.02 | Ping    | [RFCthis] |
+| 7.03 | Pong    | [RFCthis] |
+| 7.04 | Release | [RFCthis] |
+| 7.05 | Abort   | [RFCthis] |
 {: #signal-codes title="CoAP Signal Codes" }
 
 All other Signaling Codes are Unassigned.
@@ -1369,12 +1431,12 @@ Initial entries in this sub-registry are as follows:
 
 | Applies to | Number | Name                | Reference |
 |------------|--------|---------------------|-----------|
-| 7.01       |      2 | Max-Message-Size    | \[RFCthis] |
-| 7.01       |      4 | Block-wise-Transfer | \[RFCthis] |
-| 7.02, 7.03 |      2 | Custody             | \[RFCthis] |
-| 7.04       |      2 | Alternative-Address | \[RFCthis] |
-| 7.04       |      4 | Hold-Off            | \[RFCthis] |
-| 7.05       |      2 | Bad-CSM-Option      | \[RFCthis] |
+| 7.01       |      2 | Max-Message-Size    | [RFCthis] |
+| 7.01       |      4 | Block-wise-Transfer | [RFCthis] |
+| 7.02, 7.03 |      2 | Custody             | [RFCthis] |
+| 7.04       |      2 | Alternative-Address | [RFCthis] |
+| 7.04       |      4 | Hold-Off            | [RFCthis] |
+| 7.05       |      2 | Bad-CSM-Option      | [RFCthis] |
 {: #signal-option-codes title="CoAP Signal Option Codes" cols="l r l c"}
 
 The IANA policy for future additions to this sub-registry is based on
@@ -1394,40 +1456,11 @@ an option with that number, including the following properties:
 
 ## Service Name and Port Number Registration
 
-IANA is requested to assign the port number 5683 and the service name "coap",
+IANA is requested to assign the port number 5683 and the service name "coap+tcp",
 in accordance with {{RFC6335}}.
 
 Service Name.
-:   coap
-
-Transport Protocol.
-:   tcp
-
-Assignee.
-:   IESG \<iesg@ietf.org>
-
-Contact.
-:   IETF Chair \<chair@ietf.org>
-
-Description.
-:   Constrained Application Protocol (CoAP)
-
-Reference.
-:   \[RFCthis]
-
-Port Number.
-:   5683
-{: vspace='0'}
-
-## Secure Service Name and Port Number Registration
-
-IANA is requested to assign the port number 5684 and the service name "coaps+tcp",
-in accordance with {{RFC6335}}. The port number is requested also to address the exceptional
-case of TLS implementations that do not support the "Application-Layer Protocol
-Negotiation Extension" {{-alpn}}.
-
-Service Name.
-:   coaps
+:   coap+tcp
 
 Transport Protocol.
 :   tcp
@@ -1442,10 +1475,138 @@ Description.
 :   Constrained Application Protocol (CoAP)
 
 Reference.
-:  {{-alpn}}, \[RFCthis]
+:   [RFCthis]
+
+Port Number.
+:   5683
+{: vspace='0'}
+
+## Secure Service Name and Port Number Registration
+
+IANA is requested to assign the port number 5684 and the service name "coaps+tcp",
+in accordance with {{RFC6335}}. The port number is requested to address the exceptional
+case of TLS implementations that do not support the "Application-Layer Protocol
+Negotiation Extension" {{-alpn}}.
+
+Service Name.
+:   coaps+tcp
+
+Transport Protocol.
+:   tcp
+
+Assignee.
+:   IESG \<iesg@ietf.org>
+
+Contact.
+:   IETF Chair \<chair@ietf.org>
+
+Description.
+:   Constrained Application Protocol (CoAP)
+
+Reference.
+:  {{-alpn}}, [RFCthis]
 
 Port Number.
 :   5684
+{: vspace='0'}
+
+## URI Scheme Registration
+
+URI schemes are registered within the "Uniform Resource Identifier (URI) Schemes"
+registry maintained at <http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml>.
+
+### coap+tcp
+IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap+tcp".
+This registration request complies with {{-urireg}}.
+
+Scheme name:
+:   coap+tcp
+
+Status:
+:   Permanent
+
+Applications/protocols that use this scheme name:
+:   The scheme is used by CoAP endpoints to access CoAP resources using TCP.
+
+Contact:
+:   IETF chair \<chair@ietf.org>
+
+Change controller:
+:   IESG \<iesg@ietf.org>
+
+Reference:
+:   {{coap-tcp-scheme}} in [RFCthis]
+{: vspace='0'}
+
+###coaps+tcp
+IANA is requested to register the Uniform Resource Identifier (URI) scheme "coaps+tcp".
+This registration request complies with {{-urireg}}.
+
+Scheme name:
+:   coaps+tcp
+
+Status:
+:   Permanent
+
+Applications/protocols that use this scheme name:
+:   The scheme is used by CoAP endpoints to access CoAP resources using TLS.
+
+Contact:
+:   IETF chair \<chair@ietf.org>
+
+Change controller:
+:   IESG \<iesg@ietf.org>
+
+Reference:
+:   {{coaps-tcp-scheme}} in [RFCthis]
+{: vspace='0'}
+
+### coap+ws
+
+IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap+ws".
+This registration request complies with {{-urireg}}.
+
+Scheme name:
+:   coap+ws
+
+Status:
+:   Permanent
+
+Applications/protocols that use this scheme name:
+:   The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol.
+
+Contact:
+:   IETF chair \<chair@ietf.org>
+
+Change controller:
+:   IESG \<iesg@ietf.org>
+
+Reference:
+:   {{coap-ws-scheme}} in [RFCthis]
+{: vspace='0'}
+
+### coaps+ws
+IANA is requested to register the Uniform Resource Identifier (URI) scheme "coaps+ws".
+This registration request complies with {{-urireg}}.
+
+Scheme name:
+:   coaps+ws
+
+Status:
+:   Permanent
+
+Applications/protocols that use this scheme name:
+:   The scheme is used by CoAP endpoints to access CoAP resources using the WebSocket protocol
+    secured with TLS.
+
+Contact:
+:   IETF chair \<chair@ietf.org>
+
+Change controller:
+:   IESG \<iesg@ietf.org>
+
+References:
+:   {{coaps-ws-scheme}} in [RFCthis]
 {: vspace='0'}
 
 ## Well-Known URI Suffix Registration
@@ -1460,7 +1621,7 @@ Change controller.
 :   IETF
 
 Specification document(s).
-:   \[RFCthis]
+:   [RFCthis]
 
 Related information.
 :   None.
@@ -1479,7 +1640,7 @@ Identification Sequence.
 :   0x63 0x6f 0x61 0x70 ("coap")
 
 Reference.
-:   \[RFCthis]
+:   [RFCthis]
 {: vspace='0'}
 
 ## WebSocket Subprotocol Registration
@@ -1493,18 +1654,18 @@ Subprotocol Common Name.
 :   Constrained Application Protocol (CoAP)
 
 Subprotocol Definition.
-:   \[RFCthis]
+:   [RFCthis]
 {: vspace='0'}
 
 ## CoAP Option Numbers Registry
 
-IANA is requested to add \[RFCthis] to the references for the following entries registered
+IANA is requested to add [RFCthis] to the references for the following entries registered
 by {{RFC7959}} in the "CoAP Option Numbers" sub-registry defined by {{RFC7252}}:
 
 | Number | Name   | Reference           |
 |--------|--------|---------------------|
-| 23     | Block2 | RFC 7959, \[RFCthis] |
-| 27     | Block1 | RFC 7959, \[RFCthis] |
+| 23     | Block2 | RFC 7959, [RFCthis] |
+| 27     | Block1 | RFC 7959, [RFCthis] |
 {: #option-numbers title="CoAP Option Numbers" }
 --- back
 
@@ -1566,12 +1727,12 @@ This section gives examples for the first two configurations
 discussed in {{websockets-overview}}.
 
 An example of the process followed by a CoAP client to retrieve the
-representation of a resource identified by a "coap" URI might be as
+representation of a resource identified by a "coap+ws" URI might be as
 follows. {{example-1}} below illustrates the WebSocket and
 CoAP messages exchanged in detail.
 
 1. The CoAP client obtains the URI
-  \<coap://example.org/sensors/temperature?u=Cel>,
+  \<coap+ws://example.org/sensors/temperature?u=Cel>,
   for example, from a resource representation that it retrieved
   previously.
 
@@ -1637,12 +1798,11 @@ CoAP messages exchanged in detail.
      |<---------+  Close frame (opcode=%x8, FIN=1, MASK=0)
      |          |
 ~~~~
-{: #example-1 title='A CoAP client retrieves the representation of a
-     resource identified by a "coap" URI over the WebSocket protocol'}
+{: #example-1 title='A CoAP client retrieves the representation of a resource identified by a "coap+ws" URI'}
 
 {{example-2}} shows how a CoAP client uses a CoAP
 forward proxy with a WebSocket endpoint to retrieve the representation
-of the resource `coap://[2001:db8::1]/`. The use of the forward
+of the resource "coap://[2001:db8::1]/". The use of the forward
 proxy and the address of the WebSocket endpoint are determined by the
 client from local configuration rules. The request URI is specified
 in the Proxy-Uri Option. Since the request URI uses the "coap" URI
@@ -1686,7 +1846,7 @@ the WebSocket connection to the client.
      |          |          |    +------------------------------------+
      |          |          |
 ~~~~
-{: #example-2 title='A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSocket-enabled CoAP proxy'}
+{: #example-2 title='A CoAP client retrieves the representation of a resource identified by a "coap" URI via a WebSockets-enabled CoAP proxy'}
 
 # Change Log
 
@@ -1759,16 +1919,6 @@ Clarified well-known URI mechanism use for all URI schemes
 
 Changed NoSec to optional-to-implement
 
-## Since draft-ietf-core-coap-tcp-tls-08
-
-Reverted "Updates RFC6455" to extend well-known URI mechanism to ws
-and wss; point to {{-ws-wk}} instead
-
-Don't use port 443 as the default port for coaps+tcp
-
-Remove coap+tt and coaps+tt URI schemes (where tt is tcp or ws); map
-everything to coap/coaps
-
 
 # Acknowledgements {#acknowledgements}
 {: numbered="no"}
@@ -1778,11 +1928,6 @@ Olivier Delaby, Esko Dijk, Christian Groves, Nadir Javed,
 Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
 Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard,
 and Gengyu Wei for their feedback.
-
-Last-call reviews from Yoshifumi Nishida, Mark Nottingham, and
-Meral Shirazipour as well as several IESG reviewers provided extensive
-comments; from the IESG, we would like to specifically call out Ben Campbell,
-Mirja Kühlewind, Eric Rescorla, Adam Roach, and the responsible AD Alexey Melnikov.
 
 # Contributors {#contributors}
 {: numbered="no"}
