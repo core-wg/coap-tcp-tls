@@ -165,7 +165,11 @@ Currently, there are also fewer HTTP/2 implementations available for constrained
 comparison to CoAP.
 
 To address these requirements, this document defines how to transport CoAP over TCP,
-CoAP over TLS, and CoAP over WebSockets. {{layering}} illustrates the layering:
+CoAP over TLS, and CoAP over WebSockets. For these cases, the reliability offered by the
+transport protocol subsumes the reliability functions of the message layer used for CoAP
+over UDP. (Note that both for a reliable transport and the CoAP over UDP message layer, the reliability offered is per transport hop: where proxies --- see Sections 5.7 and 10 of
+{{-coap}} --- are involved, that layer's reliability function does not extend end-to-end.)
+{{fig-layering}} illustrates the layering:
 
 ~~~~
         +--------------------------------+
@@ -179,7 +183,7 @@ CoAP over TLS, and CoAP over WebSockets. {{layering}} illustrates the layering:
         |      Reliable Transport        |
         +--------------------------------+
 ~~~~
-{: #layering title='Layering of CoAP over Reliable Transports' artwork-align="center"}
+{: #fig-layering title='Layering of CoAP over Reliable Transports' artwork-align="center"}
 
 Where NATs are present, CoAP over TCP can help with their traversal.
 NATs often calculate expiration timers based on the transport layer protocol
