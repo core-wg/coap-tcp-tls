@@ -89,6 +89,7 @@ normative:
   RFC7641: RFC7641
   RFC7925: RFC7925
   RFC7959: block
+  I-D.bormann-hybi-ws-wk: ws-wk 
 informative:
   I-D.ietf-core-cocoa: cocoa
   I-D.ietf-core-object-security: oscoap
