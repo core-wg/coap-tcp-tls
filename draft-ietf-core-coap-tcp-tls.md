@@ -1940,10 +1940,10 @@ Michael Koster, Matthias Kovatsch, Achim Kraus, David Navarro,
 Szymon Sasin, Goran Selander, Zach Shelby, Andrew Summers, Julien Vermillard,
 and Gengyu Wei for their feedback.
 
-Last-call reviews from Mark Nottingham and Yoshifumi Nishida as well
-as several IESG reviewers provided extensive comments; from the IESG, 
-we would like to specifically call out Adam Roach, Ben Campbell, Eric 
-Rescorla, Mirja Kühlewind, and the responsible AD Alexey Melnikov. 
+Last-call reviews from Yoshifumi Nishida, Mark Nottingham, and
+Meral Shirazipour as well as several IESG reviewers provided extensive
+comments; from the IESG, we would like to specifically call out Ben Campbell,
+Mirja Kühlewind, Eric Rescorla, Adam Roach, and the responsible AD Alexey Melnikov. 
 
 # Contributors {#contributors}
 {: numbered="no"}
