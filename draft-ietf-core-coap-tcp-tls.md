@@ -1113,8 +1113,7 @@ The syntax defined in Section 6.2 of {{RFC7252}} applies to this URI scheme, wit
 
 * The port subcomponent indicates the TCP port at which the TLS server
   for the CoAP server is located. If it is empty or not given, then
-  the default port 443 is assumed (this is different from the default
-  port for "coaps", i.e., CoAP over DTLS over UDP).
+  the default port 5684 is assumed.
 
 * If a TLS server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
   {{-alpn}} or wishes to accommodate TLS clients that do not support ALPN, it MAY offer a
