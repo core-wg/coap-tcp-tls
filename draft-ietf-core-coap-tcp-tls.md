@@ -3,7 +3,7 @@ stand_alone: true
 ipr: trust200902
 docname: draft-ietf-core-coap-tcp-tls-latest
 cat: std
-updates: 6455, 7641, 7959
+updates: 7641, 7959
 coding: utf-8
 pi:
   strict: 'yes'
@@ -139,9 +139,8 @@ reliable delivery, simple congestion control, and flow control.
 Some environments benefit from the availability of CoAP carried over reliable
 transports such as TCP or TLS. This document outlines the changes required to use
 CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641
-for use with these transports, RFC 7959 to enable the use of larger messages over
-a reliable transport, and RFC 6455 to extend the well-known URI mechanism (RFC 5785)
-to the ws and wss URI schemes.
+for use with these transports and RFC 7959 to enable the use of larger messages over
+a reliable transport.
 
 --- middle
 
