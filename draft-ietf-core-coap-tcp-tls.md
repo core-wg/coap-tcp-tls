@@ -843,8 +843,10 @@ maintaining the connection and opts for an orderly shutdown. The details
 are in the options. A diagnostic payload (see Section
 5.5.2 of {{-coap}}) MAY be included.  A peer will normally
 respond to a Release message by closing the TCP/TLS connection.
-Messages may be in flight when the sender decides to send a Release message.
-The general expectation is that these will still be processed.
+Messages may be in flight or responses outstanding when the sender decides to
+send a Release message. The peer responding to the Release message SHOULD delay
+the closing of the connection until it has responded to all requests received by it
+before the Release message. It also MAY wait for the responses to its own requests.
 
 Release messages are indicated by the 7.04 code (Release).
 
@@ -880,7 +882,7 @@ release. The sender shuts down the connection immediately after
 the abort (and may or may not wait for a Release or Abort message or
 connection shutdown in the inverse direction). A diagnostic payload
 (see Section 5.5.2 of {{-coap}}) SHOULD be included in the Abort message.
-Messages may be in flight when the sender decides to send an Abort message.
+Messages may be in flight or responses outstanding when the sender decides to send an Abort message.
 The general expectation is that these will NOT be processed.
 
 Abort messages are indicated by the 7.05 code (Abort).
