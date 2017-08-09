@@ -608,9 +608,7 @@ connection is established as defined in Section 4 of {{RFC6455}}.
 
 The WebSocket client MUST include the subprotocol name "coap" in
 the list of protocols, which indicates support for the protocol
-defined in this document. Any later, incompatible versions of
-CoAP or CoAP over WebSockets will use a different subprotocol
-name.
+defined in this document.
 
 The WebSocket client includes the hostname of the WebSocket server
 in the Host header field of its handshake as per {{RFC6455}}. The Host
