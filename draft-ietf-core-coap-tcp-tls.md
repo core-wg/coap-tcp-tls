@@ -905,8 +905,8 @@ of {{RFC7252}}, such messages are rejected by sending a matching Reset
 message and otherwise ignoring the message. 
 
 For CoAP over reliable transports, the recipient rejects such messages by
-sending an Abort message and otherwise ignoring the message. No specific option
-has been defined for the Abort message in this case, as the details are
+sending an Abort message and otherwise ignoring (not processing) the message.
+No specific option has been defined for the Abort message in this case, as the details are
 best left to a diagnostic payload.
 
 ## Signaling examples
