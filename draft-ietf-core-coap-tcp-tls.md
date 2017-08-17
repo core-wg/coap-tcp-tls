@@ -1042,7 +1042,7 @@ using CoAP over TCP.
 
 The syntax defined in Section 6.1 of {{RFC7252}} applies to this URI scheme with the following changes:
 
-* The port subcomponent indicates the TCP port at which the CoAP server is located.
+* The port subcomponent indicates the TCP port at which the CoAP Connection Acceptor is located.
 (If it is empty or not given, then the default port 5683 is assumed, as with UDP.)
 
 Encoding considerations:
@@ -1068,7 +1068,7 @@ using CoAP over TCP secured with TLS.
 The syntax defined in Section 6.2 of {{RFC7252}} applies to this URI scheme, with the following changes:
 
 * The port subcomponent indicates the TCP port at which the TLS server
-  for the CoAP server is located. If it is empty or not given, then
+  for the CoAP Connection Acceptor is located. If it is empty or not given, then
   the default port 5684 is assumed.
 
 * If a TLS server does not support the Application-Layer Protocol Negotiation Extension (ALPN)
