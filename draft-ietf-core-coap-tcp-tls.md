@@ -78,7 +78,6 @@ normative:
   RFC0793: tcp
   RFC2119: bcp14
   RFC3986: RFC3986
-  RFC5226: RFC5226
   RFC5246: tls12
   RFC5785: RFC5785
   RFC6066: RFC6066
@@ -90,6 +89,7 @@ normative:
   RFC7641: RFC7641
   RFC7925: RFC7925
   RFC7959: block
+  RFC8126: RFC8126
   I-D.bormann-hybi-ws-wk: ws-wk 
 informative:
   I-D.ietf-core-cocoa: cocoa
@@ -1373,7 +1373,7 @@ Initial entries in this sub-registry are as follows:
 All other Signaling Codes are Unassigned.
 
 The IANA policy for future additions to this sub-registry is "IETF
-Review or IESG Approval" as described in {{RFC5226}}.
+Review or IESG Approval" as described in {{RFC8126}}.
 
 ## CoAP Signaling Option Numbers Registry {#option-codes}
 
