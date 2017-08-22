@@ -1023,7 +1023,9 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
    The elective Alternative-Address Option requests the peer to instead
    open a connection of the same scheme as the present connection to the
    alternative transport address given.  Its value is in the form
-   "authority" as defined in Section 3.2 of [RFC3986].
+   "authority" as defined in Section 3.2 of [RFC3986].  (Existing state
+   related to the connection is not transferred from the present
+   connection to the new connection.)
 
    The Alternative-Address Option is a repeatable option as defined in
    Section 5.4.5 of [RFC7252].  When multiple occurrences of the option
@@ -1056,8 +1058,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
    that these will NOT be processed.
 
    Abort messages are indicated by the 7.05 code (Abort).
-
-
 
 
 
