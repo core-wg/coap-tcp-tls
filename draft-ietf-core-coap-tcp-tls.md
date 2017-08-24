@@ -416,7 +416,7 @@ The semantics of the other CoAP header fields are left unchanged.
 
 ## Message Transmission
 
-Once a connection is established, both endpoints MUST send a Capabilities and Settings message (CSM see {{csm}})
+Once a connection is established, each endpoint MUST send a Capabilities and Settings message (CSM see {{csm}})
 as their first message on the connection. This message establishes the initial settings and
 capabilities for the endpoint, such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
@@ -624,7 +624,7 @@ transferred in a block-wise fashion as defined in {{-block}}.
 
 ## Message Transmission {#requests-responses}
 
-As with CoAP over TCP, both endpoints MUST send a Capabilities
+As with CoAP over TCP, each endpoint MUST send a Capabilities
 and Settings message (CSM see {{csm}}) as their first message on the WebSocket connection.
 
 CoAP requests and responses are exchanged asynchronously over the
@@ -698,7 +698,7 @@ Capabilities and Settings messages (CSM) are used for two purposes:
 
 * Each setting option indicates a setting that will be applied by the sender.
 
-One CSM MUST be sent by both endpoints at the start of the connection. Further
+One CSM MUST be sent by each endpoint at the start of the connection. Further
 CSM MAY be sent at any other time by either endpoint over the lifetime of
 the connection.
 
