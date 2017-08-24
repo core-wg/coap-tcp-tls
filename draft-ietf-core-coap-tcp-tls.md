@@ -1401,7 +1401,9 @@ Initial entries in this sub-registry are as follows:
 
 The IANA policy for future additions to this sub-registry is based on
 number ranges for the option numbers, analogous to the policy defined
-in Section 12.2 of {{-coap}}.
+in Section 12.2 of {{-coap}}. (The policy is analogous rather than identical
+because the structure of the subregistry includes an additional column;
+however, the value of this column has no influence on the policy.)
 
 The documentation for a Signaling Option Number should specify the semantics of
 an option with that number, including the following properties:
