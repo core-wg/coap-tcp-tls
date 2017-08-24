@@ -1020,7 +1020,7 @@ distinct origin server.
 
 The syntax for the URI schemes in this section are specified using
 Augmented Backus-Naur Form (ABNF) [RFC5234]. The definitions of "host",
-"port", "path-abempty", "query", and "fragment" are adopted from [RFC3986].
+"port", "path-abempty", and "query" are adopted from [RFC3986].
 
 Section 8 (Multicast CoAP) in {{RFC7252}} is not applicable to these schemes.
 
@@ -1037,7 +1037,7 @@ using CoAP over TCP.
 
 ~~~~ abnf
   coap-tcp-URI = "coap+tcp:" "//" host [ ":" port ]
-    path-abempty [ "?" query ]  [ "#" fragment ]
+    path-abempty [ "?" query ]
 ~~~~
 {: artwork-align="left"}
 
@@ -1062,7 +1062,7 @@ using CoAP over TCP secured with TLS.
 
 ~~~~ abnf
   coaps-tcp-URI = "coaps+tcp:" "//" host [ ":" port ]
-    path-abempty [ "?" query ] [ "#" fragment ]
+    path-abempty [ "?" query ]
 ~~~~
 {: artwork-align="left"}
 
@@ -1110,7 +1110,7 @@ using CoAP over WebSockets.
 
 ~~~~ abnf
   coap-ws-URI = "coap+ws:" "//" host [ ":" port ]
-    path-abempty [ "?" query ] [ "#" fragment ]
+    path-abempty [ "?" query ]
 ~~~~
 {: artwork-align="left"}
 
@@ -1147,7 +1147,7 @@ using CoAP over WebSockets secured by TLS.
 
 ~~~~ abnf
   coaps-ws-URI = "coaps+ws:" "//" host [ ":" port ]
-    path-abempty [ "?" query ] [ "#" fragment ]
+    path-abempty [ "?" query ]
 ~~~~
 {: artwork-align="left"}
 
