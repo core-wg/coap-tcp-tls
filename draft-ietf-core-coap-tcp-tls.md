@@ -652,7 +652,7 @@ that redundant maintenance traffic is not transmitted.
 
 # Signaling
 
-Signaling messages are introduced to allow peers to:
+Signaling messages are specifically introduced only for CoAP over reliable transports to allow peers to:
 
 * Learn related characteristics, such as maximum message size for the connection
 * Shut down the connection in an orderly fashion
