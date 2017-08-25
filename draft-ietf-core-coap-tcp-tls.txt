@@ -124,7 +124,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
      10.2.  CoAP Signaling Option Numbers Registry . . . . . . . . .  31
      10.3.  Service Name and Port Number Registration  . . . . . . .  32
      10.4.  Secure Service Name and Port Number Registration . . . .  33
-     10.5.  URI Scheme Registration  . . . . . . . . . . . . . . . .  33
+     10.5.  URI Scheme Registration  . . . . . . . . . . . . . . . .  34
      10.6.  Well-Known URI Suffix Registration . . . . . . . . . . .  36
      10.7.  ALPN Protocol Identifier . . . . . . . . . . . . . . . .  36
      10.8.  WebSocket Subprotocol Registration . . . . . . . . . . .  36
@@ -484,7 +484,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
 3.3.  Message Transmission
 
-   Once a connection is established, both endpoints MUST send a
+   Once a connection is established, each endpoint MUST send a
    Capabilities and Settings message (CSM see Section 5.3) as their
    first message on the connection.  This message establishes the
    initial settings and capabilities for the endpoint, such as maximum
@@ -740,7 +740,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
 4.3.  Message Transmission
 
-   As with CoAP over TCP, both endpoints MUST send a Capabilities and
+   As with CoAP over TCP, each endpoint MUST send a Capabilities and
    Settings message (CSM see Section 5.3) as their first message on the
    WebSocket connection.
 
@@ -842,9 +842,9 @@ Bormann, et al.         Expires February 26, 2018              [Page 15]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
 
-   One CSM MUST be sent by both endpoints at the start of the
-   connection.  Further CSM MAY be sent at any other time by either
-   endpoint over the lifetime of the connection.
+   One CSM MUST be sent by each endpoint at the start of the connection.
+   Further CSM MAY be sent at any other time by either endpoint over the
+   lifetime of the connection.
 
    Both capability and setting options are cumulative.  A CSM does not
    invalidate a previously sent capability indication or setting even if
@@ -1758,7 +1758,10 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
    The IANA policy for future additions to this sub-registry is based on
    number ranges for the option numbers, analogous to the policy defined
-   in Section 12.2 of [RFC7252].
+   in Section 12.2 of [RFC7252].  (The policy is analogous rather than
+   identical because the structure of the subregistry includes an
+   additional column; however, the value of this column has no influence
+   on the policy.)
 
    The documentation for a Signaling Option Number should specify the
    semantics of an option with that number, including the following
@@ -1784,15 +1787,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
    Transport Protocol.
       tcp
 
-   Assignee.
-      IESG <iesg@ietf.org>
-
 
 
 Bormann, et al.         Expires February 26, 2018              [Page 32]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
+
+   Assignee.
+      IESG <iesg@ietf.org>
 
    Contact.
       IETF Chair <chair@ietf.org>
@@ -1835,11 +1838,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
    Port Number.
       5684
 
-10.5.  URI Scheme Registration
 
-   URI schemes are registered within the "Uniform Resource Identifier
-   (URI) Schemes" registry maintained at
-   http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml.
+
 
 
 
@@ -1849,6 +1849,12 @@ Bormann, et al.         Expires February 26, 2018              [Page 33]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
+
+10.5.  URI Scheme Registration
+
+   URI schemes are registered within the "Uniform Resource Identifier
+   (URI) Schemes" registry maintained at
+   http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml.
 
 10.5.1.  coap+tcp
 
@@ -1892,12 +1898,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
       using TLS.
 
    Contact:
-      IETF chair <chair@ietf.org>
-
-   Change controller:
-      IESG <iesg@ietf.org>
-
-   Reference:
 
 
 
@@ -1906,6 +1906,12 @@ Bormann, et al.         Expires February 26, 2018              [Page 34]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
 
+      IETF chair <chair@ietf.org>
+
+   Change controller:
+      IESG <iesg@ietf.org>
+
+   Reference:
       Section 7.2 in [RFCthis]
 
 10.5.3.  coap+ws
@@ -1948,12 +1954,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
       The scheme is used by CoAP endpoints to access CoAP resources
       using the WebSocket protocol secured with TLS.
 
-   Contact:
-      IETF chair <chair@ietf.org>
-
-   Change controller:
-      IESG <iesg@ietf.org>
-
 
 
 
@@ -1961,6 +1961,12 @@ Bormann, et al.         Expires February 26, 2018              [Page 35]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
+
+   Contact:
+      IETF chair <chair@ietf.org>
+
+   Change controller:
+      IESG <iesg@ietf.org>
 
    References:
       Section 7.4 in [RFCthis]
@@ -2004,12 +2010,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
    the "WebSocket Subprotocol Name Registry":
 
    Subprotocol Identifier.
-      coap
-
-   Subprotocol Common Name.
-      Constrained Application Protocol (CoAP)
-
-   Subprotocol Definition.
 
 
 
@@ -2018,6 +2018,12 @@ Bormann, et al.         Expires February 26, 2018              [Page 36]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
 
+      coap
+
+   Subprotocol Common Name.
+      Constrained Application Protocol (CoAP)
+
+   Subprotocol Definition.
       [RFCthis]
 
 10.9.  CoAP Option Numbers Registry
@@ -2058,12 +2064,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
               RFC 3986, DOI 10.17487/RFC3986, January 2005,
               <https://www.rfc-editor.org/info/rfc3986>.
 
-   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.2", RFC 5246,
-              DOI 10.17487/RFC5246, August 2008, <https://www.rfc-
-              editor.org/info/rfc5246>.
-
-
 
 
 
@@ -2073,6 +2073,11 @@ Bormann, et al.         Expires February 26, 2018              [Page 37]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
+
+   [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
+              (TLS) Protocol Version 1.2", RFC 5246,
+              DOI 10.17487/RFC5246, August 2008, <https://www.rfc-
+              editor.org/info/rfc5246>.
 
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
               Uniform Resource Identifiers (URIs)", RFC 5785,
@@ -2114,11 +2119,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
               DOI 10.17487/RFC7641, September 2015, <https://www.rfc-
               editor.org/info/rfc7641>.
 
-   [RFC7925]  Tschofenig, H., Ed. and T. Fossati, "Transport Layer
-              Security (TLS) / Datagram Transport Layer Security (DTLS)
-              Profiles for the Internet of Things", RFC 7925,
-              DOI 10.17487/RFC7925, July 2016, <https://www.rfc-
-              editor.org/info/rfc7925>.
 
 
 
@@ -2129,6 +2129,12 @@ Bormann, et al.         Expires February 26, 2018              [Page 38]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
+
+   [RFC7925]  Tschofenig, H., Ed. and T. Fossati, "Transport Layer
+              Security (TLS) / Datagram Transport Layer Security (DTLS)
+              Profiles for the Internet of Things", RFC 7925,
+              DOI 10.17487/RFC7925, July 2016, <https://www.rfc-
+              editor.org/info/rfc7925>.
 
    [RFC7959]  Bormann, C. and Z. Shelby, Ed., "Block-Wise Transfers in
               the Constrained Application Protocol (CoAP)", RFC 7959,
@@ -2172,12 +2178,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
               DOI 10.17487/RFC5234, January 2008, <https://www.rfc-
               editor.org/info/rfc5234>.
 
-   [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
-              Cheshire, "Internet Assigned Numbers Authority (IANA)
-              Procedures for the Management of the Service Name and
-              Transport Protocol Port Number Registry", BCP 165,
-              RFC 6335, DOI 10.17487/RFC6335, August 2011,
-              <https://www.rfc-editor.org/info/rfc6335>.
 
 
 
@@ -2185,6 +2185,13 @@ Bormann, et al.         Expires February 26, 2018              [Page 39]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
+
+   [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
+              Cheshire, "Internet Assigned Numbers Authority (IANA)
+              Procedures for the Management of the Service Name and
+              Transport Protocol Port Number Registry", BCP 165,
+              RFC 6335, DOI 10.17487/RFC6335, August 2011,
+              <https://www.rfc-editor.org/info/rfc6335>.
 
    [RFC6347]  Rescorla, E. and N. Modadugu, "Datagram Transport Layer
               Security Version 1.2", RFC 6347, DOI 10.17487/RFC6347,
@@ -2226,14 +2233,7 @@ A.2.  Transmission and Acknowledgements
    client to either respond with an acknowledgement message or a reset
    message.  An acknowledgement message indicates that the client is
    alive and wishes to receive further notifications.  A reset message
-   indicates that the client does not recognize the token which causes
-   the server to remove the associated entry from the list of observers.
 
-   Since TCP eliminates the need for the message layer to support
-   reliability, CoAP over reliable transports does not support
-   confirmable or non-confirmable message types.  All notifications are
-   delivered reliably to the client with positive acknowledgement of
-   receipt occurring at the TCP level.  If the client does not recognize
 
 
 
@@ -2242,6 +2242,14 @@ Bormann, et al.         Expires February 26, 2018              [Page 40]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
 
+   indicates that the client does not recognize the token which causes
+   the server to remove the associated entry from the list of observers.
+
+   Since TCP eliminates the need for the message layer to support
+   reliability, CoAP over reliable transports does not support
+   confirmable or non-confirmable message types.  All notifications are
+   delivered reliably to the client with positive acknowledgement of
+   receipt occurring at the TCP level.  If the client does not recognize
    the token in a notification, it MAY immediately abort the connection
    (see Section 5.6).
 
@@ -2281,14 +2289,6 @@ Appendix B.  CoAP over WebSocket Examples
 
    An example of the process followed by a CoAP client to retrieve the
    representation of a resource identified by a "coap+ws" URI might be
-   as follows.  Figure 17 below illustrates the WebSocket and CoAP
-   messages exchanged in detail.
-
-   1.  The CoAP client obtains the URI <coap+ws://example.org/sensors/
-       temperature?u=Cel>, for example, from a resource representation
-       that it retrieved previously.
-
-
 
 
 
@@ -2297,6 +2297,13 @@ Bormann, et al.         Expires February 26, 2018              [Page 41]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
+
+   as follows.  Figure 17 below illustrates the WebSocket and CoAP
+   messages exchanged in detail.
+
+   1.  The CoAP client obtains the URI <coap+ws://example.org/sensors/
+       temperature?u=Cel>, for example, from a resource representation
+       that it retrieved previously.
 
    2.  It establishes a WebSocket connection to the endpoint URI
        composed of the authority "example.org" and the well-known path
@@ -2310,13 +2317,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP      August 2017
 
    5.  The CoAP client uses the connection for further requests, or the
        connection is closed.
-
-
-
-
-
-
-
 
 
 

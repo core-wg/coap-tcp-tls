@@ -735,7 +735,7 @@ CoAP Client       CoAP Server  CoAP Client       CoAP Server
 <h1 id="rfc.section.3.3">
 <a href="#rfc.section.3.3">3.3.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a>
 </h1>
-<p id="rfc.section.3.3.p.1">Once a connection is established, both endpoints MUST send a Capabilities and Settings message (CSM see <a href="#csm" class="xref">Section 5.3</a>) as their first message on the connection. This message establishes the initial settings and capabilities for the endpoint, such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
+<p id="rfc.section.3.3.p.1">Once a connection is established, each endpoint MUST send a Capabilities and Settings message (CSM see <a href="#csm" class="xref">Section 5.3</a>) as their first message on the connection. This message establishes the initial settings and capabilities for the endpoint, such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
 <p id="rfc.section.3.3.p.2">To avoid a deadlock, the Connection Initiator MUST NOT wait for the Connection Acceptor to send its initial CSM message before sending its own initial CSM message.  Conversely, the Connection Acceptor MAY wait for the Connection Initiator to send its initial CSM message before sending its own initial CSM message.</p>
 <p id="rfc.section.3.3.p.3">To avoid unnecessary latency, a Connection Initiator MAY send additional messages without waiting to receive the Connection Acceptor&#8217;s CSM; however, it is important to note that the Connection Acceptor&#8217;s CSM might advertise capabilities that impact how the initiator is expected to communicate with the acceptor. For example, the acceptor CSM could advertise a Max-Message-Size option (see <a href="#max-message-size" class="xref">Section 5.3.1</a>) that is smaller than the base value (1152).</p>
 <p id="rfc.section.3.3.p.4">Endpoints MUST treat a missing or invalid CSM as a connection error and abort the connection (see <a href="#sec-abort" class="xref">Section 5.6</a>).</p>
@@ -847,7 +847,7 @@ Sec-WebSocket-Protocol: coap
 <h1 id="rfc.section.4.3">
 <a href="#rfc.section.4.3">4.3.</a> <a href="#requests-responses" id="requests-responses">Message Transmission</a>
 </h1>
-<p id="rfc.section.4.3.p.1">As with CoAP over TCP, both endpoints MUST send a Capabilities and Settings message (CSM see <a href="#csm" class="xref">Section 5.3</a>) as their first message on the WebSocket connection.</p>
+<p id="rfc.section.4.3.p.1">As with CoAP over TCP, each endpoint MUST send a Capabilities and Settings message (CSM see <a href="#csm" class="xref">Section 5.3</a>) as their first message on the WebSocket connection.</p>
 <p id="rfc.section.4.3.p.2">CoAP requests and responses are exchanged asynchronously over the WebSocket connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
 <p id="rfc.section.4.3.p.3">The connection is bi-directional, so requests can be sent both by the entity that established the connection and the remote host.</p>
 <p id="rfc.section.4.3.p.4">As with CoAP over TCP, retransmission and deduplication of messages is provided by the WebSocket protocol. CoAP over WebSockets therefore does not make a distinction between Confirmable or Non-Confirmable messages, and does not provide Acknowledgement or Reset messages.</p>
@@ -890,7 +890,7 @@ Sec-WebSocket-Protocol: coap
 <li>Each capability option advertises one capability of the sender to the recipient.</li>
 <li>Each setting option indicates a setting that will be applied by the sender.</li>
 </ul>
-<p id="rfc.section.5.3.p.3">One CSM MUST be sent by both endpoints at the start of the connection. Further CSM MAY be sent at any other time by either endpoint over the lifetime of the connection.</p>
+<p id="rfc.section.5.3.p.3">One CSM MUST be sent by each endpoint at the start of the connection. Further CSM MAY be sent at any other time by either endpoint over the lifetime of the connection.</p>
 <p id="rfc.section.5.3.p.4">Both capability and setting options are cumulative. A CSM does not invalidate a previously sent capability indication or setting even if it is not repeated. A capability message without any option is a no-operation (and can be used as such). An option that is sent might override a previous value for the same option. The option defines how to handle this case if needed.</p>
 <p id="rfc.section.5.3.p.5">Base values are listed below for CSM Options. These are the values for the capability and setting before any Capabilities and Settings messages send a modified value.</p>
 <p id="rfc.section.5.3.p.6">These are not default values for the option, as defined in Section 5.4.4 in <a href="#RFC7252" class="xref">[RFC7252]</a>.  Default values apply on a per-message basis and thus reset when the value is not present in a given Capabilities and Settings message.</p>
@@ -1508,7 +1508,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 </tr>
 </tbody>
 </table>
-<p id="rfc.section.10.2.p.4">The IANA policy for future additions to this sub-registry is based on number ranges for the option numbers, analogous to the policy defined in Section 12.2 of <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
+<p id="rfc.section.10.2.p.4">The IANA policy for future additions to this sub-registry is based on number ranges for the option numbers, analogous to the policy defined in Section 12.2 of <a href="#RFC7252" class="xref">[RFC7252]</a>. (The policy is analogous rather than identical because the structure of the subregistry includes an additional column; however, the value of this column has no influence on the policy.)</p>
 <p id="rfc.section.10.2.p.5">The documentation for a Signaling Option Number should specify the semantics of an option with that number, including the following properties:</p>
 <p></p>
 
