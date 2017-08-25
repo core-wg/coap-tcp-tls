@@ -416,7 +416,7 @@ The semantics of the other CoAP header fields are left unchanged.
 
 ## Message Transmission
 
-Once a connection is established, both endpoints MUST send a Capabilities and Settings message (CSM see {{csm}})
+Once a connection is established, each endpoint MUST send a Capabilities and Settings message (CSM see {{csm}})
 as their first message on the connection. This message establishes the initial settings and
 capabilities for the endpoint, such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
@@ -624,7 +624,7 @@ transferred in a block-wise fashion as defined in {{-block}}.
 
 ## Message Transmission {#requests-responses}
 
-As with CoAP over TCP, both endpoints MUST send a Capabilities
+As with CoAP over TCP, each endpoint MUST send a Capabilities
 and Settings message (CSM see {{csm}}) as their first message on the WebSocket connection.
 
 CoAP requests and responses are exchanged asynchronously over the
@@ -698,7 +698,7 @@ Capabilities and Settings messages (CSM) are used for two purposes:
 
 * Each setting option indicates a setting that will be applied by the sender.
 
-One CSM MUST be sent by both endpoints at the start of the connection. Further
+One CSM MUST be sent by each endpoint at the start of the connection. Further
 CSM MAY be sent at any other time by either endpoint over the lifetime of
 the connection.
 
@@ -1401,7 +1401,9 @@ Initial entries in this sub-registry are as follows:
 
 The IANA policy for future additions to this sub-registry is based on
 number ranges for the option numbers, analogous to the policy defined
-in Section 12.2 of {{-coap}}.
+in Section 12.2 of {{-coap}}. (The policy is analogous rather than identical
+because the structure of the subregistry includes an additional column;
+however, the value of this column has no influence on the policy.)
 
 The documentation for a Signaling Option Number should specify the semantics of
 an option with that number, including the following properties:
