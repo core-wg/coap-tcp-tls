@@ -107,6 +107,7 @@ informative:
   RFC6335: portreg
   RFC6347: dtls
   RFC7230: RFC7230
+  I-D.gomez-lwig-tcp-constrained-node-networks:
   HomeGateway:
     title: An experimental study of home gateway characteristics
     author:
@@ -130,9 +131,7 @@ informative:
     seriesinfo: Interconnecting Smart Objects with the Internet / IAB Workshop
     format:
       PDF: http://www.iab.org/wp-content/IAB-uploads/2011/03/Turner.pdf
-
-I-D.gomez-lwig-tcp-constrained-node-networks:
-EK2016:
+  EK2016:
     title: Using UDP for Internet Transport Evolution
     author:
     - ins: K. Edeline
