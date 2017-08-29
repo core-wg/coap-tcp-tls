@@ -96,7 +96,7 @@ normative:
   RFC7525: RFC7525
   RFC7595: urireg
   RFC7641: RFC7641
-  I-D.ietf-dice-profile:
+  RFC7925:
 informative:
   I-D.bormann-core-cocoa: cocoa
   I-D.ietf-core-block: block
@@ -117,6 +117,48 @@ informative:
     date: 2010
     seriesinfo:
       Proceedings: of the 10th annual conference on Internet measurement
+  EK+2016:
+    title: Using UDP for Internet Transport Evolution
+    author:
+    - ins: K. Edeline
+      name: Korian Edeline
+      org: ''
+    - ins: M. Kuehlewind
+      name: Mirja Kuehlewind
+      org: ''
+    - ins: B. Trammell
+      name: Brian Trammell
+      org: ''
+    - ins: E. Aben
+      name: Emile Aben
+      org: ''
+    - ins: B. Donnet
+      name: Benoit Donnet
+      org: ''	  
+    date: 2016
+    seriesinfo:
+      Proceedings: arXiv preprint 1612.07816
+  BK+2015:
+    title: Advisory Guidelines for UDP Deployment
+    author:
+    - ins: C. Byrne
+      name: Cameron Byrne
+      org: ''
+    - ins: J. Kleberg
+      name: Jason Kleberg
+      org: ''
+    date: 2015
+    seriesinfo:
+      Proceedings: draft-byrne-opsec-udp-advisory-00 (expired)
+  S2016:
+    title: QUIC Deployment Experience @Google
+    author:
+    - ins: I. Swett
+      name: Ian Swett
+      org: ''
+    date: 2016
+    seriesinfo:
+      Proceedings: https://www.ietf.org/proceedings/96/slides/slides-96-quic-3.pdf
 
 --- abstract
 
@@ -134,17 +176,57 @@ outlines the changes required to use CoAP over TCP, TLS, and WebSockets transpor
 
 The [Constrained Application Protocol (CoAP)](#RFC7252) was designed
 for Internet of Things (IoT) deployments, assuming that UDP {{RFC0768}} 
-or DTLS {{RFC6347}} over UDP can be used unimpeded. UDP is a good choice
-for transferring small amounts of data across networks that follow the IP
-architecture.
+and DTLS {{RFC6347}} over UDP can be used unimpeded. 
 
-Some CoAP deployments need to integrate well with existing enterprise
-infrastructures, where UDP-based protocols may not be well-received or may
-even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for
-IoT can make the use of UDP brittle, resulting in lost or malformed packets.
+The use of CoAP over UDP is focused on simplicity, has a low codesize footprint, and 
+a small over-the-wire message size. However, it also suffers from a few limitations:
+
+* CoAP over UDP is a good choice for transferring small amounts of data across 
+networks that follow the IP architecture. It is less well suited for transferring 
+larger payloads, such as firmware updates. For this reason blockwise transfer was 
+added to CoAP, see {{RFC7959}}. Blockwise transfer also large transfers to get 
+"chunked" into small pieces, addressed and exchanged individually. 
+
+* CoAP over UDP offers a single congestion control mechanism only. It uses an 
+exponential backoff strategy for retransmissions and clients must strictly limit 
+the number of simultaneous outstanding interactions to a given server to one. This 
+means that CoAP clients cannot send multiple concurrent requests to a single CoAP 
+server. A client will therefore have to wait till the outstanding interaction has 
+been concluded. When a larger transfer has been started, such as a firmware 
+download, then this will block other interactions. This is called "head-of-line 
+blocking". (Note that there is ongoing work to add more elaborate congestion 
+control to CoAP as well, see {{-cocoa}}.)
+
+* CoAP over UDP does not provide fragmentation and reassembly support but instead 
+relies on lower layers providing this functionality. This means that fragmentation 
+and reassembly will be provided by IP or by an adaption layer, like 6LowPan. Using 
+fragmentation (either at the adaptation layer or at the IP layer) for the transport 
+of larger data payloads would be possible up to the maximum size of the underlying 
+datagram protocol. For UDP the length field is 16 bit long, which is about ~64 
+Kbyte of payload. For firmware images 64 Kbyte may, however, be too small and 
+relying on IP layer fragmentation is inefficient. Any transmission larger than 
+the path MTU will lead to IP fragmentation and the path MTU needs to be determined 
+first and it may change over time. 
+
+* Some networks drop UDP packets. Complete blocking of UDP happens in between about 
+2% and 4% of terrestrial access networks, according to {{EK+2016}}. UDP impairment 
+is especially concentrated in enterprise networks and networks in geographic regions 
+with otherwise challenged connectivity. Some networks also rate-limit UDP traffic, 
+as reported in {{BK+2015}}. QUIC deployment investigations revealed numbers around 
+0.3 % {{S2017}}. 
+
+* Where NATs are present, CoAP over TCP can help with their traversal. NATs often 
+calculate expiration timers based on the transport layer protocol being used by 
+application protocols. Many NATs maintain TCP-based NAT bindings for longer periods 
+based on the assumption that a transport layer protocol, such as TCP, offers 
+additional information about the session life cycle. UDP, on the other hand, does 
+not provide such information to a NAT and timeouts tend to be much shorter 
+{{HomeGateway}}. According to {{HomeGateway}} the mean between TCP and UDP NAT 
+binding timeouts is 386 minutes (TCP) and 160 seconds (UDP). Faster timeouts 
+require more frequent retransmissions. 
 
 To address such environments, this document defines additional bindings for CoAP,
-including TCP, TLS, and WebSockets.
+including TCP, TLS, and WebSockets, as shown in {{layering}}.
 
 ~~~~
 +-----------------------------------------------------------+
@@ -169,33 +251,18 @@ including TCP, TLS, and WebSockets.
 ~~~~
 {: #layering title='Abstract Layering of CoAP extended by TCP, TLS, and WebSockets' artwork-align="center"}
 
-Where NATs are present, CoAP over TCP can help with their traversal.
-NATs often calculate expiration timers based on the transport layer protocol
-being used by application protocols. Many NATs maintain TCP-based NAT bindings
-for longer periods based on the assumption that a transport layer protocol, such
-as TCP, offers additional information about the session life cycle. UDP, on the other
-hand, does not provide such information to a NAT and timeouts tend to be much 
-shorter {{HomeGateway}}.
 
-Some environments may also benefit from the ability of TCP to exchange
-larger payloads such as firmware images without application layer
-segmentation and to utilize the more sophisticated congestion control
-capabilities provided by many TCP implementations.
-
-(Note that there is ongoing work to add more elaborate congestion control
-to CoAP as well, see {{-cocoa}}.)
-
-CoAP may be integrated into a Web environment where the front-end
+CoAP may be integrated into the backend infrastructure where the front-end
 uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
 over TCP between the back-end services. A TCP-to-UDP gateway can be used at
 the cloud boundary to communicate with the UDP-based IoT device.
 
 To allow IoT devices to better communicate in these demanding environments, CoAP
 needs to support different transport protocols, namely TCP {{RFC0793}},
-in some situations secured by TLS {{RFC5246}}.
+preferribly secured by TLS {{RFC5246}}.
 
-In addition, some corporate networks only allow Internet access via a HTTP proxy.
-In this case, the best transport for CoAP would be the [WebSocket Protocol](#RFC6455).
+For corporate networks that only allow Internet access via a HTTP proxy
+the best transport for CoAP would be the [WebSocket Protocol](#RFC6455).
 The WebSocket protocol provides two-way communication between a client
 and a server after upgrading an [HTTP/1.1](#RFC7230) connection and may
 be available in an environment that blocks CoAP over UDP. Another scenario
@@ -219,13 +286,18 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 This document assumes that readers are familiar with the terms and
 concepts that are used in {{RFC6455}} and {{RFC7252}}.
 
+BERT stands for "Block-wise transfers in CoAP: Extension for Reliable Transport".
+
 BERT Option:
 :	A Block1 or Block2 option that includes an SZX value of 7.
 {: vspace='0'}
+
 BERT Block:
 :	The payload of a CoAP message that is affected by a BERT Option in
-	descriptive usage (Section 2.1 of [I-D.ietf-core-block]).
+	descriptive usage (Section 2.1 of {{RFC7959}}).
 {: vspace='0'}
+
+
 # CoAP over TCP
 
 The request/response interaction model of CoAP TCP/TLS is similar to CoAP UDP.
@@ -1209,7 +1281,7 @@ The security considerations of {{-coap}} apply.
 Implementations of CoAP MUST use TLS version 1.2 or higher for CoAP over TLS.
 The general TLS usage guidance in {{RFC7525}} SHOULD be followed.
 
-Guidelines for use of cipher suites and TLS extensions can be found in {{I-D.ietf-dice-profile}}.
+Guidelines for use of cipher suites and TLS extensions can be found in {{RFC7925}}.
 
 TLS does not protect the TCP header. This may, for example, 
 allow an on-path adversary to terminate a TCP connection prematurely 
