@@ -97,9 +97,10 @@ normative:
   RFC7595: urireg
   RFC7641: RFC7641
   RFC7925:
+  RFC7959: block
 informative:
-  I-D.bormann-core-cocoa: cocoa
-  I-D.ietf-core-block: block
+  I-D.ietf-core-cocoa: cocoa
+  I-D.gomez-lwig-tcp-constrained-node-networks: 
   I-D.becker-core-coap-sms-gprs: I-D.becker-core-coap-sms-gprs
   I-D.dijk-core-sleepy-reqs: I-D.dijk-core-sleepy-reqs
   RFC0768: udp
@@ -117,7 +118,7 @@ informative:
     date: 2010
     seriesinfo:
       Proceedings: of the 10th annual conference on Internet measurement
-  EK+2016:
+  EK2016:
     title: Using UDP for Internet Transport Evolution
     author:
     - ins: K. Edeline
@@ -134,11 +135,20 @@ informative:
       org: ''
     - ins: B. Donnet
       name: Benoit Donnet
-      org: ''	  
+      org: '' 
     date: 2016
     seriesinfo:
       Proceedings: arXiv preprint 1612.07816
-  BK+2015:
+  SW2016:
+    title: QUIC Deployment Experience @Google
+    author:
+    - ins: I. Swett
+      name: Ian Swett
+      org: ''
+    date: 2016
+    seriesinfo:
+      Proceedings: https://www.ietf.org/proceedings/96/slides/slides-96-quic-3.pdf
+  BK2015:
     title: Advisory Guidelines for UDP Deployment
     author:
     - ins: C. Byrne
@@ -150,15 +160,6 @@ informative:
     date: 2015
     seriesinfo:
       Proceedings: draft-byrne-opsec-udp-advisory-00 (expired)
-  S2016:
-    title: QUIC Deployment Experience @Google
-    author:
-    - ins: I. Swett
-      name: Ian Swett
-      org: ''
-    date: 2016
-    seriesinfo:
-      Proceedings: https://www.ietf.org/proceedings/96/slides/slides-96-quic-3.pdf
 
 --- abstract
 
@@ -178,42 +179,44 @@ The [Constrained Application Protocol (CoAP)](#RFC7252) was designed
 for Internet of Things (IoT) deployments, assuming that UDP {{RFC0768}} 
 and DTLS {{RFC6347}} over UDP can be used unimpeded. 
 
-The use of CoAP over UDP is focused on simplicity, has a low codesize footprint, and 
+The use of CoAP over UDP is focused on simplicity, has a low code footprint, and 
 a small over-the-wire message size. However, it also suffers from a few limitations:
 
 * CoAP over UDP is a good choice for transferring small amounts of data across 
 networks that follow the IP architecture. It is less well suited for transferring 
 larger payloads, such as firmware updates. For this reason blockwise transfer was 
-added to CoAP, see {{RFC7959}}. Blockwise transfer also large transfers to get 
-"chunked" into small pieces, addressed and exchanged individually. 
+added to CoAP, see {{RFC7959}}. With blockwise transfer large data payloads get 
+"chunked" into small(er) blocks and transferred individually. This also allows 
+to suspend a transmission and to continue at a later time to interleave other, 
+more urgent transmissions. 
 
-* CoAP over UDP offers a single congestion control mechanism only. It uses an 
+* CoAP over UDP offers a simple congestion control mechanism only. It uses an 
 exponential backoff strategy for retransmissions and clients must strictly limit 
 the number of simultaneous outstanding interactions to a given server to one. This 
 means that CoAP clients cannot send multiple concurrent requests to a single CoAP 
 server. A client will therefore have to wait till the outstanding interaction has 
 been concluded. When a larger transfer has been started, such as a firmware 
-download, then this will block other interactions. This is called "head-of-line 
-blocking". (Note that there is ongoing work to add more elaborate congestion 
-control to CoAP as well, see {{-cocoa}}.)
+download, then this transfer will block other exchanges. This is called "head-of-line 
+blocking". Note that there is ongoing work to add more elaborate congestion 
+control to CoAP as well, see {{-cocoa}}.
 
 * CoAP over UDP does not provide fragmentation and reassembly support but instead 
-relies on lower layers providing this functionality. This means that fragmentation 
-and reassembly will be provided by IP or by an adaption layer, like 6LowPan. Using 
-fragmentation (either at the adaptation layer or at the IP layer) for the transport 
-of larger data payloads would be possible up to the maximum size of the underlying 
-datagram protocol. For UDP the length field is 16 bit long, which is about ~64 
-Kbyte of payload. For firmware images 64 Kbyte may, however, be too small and 
+relies on lower layers to provide this functionality, such as IP or by an adaption 
+layer, like 6lowpan. Using fragmentation (either at the adaptation layer or at the 
+IP layer) for the transport of larger data payloads would be possible up to the 
+maximum size of the underlying datagram protocol. With UDP the length field is 
+16 bit long, which leads to a maximum payload size of a little less than 64  Kbyte
+(due to the header size). For firmware images 64 Kbyte may, however, be too small and 
 relying on IP layer fragmentation is inefficient. Any transmission larger than 
-the path MTU will lead to IP fragmentation and the path MTU needs to be determined 
+the path MTU will lead to IP fragmentation. The path MTU needs to be determined 
 first and it may change over time. 
 
 * Some networks drop UDP packets. Complete blocking of UDP happens in between about 
-2% and 4% of terrestrial access networks, according to {{EK+2016}}. UDP impairment 
+2% and 4% of terrestrial access networks, according to {{EK2016}}. UDP impairment 
 is especially concentrated in enterprise networks and networks in geographic regions 
 with otherwise challenged connectivity. Some networks also rate-limit UDP traffic, 
-as reported in {{BK+2015}}. QUIC deployment investigations revealed numbers around 
-0.3 % {{S2017}}. 
+as reported in {{BK2015}}. QUIC deployment investigations revealed numbers around 
+0.3 % {{SW2016}}. 
 
 * Where NATs are present, CoAP over TCP can help with their traversal. NATs often 
 calculate expiration timers based on the transport layer protocol being used by 
@@ -222,11 +225,19 @@ based on the assumption that a transport layer protocol, such as TCP, offers
 additional information about the session life cycle. UDP, on the other hand, does 
 not provide such information to a NAT and timeouts tend to be much shorter 
 {{HomeGateway}}. According to {{HomeGateway}} the mean between TCP and UDP NAT 
-binding timeouts is 386 minutes (TCP) and 160 seconds (UDP). Faster timeouts 
-require more frequent retransmissions. 
+binding timeouts is 386 minutes (TCP) and 160 seconds (UDP). Shorter timeout values  
+require keepalive messages to be sent more more frequently. 
 
 To address such environments, this document defines additional bindings for CoAP,
-including TCP, TLS, and WebSockets, as shown in {{layering}}.
+including TCP, TLS, and WebSockets, as shown in {{layering}}. Note, however, that 
+the use of CoAP over UDP (and CoAP over DTLS over UDP) is still the recommended 
+transport for use constrained node networks, particularly when used in concert with 
+blockwise transport. CoAP over TCP (and CoAP over TLS over TCP) is applicable for those 
+cases where the networking infrastructure leaves no other choice. The use of CoAP over 
+TCP leads to a larger code size, more roundtrips, increased RAM requirements and larger 
+packet sizes. Developers are encouraged to read 
+{{I-D.gomez-lwig-tcp-constrained-node-networks}} for guidance on low-footprint TCP
+implementations for IoT devices. 
 
 ~~~~
 +-----------------------------------------------------------+
@@ -731,7 +742,7 @@ sent unfragmented as they tend to be small and fully buffered before
 transmission. The WebSocket protocol does not provide
 means for multiplexing; if it is not desirable for a large message to
 monopolize the connection, requests and responses can be transferred in a
-blockwise fashion as defined in {{I-D.ietf-core-block}}.
+blockwise fashion as defined in {{RFC7959}}.
 
 Messages MUST NOT be Empty (Code 0.00), i.e., messages always carry
 either a request or a response.
