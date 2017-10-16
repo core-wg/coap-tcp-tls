@@ -211,7 +211,7 @@ different NAT traversal behavior than CoAP over UDP. NATs often calculate expira
 timers based on the transport layer protocol being used by application protocols. 
 Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption 
 that a transport layer protocol, such as TCP, offers additional information about 
-the session life cycle. UDP, on the other hand, does not provide such information 
+the session lifecycle. UDP, on the other hand, does not provide such information 
 to a NAT and timeouts tend to be much shorter {{HomeGateway}}. According to 
 {{HomeGateway}} the mean between TCP and UDP NAT binding timeouts is 386 minutes 
 (TCP) and 160 seconds (UDP). Shorter timeout values require keepalive messages to 
@@ -219,7 +219,7 @@ be sent more frequently. Hence, the use of CoAP over TCP requires less frequent
 transmission of keep-alive messages. 
 
 * TCP utilizes more sophisticated congestion and flow control mechanisms, which is
-useful for the transfer of larger payloads. In the context of IoT deployments such 
+useful for the transfer of larger payloads. In the context of IoT deployments, such 
 transfers could be firmware updates. There is, however, ongoing work to add 
 advanced congestion control to CoAP as well, see {{-cocoa}}. 
 
@@ -253,6 +253,14 @@ may cross-proxy their CoAP requests via HTTP to a HTTP-to-CoAP
 cross-proxy or transport them via the the WebSocket protocol, which
 provides two-way communication between a WebSocket client and a
 WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection.
+
+Finally, CoAP applications running inside a web browser may be without
+access to connectivity other than HTTP.  In this case,  the WebSocket
+protocol [RFC6455] may be used to either cross-proxy their CoAP requests
+via HTTP to an HTTP-to-CoAP cross-proxy or transport them via the
+WebSocket protocol. This would, in turn, provide two-way communication
+between a WebSocket client and a WebSocket server after upgrading an
+HTTP/1.1 [RFC7230] connection.
 
 To address the above-mentioned deployment requirements, this document defines how to 
 transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. For these cases, 
