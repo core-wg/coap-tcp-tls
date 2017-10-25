@@ -248,20 +248,12 @@ uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
 over TCP between the back-end services. A TCP-to-UDP gateway can be used at
 the cloud boundary to communicate with the UDP-based IoT device.
 
-Finally, CoAP applications running inside a web browser without access to
-connectivity other than HTTP and the [WebSocket protocol](#RFC6455)
-may cross-proxy their CoAP requests via HTTP to a HTTP-to-CoAP
-cross-proxy or transport them via the the WebSocket protocol, which
-provides two-way communication between a WebSocket client and a
-WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection.
-
 Finally, CoAP applications running inside a web browser may be without
-access to connectivity other than HTTP.  In this case,  the WebSocket
-protocol [RFC6455] may be used to either cross-proxy their CoAP requests
-via HTTP to an HTTP-to-CoAP cross-proxy or transport them via the
-WebSocket protocol. This would, in turn, provide two-way communication
-between a WebSocket client and a WebSocket server after upgrading an
-HTTP/1.1 [RFC7230] connection.
+access to connectivity other than HTTP.  In this case, the WebSocket
+protocol {{RFC6455}} may be used to transport CoAP requests and
+responses, as opposed to cross-proxying them via HTTP to an
+HTTP-to-CoAP cross-proxy. This preserves the functionality of CoAP without
+translation, in particular the Observe mechanism {{-observe}}.
 
 To address the above-mentioned deployment requirements, this document defines how to 
 transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. For these cases, 
