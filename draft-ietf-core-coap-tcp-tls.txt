@@ -958,7 +958,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    different CSM message), the Block-wise Transfer Option also indicates
    support for BERT (see Section 6).  Subsequently, if the Max-Message-
    Size Option is indicated with a value equal to or less than 1152,
-   BERT support is no longer indicated.
+   BERT support is no longer indicated.  (Note that indication of BERT
+   support obliges neither peer to actually choose to make use of BERT.)
 
 5.4.  Ping and Pong Messages
 
@@ -1001,7 +1002,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    A sender can also include an elective Custody Option in a Ping
    message to explicitly request the inclusion of an elective Custody
    Option in the corresponding Pong message.  In that case, the receiver
-   SHOULD delay its Pong message until it finishes processing all the
 
 
 
@@ -1010,6 +1010,7 @@ Bormann, et al.          Expires April 28, 2018                [Page 18]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
+   SHOULD delay its Pong message until it finishes processing all the
    request/response messages received prior to the Ping message on the
    current connection.
 
@@ -1052,7 +1053,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    Section 5.4.5 of [RFC7252].  When multiple occurrences of the option
    are included, the peer can choose any of the alternative transport
    addresses.
-
 
 
 

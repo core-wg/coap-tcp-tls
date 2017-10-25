@@ -957,7 +957,7 @@ Sec-WebSocket-Protocol: coap
 </tr></tbody>
 </table>
 <p id="rfc.section.5.3.2.p.1">A sender can use the elective Block-wise Transfer Option to indicate that it supports the block-wise transfer protocol <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
-<p id="rfc.section.5.3.2.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not. An implementation that supports block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer Option also indicates support for BERT (see <a href="#bert" class="xref">Section 6</a>). Subsequently, if the Max-Message-Size Option is indicated with a value equal to or less than 1152, BERT support is no longer indicated.</p>
+<p id="rfc.section.5.3.2.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not. An implementation that supports block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer Option also indicates support for BERT (see <a href="#bert" class="xref">Section 6</a>). Subsequently, if the Max-Message-Size Option is indicated with a value equal to or less than 1152, BERT support is no longer indicated.  (Note that indication of BERT support obliges neither peer to actually choose to make use of BERT.)</p>
 <h1 id="rfc.section.5.4">
 <a href="#rfc.section.5.4">5.4.</a> <a href="#sec-ping" id="sec-ping">Ping and Pong Messages</a>
 </h1>
