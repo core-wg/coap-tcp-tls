@@ -1363,9 +1363,22 @@ data object-based security model for CoAP that is independent of transport
 
 The TLS usage guidance in {{RFC7925}} applies, including the guidance about cipher suites
 in that document that are derived from the mandatory-to-implement (MTI) cipher suites defined
-in {{-coap}}. (Note that this selection caters for the device-to-cloud use case of CoAP over TLS
-more than for any use within a back-end environment, where the standard TLS 1.2 cipher suites or
-the more recent ones defined in {{-tlsbcp}} are more appropriate.)
+in {{-coap}}.
+
+This guidance assumes implementation in a constrained device or for
+communication with a constrained device.  CoAP over TCP/TLS has,
+however, a wider applicability.  It may, for example, be implemented
+on a gateway or on a device that is less constrained (such as a smart
+phone or a tablet), for communication with a peer that is likewise
+less constrained, or within a backend environment that only
+communicates with constrained devices via proxies.  As an exception to
+the previous paragraph, in this case, the recommendations in
+{{RFC7525}} are more appropriate.
+
+Since the guidance offered in {{RFC7925}} and {{RFC7525}} differs in
+terms of algorithms and credential types, it is assumed that a CoAP
+over TCP/TLS implementation that needs to support both cases
+implements the recommendations offered by both specifications.
 
 During the provisioning phase, a CoAP device is provided with the security information
 that it needs, including keying materials, access control lists, and authorization servers.
