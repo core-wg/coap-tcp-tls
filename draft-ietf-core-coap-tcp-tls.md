@@ -815,6 +815,20 @@ Option is indicated with a value equal to or less than 1152, BERT support is no 
 indicated.  (Note that indication of BERT support obliges neither
 peer to actually choose to make use of BERT.)
 
+Implementation note: When indicating a value of the Max-Message-Size
+option with an intention to enable BERT, the indicating implementation
+may want to choose a BERT size message it wants to encourage and add a
+delta for the header and any options that also need to be included in
+the message.  Section 4.6 of {{-coap}} adds 128 bytes to a maximum
+block size of 1024 to arrive at a default message size of 1152.  A
+BERT-enabled implementation may want to indicate a BERT block size of
+2048 or a higher multiple of 1024, and at the same time be more
+generous for the size of header and options added (say, 256 or 512).
+Adding 1024 or more however to the base BERT block size may encourage
+the peer implementation to vary the BERT block size based on the size
+of the options included, which can be harder to establish
+interoperability for.
+
 ## Ping and Pong Messages {#sec-ping}
 
 In CoAP over reliable transports, Empty messages (Code 0.00) can always be sent and MUST be ignored
