@@ -86,7 +86,7 @@ normative:
   RFC7301: alpn
   RFC7525: tlsbcp
   RFC7595: urireg
-  RFC7641: RFC7641
+  RFC7641: observe
   RFC7925: RFC7925
   RFC7959: block
   RFC8126: RFC8126
@@ -106,7 +106,6 @@ informative:
   RFC5234: RFC5234
   RFC6335: portreg
   RFC6347: dtls
-  RFC7230: RFC7230
   I-D.gomez-lwig-tcp-constrained-node-networks:
   HomeGateway:
     title: An experimental study of home gateway characteristics
@@ -193,19 +192,20 @@ a reliable transport.
 The [Constrained Application Protocol (CoAP)](#RFC7252) was designed
 for Internet of Things (IoT) deployments, assuming that UDP
 {{RFC0768}} can be used unimpeded, as can the Datagram Transport Layer
-Security protocol (DTLS {{RFC6347})} over UDP. The use of CoAP over 
+Security protocol (DTLS {{RFC6347}}) over UDP. The use of CoAP over 
 UDP is focused on simplicity, has a low code footprint, and a small 
 over-the-wire message size. 
 
 The primary reason for introducing CoAP over TCP {{RFC0793}} and TLS {{RFC5246}} 
-is that some networks drop UDP packets. Complete blocking of UDP happens in between 
+is that some networks do not forward UDP packets. Complete blocking of UDP happens in between 
 about 2% and 4% of terrestrial access networks, according to {{EK2016}}. UDP 
 impairment is especially concentrated in enterprise networks and networks in 
 geographic regions with otherwise challenged connectivity. Some networks also 
 rate-limit UDP traffic, as reported in {{BK2015}} and deployment investigations 
 related to the standardization of QUIC revealed numbers around 0.3 % {{SW2016}}. 
 
-The introduction of CoAP over TCP also leads to some side effects, namely 
+The introduction of CoAP over TCP also leads to some additional
+effects that may be desirable in a specific deployment:
 
 * Where NATs are present along the communication path, CoAP over TCP leads to 
 different NAT traversal behavior than CoAP over UDP. NATs often calculate expiration 
@@ -214,27 +214,28 @@ Many NATs maintain TCP-based NAT bindings for longer periods based on the assump
 that a transport layer protocol, such as TCP, offers additional information about 
 the session lifecycle. UDP, on the other hand, does not provide such information 
 to a NAT and timeouts tend to be much shorter {{HomeGateway}}. According to 
-{{HomeGateway}} the mean between TCP and UDP NAT binding timeouts is 386 minutes 
-(TCP) and 160 seconds (UDP). Shorter timeout values require keepalive messages to 
+{{HomeGateway}} the mean for TCP and UDP NAT binding timeouts is 386 minutes 
+(TCP) and 160 seconds (UDP).  Shorter timeout values require keepalive messages to 
 be sent more frequently. Hence, the use of CoAP over TCP requires less frequent 
 transmission of keep-alive messages. 
 
-* TCP utilizes more sophisticated congestion and flow control mechanisms, which is
-useful for the transfer of larger payloads. In the context of IoT deployments, such 
-transfers could be firmware updates. There is, however, ongoing work to add 
-advanced congestion control to CoAP as well, see {{-cocoa}}. 
+* TCP utilizes more sophisticated congestion and flow control
+mechanisms than the default mechanisms provided by CoAP over UDP, which is
+useful for the transfer of larger payloads.  (Work is, however, ongoing to add
+advanced congestion control to CoAP over UDP as well, see {{-cocoa}}.)
 
 Note that the use of CoAP over UDP (and CoAP over DTLS over UDP) is still the recommended 
-transport for use constrained node networks, particularly when used in concert with 
+transport for use in constrained node networks, particularly when used in concert with 
 blockwise transfer. CoAP over TCP is applicable for those cases where the networking 
 infrastructure leaves no other choice. The use of CoAP over TCP leads to a larger code 
 size, more roundtrips, increased RAM requirements and larger packet sizes. 
-Developers implementing CoAP over TCP are encouraged to read 
+Developers implementing CoAP over TCP are encouraged to consult
 {{I-D.gomez-lwig-tcp-constrained-node-networks}} for guidance on low-footprint TCP 
 implementations for IoT devices. 
 
-Emerging standards such as Lightweight Machine to Machine {{LWM2M}} currently use CoAP over UDP
-as a transport and require support for CoAP over TCP to address the issues above and to protect
+Standards based on CoAP such as Lightweight Machine to Machine {{LWM2M}} currently use CoAP over UDP
+as a transport; adding support for CoAP over TCP enables them to address the
+issues above for specific deployments and to protect
 investments in existing CoAP implementations and deployments. 
 
 Although HTTP/2 could also potentially address the need for enterprise firewall traversal, 
