@@ -342,12 +342,12 @@ address {
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.7.0 - http://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.8.2 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-8-29" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-10-25" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -375,7 +375,7 @@ address {
 <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-<td class="left">Expires: March 2, 2018</td>
+<td class="left">Expires: April 28, 2018</td>
 <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -408,7 +408,7 @@ address {
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">August 29, 2017</td>
+<td class="right">October 25, 2017</td>
 </tr>
 
     	
@@ -423,12 +423,12 @@ address {
 <p>Some environments benefit from the availability of CoAP carried over reliable transports such as TCP or TLS. This document outlines the changes required to use CoAP over TCP, TLS, and WebSockets transports. It also formally updates RFC 7641 for use with these transports and RFC 7959 to enable the use of larger messages over a reliable transport.</p>
 <h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
-<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on March 2, 2018.</p>
+<p>This Internet-Draft will expire on April 28, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
-<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 
   
   <hr class="noprint" />
@@ -572,10 +572,21 @@ address {
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">The <a href="#RFC7252" class="xref">Constrained Application Protocol (CoAP)</a> was designed for Internet of Things (IoT) deployments, assuming that UDP <a href="#RFC0768" class="xref">[RFC0768]</a> or Datagram Transport Layer Security (DTLS) <a href="#RFC6347" class="xref">[RFC6347]</a> over UDP can be used unimpeded. UDP is a good choice for transferring small amounts of data across networks that follow the IP architecture.</p>
-<p id="rfc.section.1.p.2">Some CoAP deployments need to integrate well with existing enterprise infrastructures, where UDP-based protocols may not be well-received or may even be blocked by firewalls. Middleboxes that are unaware of CoAP usage for IoT can make the use of UDP brittle, resulting in lost or malformed packets.</p>
-<p id="rfc.section.1.p.3">Emerging standards such as Lightweight Machine to Machine <a href="#LWM2M" class="xref">[LWM2M]</a> currently use CoAP over UDP as a transport and require support for CoAP over TCP to address the issues above and to protect investments in existing CoAP implementations and deployments. Although HTTP/2 could also potentially address these requirements, there would be additional costs and delays introduced by such a transition.  Currently, there are also fewer HTTP/2 implementations available for constrained devices in comparison to CoAP.</p>
-<p id="rfc.section.1.p.4">To address these requirements, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. For these cases, the reliability offered by the transport protocol subsumes the reliability functions of the message layer used for CoAP over UDP. (Note that both for a reliable transport and the CoAP over UDP message layer, the reliability offered is per transport hop: where proxies &#8212; see Sections 5.7 and 10 of <a href="#RFC7252" class="xref">[RFC7252]</a> &#8212; are involved, that layer&#8217;s reliability function does not extend end-to-end.) <a href="#fig-layering" class="xref">Figure 1</a> illustrates the layering:</p>
+<p id="rfc.section.1.p.1">The <a href="#RFC7252" class="xref">Constrained Application Protocol (CoAP)</a> was designed for Internet of Things (IoT) deployments, assuming that UDP <a href="#RFC0768" class="xref">[RFC0768]</a> can be used unimpeded, as can the Datagram Transport Layer Security protocol (DTLS <a href="#RFC6347" class="xref">[RFC6347]</a>) over UDP. The use of CoAP over UDP is focused on simplicity, has a low code footprint, and a small over-the-wire message size.</p>
+<p id="rfc.section.1.p.2">The primary reason for introducing CoAP over TCP <a href="#RFC0793" class="xref">[RFC0793]</a> and TLS <a href="#RFC5246" class="xref">[RFC5246]</a> is that some networks do not forward UDP packets. Complete blocking of UDP happens in between about 2% and 4% of terrestrial access networks, according to <a href="#EK2016" class="xref">[EK2016]</a>. UDP impairment is especially concentrated in enterprise networks and networks in geographic regions with otherwise challenged connectivity. Some networks also rate-limit UDP traffic, as reported in <a href="#BK2015" class="xref">[BK2015]</a> and deployment investigations related to the standardization of QUIC revealed numbers around 0.3 % <a href="#SW2016" class="xref">[SW2016]</a>.</p>
+<p id="rfc.section.1.p.3">The introduction of CoAP over TCP also leads to some additional effects that may be desirable in a specific deployment:</p>
+<p></p>
+
+<ul>
+<li>Where NATs are present along the communication path, CoAP over TCP leads to different NAT traversal behavior than CoAP over UDP. NATs often calculate expiration timers based on the transport layer protocol being used by application protocols.  Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption that a transport layer protocol, such as TCP, offers additional information about the session lifecycle. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter <a href="#HomeGateway" class="xref">[HomeGateway]</a>. According to <a href="#HomeGateway" class="xref">[HomeGateway]</a> the mean for TCP and UDP NAT binding timeouts is 386 minutes (TCP) and 160 seconds (UDP).  Shorter timeout values require keepalive messages to be sent more frequently. Hence, the use of CoAP over TCP requires less frequent transmission of keep-alive messages.</li>
+<li>TCP utilizes more sophisticated congestion and flow control mechanisms than the default mechanisms provided by CoAP over UDP, which is useful for the transfer of larger payloads.  (Work is, however, ongoing to add advanced congestion control to CoAP over UDP as well, see <a href="#I-D.ietf-core-cocoa" class="xref">[I-D.ietf-core-cocoa]</a>.)</li>
+</ul>
+<p id="rfc.section.1.p.5">Note that the use of CoAP over UDP (and CoAP over DTLS over UDP) is still the recommended transport for use in constrained node networks, particularly when used in concert with blockwise transfer. CoAP over TCP is applicable for those cases where the networking infrastructure leaves no other choice. The use of CoAP over TCP leads to a larger code size, more roundtrips, increased RAM requirements and larger packet sizes.  Developers implementing CoAP over TCP are encouraged to consult <a href="#I-D.gomez-lwig-tcp-constrained-node-networks" class="xref">[I-D.gomez-lwig-tcp-constrained-node-networks]</a> for guidance on low-footprint TCP implementations for IoT devices.</p>
+<p id="rfc.section.1.p.6">Standards based on CoAP such as Lightweight Machine to Machine <a href="#LWM2M" class="xref">[LWM2M]</a> currently use CoAP over UDP as a transport; adding support for CoAP over TCP enables them to address the issues above for specific deployments and to protect investments in existing CoAP implementations and deployments.</p>
+<p id="rfc.section.1.p.7">Although HTTP/2 could also potentially address the need for enterprise firewall traversal, there would be additional costs and delays introduced by such a transition from CoAP to HTTP/2.  Currently, there are also fewer HTTP/2 implementations available for constrained devices in comparison to CoAP. Since CoAP also support group communication using IP layer multicast and unreliable communication IoT devices would have to support HTTP/2 in addition to CoAP.</p>
+<p id="rfc.section.1.p.8">Furthermore, CoAP may be integrated into a Web environment where the front-end uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP over TCP between the back-end services. A TCP-to-UDP gateway can be used at the cloud boundary to communicate with the UDP-based IoT device.</p>
+<p id="rfc.section.1.p.9">Finally, CoAP applications running inside a web browser may be without access to connectivity other than HTTP.  In this case, the WebSocket protocol <a href="#RFC6455" class="xref">[RFC6455]</a> may be used to transport CoAP requests and responses, as opposed to cross-proxying them via HTTP to an HTTP-to-CoAP cross-proxy. This preserves the functionality of CoAP without translation, in particular the Observe mechanism <a href="#RFC7641" class="xref">[RFC7641]</a>.</p>
+<p id="rfc.section.1.p.10">To address the above-mentioned deployment requirements, this document defines how to transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. For these cases, the reliability offered by the transport protocol subsumes the reliability functions of the message layer used for CoAP over UDP. (Note that both for a reliable transport and the CoAP over UDP message layer, the reliability offered is per transport hop: where proxies &#8212; see Sections 5.7 and 10 of <a href="#RFC7252" class="xref">[RFC7252]</a> &#8212; are involved, that layer&#8217;s reliability function does not extend end-to-end.) <a href="#fig-layering" class="xref">Figure 1</a> illustrates the layering:</p>
 <div id="rfc.figure.1"></div>
 <div id="fig-layering"></div>
 <pre>
@@ -591,12 +602,7 @@ address {
   +--------------------------------+
 </pre>
 <p class="figure">Figure 1: Layering of CoAP over Reliable Transports</p>
-<p id="rfc.section.1.p.5">Where NATs are present, CoAP over TCP can help with their traversal.  NATs often calculate expiration timers based on the transport layer protocol being used by application protocols. Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption that a transport layer protocol, such as TCP, offers additional information about the session life cycle. UDP, on the other hand, does not provide such information to a NAT and timeouts tend to be much shorter <a href="#HomeGateway" class="xref">[HomeGateway]</a>.</p>
-<p id="rfc.section.1.p.6">Some environments may also benefit from the ability of TCP to exchange larger payloads, such as firmware images, without application layer segmentation and to utilize the more sophisticated congestion control capabilities provided by many TCP implementations. Note that there is ongoing work to add more elaborate congestion control to CoAP (see <a href="#I-D.ietf-core-cocoa" class="xref">[I-D.ietf-core-cocoa]</a>).</p>
-<p id="rfc.section.1.p.7">CoAP may be integrated into a Web environment where the front-end uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP over TCP between the back-end services. A TCP-to-UDP gateway can be used at the cloud boundary to communicate with the UDP-based IoT device.</p>
-<p id="rfc.section.1.p.8">To allow IoT devices to better communicate in these demanding environments, CoAP needs to support different transport protocols, namely TCP <a href="#RFC0793" class="xref">[RFC0793]</a>, in some situations secured by TLS <a href="#RFC5246" class="xref">[RFC5246]</a>.</p>
-<p id="rfc.section.1.p.9">CoAP applications running inside a web browser without access to connectivity other than HTTP and the <a href="#RFC6455" class="xref">WebSocket protocol</a> may cross-proxy their CoAP requests via HTTP to a HTTP-to-CoAP cross-proxy or transport them via the the WebSocket protocol, which provides two-way communication between a WebSocket client and a WebSocket server after upgrading an <a href="#RFC7230" class="xref">HTTP/1.1</a> connection.</p>
-<p id="rfc.section.1.p.10">This document specifies how to access resources using CoAP requests and responses over the TCP, TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP, TLS or WebSocket connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
+<p id="rfc.section.1.p.11">This document specifies how to access resources using CoAP requests and responses over the TCP, TLS and WebSocket protocols. This allows connectivity-limited applications to obtain end-to-end CoAP connectivity either by communicating CoAP directly with a CoAP server accessible over a TCP, TLS or WebSocket connection or via a CoAP intermediary that proxies CoAP requests and responses between different transports, such as between WebSockets and UDP.</p>
 <p><a href="#observing" class="xref">Appendix A</a> updates the <a href="#RFC7641" class="xref">&#8220;Observing Resources in the Constrained Application Protocol&#8221;</a> specification for use with CoAP over reliable transports. <a href="#RFC7641" class="xref">[RFC7641]</a> is an extension to the CoAP protocol that enables CoAP clients to &#8220;observe&#8221; a resource on a CoAP server. (The CoAP client retrieves a representation of a resource and registers to be notified by the CoAP server when the representation is updated.)</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#conventions-and-terminology" id="conventions-and-terminology">Conventions and Terminology</a>
@@ -1772,101 +1778,116 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <tr>
 <td class="reference"><b id="I-D.bormann-hybi-ws-wk">[I-D.bormann-hybi-ws-wk]</b></td>
 <td class="top">
-<a>Bormann, C.</a>, "<a href="http://tools.ietf.org/html/draft-bormann-hybi-ws-wk-00">Well-known URIs for the WebSocket Protocol</a>", Internet-Draft draft-bormann-hybi-ws-wk-00, May 2017.</td>
+<a>Bormann, C.</a>, "<a href="https://tools.ietf.org/html/draft-bormann-hybi-ws-wk-00">Well-known URIs for the WebSocket Protocol</a>", Internet-Draft draft-bormann-hybi-ws-wk-00, May 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC0793">[RFC0793]</b></td>
 <td class="top">
-<a>Postel, J.</a>, "<a href="http://tools.ietf.org/html/rfc793">Transmission Control Protocol</a>", STD 7, RFC 793, DOI 10.17487/RFC0793, September 1981.</td>
+<a>Postel, J.</a>, "<a href="https://tools.ietf.org/html/rfc793">Transmission Control Protocol</a>", STD 7, RFC 793, DOI 10.17487/RFC0793, September 1981.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC2119">[RFC2119]</b></td>
 <td class="top">
-<a>Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+<a>Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC3986">[RFC3986]</b></td>
 <td class="top">
-<a>Berners-Lee, T.</a>, <a>Fielding, R.</a> and <a>L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>", STD 66, RFC 3986, DOI 10.17487/RFC3986, January 2005.</td>
+<a>Berners-Lee, T.</a>, <a>Fielding, R.</a> and <a>L. Masinter</a>, "<a href="https://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>", STD 66, RFC 3986, DOI 10.17487/RFC3986, January 2005.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC5246">[RFC5246]</b></td>
 <td class="top">
-<a>Dierks, T.</a> and <a>E. Rescorla</a>, "<a href="http://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>", RFC 5246, DOI 10.17487/RFC5246, August 2008.</td>
+<a>Dierks, T.</a> and <a>E. Rescorla</a>, "<a href="https://tools.ietf.org/html/rfc5246">The Transport Layer Security (TLS) Protocol Version 1.2</a>", RFC 5246, DOI 10.17487/RFC5246, August 2008.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC5785">[RFC5785]</b></td>
 <td class="top">
-<a>Nottingham, M.</a> and <a>E. Hammer-Lahav</a>, "<a href="http://tools.ietf.org/html/rfc5785">Defining Well-Known Uniform Resource Identifiers (URIs)</a>", RFC 5785, DOI 10.17487/RFC5785, April 2010.</td>
+<a>Nottingham, M.</a> and <a>E. Hammer-Lahav</a>, "<a href="https://tools.ietf.org/html/rfc5785">Defining Well-Known Uniform Resource Identifiers (URIs)</a>", RFC 5785, DOI 10.17487/RFC5785, April 2010.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC6066">[RFC6066]</b></td>
 <td class="top">
-<a>Eastlake 3rd, D.</a>, "<a href="http://tools.ietf.org/html/rfc6066">Transport Layer Security (TLS) Extensions: Extension Definitions</a>", RFC 6066, DOI 10.17487/RFC6066, January 2011.</td>
+<a>Eastlake 3rd, D.</a>, "<a href="https://tools.ietf.org/html/rfc6066">Transport Layer Security (TLS) Extensions: Extension Definitions</a>", RFC 6066, DOI 10.17487/RFC6066, January 2011.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC6455">[RFC6455]</b></td>
 <td class="top">
-<a>Fette, I.</a> and <a>A. Melnikov</a>, "<a href="http://tools.ietf.org/html/rfc6455">The WebSocket Protocol</a>", RFC 6455, DOI 10.17487/RFC6455, December 2011.</td>
+<a>Fette, I.</a> and <a>A. Melnikov</a>, "<a href="https://tools.ietf.org/html/rfc6455">The WebSocket Protocol</a>", RFC 6455, DOI 10.17487/RFC6455, December 2011.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7252">[RFC7252]</b></td>
 <td class="top">
-<a>Shelby, Z.</a>, <a>Hartke, K.</a> and <a>C. Bormann</a>, "<a href="http://tools.ietf.org/html/rfc7252">The Constrained Application Protocol (CoAP)</a>", RFC 7252, DOI 10.17487/RFC7252, June 2014.</td>
+<a>Shelby, Z.</a>, <a>Hartke, K.</a> and <a>C. Bormann</a>, "<a href="https://tools.ietf.org/html/rfc7252">The Constrained Application Protocol (CoAP)</a>", RFC 7252, DOI 10.17487/RFC7252, June 2014.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7301">[RFC7301]</b></td>
 <td class="top">
-<a>Friedl, S.</a>, <a>Popov, A.</a>, <a>Langley, A.</a> and <a>E. Stephan</a>, "<a href="http://tools.ietf.org/html/rfc7301">Transport Layer Security (TLS) Application-Layer Protocol Negotiation Extension</a>", RFC 7301, DOI 10.17487/RFC7301, July 2014.</td>
+<a>Friedl, S.</a>, <a>Popov, A.</a>, <a>Langley, A.</a> and <a>E. Stephan</a>, "<a href="https://tools.ietf.org/html/rfc7301">Transport Layer Security (TLS) Application-Layer Protocol Negotiation Extension</a>", RFC 7301, DOI 10.17487/RFC7301, July 2014.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7525">[RFC7525]</b></td>
 <td class="top">
-<a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="http://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
+<a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="https://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7595">[RFC7595]</b></td>
 <td class="top">
-<a>Thaler, D.</a>, <a>Hansen, T.</a> and <a>T. Hardie</a>, "<a href="http://tools.ietf.org/html/rfc7595">Guidelines and Registration Procedures for URI Schemes</a>", BCP 35, RFC 7595, DOI 10.17487/RFC7595, June 2015.</td>
+<a>Thaler, D.</a>, <a>Hansen, T.</a> and <a>T. Hardie</a>, "<a href="https://tools.ietf.org/html/rfc7595">Guidelines and Registration Procedures for URI Schemes</a>", BCP 35, RFC 7595, DOI 10.17487/RFC7595, June 2015.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7641">[RFC7641]</b></td>
 <td class="top">
-<a>Hartke, K.</a>, "<a href="http://tools.ietf.org/html/rfc7641">Observing Resources in the Constrained Application Protocol (CoAP)</a>", RFC 7641, DOI 10.17487/RFC7641, September 2015.</td>
+<a>Hartke, K.</a>, "<a href="https://tools.ietf.org/html/rfc7641">Observing Resources in the Constrained Application Protocol (CoAP)</a>", RFC 7641, DOI 10.17487/RFC7641, September 2015.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7925">[RFC7925]</b></td>
 <td class="top">
-<a>Tschofenig, H.</a> and <a>T. Fossati</a>, "<a href="http://tools.ietf.org/html/rfc7925">Transport Layer Security (TLS) / Datagram Transport Layer Security (DTLS) Profiles for the Internet of Things</a>", RFC 7925, DOI 10.17487/RFC7925, July 2016.</td>
+<a>Tschofenig, H.</a> and <a>T. Fossati</a>, "<a href="https://tools.ietf.org/html/rfc7925">Transport Layer Security (TLS) / Datagram Transport Layer Security (DTLS) Profiles for the Internet of Things</a>", RFC 7925, DOI 10.17487/RFC7925, July 2016.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7959">[RFC7959]</b></td>
 <td class="top">
-<a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="http://tools.ietf.org/html/rfc7959">Block-Wise Transfers in the Constrained Application Protocol (CoAP)</a>", RFC 7959, DOI 10.17487/RFC7959, August 2016.</td>
+<a>Bormann, C.</a> and <a>Z. Shelby</a>, "<a href="https://tools.ietf.org/html/rfc7959">Block-Wise Transfers in the Constrained Application Protocol (CoAP)</a>", RFC 7959, DOI 10.17487/RFC7959, August 2016.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC8126">[RFC8126]</b></td>
 <td class="top">
-<a>Cotton, M.</a>, <a>Leiba, B.</a> and <a>T. Narten</a>, "<a href="http://tools.ietf.org/html/rfc8126">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 8126, DOI 10.17487/RFC8126, June 2017.</td>
+<a>Cotton, M.</a>, <a>Leiba, B.</a> and <a>T. Narten</a>, "<a href="https://tools.ietf.org/html/rfc8126">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 8126, DOI 10.17487/RFC8126, June 2017.</td>
 </tr>
 </tbody></table>
 <h1 id="rfc.references.2">
 <a href="#rfc.references.2">11.2.</a> Informative References</h1>
 <table><tbody>
 <tr>
+<td class="reference"><b id="BK2015">[BK2015]</b></td>
+<td class="top">
+<a>Byrne, C.</a> and <a>J. Kleberg</a>, "<a>Advisory Guidelines for UDP Deployment</a>", Proceedings draft-byrne-opsec-udp-advisory-00 (expired), 2015.</td>
+</tr>
+<tr>
+<td class="reference"><b id="EK2016">[EK2016]</b></td>
+<td class="top">
+<a>Edeline, K.</a>, <a>Kuehlewind, M.</a>, <a>Trammell, B.</a>, <a>Aben, E.</a> and <a>B. Donnet</a>, "<a>Using UDP for Internet Transport Evolution</a>", Proceedings arXiv preprint 1612.07816, 2016.</td>
+</tr>
+<tr>
 <td class="reference"><b id="HomeGateway">[HomeGateway]</b></td>
 <td class="top">
 <a>Eggert, L.</a>, "<a>An experimental study of home gateway characteristics</a>", Proceedings of the 10th annual conference on Internet measurement , 2010.</td>
 </tr>
 <tr>
+<td class="reference"><b id="I-D.gomez-lwig-tcp-constrained-node-networks">[I-D.gomez-lwig-tcp-constrained-node-networks]</b></td>
+<td class="top">
+<a>Gomez, C.</a>, <a>Crowcroft, J.</a> and <a>M. Scharf</a>, "<a href="https://tools.ietf.org/html/draft-gomez-lwig-tcp-constrained-node-networks-03">TCP over Constrained-Node Networks</a>", Internet-Draft draft-gomez-lwig-tcp-constrained-node-networks-03, June 2017.</td>
+</tr>
+<tr>
 <td class="reference"><b id="I-D.ietf-core-cocoa">[I-D.ietf-core-cocoa]</b></td>
 <td class="top">
-<a>Bormann, C.</a>, <a>Betzler, A.</a>, <a>Gomez, C.</a> and <a>I. Demirkol</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-cocoa-01">CoAP Simple Congestion Control/Advanced</a>", Internet-Draft draft-ietf-core-cocoa-01, March 2017.</td>
+<a>Bormann, C.</a>, <a>Betzler, A.</a>, <a>Gomez, C.</a> and <a>I. Demirkol</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-cocoa-01">CoAP Simple Congestion Control/Advanced</a>", Internet-Draft draft-ietf-core-cocoa-01, March 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</b></td>
 <td class="top">
-<a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="http://tools.ietf.org/html/draft-ietf-core-object-security-04">Object Security of CoAP (OSCOAP)</a>", Internet-Draft draft-ietf-core-object-security-04, July 2017.</td>
+<a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-object-security-06">Object Security for Constrained RESTful Environments (OSCORE)</a>", Internet-Draft draft-ietf-core-object-security-06, October 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="LWM2M">[LWM2M]</b></td>
@@ -1876,32 +1897,32 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <tr>
 <td class="reference"><b id="RFC0768">[RFC0768]</b></td>
 <td class="top">
-<a>Postel, J.</a>, "<a href="http://tools.ietf.org/html/rfc768">User Datagram Protocol</a>", STD 6, RFC 768, DOI 10.17487/RFC0768, August 1980.</td>
+<a>Postel, J.</a>, "<a href="https://tools.ietf.org/html/rfc768">User Datagram Protocol</a>", STD 6, RFC 768, DOI 10.17487/RFC0768, August 1980.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC5234">[RFC5234]</b></td>
 <td class="top">
-<a>Crocker, D.</a> and <a>P. Overell</a>, "<a href="http://tools.ietf.org/html/rfc5234">Augmented BNF for Syntax Specifications: ABNF</a>", STD 68, RFC 5234, DOI 10.17487/RFC5234, January 2008.</td>
+<a>Crocker, D.</a> and <a>P. Overell</a>, "<a href="https://tools.ietf.org/html/rfc5234">Augmented BNF for Syntax Specifications: ABNF</a>", STD 68, RFC 5234, DOI 10.17487/RFC5234, January 2008.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC6335">[RFC6335]</b></td>
 <td class="top">
-<a>Cotton, M.</a>, <a>Eggert, L.</a>, <a>Touch, J.</a>, <a>Westerlund, M.</a> and <a>S. Cheshire</a>, "<a href="http://tools.ietf.org/html/rfc6335">Internet Assigned Numbers Authority (IANA) Procedures for the Management of the Service Name and Transport Protocol Port Number Registry</a>", BCP 165, RFC 6335, DOI 10.17487/RFC6335, August 2011.</td>
+<a>Cotton, M.</a>, <a>Eggert, L.</a>, <a>Touch, J.</a>, <a>Westerlund, M.</a> and <a>S. Cheshire</a>, "<a href="https://tools.ietf.org/html/rfc6335">Internet Assigned Numbers Authority (IANA) Procedures for the Management of the Service Name and Transport Protocol Port Number Registry</a>", BCP 165, RFC 6335, DOI 10.17487/RFC6335, August 2011.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC6347">[RFC6347]</b></td>
 <td class="top">
-<a>Rescorla, E.</a> and <a>N. Modadugu</a>, "<a href="http://tools.ietf.org/html/rfc6347">Datagram Transport Layer Security Version 1.2</a>", RFC 6347, DOI 10.17487/RFC6347, January 2012.</td>
-</tr>
-<tr>
-<td class="reference"><b id="RFC7230">[RFC7230]</b></td>
-<td class="top">
-<a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="http://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
+<a>Rescorla, E.</a> and <a>N. Modadugu</a>, "<a href="https://tools.ietf.org/html/rfc6347">Datagram Transport Layer Security Version 1.2</a>", RFC 6347, DOI 10.17487/RFC6347, January 2012.</td>
 </tr>
 <tr>
 <td class="reference"><b id="SecurityChallenges">[SecurityChallenges]</b></td>
 <td class="top">
 <a>Polk, T.</a> and <a>S. Turner</a>, "<a href="http://www.iab.org/wp-content/IAB-uploads/2011/03/Turner.pdf">Security Challenges for the Internet of Things</a>", Interconnecting Smart Objects with the Internet / IAB Workshop , February 2011.</td>
+</tr>
+<tr>
+<td class="reference"><b id="SW2016">[SW2016]</b></td>
+<td class="top">
+<a>Swett, I.</a>, "<a>QUIC Deployment Experience @Google</a>", Proceedings https://www.ietf.org/proceedings/96/slides/slides-96-quic-3.pdf, 2016.</td>
 </tr>
 </tbody></table>
 <h1 id="rfc.appendix.A">
