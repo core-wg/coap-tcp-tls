@@ -1382,8 +1382,10 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <h1 id="rfc.section.8.1">
 <a href="#rfc.section.8.1">8.1.</a> <a href="#tls-binding-for-coap-over-tcp" id="tls-binding-for-coap-over-tcp">TLS binding for CoAP over TCP</a>
 </h1>
-<p id="rfc.section.8.1.p.1">The TLS usage guidance in <a href="#RFC7925" class="xref">[RFC7925]</a> applies, including the guidance about cipher suites in that document that are derived from the mandatory-to-implement (MTI) cipher suites defined in <a href="#RFC7252" class="xref">[RFC7252]</a>. (Note that this selection caters for the device-to-cloud use case of CoAP over TLS more than for any use within a back-end environment, where the standard TLS 1.2 cipher suites or the more recent ones defined in <a href="#RFC7525" class="xref">[RFC7525]</a> are more appropriate.)</p>
-<p id="rfc.section.8.1.p.2">During the provisioning phase, a CoAP device is provided with the security information that it needs, including keying materials, access control lists, and authorization servers.  At the end of the provisioning phase, the device will be in one of four security modes:</p>
+<p id="rfc.section.8.1.p.1">The TLS usage guidance in <a href="#RFC7925" class="xref">[RFC7925]</a> applies, including the guidance about cipher suites in that document that are derived from the mandatory-to-implement (MTI) cipher suites defined in <a href="#RFC7252" class="xref">[RFC7252]</a>.</p>
+<p id="rfc.section.8.1.p.2">This guidance assumes implementation in a constrained device or for communication with a constrained device.  CoAP over TCP/TLS has, however, a wider applicability.  It may, for example, be implemented on a gateway or on a device that is less constrained (such as a smart phone or a tablet), for communication with a peer that is likewise less constrained, or within a backend environment that only communicates with constrained devices via proxies.  As an exception to the previous paragraph, in this case, the recommendations in <a href="#RFC7525" class="xref">[RFC7525]</a> are more appropriate.</p>
+<p id="rfc.section.8.1.p.3">Since the guidance offered in <a href="#RFC7925" class="xref">[RFC7925]</a> and <a href="#RFC7525" class="xref">[RFC7525]</a> differs in terms of algorithms and credential types, it is assumed that a CoAP over TCP/TLS implementation that needs to support both cases implements the recommendations offered by both specifications.</p>
+<p id="rfc.section.8.1.p.4">During the provisioning phase, a CoAP device is provided with the security information that it needs, including keying materials, access control lists, and authorization servers.  At the end of the provisioning phase, the device will be in one of four security modes:</p>
 <p></p>
 
 <dl>
@@ -1396,8 +1398,8 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <dt>Certificate:</dt>
 <dd style="margin-left: 8">TLS is enabled. The guidance in Section 4.4 of <a href="#RFC7925" class="xref">[RFC7925]</a> applies.</dd>
 </dl>
-<p id="rfc.section.8.1.p.4">The &#8220;NoSec&#8221; mode is optional-to-implement. The system simply sends the packets over normal TCP which is indicated by the &#8220;coap+tcp&#8221; scheme and the TCP CoAP default port.  The system is secured only by keeping attackers from being able to send or receive packets from the network with the CoAP nodes.</p>
-<p id="rfc.section.8.1.p.5">&#8220;PreSharedKey&#8221;, &#8220;RawPublicKey&#8221;, or &#8220;Certificate&#8221; is mandatory-to-implement for the TLS binding depending on the credential type used with the device. These security modes are achieved using TLS and are indicated by the &#8220;coaps+tcp&#8221; scheme and TLS-secured CoAP default port.</p>
+<p id="rfc.section.8.1.p.6">The &#8220;NoSec&#8221; mode is optional-to-implement. The system simply sends the packets over normal TCP which is indicated by the &#8220;coap+tcp&#8221; scheme and the TCP CoAP default port.  The system is secured only by keeping attackers from being able to send or receive packets from the network with the CoAP nodes.</p>
+<p id="rfc.section.8.1.p.7">&#8220;PreSharedKey&#8221;, &#8220;RawPublicKey&#8221;, or &#8220;Certificate&#8221; is mandatory-to-implement for the TLS binding depending on the credential type used with the device. These security modes are achieved using TLS and are indicated by the &#8220;coaps+tcp&#8221; scheme and TLS-secured CoAP default port.</p>
 <h1 id="rfc.section.8.2">
 <a href="#rfc.section.8.2">8.2.</a> <a href="#tls-usage-for-coap-over-websockets" id="tls-usage-for-coap-over-websockets">TLS usage for CoAP over WebSockets</a>
 </h1>

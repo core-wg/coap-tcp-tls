@@ -117,28 +117,28 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    8.  Securing CoAP . . . . . . . . . . . . . . . . . . . . . . . .  30
      8.1.  TLS binding for CoAP over TCP . . . . . . . . . . . . . .  30
      8.2.  TLS usage for CoAP over WebSockets  . . . . . . . . . . .  31
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  31
-     9.1.  Signaling Messages  . . . . . . . . . . . . . . . . . . .  31
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  32
+     9.1.  Signaling Messages  . . . . . . . . . . . . . . . . . . .  32
    10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  32
      10.1.  Signaling Codes  . . . . . . . . . . . . . . . . . . . .  32
-     10.2.  CoAP Signaling Option Numbers Registry . . . . . . . . .  32
-     10.3.  Service Name and Port Number Registration  . . . . . . .  33
+     10.2.  CoAP Signaling Option Numbers Registry . . . . . . . . .  33
+     10.3.  Service Name and Port Number Registration  . . . . . . .  34
      10.4.  Secure Service Name and Port Number Registration . . . .  34
      10.5.  URI Scheme Registration  . . . . . . . . . . . . . . . .  35
      10.6.  Well-Known URI Suffix Registration . . . . . . . . . . .  37
      10.7.  ALPN Protocol Identifier . . . . . . . . . . . . . . . .  37
-     10.8.  WebSocket Subprotocol Registration . . . . . . . . . . .  37
+     10.8.  WebSocket Subprotocol Registration . . . . . . . . . . .  38
      10.9.  CoAP Option Numbers Registry . . . . . . . . . . . . . .  38
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  38
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  38
      11.2.  Informative References . . . . . . . . . . . . . . . . .  40
-     11.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  41
+     11.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  42
    Appendix A.  Updates to RFC 7641 Observing Resources in the
-                Constrained Application Protocol (CoAP)  . . . . . .  41
+                Constrained Application Protocol (CoAP)  . . . . . .  42
      A.1.  Notifications and Reordering  . . . . . . . . . . . . . .  42
      A.2.  Transmission and Acknowledgements . . . . . . . . . . . .  42
      A.3.  Freshness . . . . . . . . . . . . . . . . . . . . . . . .  42
-     A.4.  Cancellation  . . . . . . . . . . . . . . . . . . . . . .  42
+     A.4.  Cancellation  . . . . . . . . . . . . . . . . . . . . . .  43
    Appendix B.  CoAP over WebSocket Examples . . . . . . . . . . . .  43
    Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  46
      C.1.  Since draft-ietf-core-coap-tcp-tls-02 . . . . . . . . . .  46
@@ -1655,13 +1655,33 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    The TLS usage guidance in [RFC7925] applies, including the guidance
    about cipher suites in that document that are derived from the
    mandatory-to-implement (MTI) cipher suites defined in [RFC7252].
-   (Note that this selection caters for the device-to-cloud use case of
-   CoAP over TLS more than for any use within a back-end environment,
-   where the standard TLS 1.2 cipher suites or the more recent ones
-   defined in [RFC7525] are more appropriate.)
+
+   This guidance assumes implementation in a constrained device or for
+   communication with a constrained device.  CoAP over TCP/TLS has,
+   however, a wider applicability.  It may, for example, be implemented
+   on a gateway or on a device that is less constrained (such as a smart
+   phone or a tablet), for communication with a peer that is likewise
+   less constrained, or within a backend environment that only
+   communicates with constrained devices via proxies.  As an exception
+   to the previous paragraph, in this case, the recommendations in
+   [RFC7525] are more appropriate.
+
+   Since the guidance offered in [RFC7925] and [RFC7525] differs in
+   terms of algorithms and credential types, it is assumed that a CoAP
+   over TCP/TLS implementation that needs to support both cases
+   implements the recommendations offered by both specifications.
 
    During the provisioning phase, a CoAP device is provided with the
    security information that it needs, including keying materials,
+
+
+
+
+Bormann, et al.          Expires April 28, 2018                [Page 30]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
    access control lists, and authorization servers.  At the end of the
    provisioning phase, the device will be in one of four security modes:
 
@@ -1672,15 +1692,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
    RawPublicKey:  TLS is enabled.  The guidance in Section 4.3 of
       [RFC7925] applies.
-
-
-
-
-
-Bormann, et al.          Expires April 28, 2018                [Page 30]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
-
 
    Certificate:  TLS is enabled.  The guidance in Section 4.4 of
       [RFC7925] applies.
@@ -1718,6 +1729,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    provide Secure CoAP over WebSockets for the browser use case will
    need to follow the browser preferences and MUST follow [RFC7525].
 
+
+
+
+
+Bormann, et al.          Expires April 28, 2018                [Page 31]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
 9.  Security Considerations
 
    The security considerations of [RFC7252] apply.  For CoAP over
@@ -1730,13 +1750,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    followed blindly.  In particular, a peer MUST NOT assume that a
    successful connection to the Alternative-Address inherits all the
    security properties of the current connection.
-
-
-
-Bormann, et al.          Expires April 28, 2018                [Page 31]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
-
 
 10.  IANA Considerations
 
@@ -1772,6 +1785,15 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    The IANA policy for future additions to this sub-registry is "IETF
    Review or IESG Approval" as described in [RFC8126].
 
+
+
+
+
+Bormann, et al.          Expires April 28, 2018                [Page 32]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
 10.2.  CoAP Signaling Option Numbers Registry
 
    IANA is requested to create a sub-registry for Options Numbers used
@@ -1784,15 +1806,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    documentation.
 
    Initial entries in this sub-registry are as follows:
-
-
-
-
-
-Bormann, et al.          Expires April 28, 2018                [Page 32]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
-
 
          +------------+--------+---------------------+-----------+
          | Applies to | Number | Name                | Reference |
@@ -1830,6 +1843,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
    o  The format and length of the option's value.
 
+
+
+Bormann, et al.          Expires April 28, 2018                [Page 33]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
    o  The base value for the option, if any.
 
 10.3.  Service Name and Port Number Registration
@@ -1842,13 +1862,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
    Transport Protocol.
       tcp
-
-
-
-Bormann, et al.          Expires April 28, 2018                [Page 33]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
-
 
    Assignee.
       IESG <iesg@ietf.org>
@@ -1885,6 +1898,14 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    Contact.
       IETF Chair <chair@ietf.org>
 
+
+
+
+Bormann, et al.          Expires April 28, 2018                [Page 34]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
    Description.
       Constrained Application Protocol (CoAP)
 
@@ -1893,18 +1914,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
    Port Number.
       5684
-
-
-
-
-
-
-
-
-Bormann, et al.          Expires April 28, 2018                [Page 34]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
-
 
 10.5.  URI Scheme Registration
 
@@ -1946,6 +1955,13 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    Scheme name:
       coaps+tcp
 
+
+
+Bormann, et al.          Expires April 28, 2018                [Page 35]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
    Status:
       Permanent
 
@@ -1954,14 +1970,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
       using TLS.
 
    Contact:
-
-
-
-Bormann, et al.          Expires April 28, 2018                [Page 35]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
-
-
       IETF chair <chair@ietf.org>
 
    Change controller:
@@ -2003,20 +2011,19 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    Scheme name:
       coaps+ws
 
-   Status:
-      Permanent
-
-   Applications/protocols that use this scheme name:
-      The scheme is used by CoAP endpoints to access CoAP resources
-      using the WebSocket protocol secured with TLS.
-
-
 
 
 Bormann, et al.          Expires April 28, 2018                [Page 36]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
+
+   Status:
+      Permanent
+
+   Applications/protocols that use this scheme name:
+      The scheme is used by CoAP endpoints to access CoAP resources
+      using the WebSocket protocol secured with TLS.
 
    Contact:
       IETF chair <chair@ietf.org>
@@ -2060,13 +2067,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    Reference.
       [RFCthis]
 
-10.8.  WebSocket Subprotocol Registration
-
-   IANA is requested to register the WebSocket CoAP subprotocol under
-   the "WebSocket Subprotocol Name Registry":
-
-   Subprotocol Identifier.
-
 
 
 Bormann, et al.          Expires April 28, 2018                [Page 37]
@@ -2074,6 +2074,12 @@ Bormann, et al.          Expires April 28, 2018                [Page 37]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
+10.8.  WebSocket Subprotocol Registration
+
+   IANA is requested to register the WebSocket CoAP subprotocol under
+   the "WebSocket Subprotocol Name Registry":
+
+   Subprotocol Identifier.
       coap
 
    Subprotocol Common Name.
@@ -2115,12 +2121,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
-              Resource Identifier (URI): Generic Syntax", STD 66,
-              RFC 3986, DOI 10.17487/RFC3986, January 2005,
-              <https://www.rfc-editor.org/info/rfc3986>.
-
-
 
 
 
@@ -2129,6 +2129,11 @@ Bormann, et al.          Expires April 28, 2018                [Page 38]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
+
+   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform
+              Resource Identifier (URI): Generic Syntax", STD 66,
+              RFC 3986, DOI 10.17487/RFC3986, January 2005,
+              <https://www.rfc-editor.org/info/rfc3986>.
 
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
@@ -2170,11 +2175,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
               RFC 7595, DOI 10.17487/RFC7595, June 2015,
               <https://www.rfc-editor.org/info/rfc7595>.
 
-   [RFC7641]  Hartke, K., "Observing Resources in the Constrained
-              Application Protocol (CoAP)", RFC 7641,
-              DOI 10.17487/RFC7641, September 2015,
-              <https://www.rfc-editor.org/info/rfc7641>.
-
 
 
 
@@ -2185,6 +2185,11 @@ Bormann, et al.          Expires April 28, 2018                [Page 39]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
+
+   [RFC7641]  Hartke, K., "Observing Resources in the Constrained
+              Application Protocol (CoAP)", RFC 7641,
+              DOI 10.17487/RFC7641, September 2015,
+              <https://www.rfc-editor.org/info/rfc7641>.
 
    [RFC7925]  Tschofenig, H., Ed. and T. Fossati, "Transport Layer
               Security (TLS) / Datagram Transport Layer Security (DTLS)
@@ -2228,11 +2233,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
               "CoAP Simple Congestion Control/Advanced", draft-ietf-
               core-cocoa-01 (work in progress), March 2017.
 
-   [I-D.ietf-core-object-security]
-              Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
-              "Object Security for Constrained RESTful Environments
-              (OSCORE)", draft-ietf-core-object-security-06 (work in
-              progress), October 2017.
 
 
 
@@ -2241,6 +2241,12 @@ Bormann, et al.          Expires April 28, 2018                [Page 40]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
+
+   [I-D.ietf-core-object-security]
+              Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
+              "Object Security for Constrained RESTful Environments
+              (OSCORE)", draft-ietf-core-object-security-06 (work in
+              progress), October 2017.
 
    [LWM2M]    Open Mobile Alliance, "Lightweight Machine to Machine
               Technical Specification Version 1.0", February 2017,
@@ -2280,6 +2286,18 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
               https://www.ietf.org/proceedings/96/slides/slides-96-quic-
               3.pdf, 2016.
 
+
+
+
+
+
+
+
+Bormann, et al.          Expires April 28, 2018                [Page 41]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
 11.3.  URIs
 
    [1] http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
@@ -2289,14 +2307,6 @@ Appendix A.  Updates to RFC 7641 Observing Resources in the Constrained
 
    In this appendix, "client" and "server" refer to the CoAP client and
    CoAP server.
-
-
-
-
-Bormann, et al.          Expires April 28, 2018                [Page 41]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
-
 
 A.1.  Notifications and Reordering
 
@@ -2335,6 +2345,15 @@ A.3.  Freshness
    that the server is still responsive.  For CoAP over reliable
    transports, it is more efficient to check the health of the
    connection (and all its active observations) by sending a CoAP Ping
+
+
+
+
+Bormann, et al.          Expires April 28, 2018                [Page 42]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
    Signaling message (Section 5.4) rather than individual requests to
    confirm active observations.
 
@@ -2344,15 +2363,6 @@ A.4.  Cancellation
    notifications can "forget" the observation and respond to the next
    notification from the server with a reset message to cancel the
    observation.
-
-
-
-
-
-Bormann, et al.          Expires April 28, 2018                [Page 42]
-
-Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
-
 
    For CoAP over reliable transports, a client MUST explicitly
    deregister by issuing a GET request that has the Token field set to
@@ -2391,16 +2401,6 @@ Appendix B.  CoAP over WebSocket Examples
 
    5.  The CoAP client uses the connection for further requests, or the
        connection is closed.
-
-
-
-
-
-
-
-
-
-
 
 
 
