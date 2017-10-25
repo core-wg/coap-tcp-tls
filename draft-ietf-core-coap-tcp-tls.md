@@ -191,8 +191,9 @@ a reliable transport.
 # Introduction {#introduction}
 
 The [Constrained Application Protocol (CoAP)](#RFC7252) was designed
-for Internet of Things (IoT) deployments, assuming that UDP {{RFC0768}} 
-and DTLS {{RFC6347}} over UDP can be used unimpeded. The use of CoAP over 
+for Internet of Things (IoT) deployments, assuming that UDP
+{{RFC0768}} can be used unimpeded, as can the Datagram Transport Layer
+Security protocol (DTLS {{RFC6347})} over UDP. The use of CoAP over 
 UDP is focused on simplicity, has a low code footprint, and a small 
 over-the-wire message size. 
 
