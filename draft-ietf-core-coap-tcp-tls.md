@@ -192,71 +192,83 @@ a reliable transport.
 
 The [Constrained Application Protocol (CoAP)](#RFC7252) was designed
 for Internet of Things (IoT) deployments, assuming that UDP {{RFC0768}} 
-and DTLS {{RFC6347}} over UDP can be used unimpeded. 
+and DTLS {{RFC6347}} over UDP can be used unimpeded. The use of CoAP over 
+UDP is focused on simplicity, has a low code footprint, and a small 
+over-the-wire message size. 
 
-The use of CoAP over UDP is focused on simplicity, has a low code footprint, and 
-a small over-the-wire message size. However, it also suffers from a few limitations:
+The primary reason for introducing CoAP over TCP {{RFC0793}} and TLS {{RFC5246}} 
+is that some networks drop UDP packets. Complete blocking of UDP happens in between 
+about 2% and 4% of terrestrial access networks, according to {{EK2016}}. UDP 
+impairment is especially concentrated in enterprise networks and networks in 
+geographic regions with otherwise challenged connectivity. Some networks also 
+rate-limit UDP traffic, as reported in {{BK2015}} and deployment investigations 
+related to the standardization of QUIC revealed numbers around 0.3 % {{SW2016}}. 
 
-* CoAP over UDP is a good choice for transferring small amounts of data across 
-networks that follow the IP architecture. It is less well suited for transferring 
-larger payloads, such as firmware updates. For this reason blockwise transfer was 
-added to CoAP, see {{RFC7959}}. With blockwise transfer large data payloads get 
-"chunked" into small(er) blocks and transferred individually. This also allows 
-to suspend a transmission and to continue at a later time to interleave other, 
-more urgent transmissions. 
+The introduction of CoAP over TCP also leads to some side effects, namely 
 
-* CoAP over UDP offers a simple congestion control mechanism only. It uses an 
-exponential backoff strategy for retransmissions and clients must strictly limit 
-the number of simultaneous outstanding interactions to a given server to one. This 
-means that CoAP clients cannot send multiple concurrent requests to a single CoAP 
-server. A client will therefore have to wait till the outstanding interaction has 
-been concluded. When a larger transfer has been started, such as a firmware 
-download, then this transfer will block other exchanges. This is called "head-of-line 
-blocking". Note that there is ongoing work to add more elaborate congestion 
-control to CoAP as well, see {{-cocoa}}.
+* Where NATs are present along the communication path, CoAP over TCP leads to 
+different NAT traversal behavior than CoAP over UDP. NATs often calculate expiration 
+timers based on the transport layer protocol being used by application protocols. 
+Many NATs maintain TCP-based NAT bindings for longer periods based on the assumption 
+that a transport layer protocol, such as TCP, offers additional information about 
+the session lifecycle. UDP, on the other hand, does not provide such information 
+to a NAT and timeouts tend to be much shorter {{HomeGateway}}. According to 
+{{HomeGateway}} the mean between TCP and UDP NAT binding timeouts is 386 minutes 
+(TCP) and 160 seconds (UDP). Shorter timeout values require keepalive messages to 
+be sent more frequently. Hence, the use of CoAP over TCP requires less frequent 
+transmission of keep-alive messages. 
 
-* CoAP over UDP does not provide fragmentation and reassembly support but instead 
-relies on lower layers to provide this functionality, such as IP or by an adaption 
-layer, like 6lowpan. Using fragmentation (either at the adaptation layer or at the 
-IP layer) for the transport of larger data payloads would be possible up to the 
-maximum size of the underlying datagram protocol. With UDP the length field is 
-16 bit long, which leads to a maximum payload size of a little less than 64  Kbyte
-(due to the header size). For firmware images 64 Kbyte may, however, be too small and 
-relying on IP layer fragmentation is inefficient. Any transmission larger than 
-the path MTU will lead to IP fragmentation. The path MTU needs to be determined 
-first and it may change over time. 
+* TCP utilizes more sophisticated congestion and flow control mechanisms, which is
+useful for the transfer of larger payloads. In the context of IoT deployments, such 
+transfers could be firmware updates. There is, however, ongoing work to add 
+advanced congestion control to CoAP as well, see {{-cocoa}}. 
 
-* Some networks drop UDP packets. Complete blocking of UDP happens in between about 
-2% and 4% of terrestrial access networks, according to {{EK2016}}. UDP impairment 
-is especially concentrated in enterprise networks and networks in geographic regions 
-with otherwise challenged connectivity. Some networks also rate-limit UDP traffic, 
-as reported in {{BK2015}}. QUIC deployment investigations revealed numbers around 
-0.3 % {{SW2016}}. 
-
-* Where NATs are present, CoAP over TCP can help with their traversal. NATs often 
-calculate expiration timers based on the transport layer protocol being used by 
-application protocols. Many NATs maintain TCP-based NAT bindings for longer periods 
-based on the assumption that a transport layer protocol, such as TCP, offers 
-additional information about the session life cycle. UDP, on the other hand, does 
-not provide such information to a NAT and timeouts tend to be much shorter 
-{{HomeGateway}}. According to {{HomeGateway}} the mean between TCP and UDP NAT 
-binding timeouts is 386 minutes (TCP) and 160 seconds (UDP). Shorter timeout values
-require keepalive messages to be sent more more frequently. 
+Note that the use of CoAP over UDP (and CoAP over DTLS over UDP) is still the recommended 
+transport for use constrained node networks, particularly when used in concert with 
+blockwise transfer. CoAP over TCP is applicable for those cases where the networking 
+infrastructure leaves no other choice. The use of CoAP over TCP leads to a larger code 
+size, more roundtrips, increased RAM requirements and larger packet sizes. 
+Developers implementing CoAP over TCP are encouraged to read 
+{{I-D.gomez-lwig-tcp-constrained-node-networks}} for guidance on low-footprint TCP 
+implementations for IoT devices. 
 
 Emerging standards such as Lightweight Machine to Machine {{LWM2M}} currently use CoAP over UDP
 as a transport and require support for CoAP over TCP to address the issues above and to protect
-investments in existing CoAP implementations and deployments. Although HTTP/2 could also potentially
-address these requirements, there would be additional costs and delays introduced by such a transition.
-Currently, there are also fewer HTTP/2 implementations available for constrained devices in
-comparison to CoAP.
+investments in existing CoAP implementations and deployments. 
 
-To address these requirements, this document defines how to transport CoAP over TCP,
-CoAP over TLS, and CoAP over WebSockets. For these cases, the reliability offered by the
-transport protocol subsumes the reliability functions of the message layer used for CoAP
-over UDP. (Note that both for a reliable transport and the CoAP over UDP message layer, 
-the reliability offered is per transport hop: where proxies --- see Sections 5.7 and 10 of
-{{-coap}} --- are involved, that layer's reliability function does not extend end-to-end.)
-{{fig-layering}} illustrates the layering:
+Although HTTP/2 could also potentially address the need for enterprise firewall traversal, 
+there would be additional costs and delays introduced by such a transition from CoAP to HTTP/2.
+Currently, there are also fewer HTTP/2 implementations available for constrained devices in
+comparison to CoAP. Since CoAP also support group communication using IP layer multicast and 
+unreliable communication IoT devices would have to support HTTP/2 in addition to CoAP.
+
+Furthermore, CoAP may be integrated into a Web environment where the front-end
+uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
+over TCP between the back-end services. A TCP-to-UDP gateway can be used at
+the cloud boundary to communicate with the UDP-based IoT device.
+
+Finally, CoAP applications running inside a web browser without access to
+connectivity other than HTTP and the [WebSocket protocol](#RFC6455)
+may cross-proxy their CoAP requests via HTTP to a HTTP-to-CoAP
+cross-proxy or transport them via the the WebSocket protocol, which
+provides two-way communication between a WebSocket client and a
+WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection.
+
+Finally, CoAP applications running inside a web browser may be without
+access to connectivity other than HTTP.  In this case,  the WebSocket
+protocol [RFC6455] may be used to either cross-proxy their CoAP requests
+via HTTP to an HTTP-to-CoAP cross-proxy or transport them via the
+WebSocket protocol. This would, in turn, provide two-way communication
+between a WebSocket client and a WebSocket server after upgrading an
+HTTP/1.1 [RFC7230] connection.
+
+To address the above-mentioned deployment requirements, this document defines how to 
+transport CoAP over TCP, CoAP over TLS, and CoAP over WebSockets. For these cases, 
+the reliability offered by the transport protocol subsumes the reliability functions 
+of the message layer used for CoAP over UDP. (Note that both for a reliable transport 
+and the CoAP over UDP message layer, the reliability offered is per transport hop: 
+where proxies --- see Sections 5.7 and 10 of {{-coap}} --- are involved, that layer's 
+reliability function does not extend end-to-end.) {{fig-layering}} illustrates the layering:
 
 ~~~~
   +--------------------------------+
@@ -271,32 +283,6 @@ the reliability offered is per transport hop: where proxies --- see Sections 5.7
   +--------------------------------+
 ~~~~
 {: #fig-layering title='Layering of CoAP over Reliable Transports' artwork-align="center"}
-
-Note, however, that 
-the use of CoAP over UDP (and CoAP over DTLS over UDP) is still the recommended 
-transport for use constrained node networks, particularly when used in concert with 
-blockwise transport. CoAP over TCP (and CoAP over TLS over TCP) is applicable for those 
-cases where the networking infrastructure leaves no other choice. The use of CoAP over 
-TCP leads to a larger code size, more roundtrips, increased RAM requirements and larger 
-packet sizes. Developers are encouraged to read 
-{{I-D.gomez-lwig-tcp-constrained-node-networks}} for guidance on low-footprint TCP
-implementations for IoT devices. 
-
-CoAP may be integrated into a Web environment where the front-end
-uses CoAP over UDP from IoT devices to a cloud infrastructure and then CoAP
-over TCP between the back-end services. A TCP-to-UDP gateway can be used at
-the cloud boundary to communicate with the UDP-based IoT device.
-
-To allow IoT devices to better communicate in these demanding environments, CoAP
-needs to support different transport protocols, namely TCP {{RFC0793}},
-in some situations secured by TLS {{RFC5246}}.
-
-CoAP applications running inside a web browser without access to
-connectivity other than HTTP and the [WebSocket protocol](#RFC6455)
-may cross-proxy their CoAP requests via HTTP to a HTTP-to-CoAP
-cross-proxy or transport them via the the WebSocket protocol, which
-provides two-way communication between a WebSocket client and a
-WebSocket server after upgrading an [HTTP/1.1](#RFC7230) connection.
 
 This document specifies how to access resources using CoAP requests
 and responses over the TCP, TLS and WebSocket protocols. This allows
