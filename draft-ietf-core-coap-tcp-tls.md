@@ -491,9 +491,13 @@ sending its own initial CSM message.
 
 To avoid unnecessary latency, a Connection Initiator MAY send additional messages without waiting to receive
 the Connection Acceptor's CSM; however, it is important to note that
-the Connection Acceptor's CSM might advertise capabilities
-that impact how the initiator is expected to communicate with the acceptor. For example, the acceptor CSM
-could advertise a Max-Message-Size option (see {{max-message-size}}) that is smaller than the base value (1152). 
+the Connection Acceptor's CSM might indicate capabilities
+that impact how the initiator is expected to communicate with the
+acceptor.
+For example, the acceptor CSM
+could indicate a Max-Message-Size option (see {{max-message-size}})
+that is smaller than the base value (1152) in order to limit both
+buffering requirements and head-of-line blocking.
 
 Endpoints MUST treat a missing or invalid CSM as a connection error and abort
 the connection (see {{sec-abort}}). 
@@ -756,7 +760,7 @@ option is understood but cannot be processed, the option documents the behavior.
 
 Capabilities and Settings messages (CSM) are used for two purposes:
 
-* Each capability option advertises one capability of the sender to the recipient. 
+* Each capability option indicates one capability of the sender to the recipient.
 
 * Each setting option indicates a setting that will be applied by the sender.
 
@@ -781,8 +785,13 @@ Capabilities and Settings messages are indicated by the 7.01 code (CSM).
 
 ### Max-Message-Size Capability Option {#max-message-size}
 
-The sender can use the elective Max-Message-Size Option to indicate the maximum message size
-in bytes that it can receive.
+The sender can use the elective Max-Message-Size Option to indicate
+the maximum size of a message in bytes that it can receive.  The
+message size indicated includes the entire message, starting from the
+first byte of the message header and ending at the end of the message
+payload (there is no relationship of the message size to the overall
+request or response body size that may be achievable in block-wise
+transfer.)
 
 | #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
