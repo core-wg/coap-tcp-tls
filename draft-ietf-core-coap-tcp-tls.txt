@@ -140,16 +140,16 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
      A.3.  Freshness . . . . . . . . . . . . . . . . . . . . . . . .  42
      A.4.  Cancellation  . . . . . . . . . . . . . . . . . . . . . .  43
    Appendix B.  CoAP over WebSocket Examples . . . . . . . . . . . .  43
-   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  46
-     C.1.  Since draft-ietf-core-coap-tcp-tls-02 . . . . . . . . . .  46
-     C.2.  Since draft-ietf-core-coap-tcp-tls-03 . . . . . . . . . .  46
-     C.3.  Since draft-ietf-core-coap-tcp-tls-04 . . . . . . . . . .  46
-     C.4.  Since draft-ietf-core-coap-tcp-tls-05 . . . . . . . . . .  46
-     C.5.  Since draft-ietf-core-coap-tcp-tls-06 . . . . . . . . . .  47
-     C.6.  Since draft-ietf-core-coap-tcp-tls-07 . . . . . . . . . .  47
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  47
-   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  47
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  48
+   Appendix C.  Change Log . . . . . . . . . . . . . . . . . . . . .  47
+     C.1.  Since draft-ietf-core-coap-tcp-tls-02 . . . . . . . . . .  47
+     C.2.  Since draft-ietf-core-coap-tcp-tls-03 . . . . . . . . . .  47
+     C.3.  Since draft-ietf-core-coap-tcp-tls-04 . . . . . . . . . .  47
+     C.4.  Since draft-ietf-core-coap-tcp-tls-05 . . . . . . . . . .  47
+     C.5.  Since draft-ietf-core-coap-tcp-tls-06 . . . . . . . . . .  48
+     C.6.  Since draft-ietf-core-coap-tcp-tls-07 . . . . . . . . . .  48
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  48
+   Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .  48
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  49
 
 1.  Introduction
 
@@ -2344,8 +2344,8 @@ A.3.  Freshness
    original request to re-register its interest in a resource and verify
    that the server is still responsive.  For CoAP over reliable
    transports, it is more efficient to check the health of the
-   connection (and all its active observations) by sending a CoAP Ping
-
+   connection (and all its active observations) by sending a single CoAP
+   Ping Signaling message (Section 5.4) rather than individual requests
 
 
 
@@ -2354,8 +2354,13 @@ Bormann, et al.            Expires May 1, 2018                 [Page 42]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
-   Signaling message (Section 5.4) rather than individual requests to
-   confirm active observations.
+   to confirm each active observation.  (Note that such a Ping/Pong only
+   confirms a single hop: there is no obligation, and no expectation, of
+   a proxy to react to a Ping by checking all its onward observations or
+   all the connections, if any, underlying them.  A proxy MAY maintain
+   its own schedule for confirming the onward observations it relies on;
+   it is however generally inadvisable for a proxy to generate a large
+   number of outgoing checks based on a single incoming check.)
 
 A.4.  Cancellation
 
@@ -2397,6 +2402,14 @@ Appendix B.  CoAP over WebSocket Examples
        request.  The request indicates the target resource with the Uri-
        Path ("sensors", "temperature") and Uri-Query ("u=Cel") options.
 
+
+
+
+Bormann, et al.            Expires May 1, 2018                 [Page 43]
+
+Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
+
+
    4.  It waits for the server to return a response.
 
    5.  The CoAP client uses the connection for further requests, or the
@@ -2405,7 +2418,50 @@ Appendix B.  CoAP over WebSocket Examples
 
 
 
-Bormann, et al.            Expires May 1, 2018                 [Page 43]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann, et al.            Expires May 1, 2018                 [Page 44]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
@@ -2461,7 +2517,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
 
-Bormann, et al.            Expires May 1, 2018                 [Page 44]
+Bormann, et al.            Expires May 1, 2018                 [Page 45]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
@@ -2517,7 +2573,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
 
-Bormann, et al.            Expires May 1, 2018                 [Page 45]
+Bormann, et al.            Expires May 1, 2018                 [Page 46]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
@@ -2573,7 +2629,7 @@ C.4.  Since draft-ietf-core-coap-tcp-tls-05
 
 
 
-Bormann, et al.            Expires May 1, 2018                 [Page 46]
+Bormann, et al.            Expires May 1, 2018                 [Page 47]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
@@ -2629,7 +2685,7 @@ Contributors
 
 
 
-Bormann, et al.            Expires May 1, 2018                 [Page 47]
+Bormann, et al.            Expires May 1, 2018                 [Page 48]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
@@ -2685,7 +2741,7 @@ Authors' Addresses
 
 
 
-Bormann, et al.            Expires May 1, 2018                 [Page 48]
+Bormann, et al.            Expires May 1, 2018                 [Page 49]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
@@ -2741,4 +2797,4 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
 
-Bormann, et al.            Expires May 1, 2018                 [Page 49]
+Bormann, et al.            Expires May 1, 2018                 [Page 50]
