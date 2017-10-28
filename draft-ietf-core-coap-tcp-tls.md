@@ -1764,9 +1764,15 @@ For CoAP over UDP, if a client does not receive a notification for some
 time, it MAY send a new GET request with the same token as the original request to
 re-register its interest in a resource and verify that the server is still
 responsive. For CoAP over reliable transports, it is more efficient to check
-the health of the connection (and all its active observations) by sending a CoAP
+the health of the connection (and all its active observations) by sending a single CoAP
 Ping Signaling message ({{sec-ping}}) rather than individual requests to confirm
-active observations.
+each active observation.  (Note that such a Ping/Pong only confirms a single hop:
+there is no obligation, and no expectation, of a proxy to react to a
+Ping by checking all its onward observations or all the connections,
+if any, underlying them.  A proxy MAY maintain its own schedule for
+confirming the onward observations it relies on; it is however
+generally inadvisable for a proxy to generate a large number of
+outgoing checks based on a single incoming check.)
 
 ## Cancellation {#observe-cancel}
 
