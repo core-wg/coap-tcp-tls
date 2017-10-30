@@ -633,6 +633,7 @@ address {
 <a href="#rfc.section.3">3.</a> <a href="#coap-over-tcp" id="coap-over-tcp">CoAP over TCP</a>
 </h1>
 <p id="rfc.section.3.p.1">The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.  The primary differences are in the message layer. The message layer of CoAP over UDP supports optional reliability by defining four types of messages: Confirmable, Non-confirmable, Acknowledgement, and Reset. In addition, messages include a Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate messages.</p>
+<p id="rfc.section.3.p.2">The management of the connections is left to the application, i.e., the present specification does not describe how an application decides to open a connection or to re-open another one in the presence of failures (or what it would deem to be a failure, see also <a href="#sec-ping" class="xref">Section 5.4</a>).  In particular, the Connection Initiator need not be the client of the first request placed on the connection.</p>
 <h1 id="rfc.section.3.1">
 <a href="#rfc.section.3.1">3.1.</a> <a href="#messaging-model" id="messaging-model">Messaging Model</a>
 </h1>
@@ -743,7 +744,7 @@ CoAP Client       CoAP Server  CoAP Client       CoAP Server
 </h1>
 <p id="rfc.section.3.3.p.1">Once a connection is established, each endpoint MUST send a Capabilities and Settings message (CSM see <a href="#csm" class="xref">Section 5.3</a>) as their first message on the connection. This message establishes the initial settings and capabilities for the endpoint, such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
 <p id="rfc.section.3.3.p.2">To avoid a deadlock, the Connection Initiator MUST NOT wait for the Connection Acceptor to send its initial CSM message before sending its own initial CSM message.  Conversely, the Connection Acceptor MAY wait for the Connection Initiator to send its initial CSM message before sending its own initial CSM message.</p>
-<p id="rfc.section.3.3.p.3">To avoid unnecessary latency, a Connection Initiator MAY send additional messages without waiting to receive the Connection Acceptor&#8217;s CSM; however, it is important to note that the Connection Acceptor&#8217;s CSM might indicate capabilities that impact how the initiator is expected to communicate with the acceptor.  For example, the acceptor CSM could indicate a Max-Message-Size option (see <a href="#max-message-size" class="xref">Section 5.3.1</a>) that is smaller than the base value (1152) in order to limit both buffering requirements and head-of-line blocking.</p>
+<p id="rfc.section.3.3.p.3">To avoid unnecessary latency, a Connection Initiator MAY send additional messages after its initial CSM without waiting to receive the Connection Acceptor&#8217;s CSM; however, it is important to note that the Connection Acceptor&#8217;s CSM might indicate capabilities that impact how the initiator is expected to communicate with the acceptor.  For example, the acceptor CSM could indicate a Max-Message-Size option (see <a href="#max-message-size" class="xref">Section 5.3.1</a>) that is smaller than the base value (1152) in order to limit both buffering requirements and head-of-line blocking.</p>
 <p id="rfc.section.3.3.p.4">Endpoints MUST treat a missing or invalid CSM as a connection error and abort the connection (see <a href="#sec-abort" class="xref">Section 5.6</a>).</p>
 <p id="rfc.section.3.3.p.5">CoAP requests and responses are exchanged asynchronously over the TCP/TLS connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
 <p id="rfc.section.3.3.p.6">The connection is bi-directional, so requests can be sent both by the entity that established the connection (Connection Initiator) and the remote host (Connection Acceptor).  If one side does not implement a CoAP server, an error response MUST be returned for all CoAP requests from the other side. The simplest approach is to always return 5.01 (Not Implemented). A more elaborate mock server could also return 4.xx responses such as 4.04 (Not Found) or 4.02 (Bad Option) where appropriate.</p>
@@ -966,6 +967,7 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.5.4.p.1">In CoAP over reliable transports, Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient. This provides a basic keep-alive function. In contrast, Ping and Pong messages are a bidirectional exchange.</p>
 <p id="rfc.section.5.4.p.2">Upon receipt of a Ping message, the receiver MUST return a Pong message with an identical token in response. Unless the Ping carries an option with delaying semantics such as the Custody Option, it SHOULD respond as soon as practical. As with all Signaling messages, the recipient of a Ping or Pong message MUST ignore elective options it does not understand.</p>
 <p id="rfc.section.5.4.p.3">Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).</p>
+<p id="rfc.section.5.4.p.4">Note that, as with similar mechanisms defined in <a href="#RFC6455" class="xref">[RFC6455]</a> and <a href="#RFC7540" class="xref">[RFC7540]</a>, the present specification does not define any specific maximum time that the sender of a Ping message has to allow waiting for a Pong reply.  Any limitations on the patience for this reply are a matter of the application making use of these messages, as is any approach to recover from a failure to respond in time.</p>
 <h1 id="rfc.section.5.4.1">
 <a href="#rfc.section.5.4.1">5.4.1.</a> <a href="#custody-option" id="custody-option">Custody Option</a>
 </h1>
@@ -1833,6 +1835,11 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <td class="reference"><b id="RFC7525">[RFC7525]</b></td>
 <td class="top">
 <a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="https://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7540">[RFC7540]</b></td>
+<td class="top">
+<a>Belshe, M.</a>, <a>Peon, R.</a> and <a>M. Thomson</a>, "<a href="https://tools.ietf.org/html/rfc7540">Hypertext Transfer Protocol Version 2 (HTTP/2)</a>", RFC 7540, DOI 10.17487/RFC7540, May 2015.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC7595">[RFC7595]</b></td>
