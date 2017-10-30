@@ -173,6 +173,7 @@ informative:
     date: 2015
     seriesinfo:
       Proceedings: draft-byrne-opsec-udp-advisory-00 (expired)
+  IANA.uri-schemes:
 
 --- abstract
 
@@ -1658,7 +1659,7 @@ Port Number.
 ## URI Scheme Registration
 
 URI schemes are registered within the "Uniform Resource Identifier (URI) Schemes"
-registry maintained at <http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml>.
+registry maintained at {{IANA.uri-schemes}}.
 
 ### coap+tcp
 IANA is requested to register the Uniform Resource Identifier (URI) scheme "coap+tcp".
