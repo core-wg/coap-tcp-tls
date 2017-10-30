@@ -815,8 +815,11 @@ A sender can use the elective Block-wise Transfer Option to indicate that it
 supports the block-wise transfer protocol {{-block}}.
 
 If the option is not given, the peer has no information about whether block-wise
-transfers are supported by the sender or not. An implementation that supports
-block-wise transfers SHOULD indicate the Block-wise Transfer Option. If a
+transfers are supported by the sender or not.  An implementation
+wishing to offer block-wise transfers to its peer therefore needs to
+indicate the Block-wise Transfer Option.
+
+If a
 Max-Message-Size Option is indicated with a value that is greater than 1152
 (in the same or a different CSM message), the Block-wise Transfer Option also
 indicates support for BERT (see {{bert}}). Subsequently, if the Max-Message-Size
