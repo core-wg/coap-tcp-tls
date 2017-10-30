@@ -1744,6 +1744,11 @@ for CoAP over reliable transports since the TCP protocol ensures reliable and or
 of messages. The value of the Observe Option in 2.xx notifications MAY be empty on transmission
 and MUST be ignored on reception.
 
+Implementation note: This means that a proxy from a reordering
+transport to a reliable (in-order) transport (such as a UDP-to-TCP
+proxy) needs to process the Observe Option in notifications according
+to the rules in Section 3.4 of {{-observe}}.
+
 ## Transmission and Acknowledgements
 
 For CoAP over UDP, server notifications to the client can be confirmable or non-confirmable.
