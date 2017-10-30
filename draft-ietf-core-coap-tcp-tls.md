@@ -85,6 +85,7 @@ normative:
   RFC7252: coap
   RFC7301: alpn
   RFC7525: tlsbcp
+  RFC7540: h2
   RFC7595: urireg
   RFC7641: observe
   RFC7925: RFC7925
@@ -334,6 +335,13 @@ Non-confirmable, Acknowledgement, and Reset. In addition, messages include a
 Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate
 messages. 
 
+The management of the connections is left to the application, i.e.,
+the present specification does not describe how an application decides
+to open a connection or to re-open another one in the presence of
+failures (or what it would deem to be a failure, see also
+{{sec-ping}}).  In particular, the Connection Initiator need not be
+the client of the first request placed on the connection.
+
 ## Messaging Model 
 
 Conceptually, CoAP over TCP replaces most of the message layer of CoAP over UDP
@@ -489,7 +497,8 @@ own initial CSM message.  Conversely, the Connection Acceptor MAY wait
 for the Connection Initiator to send its initial CSM message before
 sending its own initial CSM message.
 
-To avoid unnecessary latency, a Connection Initiator MAY send additional messages without waiting to receive
+To avoid unnecessary latency, a Connection Initiator MAY send
+additional messages after its initial CSM without waiting to receive
 the Connection Acceptor's CSM; however, it is important to note that
 the Connection Acceptor's CSM might indicate capabilities
 that impact how the initiator is expected to communicate with the
@@ -853,6 +862,13 @@ it SHOULD respond as soon as practical. As with all Signaling messages, the reci
 Pong message MUST ignore elective options it does not understand.
 
 Ping and Pong messages are indicated by the 7.02 code (Ping) and the 7.03 code (Pong).
+
+Note that, as with similar mechanisms defined in {{RFC6455}} and
+{{RFC7540}}, the present specification does not define any specific
+maximum time that the sender of a Ping message has to allow waiting
+for a Pong reply.  Any limitations on the patience for this reply are
+a matter of the application making use of these messages, as is any
+approach to recover from a failure to respond in time.
 
 ### Custody Option
 
