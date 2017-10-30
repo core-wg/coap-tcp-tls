@@ -1107,6 +1107,71 @@ CoAP Client                             CoAP Server
 ~~~~
 {: #fig-bert2 title='PUT with BERT blocks'}
 
+# Observing Resources over Reliable Transports {#observing}
+
+This section describes how the procedures defined in {{RFC7641}} for
+observing resources over CoAP are applied (and modified, as needed)
+for reliable transports.  In this section, "client" and "server" refer
+to the CoAP client and CoAP server.
+
+## Notifications and Reordering
+
+When using the Observe Option with CoAP over UDP, notifications from the server set the option
+value to an increasing sequence number for reordering detection on the client since messages
+can arrive in a different order than they were sent. This sequence number is not required
+for CoAP over reliable transports since the TCP protocol ensures reliable and ordered delivery
+of messages. The value of the Observe Option in 2.xx notifications MAY be empty on transmission
+and MUST be ignored on reception.
+
+Implementation note: This means that a proxy from a reordering
+transport to a reliable (in-order) transport (such as a UDP-to-TCP
+proxy) needs to process the Observe Option in notifications according
+to the rules in Section 3.4 of {{-observe}}.
+
+## Transmission and Acknowledgements
+
+For CoAP over UDP, server notifications to the client can be confirmable or non-confirmable.
+A confirmable message requires the client to either respond with an acknowledgement message or
+a reset message. An acknowledgement message indicates that the client is alive and wishes to receive
+further notifications. A reset message indicates that the client does not recognize
+the token which causes the server to remove the associated entry from the list of observers.
+
+Since TCP eliminates the need for the message layer to support reliability, CoAP over reliable
+transports does not support confirmable or non-confirmable message types. All notifications are
+delivered reliably to the client with positive acknowledgement of receipt occurring at the TCP
+level. If the client does not recognize the token in a notification, it MAY immediately abort
+the connection (see {{sec-abort}}).
+
+## Freshness
+
+For CoAP over UDP, if a client does not receive a notification for some
+time, it MAY send a new GET request with the same token as the original request to
+re-register its interest in a resource and verify that the server is still
+responsive. For CoAP over reliable transports, it is more efficient to check
+the health of the connection (and all its active observations) by sending a single CoAP
+Ping Signaling message ({{sec-ping}}) rather than individual requests to confirm
+each active observation.  (Note that such a Ping/Pong only confirms a single hop:
+there is no obligation, and no expectation, of a proxy to react to a
+Ping by checking all its onward observations or all the connections,
+if any, underlying them.  A proxy MAY maintain its own schedule for
+confirming the onward observations it relies on; it is however
+generally inadvisable for a proxy to generate a large number of
+outgoing checks based on a single incoming check.)
+
+## Cancellation {#observe-cancel}
+
+For CoAP over UDP, a client that is no longer interested in receiving notifications can "forget"
+the observation and respond to the next notification from the server with a reset message to cancel
+the observation. 
+
+For CoAP over reliable transports, a client MUST explicitly deregister by issuing a GET request
+that has the Token field set to the token of the observation to be cancelled and includes an Observe
+Option with the value set to 1 (deregister). 
+
+If the client observes one or more resources over a reliable transport, then the CoAP server
+(or intermediary in the role of the CoAP server) MUST remove all entries associated with the
+client endpoint from the lists of observers when the connection is either closed or times out.
+
 # CoAP over Reliable Transport URIs {#URI}
 
 CoAP over UDP {{RFC7252}} defines the "coap" and "coaps" URI schemes. This document
@@ -1748,69 +1813,6 @@ by {{RFC7959}} in the "CoAP Option Numbers" sub-registry defined by {{RFC7252}}:
 | 27     | Block1 | RFC 7959, \[RFCthis] |
 {: #option-numbers title="CoAP Option Numbers" }
 --- back
-
-# Updates to RFC 7641 Observing Resources in the Constrained Application Protocol (CoAP) {#observing}
-
-In this appendix, "client" and "server" refer to the CoAP client and
-CoAP server.
-
-## Notifications and Reordering
-
-When using the Observe Option with CoAP over UDP, notifications from the server set the option
-value to an increasing sequence number for reordering detection on the client since messages
-can arrive in a different order than they were sent. This sequence number is not required
-for CoAP over reliable transports since the TCP protocol ensures reliable and ordered delivery
-of messages. The value of the Observe Option in 2.xx notifications MAY be empty on transmission
-and MUST be ignored on reception.
-
-Implementation note: This means that a proxy from a reordering
-transport to a reliable (in-order) transport (such as a UDP-to-TCP
-proxy) needs to process the Observe Option in notifications according
-to the rules in Section 3.4 of {{-observe}}.
-
-## Transmission and Acknowledgements
-
-For CoAP over UDP, server notifications to the client can be confirmable or non-confirmable.
-A confirmable message requires the client to either respond with an acknowledgement message or
-a reset message. An acknowledgement message indicates that the client is alive and wishes to receive
-further notifications. A reset message indicates that the client does not recognize
-the token which causes the server to remove the associated entry from the list of observers.
-
-Since TCP eliminates the need for the message layer to support reliability, CoAP over reliable
-transports does not support confirmable or non-confirmable message types. All notifications are
-delivered reliably to the client with positive acknowledgement of receipt occurring at the TCP
-level. If the client does not recognize the token in a notification, it MAY immediately abort
-the connection (see {{sec-abort}}).
-
-## Freshness
-
-For CoAP over UDP, if a client does not receive a notification for some
-time, it MAY send a new GET request with the same token as the original request to
-re-register its interest in a resource and verify that the server is still
-responsive. For CoAP over reliable transports, it is more efficient to check
-the health of the connection (and all its active observations) by sending a single CoAP
-Ping Signaling message ({{sec-ping}}) rather than individual requests to confirm
-each active observation.  (Note that such a Ping/Pong only confirms a single hop:
-there is no obligation, and no expectation, of a proxy to react to a
-Ping by checking all its onward observations or all the connections,
-if any, underlying them.  A proxy MAY maintain its own schedule for
-confirming the onward observations it relies on; it is however
-generally inadvisable for a proxy to generate a large number of
-outgoing checks based on a single incoming check.)
-
-## Cancellation {#observe-cancel}
-
-For CoAP over UDP, a client that is no longer interested in receiving notifications can "forget"
-the observation and respond to the next notification from the server with a reset message to cancel
-the observation. 
-
-For CoAP over reliable transports, a client MUST explicitly deregister by issuing a GET request
-that has the Token field set to the token of the observation to be cancelled and includes an Observe
-Option with the value set to 1 (deregister). 
-
-If the client observes one or more resources over a reliable transport, then the CoAP server
-(or intermediary in the role of the CoAP server) MUST remove all entries associated with the
-client endpoint from the lists of observers when the connection is either closed or times out.
 
 # CoAP over WebSocket Examples {#examples}
 
