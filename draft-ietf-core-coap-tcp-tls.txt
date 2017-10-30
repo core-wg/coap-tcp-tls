@@ -956,14 +956,16 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
    If the option is not given, the peer has no information about whether
    block-wise transfers are supported by the sender or not.  An
-   implementation that supports block-wise transfers SHOULD indicate the
-   Block-wise Transfer Option.  If a Max-Message-Size Option is
-   indicated with a value that is greater than 1152 (in the same or a
-   different CSM message), the Block-wise Transfer Option also indicates
-   support for BERT (see Section 6).  Subsequently, if the Max-Message-
-   Size Option is indicated with a value equal to or less than 1152,
-   BERT support is no longer indicated.  (Note that indication of BERT
-   support obliges neither peer to actually choose to make use of BERT.)
+   implementation wishing to offer block-wise transfers to its peer
+   therefore needs to indicate the Block-wise Transfer Option.
+
+   If a Max-Message-Size Option is indicated with a value that is
+   greater than 1152 (in the same or a different CSM message), the
+   Block-wise Transfer Option also indicates support for BERT (see
+   Section 6).  Subsequently, if the Max-Message-Size Option is
+   indicated with a value equal to or less than 1152, BERT support is no
+   longer indicated.  (Note that indication of BERT support obliges
+   neither peer to actually choose to make use of BERT.)
 
    Implementation note: When indicating a value of the Max-Message-Size
    option with an intention to enable BERT, the indicating
@@ -996,8 +998,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    Ping and Pong messages are indicated by the 7.02 code (Ping) and the
    7.03 code (Pong).
 
-5.4.1.  Custody Option
-
 
 
 
@@ -1009,6 +1009,8 @@ Bormann, et al.            Expires May 3, 2018                 [Page 18]
 
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
+
+5.4.1.  Custody Option
 
    +---+---+---+----------+----------------+--------+--------+---------+
    | # | C | R | Applies  | Name           | Format | Length | Base    |
@@ -1053,8 +1055,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
    Release messages can indicate one or more reasons using elective
    options.  The following options are defined:
-
-
 
 
 
