@@ -137,7 +137,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  40
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  40
      12.2.  Informative References . . . . . . . . . . . . . . . . .  42
-     12.3.  URIs . . . . . . . . . . . . . . . . . . . . . . . . . .  44
    Appendix A.  CoAP over WebSocket Examples . . . . . . . . . . . .  44
    Appendix B.  Change Log . . . . . . . . . . . . . . . . . . . . .  47
      B.1.  Since draft-ietf-core-coap-tcp-tls-02 . . . . . . . . . .  47
@@ -162,6 +161,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    The primary reason for introducing CoAP over TCP [RFC0793] and TLS
    [RFC5246] is that some networks do not forward UDP packets.  Complete
    blocking of UDP happens in between about 2% and 4% of terrestrial
+   access networks, according to [EK2016].  UDP impairment is especially
 
 
 
@@ -170,7 +170,6 @@ Bormann, et al.            Expires May 3, 2018                  [Page 3]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
-   access networks, according to [EK2016].  UDP impairment is especially
    concentrated in enterprise networks and networks in geographic
    regions with otherwise challenged connectivity.  Some networks also
    rate-limit UDP traffic, as reported in [BK2015] and deployment
@@ -217,7 +216,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    specific deployments and to protect investments in existing CoAP
    implementations and deployments.
 
-
+   Although HTTP/2 could also potentially address the need for
+   enterprise firewall traversal, there would be additional costs and
 
 
 
@@ -226,8 +226,6 @@ Bormann, et al.            Expires May 3, 2018                  [Page 4]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
-   Although HTTP/2 could also potentially address the need for
-   enterprise firewall traversal, there would be additional costs and
    delays introduced by such a transition from CoAP to HTTP/2.
    Currently, there are also fewer HTTP/2 implementations available for
    constrained devices in comparison to CoAP.  Since CoAP also support
@@ -274,6 +272,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
    This document specifies how to access resources using CoAP requests
    and responses over the TCP, TLS and WebSocket protocols.  This allows
    connectivity-limited applications to obtain end-to-end CoAP
+   connectivity either by communicating CoAP directly with a CoAP server
+   accessible over a TCP, TLS or WebSocket connection or via a CoAP
 
 
 
@@ -282,8 +282,6 @@ Bormann, et al.            Expires May 3, 2018                  [Page 5]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
-   connectivity either by communicating CoAP directly with a CoAP server
-   accessible over a TCP, TLS or WebSocket connection or via a CoAP
    intermediary that proxies CoAP requests and responses between
    different transports, such as between WebSockets and UDP.
 
@@ -329,6 +327,8 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
       The peer that accepts the reliable byte stream connection opened
       by the other peer, i.e., the TCP passive opener, TLS server, or
       WebSocket server.
+
+
 
 
 
@@ -2027,8 +2027,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 11.5.  URI Scheme Registration
 
    URI schemes are registered within the "Uniform Resource Identifier
-   (URI) Schemes" registry maintained at
-   http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml [1].
+   (URI) Schemes" registry maintained at [IANA.uri-schemes].
 
 11.5.1.  coap+tcp
 
@@ -2066,6 +2065,7 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
    Status:
       Permanent
+
 
 
 
@@ -2365,6 +2365,10 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
               (OSCORE)", draft-ietf-core-object-security-06 (work in
               progress), October 2017.
 
+   [IANA.uri-schemes]
+              IANA, "Uniform Resource Identifier (URI) Schemes",
+              <http://www.iana.org/assignments/uri-schemes>.
+
    [LWM2M]    Open Mobile Alliance, "Lightweight Machine to Machine
               Technical Specification Version 1.0", February 2017,
               <http://www.openmobilealliance.org/release/LightweightM2M/
@@ -2398,10 +2402,6 @@ Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
               <http://www.iab.org/wp-content/IAB-uploads/2011/03/
               Turner.pdf>.
 
-   [SW2016]   Swett, I., "QUIC Deployment Experience @Google",
-              Proceedings
-              https://www.ietf.org/proceedings/96/slides/slides-96-quic-
-              3.pdf, 2016.
 
 
 
@@ -2410,9 +2410,10 @@ Bormann, et al.            Expires May 3, 2018                 [Page 43]
 Internet-Draft   TCP/TLS/WebSockets Transports for CoAP     October 2017
 
 
-12.3.  URIs
-
-   [1] http://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml
+   [SW2016]   Swett, I., "QUIC Deployment Experience @Google",
+              Proceedings
+              https://www.ietf.org/proceedings/96/slides/slides-96-quic-
+              3.pdf, 2016.
 
 Appendix A.  CoAP over WebSocket Examples
 
@@ -2440,7 +2441,6 @@ Appendix A.  CoAP over WebSocket Examples
 
    5.  The CoAP client uses the connection for further requests, or the
        connection is closed.
-
 
 
 
