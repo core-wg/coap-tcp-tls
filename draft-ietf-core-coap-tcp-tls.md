@@ -1834,6 +1834,8 @@ CoAP messages exchanged in detail.
   of the authority "example.org" and the well-known path
   "/.well-known/coap", \<ws://example.org/.well-known/coap>.
 
+1. CSM messages ({{csm}}) are exchanged (not shown for lack of space).
+
 1. It sends a single-frame, masked, binary message containing a CoAP
   request. The request indicates the target resource with the
   Uri-Path ("sensors", "temperature") and Uri-Query ("u=Cel")
@@ -1867,7 +1869,8 @@ CoAP messages exchanged in detail.
      |          |  Connection: Upgrade
      |          |  Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
      |          |  Sec-WebSocket-Protocol: coap
-     |          |
+     :          :
+     :<-------->:  Exchange of CSM messages (not shown)
      |          |
      +--------->|  Binary frame (opcode=%x2, FIN=1, MASK=1)
      |          |    +-------------------------+
@@ -1886,7 +1889,6 @@ CoAP messages exchanged in detail.
      |          |    +-------------------------+
      :          :
      :          :
-     |          |
      +--------->|  Close frame (opcode=%x8, FIN=1, MASK=1)
      |          |
      |<---------+  Close frame (opcode=%x8, FIN=1, MASK=0)
