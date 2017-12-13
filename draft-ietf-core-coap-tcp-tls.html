@@ -33,6 +33,7 @@
   ul.toc {
     top: 80px;
     overflow: auto;
+    overscroll-behavior: contain;
   }
 
   body {
@@ -347,7 +348,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-10-30" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-12-13" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -375,7 +376,7 @@ address {
 <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-<td class="left">Expires: May 3, 2018</td>
+<td class="left">Expires: June 16, 2018</td>
 <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -408,7 +409,7 @@ address {
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">October 30, 2017</td>
+<td class="right">December 13, 2017</td>
 </tr>
 
     	
@@ -425,7 +426,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on May 3, 2018.</p>
+<p>This Internet-Draft will expire on June 16, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -932,7 +933,7 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.5.3.1.p.2">As per Section 4.6 of <a href="#RFC7252" class="xref">[RFC7252]</a>, the base value (and the value used when this option is not implemented) is 1152.</p>
 <p id="rfc.section.5.3.1.p.3">The active value of the Max-Message-Size Option is replaced each time the option is sent with a modified value. Its starting value is its base value.</p>
 <h1 id="rfc.section.5.3.2">
-<a href="#rfc.section.5.3.2">5.3.2.</a> <a href="#block-wise-transfer-capability-option" id="block-wise-transfer-capability-option">Block-wise Transfer Capability Option</a>
+<a href="#rfc.section.5.3.2">5.3.2.</a> <a href="#block-wise-transfer-capability-option" id="block-wise-transfer-capability-option">Block-Wise-Transfer Capability Option</a>
 </h1>
 <table cellpadding="3" cellspacing="0" class="tt full center">
 <caption>C=Critical, R=Repeatable</caption>
@@ -951,15 +952,15 @@ Sec-WebSocket-Protocol: coap
 <td class="left"></td>
 <td class="left"></td>
 <td class="left">CSM</td>
-<td class="left">Block-wise Transfer</td>
+<td class="left">Block-Wise-Transfer</td>
 <td class="right">empty</td>
 <td class="right">0</td>
 <td class="left">(none)</td>
 </tr></tbody>
 </table>
-<p id="rfc.section.5.3.2.p.1">A sender can use the elective Block-wise Transfer Option to indicate that it supports the block-wise transfer protocol <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
-<p id="rfc.section.5.3.2.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not.  An implementation wishing to offer block-wise transfers to its peer therefore needs to indicate the Block-wise Transfer Option.</p>
-<p id="rfc.section.5.3.2.p.3">If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-wise Transfer Option also indicates support for BERT (see <a href="#bert" class="xref">Section 6</a>). Subsequently, if the Max-Message-Size Option is indicated with a value equal to or less than 1152, BERT support is no longer indicated.  (Note that indication of BERT support obliges neither peer to actually choose to make use of BERT.)</p>
+<p id="rfc.section.5.3.2.p.1">A sender can use the elective Block-Wise-Transfer Option to indicate that it supports the block-wise transfer protocol <a href="#RFC7959" class="xref">[RFC7959]</a>.</p>
+<p id="rfc.section.5.3.2.p.2">If the option is not given, the peer has no information about whether block-wise transfers are supported by the sender or not.  An implementation wishing to offer block-wise transfers to its peer therefore needs to indicate the Block-Wise-Transfer Option.</p>
+<p id="rfc.section.5.3.2.p.3">If a Max-Message-Size Option is indicated with a value that is greater than 1152 (in the same or a different CSM message), the Block-Wise-Transfer Option also indicates support for BERT (see <a href="#bert" class="xref">Section 6</a>). Subsequently, if the Max-Message-Size Option is indicated with a value equal to or less than 1152, BERT support is no longer indicated.  (Note that indication of BERT support obliges neither peer to actually choose to make use of BERT.)</p>
 <p id="rfc.section.5.3.2.p.4">Implementation note: When indicating a value of the Max-Message-Size option with an intention to enable BERT, the indicating implementation may want to choose a BERT size message it wants to encourage and add a delta for the header and any options that also need to be included in the message.  Section 4.6 of <a href="#RFC7252" class="xref">[RFC7252]</a> adds 128 bytes to a maximum block size of 1024 to arrive at a default message size of 1152.  A BERT-enabled implementation may want to indicate a BERT block size of 2048 or a higher multiple of 1024, and at the same time be more generous for the size of header and options added (say, 256 or 512).  Adding 1024 or more however to the base BERT block size may encourage the peer implementation to vary the BERT block size based on the size of the options included, which can be harder to establish interoperability for.</p>
 <h1 id="rfc.section.5.4">
 <a href="#rfc.section.5.4">5.4.</a> <a href="#sec-ping" id="sec-ping">Ping and Pong Messages</a>
@@ -1515,7 +1516,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <tr>
 <td class="left">7.01</td>
 <td class="right">4</td>
-<td class="left">Block-wise-Transfer</td>
+<td class="left">Block-Wise-Transfer</td>
 <td class="center">[RFCthis]</td>
 </tr>
 <tr>
@@ -1917,12 +1918,12 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <tr>
 <td class="reference"><b id="I-D.ietf-core-cocoa">[I-D.ietf-core-cocoa]</b></td>
 <td class="top">
-<a>Bormann, C.</a>, <a>Betzler, A.</a>, <a>Gomez, C.</a> and <a>I. Demirkol</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-cocoa-01">CoAP Simple Congestion Control/Advanced</a>", Internet-Draft draft-ietf-core-cocoa-01, March 2017.</td>
+<a>Bormann, C.</a>, <a>Betzler, A.</a>, <a>Gomez, C.</a> and <a>I. Demirkol</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-cocoa-02">CoAP Simple Congestion Control/Advanced</a>", Internet-Draft draft-ietf-core-cocoa-02, October 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</b></td>
 <td class="top">
-<a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-object-security-06">Object Security for Constrained RESTful Environments (OSCORE)</a>", Internet-Draft draft-ietf-core-object-security-06, October 2017.</td>
+<a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-object-security-07">Object Security for Constrained RESTful Environments (OSCORE)</a>", Internet-Draft draft-ietf-core-object-security-07, November 2017.</td>
 </tr>
 <tr>
 <td class="reference"><b id="IANA.uri-schemes">[IANA.uri-schemes]</b></td>
