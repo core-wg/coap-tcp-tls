@@ -814,24 +814,24 @@ is not implemented) is 1152.
 The active value of the Max-Message-Size Option is replaced each time the option
 is sent with a modified value. Its starting value is its base value.
 
-### Block-wise Transfer Capability Option
+### Block-Wise-Transfer Capability Option
 
 | #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
-| 4| | | CSM        | Block-wise Transfer|  empty | 0      | (none)      |
+| 4| | | CSM        | Block-Wise-Transfer|  empty | 0      | (none)      |
 {: cols='2r l l 8l 17l 6r 6r 7l' title='C=Critical, R=Repeatable'}
 
-A sender can use the elective Block-wise Transfer Option to indicate that it
+A sender can use the elective Block-Wise-Transfer Option to indicate that it
 supports the block-wise transfer protocol {{-block}}.
 
 If the option is not given, the peer has no information about whether block-wise
 transfers are supported by the sender or not.  An implementation
 wishing to offer block-wise transfers to its peer therefore needs to
-indicate the Block-wise Transfer Option.
+indicate the Block-Wise-Transfer Option.
 
 If a
 Max-Message-Size Option is indicated with a value that is greater than 1152
-(in the same or a different CSM message), the Block-wise Transfer Option also
+(in the same or a different CSM message), the Block-Wise-Transfer Option also
 indicates support for BERT (see {{bert}}). Subsequently, if the Max-Message-Size
 Option is indicated with a value equal to or less than 1152, BERT support is no longer
 indicated.  (Note that indication of BERT support obliges neither
@@ -1576,7 +1576,7 @@ Initial entries in this sub-registry are as follows:
 | Applies to | Number | Name                | Reference |
 |------------|--------|---------------------|-----------|
 | 7.01       |      2 | Max-Message-Size    | \[RFCthis] |
-| 7.01       |      4 | Block-wise-Transfer | \[RFCthis] |
+| 7.01       |      4 | Block-Wise-Transfer | \[RFCthis] |
 | 7.02, 7.03 |      2 | Custody             | \[RFCthis] |
 | 7.04       |      2 | Alternative-Address | \[RFCthis] |
 | 7.04       |      4 | Hold-Off            | \[RFCthis] |
