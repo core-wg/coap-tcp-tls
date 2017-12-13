@@ -1976,6 +1976,7 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <ol>
 <li>The CoAP client obtains the URI &lt;coap+ws://example.org/sensors/temperature?u=Cel&gt;, for example, from a resource representation that it retrieved previously.</li>
 <li>It establishes a WebSocket connection to the endpoint URI composed of the authority &#8220;example.org&#8221; and the well-known path &#8220;/.well-known/coap&#8221;, &lt;ws://example.org/.well-known/coap&gt;.</li>
+<li>CSM messages (<a href="#csm" class="xref">Section 5.3</a>) are exchanged (not shown for lack of space).</li>
 <li>It sends a single-frame, masked, binary message containing a CoAP request. The request indicates the target resource with the Uri-Path (&#8220;sensors&#8221;, &#8220;temperature&#8221;) and Uri-Query (&#8220;u=Cel&#8221;) options.</li>
 <li>It waits for the server to return a response.</li>
 <li>The CoAP client uses the connection for further requests, or the connection is closed.</li>
@@ -2003,7 +2004,8 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
      |          |  Connection: Upgrade
      |          |  Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
      |          |  Sec-WebSocket-Protocol: coap
-     |          |
+     :          :
+     :&lt;--------&gt;:  Exchange of CSM messages (not shown)
      |          |
      +---------&gt;|  Binary frame (opcode=%x2, FIN=1, MASK=1)
      |          |    +-------------------------+
@@ -2022,7 +2024,6 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
      |          |    +-------------------------+
      :          :
      :          :
-     |          |
      +---------&gt;|  Close frame (opcode=%x8, FIN=1, MASK=1)
      |          |
      |&lt;---------+  Close frame (opcode=%x8, FIN=1, MASK=0)
