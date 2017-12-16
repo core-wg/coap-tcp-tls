@@ -85,7 +85,6 @@ normative:
   RFC7252: coap
   RFC7301: alpn
   RFC7525: tlsbcp
-  RFC7540: h2
   RFC7595: urireg
   RFC7641: observe
   RFC7925: RFC7925
@@ -107,6 +106,8 @@ informative:
   RFC5234: RFC5234
   RFC6335: portreg
   RFC6347: dtls
+  RFC7230: http1
+  RFC7540: h2
   I-D.gomez-lwig-tcp-constrained-node-networks:
   HomeGateway:
     title: An experimental study of home gateway characteristics
@@ -318,12 +319,19 @@ BERT Block:
 :   The payload of a CoAP message that is affected by a BERT Option in
     descriptive usage (see Section 2.1 of {{-block}}).
 
+Transport Connection:
+: Underlying reliable byte stream connection, as directly provided by
+  TCP, or indirectly via TLS or WebSockets.
+
+Connection:
+: Transport Connection, unless explicitly qualified otherwise.
+
 Connection Initiator:
-:   The peer that opens a reliable byte stream connection, i.e., the
+:   The peer that opens a Transport Connection, i.e., the
     TCP active opener, TLS client, or WebSocket client.
 
 Connection Acceptor:
-:   The peer that accepts the reliable byte stream connection opened by
+:   The peer that accepts the Transport Connection opened by
     the other peer, i.e., the TCP passive opener, TLS server, or
     WebSocket server.
 
@@ -336,12 +344,26 @@ Non-confirmable, Acknowledgement, and Reset. In addition, messages include a
 Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate
 messages. 
 
-The management of the connections is left to the application, i.e.,
+The management of the transport connections is left to the application, i.e.,
 the present specification does not describe how an application decides
 to open a connection or to re-open another one in the presence of
 failures (or what it would deem to be a failure, see also
 {{sec-ping}}).  In particular, the Connection Initiator need not be
 the client of the first request placed on the connection.
+Some implementations will want to implement a dynamic connection
+management similar to the one described in Section 6 of {{-http1}} for
+HTTP, opening a connection when the first client request is ready to
+be sent and reusing that for further messages for a while, until no
+message is sent for a certain time and no requests are outstanding
+(possibly with a configurable idle time) and a release process is
+started ({{sec-release}}).  In implementations of this kind, connection
+releases or aborts may not be indicated as errors to the application but may
+simply be handled by automatic reconnection once the need arises again.
+Other implementations may be based on configured connections that are
+kept open continuously and lead to management system notifications on
+release or abort.  The protocol defined in the present specification is
+intended to work with either model (or other, application-specific
+connection management models).
 
 ## Messaging Model 
 
@@ -487,7 +509,7 @@ The semantics of the other CoAP header fields are left unchanged.
 
 ## Message Transmission
 
-Once a connection is established, each endpoint MUST send a Capabilities and Settings message (CSM see {{csm}})
+Once a transport connection is established, each endpoint MUST send a Capabilities and Settings message (CSM, see {{csm}})
 as their first message on the connection. This message establishes the initial settings and
 capabilities for the endpoint, such as maximum message size or support for block-wise transfers.
 The absence of options in the CSM indicates that base values are assumed.
@@ -513,14 +535,14 @@ Endpoints MUST treat a missing or invalid CSM as a connection error and abort
 the connection (see {{sec-abort}}). 
 
 CoAP requests and responses are exchanged asynchronously over the
-TCP/TLS connection. A CoAP client can send multiple requests
+transport connection. A CoAP client can send multiple requests
 without waiting for a response and the CoAP server can return
 responses in any order. Responses MUST be returned over the same
 connection as the originating request. Concurrent requests are
 differentiated by their Token, which is scoped locally to the
 connection.
 
-The connection is bi-directional, so requests can be sent both by
+The transport connection is bi-directional, so requests can be sent both by
 the entity that established the connection (Connection Initiator) and
 the remote host (Connection Acceptor).
 If one side does not implement a CoAP server, an error response MUST be
@@ -542,10 +564,10 @@ If a CoAP client does not receive any response for some time after
 sending a CoAP request (or, similarly, when a client observes a
 resource and it does not receive any notification for some time),
 it can send a CoAP Ping Signaling message (see {{sec-ping}}) to test
-the connection and verify that the CoAP server is responsive.
+the transport connection and verify that the CoAP server is responsive.
 
-When the underlying TCP connection is closed or reset, the signaling state
-and any observation state (see {{observe-cancel}}) associated with the reliable
+When the underlying transport connection is closed or reset, the signaling state
+and any observation state (see {{observe-cancel}}) associated with the
 connection are removed. In flight messages may or may not be lost.
 
 # CoAP over WebSockets {#websockets-overview}
@@ -774,7 +796,7 @@ Capabilities and Settings messages (CSM) are used for two purposes:
 
 * Each setting option indicates a setting that will be applied by the sender.
 
-One CSM MUST be sent by each endpoint at the start of the connection. Further
+One CSM MUST be sent by each endpoint at the start of the transport connection. Further
 CSM MAY be sent at any other time by either endpoint over the lifetime of
 the connection.
 
@@ -890,17 +912,32 @@ request the inclusion of an elective Custody Option in the corresponding Pong me
 In that case, the receiver SHOULD delay its Pong message until it finishes processing
 all the request/response messages received prior to the Ping message on the current connection.
 
-## Release Messages
+## Release Messages {#sec-release}
 
 A Release message indicates that the sender does not want to continue
-maintaining the connection and opts for an orderly shutdown. The details
-are in the options. A diagnostic payload (see Section
-5.5.2 of {{-coap}}) MAY be included.  A peer will normally
-respond to a Release message by closing the TCP/TLS connection.
-Messages may be in flight or responses outstanding when the sender decides to
-send a Release message. The peer responding to the Release message SHOULD delay
-the closing of the connection until it has responded to all requests received by it
-before the Release message. It also MAY wait for the responses to its own requests.
+maintaining the transport connection and opts for an orderly shutdown,
+but wants to leave it to the peer to actually start closing the
+connection. The details are in the options. A diagnostic payload (see
+Section 5.5.2 of {{-coap}}) MAY be included.
+
+A peer will normally
+respond to a Release message by closing the transport connection.
+(In case that does not happen, the sender of the release may want to
+implement a timeout mechanism if getting rid of the connection is
+actually important to it.)
+
+Messages may be in flight or responses outstanding when the sender
+decides to send a Release message (which is one reason the sender had
+decided to wait with closing the connection). The peer responding to
+the Release message SHOULD delay the closing of the connection until
+it has responded to all requests received by it before the Release
+message. It also MAY wait for the responses to its own requests.
+
+It is NOT RECOMMENDED for the sender of a Release message to continue
+sending requests on the connection it already indicated to be
+released: the peer might close the connection at any time and miss
+those requests.  There is no obligation for the peer to check for this
+condition, though.
 
 Release messages are indicated by the 7.04 code (Release).
 
@@ -932,7 +969,7 @@ reconnect to it for the number of seconds given in the value.
 ## Abort Messages {#sec-abort}
 
 An Abort message indicates that the sender is unable to continue
-maintaining the connection and cannot even wait for an orderly
+maintaining the transport connection and cannot even wait for an orderly
 release. The sender shuts down the connection immediately after
 the abort (and may or may not wait for a Release or Abort message or
 connection shutdown in the inverse direction). A diagnostic payload
@@ -1009,7 +1046,7 @@ transport. While this suggests that the Block-wise transfer protocol
 {{-block}} is also no longer needed, it remains applicable for a number of cases:
 
 * large messages, such as firmware downloads, may cause undesired
-  head-of-line blocking when a single TCP connection is used
+  head-of-line blocking when a single transport connection is used
 
 * a UDP-to-TCP gateway may simply not have the context to convert a
   message with a Block Option into the equivalent exchange without any
