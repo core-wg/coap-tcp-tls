@@ -348,7 +348,7 @@ address {
 
   <meta name="dct.creator" content="Bormann, C., Lemay, S., Tschofenig, H., Hartke, K., Silverajan, B., and B. Raymor, Ed." />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-coap-tcp-tls-latest" />
-  <meta name="dct.issued" scheme="ISO8601" content="2017-12-13" />
+  <meta name="dct.issued" scheme="ISO8601" content="2017-12-16" />
   <meta name="dct.abstract" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
   <meta name="description" content="The Constrained Application Protocol (CoAP), although inspired by HTTP, was designed to use UDP instead of TCP. The message layer of the CoAP over UDP protocol includes support for reliable delivery, simple congestion control, and flow control." />
 
@@ -376,7 +376,7 @@ address {
 <td class="right">Zebra Technologies</td>
 </tr>
 <tr>
-<td class="left">Expires: June 16, 2018</td>
+<td class="left">Expires: June 19, 2018</td>
 <td class="right">H. Tschofenig</td>
 </tr>
 <tr>
@@ -409,7 +409,7 @@ address {
 </tr>
 <tr>
 <td class="left"></td>
-<td class="right">December 13, 2017</td>
+<td class="right">December 16, 2017</td>
 </tr>
 
     	
@@ -426,7 +426,7 @@ address {
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on June 16, 2018.</p>
+<p>This Internet-Draft will expire on June 19, 2018.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
 <p>Copyright (c) 2017 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
@@ -623,18 +623,24 @@ address {
 <dt>BERT Block:</dt>
 <dd style="margin-left: 8">
 <br> The payload of a CoAP message that is affected by a BERT Option in descriptive usage (see Section 2.1 of <a href="#RFC7959" class="xref">[RFC7959]</a>).</dd>
+<dt>Transport Connection:</dt>
+<dd style="margin-left: 8">
+<br> Underlying reliable byte stream connection, as directly provided by TCP, or indirectly via TLS or WebSockets.</dd>
+<dt>Connection:</dt>
+<dd style="margin-left: 8">
+<br> Transport Connection, unless explicitly qualified otherwise.</dd>
 <dt>Connection Initiator:</dt>
 <dd style="margin-left: 8">
-<br> The peer that opens a reliable byte stream connection, i.e., the TCP active opener, TLS client, or WebSocket client.</dd>
+<br> The peer that opens a Transport Connection, i.e., the TCP active opener, TLS client, or WebSocket client.</dd>
 <dt>Connection Acceptor:</dt>
 <dd style="margin-left: 8">
-<br> The peer that accepts the reliable byte stream connection opened by the other peer, i.e., the TCP passive opener, TLS server, or WebSocket server.</dd>
+<br> The peer that accepts the Transport Connection opened by the other peer, i.e., the TCP passive opener, TLS server, or WebSocket server.</dd>
 </dl>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#coap-over-tcp" id="coap-over-tcp">CoAP over TCP</a>
 </h1>
 <p id="rfc.section.3.p.1">The request/response interaction model of CoAP over TCP is the same as CoAP over UDP.  The primary differences are in the message layer. The message layer of CoAP over UDP supports optional reliability by defining four types of messages: Confirmable, Non-confirmable, Acknowledgement, and Reset. In addition, messages include a Message ID to relate Acknowledgments to Confirmable messages and to detect duplicate messages.</p>
-<p id="rfc.section.3.p.2">The management of the connections is left to the application, i.e., the present specification does not describe how an application decides to open a connection or to re-open another one in the presence of failures (or what it would deem to be a failure, see also <a href="#sec-ping" class="xref">Section 5.4</a>).  In particular, the Connection Initiator need not be the client of the first request placed on the connection.</p>
+<p id="rfc.section.3.p.2">The management of the transport connections is left to the application, i.e., the present specification does not describe how an application decides to open a connection or to re-open another one in the presence of failures (or what it would deem to be a failure, see also <a href="#sec-ping" class="xref">Section 5.4</a>).  In particular, the Connection Initiator need not be the client of the first request placed on the connection.  Some implementations will want to implement a dynamic connection management similar to the one described in Section 6 of <a href="#RFC7230" class="xref">[RFC7230]</a> for HTTP, opening a connection when the first client request is ready to be sent and reusing that for further messages for a while, until no message is sent for a certain time and no requests are outstanding (possibly with a configurable idle time) and a release process is started (<a href="#sec-release" class="xref">Section 5.5</a>).  In implementations of this kind, connection releases or aborts may not be indicated as errors to the application but may simply be handled by automatic reconnection once the need arises again.  Other implementations may be based on configured connections that are kept open continuously and lead to management system notifications on release or abort.  The protocol defined in the present specification is intended to work with either model (or other, application-specific connection management models).</p>
 <h1 id="rfc.section.3.1">
 <a href="#rfc.section.3.1">3.1.</a> <a href="#messaging-model" id="messaging-model">Messaging Model</a>
 </h1>
@@ -743,19 +749,19 @@ CoAP Client       CoAP Server  CoAP Client       CoAP Server
 <h1 id="rfc.section.3.3">
 <a href="#rfc.section.3.3">3.3.</a> <a href="#message-transmission" id="message-transmission">Message Transmission</a>
 </h1>
-<p id="rfc.section.3.3.p.1">Once a connection is established, each endpoint MUST send a Capabilities and Settings message (CSM see <a href="#csm" class="xref">Section 5.3</a>) as their first message on the connection. This message establishes the initial settings and capabilities for the endpoint, such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
+<p id="rfc.section.3.3.p.1">Once a transport connection is established, each endpoint MUST send a Capabilities and Settings message (CSM, see <a href="#csm" class="xref">Section 5.3</a>) as their first message on the connection. This message establishes the initial settings and capabilities for the endpoint, such as maximum message size or support for block-wise transfers.  The absence of options in the CSM indicates that base values are assumed.</p>
 <p id="rfc.section.3.3.p.2">To avoid a deadlock, the Connection Initiator MUST NOT wait for the Connection Acceptor to send its initial CSM message before sending its own initial CSM message.  Conversely, the Connection Acceptor MAY wait for the Connection Initiator to send its initial CSM message before sending its own initial CSM message.</p>
 <p id="rfc.section.3.3.p.3">To avoid unnecessary latency, a Connection Initiator MAY send additional messages after its initial CSM without waiting to receive the Connection Acceptor&#8217;s CSM; however, it is important to note that the Connection Acceptor&#8217;s CSM might indicate capabilities that impact how the initiator is expected to communicate with the acceptor.  For example, the acceptor CSM could indicate a Max-Message-Size option (see <a href="#max-message-size" class="xref">Section 5.3.1</a>) that is smaller than the base value (1152) in order to limit both buffering requirements and head-of-line blocking.</p>
 <p id="rfc.section.3.3.p.4">Endpoints MUST treat a missing or invalid CSM as a connection error and abort the connection (see <a href="#sec-abort" class="xref">Section 5.6</a>).</p>
-<p id="rfc.section.3.3.p.5">CoAP requests and responses are exchanged asynchronously over the TCP/TLS connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
-<p id="rfc.section.3.3.p.6">The connection is bi-directional, so requests can be sent both by the entity that established the connection (Connection Initiator) and the remote host (Connection Acceptor).  If one side does not implement a CoAP server, an error response MUST be returned for all CoAP requests from the other side. The simplest approach is to always return 5.01 (Not Implemented). A more elaborate mock server could also return 4.xx responses such as 4.04 (Not Found) or 4.02 (Bad Option) where appropriate.</p>
+<p id="rfc.section.3.3.p.5">CoAP requests and responses are exchanged asynchronously over the transport connection. A CoAP client can send multiple requests without waiting for a response and the CoAP server can return responses in any order. Responses MUST be returned over the same connection as the originating request. Concurrent requests are differentiated by their Token, which is scoped locally to the connection.</p>
+<p id="rfc.section.3.3.p.6">The transport connection is bi-directional, so requests can be sent both by the entity that established the connection (Connection Initiator) and the remote host (Connection Acceptor).  If one side does not implement a CoAP server, an error response MUST be returned for all CoAP requests from the other side. The simplest approach is to always return 5.01 (Not Implemented). A more elaborate mock server could also return 4.xx responses such as 4.04 (Not Found) or 4.02 (Bad Option) where appropriate.</p>
 <p id="rfc.section.3.3.p.7">Retransmission and deduplication of messages is provided by the TCP protocol.</p>
 <h1 id="rfc.section.3.4">
 <a href="#rfc.section.3.4">3.4.</a> <a href="#liveliness" id="liveliness">Connection Health</a>
 </h1>
 <p id="rfc.section.3.4.p.1">Empty messages (Code 0.00) can always be sent and MUST be ignored by the recipient. This provides a basic keep-alive function that can refresh NAT bindings.</p>
-<p id="rfc.section.3.4.p.2">If a CoAP client does not receive any response for some time after sending a CoAP request (or, similarly, when a client observes a resource and it does not receive any notification for some time), it can send a CoAP Ping Signaling message (see <a href="#sec-ping" class="xref">Section 5.4</a>) to test the connection and verify that the CoAP server is responsive.</p>
-<p id="rfc.section.3.4.p.3">When the underlying TCP connection is closed or reset, the signaling state and any observation state (see <a href="#observe-cancel" class="xref">Section 7.4</a>) associated with the reliable connection are removed. In flight messages may or may not be lost.</p>
+<p id="rfc.section.3.4.p.2">If a CoAP client does not receive any response for some time after sending a CoAP request (or, similarly, when a client observes a resource and it does not receive any notification for some time), it can send a CoAP Ping Signaling message (see <a href="#sec-ping" class="xref">Section 5.4</a>) to test the transport connection and verify that the CoAP server is responsive.</p>
+<p id="rfc.section.3.4.p.3">When the underlying transport connection is closed or reset, the signaling state and any observation state (see <a href="#observe-cancel" class="xref">Section 7.4</a>) associated with the connection are removed. In flight messages may or may not be lost.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#websockets-overview" id="websockets-overview">CoAP over WebSockets</a>
 </h1>
@@ -898,7 +904,7 @@ Sec-WebSocket-Protocol: coap
 <li>Each capability option indicates one capability of the sender to the recipient.</li>
 <li>Each setting option indicates a setting that will be applied by the sender.</li>
 </ul>
-<p id="rfc.section.5.3.p.3">One CSM MUST be sent by each endpoint at the start of the connection. Further CSM MAY be sent at any other time by either endpoint over the lifetime of the connection.</p>
+<p id="rfc.section.5.3.p.3">One CSM MUST be sent by each endpoint at the start of the transport connection. Further CSM MAY be sent at any other time by either endpoint over the lifetime of the connection.</p>
 <p id="rfc.section.5.3.p.4">Both capability and setting options are cumulative. A CSM does not invalidate a previously sent capability indication or setting even if it is not repeated. A capability message without any option is a no-operation (and can be used as such). An option that is sent might override a previous value for the same option. The option defines how to handle this case if needed.</p>
 <p id="rfc.section.5.3.p.5">Base values are listed below for CSM Options. These are the values for the capability and setting before any Capabilities and Settings messages send a modified value.</p>
 <p id="rfc.section.5.3.p.6">These are not default values for the option, as defined in Section 5.4.4 in <a href="#RFC7252" class="xref">[RFC7252]</a>.  Default values apply on a per-message basis and thus reset when the value is not present in a given Capabilities and Settings message.</p>
@@ -998,11 +1004,14 @@ Sec-WebSocket-Protocol: coap
 <p id="rfc.section.5.4.1.p.1">When responding to a Ping message, the receiver can include an elective Custody Option in the Pong message. This option indicates that the application has processed all the request/response messages received prior to the Ping message on the current connection. (Note that there is no definition of specific application semantics for &#8220;processed&#8221;, but there is an expectation that the receiver of a Pong Message with a Custody Option should be able to free buffers based on this indication.)</p>
 <p id="rfc.section.5.4.1.p.2">A sender can also include an elective Custody Option in a Ping message to explicitly request the inclusion of an elective Custody Option in the corresponding Pong message.  In that case, the receiver SHOULD delay its Pong message until it finishes processing all the request/response messages received prior to the Ping message on the current connection.</p>
 <h1 id="rfc.section.5.5">
-<a href="#rfc.section.5.5">5.5.</a> <a href="#release-messages" id="release-messages">Release Messages</a>
+<a href="#rfc.section.5.5">5.5.</a> <a href="#sec-release" id="sec-release">Release Messages</a>
 </h1>
-<p id="rfc.section.5.5.p.1">A Release message indicates that the sender does not want to continue maintaining the connection and opts for an orderly shutdown. The details are in the options. A diagnostic payload (see Section 5.5.2 of <a href="#RFC7252" class="xref">[RFC7252]</a>) MAY be included.  A peer will normally respond to a Release message by closing the TCP/TLS connection.  Messages may be in flight or responses outstanding when the sender decides to send a Release message. The peer responding to the Release message SHOULD delay the closing of the connection until it has responded to all requests received by it before the Release message. It also MAY wait for the responses to its own requests.</p>
-<p id="rfc.section.5.5.p.2">Release messages are indicated by the 7.04 code (Release).</p>
-<p id="rfc.section.5.5.p.3">Release messages can indicate one or more reasons using elective options.  The following options are defined:</p>
+<p id="rfc.section.5.5.p.1">A Release message indicates that the sender does not want to continue maintaining the transport connection and opts for an orderly shutdown, but wants to leave it to the peer to actually start closing the connection. The details are in the options. A diagnostic payload (see Section 5.5.2 of <a href="#RFC7252" class="xref">[RFC7252]</a>) MAY be included.</p>
+<p id="rfc.section.5.5.p.2">A peer will normally respond to a Release message by closing the transport connection.  (In case that does not happen, the sender of the release may want to implement a timeout mechanism if getting rid of the connection is actually important to it.)</p>
+<p id="rfc.section.5.5.p.3">Messages may be in flight or responses outstanding when the sender decides to send a Release message (which is one reason the sender had decided to wait with closing the connection). The peer responding to the Release message SHOULD delay the closing of the connection until it has responded to all requests received by it before the Release message. It also MAY wait for the responses to its own requests.</p>
+<p id="rfc.section.5.5.p.4">It is NOT RECOMMENDED for the sender of a Release message to continue sending requests on the connection it already indicated to be released: the peer might close the connection at any time and miss those requests.  There is no obligation for the peer to check for this condition, though.</p>
+<p id="rfc.section.5.5.p.5">Release messages are indicated by the 7.04 code (Release).</p>
+<p id="rfc.section.5.5.p.6">Release messages can indicate one or more reasons using elective options.  The following options are defined:</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
 <caption>C=Critical, R=Repeatable</caption>
 <thead><tr>
@@ -1026,8 +1035,8 @@ Sec-WebSocket-Protocol: coap
 <td class="left">(none)</td>
 </tr></tbody>
 </table>
-<p id="rfc.section.5.5.p.4">The elective Alternative-Address Option requests the peer to instead open a connection of the same scheme as the present connection to the alternative transport address given.  Its value is in the form &#8220;authority&#8221; as defined in Section 3.2 of <a href="#RFC3986" class="xref">[RFC3986]</a>. (Existing state related to the connection is not transferred from the present connection to the new connection.)</p>
-<p id="rfc.section.5.5.p.5">The Alternative-Address Option is a repeatable option as defined in Section 5.4.5 of <a href="#RFC7252" class="xref">[RFC7252]</a>.  When multiple occurrences of the option are included, the peer can choose any of the alternative transport addresses.</p>
+<p id="rfc.section.5.5.p.7">The elective Alternative-Address Option requests the peer to instead open a connection of the same scheme as the present connection to the alternative transport address given.  Its value is in the form &#8220;authority&#8221; as defined in Section 3.2 of <a href="#RFC3986" class="xref">[RFC3986]</a>. (Existing state related to the connection is not transferred from the present connection to the new connection.)</p>
+<p id="rfc.section.5.5.p.8">The Alternative-Address Option is a repeatable option as defined in Section 5.4.5 of <a href="#RFC7252" class="xref">[RFC7252]</a>.  When multiple occurrences of the option are included, the peer can choose any of the alternative transport addresses.</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
 <caption>C=Critical, R=Repeatable</caption>
 <thead><tr>
@@ -1051,11 +1060,11 @@ Sec-WebSocket-Protocol: coap
 <td class="left">(none)</td>
 </tr></tbody>
 </table>
-<p id="rfc.section.5.5.p.6">The elective Hold-Off Option indicates that the server is requesting that the peer not reconnect to it for the number of seconds given in the value.</p>
+<p id="rfc.section.5.5.p.9">The elective Hold-Off Option indicates that the server is requesting that the peer not reconnect to it for the number of seconds given in the value.</p>
 <h1 id="rfc.section.5.6">
 <a href="#rfc.section.5.6">5.6.</a> <a href="#sec-abort" id="sec-abort">Abort Messages</a>
 </h1>
-<p id="rfc.section.5.6.p.1">An Abort message indicates that the sender is unable to continue maintaining the connection and cannot even wait for an orderly release. The sender shuts down the connection immediately after the abort (and may or may not wait for a Release or Abort message or connection shutdown in the inverse direction). A diagnostic payload (see Section 5.5.2 of <a href="#RFC7252" class="xref">[RFC7252]</a>) SHOULD be included in the Abort message.  Messages may be in flight or responses outstanding when the sender decides to send an Abort message.  The general expectation is that these will NOT be processed.</p>
+<p id="rfc.section.5.6.p.1">An Abort message indicates that the sender is unable to continue maintaining the transport connection and cannot even wait for an orderly release. The sender shuts down the connection immediately after the abort (and may or may not wait for a Release or Abort message or connection shutdown in the inverse direction). A diagnostic payload (see Section 5.5.2 of <a href="#RFC7252" class="xref">[RFC7252]</a>) SHOULD be included in the Abort message.  Messages may be in flight or responses outstanding when the sender decides to send an Abort message.  The general expectation is that these will NOT be processed.</p>
 <p id="rfc.section.5.6.p.2">Abort messages are indicated by the 7.05 code (Abort).</p>
 <p id="rfc.section.5.6.p.3">Abort messages can indicate one or more reasons using elective options. The following option is defined:</p>
 <table cellpadding="3" cellspacing="0" class="tt full center">
@@ -1126,7 +1135,7 @@ Sec-WebSocket-Protocol: coap
 <p></p>
 
 <ul>
-<li>large messages, such as firmware downloads, may cause undesired head-of-line blocking when a single TCP connection is used</li>
+<li>large messages, such as firmware downloads, may cause undesired head-of-line blocking when a single transport connection is used</li>
 <li>a UDP-to-TCP gateway may simply not have the context to convert a message with a Block Option into the equivalent exchange without any use of a Block Option (it would need to convert the entire blockwise exchange from start to end into a single exchange)</li>
 </ul>
 <p id="rfc.section.6.p.3">The &#8216;Block-wise Extension for Reliable Transport (BERT)&#8217; extends the Block protocol to enable the use of larger messages over a reliable transport.</p>
@@ -1862,11 +1871,6 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <a>Sheffer, Y.</a>, <a>Holz, R.</a> and <a>P. Saint-Andre</a>, "<a href="https://tools.ietf.org/html/rfc7525">Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)</a>", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May 2015.</td>
 </tr>
 <tr>
-<td class="reference"><b id="RFC7540">[RFC7540]</b></td>
-<td class="top">
-<a>Belshe, M.</a>, <a>Peon, R.</a> and <a>M. Thomson</a>, "<a href="https://tools.ietf.org/html/rfc7540">Hypertext Transfer Protocol Version 2 (HTTP/2)</a>", RFC 7540, DOI 10.17487/RFC7540, May 2015.</td>
-</tr>
-<tr>
 <td class="reference"><b id="RFC7595">[RFC7595]</b></td>
 <td class="top">
 <a>Thaler, D.</a>, <a>Hansen, T.</a> and <a>T. Hardie</a>, "<a href="https://tools.ietf.org/html/rfc7595">Guidelines and Registration Procedures for URI Schemes</a>", BCP 35, RFC 7595, DOI 10.17487/RFC7595, June 2015.</td>
@@ -1954,6 +1958,16 @@ wss://example.org/.well-known/coap   Uri-Path: "temperature"
 <td class="reference"><b id="RFC6347">[RFC6347]</b></td>
 <td class="top">
 <a>Rescorla, E.</a> and <a>N. Modadugu</a>, "<a href="https://tools.ietf.org/html/rfc6347">Datagram Transport Layer Security Version 1.2</a>", RFC 6347, DOI 10.17487/RFC6347, January 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7230">[RFC7230]</b></td>
+<td class="top">
+<a>Fielding, R.</a> and <a>J. Reschke</a>, "<a href="https://tools.ietf.org/html/rfc7230">Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing</a>", RFC 7230, DOI 10.17487/RFC7230, June 2014.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7540">[RFC7540]</b></td>
+<td class="top">
+<a>Belshe, M.</a>, <a>Peon, R.</a> and <a>M. Thomson</a>, "<a href="https://tools.ietf.org/html/rfc7540">Hypertext Transfer Protocol Version 2 (HTTP/2)</a>", RFC 7540, DOI 10.17487/RFC7540, May 2015.</td>
 </tr>
 <tr>
 <td class="reference"><b id="SecurityChallenges">[SecurityChallenges]</b></td>
