@@ -68,12 +68,7 @@ author:
 - role: editor
   ins: B. Raymor
   name: Brian Raymor
-  org: Microsoft
-  street: One Microsoft Way
-  city: Redmond
-  code: '98052'
-  country: United States of America
-  email: brian.raymor@microsoft.com
+  email: brianraymor@hotmail.com
 normative:
   RFC0793: tcp
   RFC2119: bcp14
