@@ -817,20 +817,14 @@ The sender can use the elective Max-Message-Size Option to indicate
 the maximum size of a message in bytes that it can receive.  The
 message size indicated includes the entire message, starting from the
 first byte of the message header and ending at the end of the message
-payload. 
+payload.
 
-Note that there is no relationship of the message size to the overall
+(Note that there is no relationship of the message size to the overall
 request or response body size that may be achievable in block-wise
-transfer. For example, consider the GET with BERT block-wise transfer 
-in {{fig-bert1}}. If the CoAP client indicates a value of 6000 bytes 
-using the Max-Message-Size option then the exchange will succeed since none 
-of the three transfers will be above the indicated maximum size limit
-(ignoring the size of the CoAP header and options, which are not shown
-in the message flow). Consider a second case where the same CoAP client 
-indicates a value of 4000 bytes using the Max-Message-Size option then 
-the CoAP stack on the server will refuse the transmission (or adjust the 
-transmission size) since the payload exceeds the limit indicated by 
-the client. 
+transfer.  For example, the exchange depicted further down
+in {{fig-bert1}} can be performed if the CoAP client indicates a value
+of around 6000 bytes for the Max-Message-Size option, even though the
+total body size transferred to the client is 3072 + 5120 + 4711 = 12903 bytes.)
 
 | #|C|R| Applies to | Name               | Format | Length | Base Value  |
 |--+-+-+------------+--------------------+--------+--------+-------------+
